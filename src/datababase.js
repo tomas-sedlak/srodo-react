@@ -21,7 +21,7 @@ export const users = {
         username: "laci",
         displayName: "Ladislav Spisiak",
         profilePicture: "../public/laci.jpg",
-        description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis nesciunt voluptas, at ab repudiandae aut? Vero, veritatis voluptatibus. Expedita officia ullam illo obcaecati soluta possimus, nihil eligendi sapiente odit tempora.",
+        // description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis nesciunt voluptas, at ab repudiandae aut? Vero, veritatis voluptatibus. Expedita officia ullam illo obcaecati soluta possimus, nihil eligendi sapiente odit tempora.",
         likes: 154242454,
         posts: 1,
         badges: ["Top G", "math god"],

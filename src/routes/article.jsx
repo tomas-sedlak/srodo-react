@@ -9,7 +9,7 @@ export default function Article() {
     const user = users[314];
 
     return (
-        <Box maw={1100} p="md" m="auto">
+        <Box maw={1280} p="md" m="auto">
             <Group align="flex-start">
                 <Box style={{ flex: 1 }}>
                     <Card padding="xl" radius="md" mb="md" withBorder>
@@ -51,7 +51,7 @@ export default function Article() {
                         <Profile user={user} size="lg" />
 
                         <Text mt="md">
-                            {user.description}
+                            {user.description ? user.description : "No user description"}
                         </Text>
 
                         <Group mt="md" gap="xl">

@@ -7,13 +7,9 @@ export default function Root() {
     const [opened, setOpened] = useState(false);
     
     return (
-        <AppShell
-        layout="alt"
-            header={{ height: 60 }}
-            // navbar={{ width: 300}}
-        >
-            <AppShell.Header>
-                <Group h="100%" maw={1100} m="auto" px="md" justify="space-between">
+        <>
+            <header>
+                <Group h="100%" maw={1280} m="auto" px="md" justify="space-between">
                     <Group>
                         <Text fw={700}>Srodo</Text>
                         <TextInput
@@ -31,18 +27,11 @@ export default function Root() {
                         <Button variant="outline">Sign up</Button>
                     </Group>
                 </Group>
-            </AppShell.Header>
-            {/* <AppShell.Navbar p="md">
-                Navbar
-            </AppShell.Navbar> */}
-            <AppShell.Main>
-                <Box bg="#f8f8f8">
-                    <Outlet />
-                </Box>
-            </AppShell.Main>
-        </AppShell>
-        // <header>
+            </header>
 
-        // </header>
+            <main>
+                <Outlet />
+            </main>
+        </>
     )
 }

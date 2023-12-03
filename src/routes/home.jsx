@@ -1,15 +1,160 @@
 import { Link } from "react-router-dom";
-import { Box, Card, AspectRatio, Image, Text, Group } from '@mantine/core';
+import { Box, Card, AspectRatio, Image, Text, Group, Button, Badge } from '@mantine/core';
 import { ProfileHover } from "../templates/profile";
 import Tags from "../templates/tags";
 import { posts, users } from "../datababase";
 
+const menu = [
+    {
+        label: "Home",
+        link: "/",
+        leftSection: "🏠"
+    },
+    {
+        label: "Srodo AI",
+        link: "/ai",
+        leftSection: "🤖",
+        badge: "new!"
+    },
+    {
+        label: "Tags",
+        link: "/tags",
+        leftSection: "🏷️"
+    },
+    {
+        label: "Math",
+        link: "/",
+        leftSection: "📈"
+    },
+    {
+        label: "Informatic",
+        link: "/",
+        leftSection: "💻"
+    },
+    {
+        label: "Biology",
+        link: "/",
+        leftSection: "🧬"
+    },
+    {
+        label: "Geography",
+        link: "/",
+        leftSection: "🌍"
+    },
+    {
+        label: "Chemistry",
+        link: "/",
+        leftSection: "🧪"
+    }
+]
+
+const tags = [
+    {
+        label: "#python",
+        link: "/",
+    },
+    {
+        label: "#math",
+        link: "/",
+    },
+    {
+        label: "#javascript",
+        link: "/",
+    },
+    {
+        label: "#react",
+        link: "/",
+    },
+    {
+        label: "#biology",
+        link: "/",
+    },
+    {
+        label: "#spisi",
+        link: "/",
+    },
+    {
+        label: "#joko",
+        link: "/",
+    },
+    {
+        label: "#jano",
+        link: "/",
+    },
+    {
+        label: "#ilovemath",
+        link: "/",
+    },
+    {
+        label: "#coro",
+        link: "/",
+    },
+]
+
 export default function Home() {
     return (
-        <Box maw={650} p="md" m="auto">
-            {posts.map((post) => {
-                return <ArticleCard post={post} /> 
-            })}
+        <Box maw={1280} p="md" m="auto">
+            <Group align="flex-start">
+                <Box w={240}>
+                    {menu.map((value) => {
+                        return (
+                            <Link to={value.link}>
+                                <Button
+                                    px="sm"
+                                    leftSection={value.leftSection}
+                                    rightSection={value.badge && <Badge variant="light" color="green">{value.badge}</Badge>}
+                                    variant="subtle"
+                                    color="dark"
+                                    size="md"
+                                    fw={400}
+                                    justify="flex-start"
+                                    fullWidth
+                                >
+                                    {value.label}
+                                </Button>
+                            </Link>
+                        )
+                    })}
+
+                    <Text
+                        mt="lg"
+                        mb="sm"
+                        fw={700}
+                    >
+                        Popular tags
+                    </Text>
+
+                    {tags.map((value) => {
+                        return (
+                            <Link to={value.link}>
+                                <Button
+                                    px="sm"
+                                    variant="subtle"
+                                    color="dark"
+                                    size="md"
+                                    fw={400}
+                                    justify="flex-start"
+                                    fullWidth
+                                >
+                                    {value.label}
+                                </Button>
+                            </Link>
+                        )
+                    })}
+                </Box>
+                <Box style={{ flex: 1 }}>
+                    {posts.map((post) => {
+                        return <ArticleCard post={post} /> 
+                    })}
+                </Box>
+                <Box w={320}>
+                    <Card padding="md" radius="md" mb="md" withBorder>
+                        <Text>
+                            Some interesting news...
+                        </Text>
+                    </Card>
+                </Box>
+            </Group>
         </Box>
     )
 }
@@ -44,7 +189,7 @@ function ArticleCard({ post }) {
                 </Text>
             </Link>
 
-            <Text mb="md" lineClamp={3}>{post.description}</Text>
+            <Text mb="sm" lineClamp={3}>{post.description}</Text>
 
             <Tags tags={post.tags} />
         </Card>

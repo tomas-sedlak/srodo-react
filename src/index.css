@@ -6,3 +6,18 @@
 a {
   text-decoration: none;
 }
+
+header {
+  z-index: 999;
+  background-color: white;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+main {
+  background-color: #f8f8f8;
+  margin-top: 60px;
+}

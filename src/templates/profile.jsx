@@ -23,7 +23,7 @@ export default function Profile({ user, size }) {
                     </Link>
                     {user.badges.map((badge) => {
                         return (
-                            <Badge size="xs">{badge}</Badge>
+                            <Badge variant="light" size="sm">{badge}</Badge>
                         )
                     })}
                 </Group>
@@ -44,7 +44,7 @@ export function ProfileHover({ user }) {
                 <HoverCard.Dropdown>
                     <Profile user={ user } />
                     <Text size="sm" mt="md">
-                        {user.description}
+                        {user.description ? user.description : "No user description"}
                     </Text>
                     <Group mt="md" gap="xl">
                         <Text size="sm">
@@ -72,7 +72,7 @@ export function ProfileHover({ user }) {
                     </Link>
                     {user.badges.map((badge) => {
                         return (
-                            <Badge size="xs">{badge}</Badge>
+                            <Badge variant="light" size="sm">{badge}</Badge>
                         )
                     })}
                 </Group>
