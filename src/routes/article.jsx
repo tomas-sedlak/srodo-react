@@ -42,7 +42,7 @@ export default function Article() {
                             <Tags tags={post.tags} />
                         </Box>
 
-                        <Text mb="md">{post.description}</Text>
+                        <Text mb="md" size="lg">{post.description}</Text>
 
                     </Card>
                 </Box>

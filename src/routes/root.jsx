@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from "react-router-dom";
-import { AppShell, Group, Box, Button, TextInput, Text, ActionIcon } from '@mantine/core';
+import { Group, Button, TextInput, Text, ActionIcon } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 
 export default function Root() {

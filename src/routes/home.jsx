@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
-import { Box, Card, AspectRatio, Image, Text, Group, Button, Badge } from '@mantine/core';
+import { Box, Card, AspectRatio, Image, Text, Group, Button, Badge, Affix } from '@mantine/core';
+import ImagesModal from "../templates/imagesModal";
 import { ProfileHover } from "../templates/profile";
 import Tags from "../templates/tags";
+import News from "../templates/news"
 import { posts, users } from "../datababase";
 
 const menu = [
@@ -17,9 +19,9 @@ const menu = [
         badge: "new!"
     },
     {
-        label: "Tags",
+        label: "News",
         link: "/tags",
-        leftSection: "🏷️"
+        leftSection: "📰"
     },
     {
         label: "Math",
@@ -95,7 +97,7 @@ export default function Home() {
     return (
         <Box maw={1280} p="md" m="auto">
             <Group align="flex-start">
-                <Box w={240}>
+                <Box maw={240} style={{ flex: 1 }} className="sticky-navbar">
                     {menu.map((value) => {
                         return (
                             <Link to={value.link}>
@@ -115,44 +117,19 @@ export default function Home() {
                             </Link>
                         )
                     })}
-
-                    <Text
-                        mt="lg"
-                        mb="sm"
-                        fw={700}
-                    >
-                        Popular tags
-                    </Text>
-
-                    {tags.map((value) => {
-                        return (
-                            <Link to={value.link}>
-                                <Button
-                                    px="sm"
-                                    variant="subtle"
-                                    color="dark"
-                                    size="md"
-                                    fw={400}
-                                    justify="flex-start"
-                                    fullWidth
-                                >
-                                    {value.label}
-                                </Button>
-                            </Link>
-                        )
-                    })}
                 </Box>
                 <Box style={{ flex: 1 }}>
                     {posts.map((post) => {
                         return <ArticleCard post={post} /> 
                     })}
+                    <Text ta="center" p="lg">Dostal si sa az na koniec stranky 🥳</Text>
                 </Box>
-                <Box w={320}>
+                <Box maw={320} style={{ flex: 1 }}>
                     <Card padding="md" radius="md" mb="md" withBorder>
-                        <Text>
-                            Some interesting news...
-                        </Text>
+                        <ImagesModal />
                     </Card>
+
+                    <News />
                 </Box>
             </Group>
         </Box>
@@ -166,7 +143,7 @@ function ArticleCard({ post }) {
         <Card padding="lg" radius="md" mb="xs" withBorder>
             <Card.Section>
                 <Link to="/article">
-                    <AspectRatio ratio={8 / 3}>
+                    <AspectRatio ratio={10 / 3}>
                         <Image src={post.image} />
                     </AspectRatio>
                 </Link>
@@ -184,14 +161,19 @@ function ArticleCard({ post }) {
                     underline="never"
                     mb="xs"
                     style={{ lineHeight: 1.2 }}
+                    lineClamp={2}
                 >
                     {post.title}
                 </Text>
             </Link>
 
-            <Text mb="sm" lineClamp={3}>{post.description}</Text>
+            <Text mb="sm" c="dark" style={{ lineHeight: 1.4 }} lineClamp={2}>{post.description}</Text>
 
-            <Tags tags={post.tags} />
+            <Group>
+                <Text size="sm" c="grey">
+                    1 week ago &middot; 13 min read &middot; Biology
+                </Text>
+            </Group>
         </Card>
     )
 }

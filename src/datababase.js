@@ -20,7 +20,7 @@ export const users = {
     314: {
         username: "laci",
         displayName: "Ladislav Spisiak",
-        profilePicture: "../public/laci.jpg",
+        profilePicture: "/laci.jpg",
         // description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis nesciunt voluptas, at ab repudiandae aut? Vero, veritatis voluptatibus. Expedita officia ullam illo obcaecati soluta possimus, nihil eligendi sapiente odit tempora.",
         likes: 154242454,
         posts: 1,

@@ -3,14 +3,14 @@ import { Group, Button } from '@mantine/core';
 
 export default function Tags({ tags }) {
     return (
-        <Group gap={0}>
+        // <Group gap={0}>
+        <>
             {tags.map((tag) => {
                 return (
                     <Link to={"tags/" + tag}>
                         <Button
-                        variant="subtle"
-                            color="dark"
-                            size="sm"
+                            variant="subtle"
+                            color="gray"
                             fw={400}
                             px={8}
                         >
@@ -19,6 +19,7 @@ export default function Tags({ tags }) {
                     </Link>
                 )
             })}
-        </Group>
+        </>
+        // </Group>
     )
 }

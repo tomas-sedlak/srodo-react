@@ -8,7 +8,7 @@ export default function Profile({ user, size }) {
                 <Avatar src={user.profilePicture} size={size} />
             </Link>
             <Stack gap={5}>
-                <Text fw={700} style={{ lineHeight: 1 }}>
+                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
                 <Group gap={5}>
@@ -35,7 +35,7 @@ export default function Profile({ user, size }) {
 export function ProfileHover({ user }) {
     return (
         <>
-            <HoverCard width={320} withArrow>
+            <HoverCard width={320} position="right" withArrow>
                 <HoverCard.Target>
                     <Link to={user.username}>
                         <Avatar src={user.profilePicture} />
@@ -57,14 +57,14 @@ export function ProfileHover({ user }) {
                 </HoverCard.Dropdown>
             </HoverCard>
             <Stack gap={5}>
-                <Text fw={700} style={{ lineHeight: 1 }}>
+                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
                 <Group gap={5}>
                     <Link to={user.username}>
                         <Text
                             c="gray"
-                            size="sm"
+                            size="xs"
                             style={{ lineHeight: 1 }}
                         >
                             @{user.username}
