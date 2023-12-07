@@ -1,95 +1,73 @@
+import { AspectRatio, Badge, Box, Button, Card, Group, Image, Text } from '@mantine/core';
 import { Link } from "react-router-dom";
-import { Box, Card, AspectRatio, Image, Text, Group, Button, Badge, Affix } from '@mantine/core';
-import ImagesModal from "../templates/imagesModal";
-import { ProfileHover } from "../templates/profile";
-import Tags from "../templates/tags";
-import News from "../templates/news"
 import { posts, users } from "../datababase";
+import News from "../templates/news";
+import { ProfileHover } from "../templates/profile";
 
 const menu = [
     {
-        label: "Home",
+        label: "Domov",
         link: "/",
         leftSection: "🏠"
     },
     {
-        label: "Srodo AI",
+        label: "Šrodo AI",
         link: "/ai",
-        leftSection: "🤖",
-        badge: "new!"
+        leftSection: "🧠",
+        badge: "Nové!"
     },
     {
-        label: "News",
+        label: "Novinky",
         link: "/tags",
         leftSection: "📰"
     },
+]
+
+const categories = [
     {
-        label: "Math",
+        label: "Matematika",
         link: "/",
         leftSection: "📈"
     },
     {
-        label: "Informatic",
+        label: "Informatika",
         link: "/",
         leftSection: "💻"
     },
     {
-        label: "Biology",
+        label: "Jazyky",
+        link: "/",
+        leftSection: "💬"
+    },
+    {
+        label: "Biológia",
         link: "/",
         leftSection: "🧬"
     },
     {
-        label: "Geography",
+        label: "Chémia",
+        link: "/",
+        leftSection: "🧪"
+    },
+    {
+        label: "Fyzika",
+        link: "/",
+        leftSection: "⚡"
+    },
+    {
+        label: "Geografia",
         link: "/",
         leftSection: "🌍"
     },
     {
-        label: "Chemistry",
+        label: "Umenie",
         link: "/",
-        leftSection: "🧪"
-    }
-]
-
-const tags = [
-    {
-        label: "#python",
-        link: "/",
+        leftSection: "🎨"
     },
     {
-        label: "#math",
+        label: "Šport",
         link: "/",
-    },
-    {
-        label: "#javascript",
-        link: "/",
-    },
-    {
-        label: "#react",
-        link: "/",
-    },
-    {
-        label: "#biology",
-        link: "/",
-    },
-    {
-        label: "#spisi",
-        link: "/",
-    },
-    {
-        label: "#joko",
-        link: "/",
-    },
-    {
-        label: "#jano",
-        link: "/",
-    },
-    {
-        label: "#ilovemath",
-        link: "/",
-    },
-    {
-        label: "#coro",
-        link: "/",
+        leftSection: "💪"
     },
 ]
 
@@ -117,6 +95,26 @@ export default function Home() {
                             </Link>
                         )
                     })}
+                    <Text fw={700} mt="md" mb="sm" ml="sm">Predmety</Text>
+                    {categories.map((value) => {
+                        return (
+                            <Link to={value.link}>
+                                <Button
+                                    px="sm"
+                                    leftSection={value.leftSection}
+                                    rightSection={value.badge && <Badge variant="light" color="green">{value.badge}</Badge>}
+                                    variant="subtle"
+                                    color="dark"
+                                    size="md"
+                                    fw={400}
+                                    justify="flex-start"
+                                    fullWidth
+                                >
+                                    {value.label}
+                                </Button>
+                            </Link>
+                        )
+                    })}
                 </Box>
                 <Box style={{ flex: 1 }}>
                     {posts.map((post) => {
@@ -124,11 +122,7 @@ export default function Home() {
                     })}
                     <Text ta="center" p="lg">Dostal si sa az na koniec stranky 🥳</Text>
                 </Box>
-                <Box maw={320} style={{ flex: 1 }}>
-                    <Card padding="md" radius="md" mb="md" withBorder>
-                        <ImagesModal />
-                    </Card>
-
+                <Box maw={340} style={{ flex: 1 }}>
                     <News />
                 </Box>
             </Group>
@@ -140,16 +134,16 @@ function ArticleCard({ post }) {
     const user = users[post.author]
 
     return (
-        <Card padding="lg" radius="md" mb="xs" withBorder>
+        <Card padding="lg" radius="md" mb="sm" withBorder>
             <Card.Section>
                 <Link to="/article">
-                    <AspectRatio ratio={10 / 3}>
+                    <AspectRatio ratio={10 / 4}>
                         <Image src={post.image} />
                     </AspectRatio>
                 </Link>
             </Card.Section>
             
-            <Group mt="md" mb="sm" gap="xs">
+            <Group mt="md" mb="sm" gap="sm">
                 <ProfileHover user={user} />
             </Group>
 
@@ -159,15 +153,13 @@ function ArticleCard({ post }) {
                     fw={700}
                     fz={24}
                     underline="never"
-                    mb="xs"
+                    mb="sm"
                     style={{ lineHeight: 1.2 }}
                     lineClamp={2}
                 >
                     {post.title}
                 </Text>
             </Link>
-
-            <Text mb="sm" c="dark" style={{ lineHeight: 1.4 }} lineClamp={2}>{post.description}</Text>
 
             <Group>
                 <Text size="sm" c="grey">

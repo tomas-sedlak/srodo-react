@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Box, Card, AspectRatio, Image, Text, Group, Title, NumberFormatter, Button } from '@mantine/core';
 import Profile from "../templates/profile";
 import Tags from "../templates/tags";
+import News from "../templates/news";
 import { posts, users } from "../datababase";
 
 export default function Article() {
@@ -21,26 +22,26 @@ export default function Article() {
                             </Link>
                         </Card.Section>
                         
-                        <Group mt="lg" mb="lg" gap="xs">
+                        <Group mt="lg" mb="sm" gap="xs">
                             <Profile user={ user } />
                         </Group>
-
-                        <Text c="gray" size="sm">
-                            Created 1 month ago • Updated 5 days ago • 105 Comments
-                        </Text>
 
                         <Title
                             fw={800}
                             fz={48}
-                            mb="xs"
+                            mb="sm"
                             style={{ lineHeight: 1.2 }}
                         >
                             {post.title}
                         </Title>
 
-                        <Box mb="lg">
+                        {/* <Box mb="lg">
                             <Tags tags={post.tags} />
-                        </Box>
+                        </Box> */}
+
+                        <Text c="gray" size="sm" mb="lg">
+                            Created 1 month ago &middot; Updated 5 days ago &middot; 13 min read &middot; Biology
+                        </Text>
 
                         <Text mb="md" size="lg">{post.description}</Text>
 
@@ -67,6 +68,8 @@ export default function Article() {
                             Follow
                         </Button>
                     </Card>
+
+                    <News />
                 </Box>
             </Group>
         </Box>

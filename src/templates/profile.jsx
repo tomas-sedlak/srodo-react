@@ -7,8 +7,8 @@ export default function Profile({ user, size }) {
             <Link to={user.username}>
                 <Avatar src={user.profilePicture} size={size} />
             </Link>
-            <Stack gap={5}>
-                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+            <Stack gap={4}>
+                <Text fw={600} size="md" style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
                 <Group gap={5}>
@@ -21,11 +21,11 @@ export default function Profile({ user, size }) {
                             @{user.username}
                         </Text>
                     </Link>
-                    {user.badges.map((badge) => {
+                    {/* {user.badges.map((badge) => {
                         return (
                             <Badge variant="light" size="sm">{badge}</Badge>
                         )
-                    })}
+                    })} */}
                 </Group>
             </Stack>
         </Group>
@@ -35,7 +35,7 @@ export default function Profile({ user, size }) {
 export function ProfileHover({ user }) {
     return (
         <>
-            <HoverCard width={320} position="right" withArrow>
+            <HoverCard width={320} position="bottom-start" radius="md">
                 <HoverCard.Target>
                     <Link to={user.username}>
                         <Avatar src={user.profilePicture} />
@@ -56,25 +56,25 @@ export function ProfileHover({ user }) {
                     </Group>
                 </HoverCard.Dropdown>
             </HoverCard>
-            <Stack gap={5}>
-                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+            <Stack gap={4}>
+                <Text fw={600} size="md" style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
-                <Group gap={5}>
+                <Group gap={0}>
                     <Link to={user.username}>
                         <Text
                             c="gray"
-                            size="xs"
+                            size="sm"
                             style={{ lineHeight: 1 }}
                         >
                             @{user.username}
                         </Text>
                     </Link>
-                    {user.badges.map((badge) => {
+                    {/* {user.badges.map((badge) => {
                         return (
                             <Badge variant="light" size="sm">{badge}</Badge>
                         )
-                    })}
+                    })} */}
                 </Group>
             </Stack>
         </>

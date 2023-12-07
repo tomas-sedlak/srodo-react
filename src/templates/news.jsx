@@ -30,8 +30,8 @@ export default function News() {
             Novinky su <b>oneskorene o 24 hodin</b>. Ak nam pomozete vyzbierat $449 mesacne, spravy budu aktualne.
         </Alert>
         <Card radius="md" mb="md" p={0} withBorder>
-            <Text fw={700} p="sm">Novinky vo vede</Text>
-            <Divider />
+            <Text fw={700} size="lg" p="md" style={{ lineHeight: 1 }}>Novinky vo vede</Text>
+            <Divider color="#f2f2f2" />
             {scienceArticles.slice(0, 5).map((article, index) => {
                 return (
                     <>
@@ -41,14 +41,14 @@ export default function News() {
                                 <Text c="gray" size="sm">{article.source.name} &middot; {article.author}</Text>
                             </Link>
                         </Box>
-                        {index < 4 && <Divider />}
+                        {index < 4 && <Divider color="#f2f2f2" />}
                     </>
                 )
             })}
         </Card>
         <Card radius="md" mb="md" p={0} withBorder>
-            <Text fw={700} p="sm">Novinky v technologiach</Text>
-            <Divider />
+            <Text fw={700} size="lg" p="md" style={{ lineHeight: 1 }}>Novinky v technologiach</Text>
+            <Divider color="#f2f2f2" />
             {technologyArticles.slice(0, 5).map((article, index) => {
                 return (
                     <>
@@ -58,7 +58,7 @@ export default function News() {
                                 <Text c="gray" size="sm">{article.source.name} &middot; {article.author}</Text>
                             </Link>
                         </Box>
-                        {index < 4 && <Divider />}
+                        {index < 4 && <Divider color="#f2f2f2" />}
                     </>
                 )
             })}

@@ -15,16 +15,20 @@ header {
   top: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
 }
 
 main {
   background-color: #f8f8f8;
-  margin-top: 60px;
+  min-height: 100vh;
 }
 
 .sticky-navbar {
   position: sticky;
   left: 0;
   top: 76px;
+}
+
+.menu-item {
+  border-radius: var(--mantine-radius-sm);
 }

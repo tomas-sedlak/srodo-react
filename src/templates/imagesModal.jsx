@@ -25,7 +25,7 @@ export default function ImagesModal() {
             <Modal
                 opened={opened}
                 onClose={close}
-                size="lg"
+                size="xl"
                 title="Upload cover image"
                 centered
                 style={{overflowY: "hidden"}}
@@ -79,7 +79,7 @@ export default function ImagesModal() {
             </Modal>
 
             <Button onClick={open}>
-                Upload image
+                Upload cover image
             </Button>
         </>
     )

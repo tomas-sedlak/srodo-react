@@ -1,7 +1,7 @@
 export const users = {
     123: {
         username: "admin",
-        displayName: "Awesome display name 🔥",
+        displayName: "🔥 Awesome display name 🔥",
         profilePicture: "https://wallpapers-clan.com/wp-content/uploads/2022/05/meme-pfp-13.jpg",
         description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis nesciunt voluptas, at ab repudiandae aut? Vero, veritatis voluptatibus. Expedita officia ullam illo obcaecati soluta possimus, nihil eligendi sapiente odit tempora.",
         likes: 524,

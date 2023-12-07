@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import '@mantine/core/styles.css';
 import "./index.css";
+import '@mantine/tiptap/styles.css';
 import { MantineProvider } from "@mantine/core"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/root.jsx"
@@ -9,6 +10,7 @@ import Home from "./routes/home.jsx"
 import User, {loader as userLoader} from "./routes/user.jsx"
 import Tag, {loader as tagLoader} from "./routes/tag.jsx"
 import Article from "./routes/article.jsx"
+import Create from "./routes/create.jsx"
 
 // Heroku.com
 
@@ -34,9 +36,13 @@ const router = createBrowserRouter([
                 path: "tags/:tag",
                 element: <Tag />,
                 loader: tagLoader
-            }
+            },
         ]
     },
+    {
+        path: "new",
+        element: <Create />
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
