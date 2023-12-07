@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import '@mantine/core/styles.css';
 import "./index.css";
 import '@mantine/tiptap/styles.css';
-import { MantineProvider } from "@mantine/core"
+import { MantineProvider, createTheme } from "@mantine/core"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./routes/root.jsx"
 import Home from "./routes/home.jsx"
@@ -13,6 +13,13 @@ import Article from "./routes/article.jsx"
 import Create from "./routes/create.jsx"
 
 // Heroku.com
+
+const theme = createTheme({
+    colors: {
+        srobarka: ["#ffe5e8", "#ffb3bb", "#ff808e", "#ff4d61", "#ff1a34", "#e6001b", "#b30015", "#80000f", "#4d0009", "#1a0003"]
+    },
+    primaryColor: "srobarka"
+})
 
 const router = createBrowserRouter([
     {
@@ -47,7 +54,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <MantineProvider>
+    <MantineProvider theme={theme}>
         <RouterProvider router={router} />
     </MantineProvider>
   </React.StrictMode>

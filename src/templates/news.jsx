@@ -26,7 +26,7 @@ export default function News() {
 
     return (
         <>
-        <Alert mb="md" radius="md" color="yellow" variant="light" icon={<IconInfoCircle />}>
+        <Alert mb="md" radius="md" variant="light" icon={<IconInfoCircle />}>
             Novinky su <b>oneskorene o 24 hodin</b>. Ak nam pomozete vyzbierat $449 mesacne, spravy budu aktualne.
         </Alert>
         <Card radius="md" mb="md" p={0} withBorder>

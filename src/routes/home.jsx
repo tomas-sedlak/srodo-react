@@ -82,7 +82,7 @@ export default function Home() {
                                 <Button
                                     px="sm"
                                     leftSection={value.leftSection}
-                                    rightSection={value.badge && <Badge variant="light" color="green">{value.badge}</Badge>}
+                                    rightSection={value.badge && <Badge variant="light">{value.badge}</Badge>}
                                     variant="subtle"
                                     color="dark"
                                     size="md"
@@ -102,7 +102,7 @@ export default function Home() {
                                 <Button
                                     px="sm"
                                     leftSection={value.leftSection}
-                                    rightSection={value.badge && <Badge variant="light" color="green">{value.badge}</Badge>}
+                                    rightSection={value.badge && <Badge variant="light">{value.badge}</Badge>}
                                     variant="subtle"
                                     color="dark"
                                     size="md"
