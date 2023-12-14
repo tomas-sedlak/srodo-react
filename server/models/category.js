@@ -1,10 +1,11 @@
 const mongoose = require("mongoose")
 
 const categorySchema = new mongoose.Schema({
-    image: String,
+    index: Number,
     label: String,
     emoji: String,
     url: String,
+    image: String,
     description: String
 })
 

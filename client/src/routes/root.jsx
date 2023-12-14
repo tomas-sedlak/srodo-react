@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import { Outlet } from "react-router-dom";
+import Aside from "../templates/aside";
+import Navbar from "../templates/navbar";
 import { Box, Group, Button, TextInput, Text, ActionIcon, Menu, Avatar, Indicator, rem } from '@mantine/core';
 import { IconSearch, IconLogout, IconSettings, IconPlus, IconBell } from '@tabler/icons-react';
 
@@ -9,7 +11,7 @@ export default function Root() {
     
     return (
         <>
-            <header>
+            {/* <header>
                 <Group h="100%" maw={1280} m="auto" px="md" justify="space-between">
                     <Group>
                         <Text fw={700}>Srodo</Text>
@@ -24,8 +26,8 @@ export default function Root() {
                         />
                     </Group>
                     <Group gap="sm">
-                        {/* <Button>Login</Button>
-                        <Button variant="outline">Sign up</Button> */}
+                        <Button>Login</Button>
+                        <Button variant="outline">Sign up</Button>
                         <Link to="new">
                             <Button>
                                 Create post
@@ -80,12 +82,17 @@ export default function Root() {
 
                     </Group>
                 </Group>
-            </header>
+            </header> */}
 
-            <main>
-                <Box mt={60}>
+            <main className="home-wrapper">
+                <Navbar />
+
+                <Box py="md">
                     <Outlet />
+                    <Text ta="center" p="lg">Dostal si sa az na koniec stranky 🥳</Text>
                 </Box>
+
+                <Aside />
             </main>
         </>
     )
