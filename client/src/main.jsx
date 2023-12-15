@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import '@mantine/core/styles.css';
-import "./index.css";
+import "./css/index.css";
 import '@mantine/tiptap/styles.css';
 import { MantineProvider, createTheme } from "@mantine/core"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";

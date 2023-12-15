@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Card, Box, Text, Divider, TextInput, ActionIcon } from '@mantine/core';
+import { Card, Box, Text, Divider, Autocomplete, ActionIcon } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
 
@@ -26,10 +26,9 @@ export default function Aside() {
 
     return (
         <aside className="aside">
-            <TextInput
+            <Autocomplete
                 className="search"
                 size="md"
-                radius="md"
                 placeholder="Hľadať"
                 rightSection={
                     <ActionIcon color="dark" variant="transparent">

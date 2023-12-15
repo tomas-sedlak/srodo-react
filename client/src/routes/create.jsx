@@ -77,7 +77,7 @@ export default function Create() {
       });
     
     return (
-        <main>
+        // <main>
             <Box maw={800} p="md" m="auto">
                 <Card padding="xl" radius="md" mb="md" m="auto" withBorder>
                     <Group mb="md">
@@ -148,6 +148,6 @@ export default function Create() {
                     </Button>
                 </Group>
             </Box>
-        </main>
+        // </main>
     );
 }

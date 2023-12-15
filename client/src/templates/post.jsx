@@ -23,7 +23,7 @@ export default function Post({ post }) {
             <Card.Section>
                 <Link to={url}>
                     <AspectRatio ratio={10 / 4}>
-                        <Image src={post.image} />
+                        <Image src={post.image + "?w=600"} />
                     </AspectRatio>
                 </Link>
             </Card.Section>

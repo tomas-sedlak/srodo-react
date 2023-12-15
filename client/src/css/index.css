@@ -1,0 +1,121 @@
+/* ::selection {
+  background-color: rgba(34,139,230,.1);
+  color: #228be6;
+} */
+
+a {
+  text-decoration: none;
+}
+
+header {
+  z-index: 99;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background-color: #f8f8f8;
+}
+
+main {
+  min-height: 100vh;
+  max-width: 1280px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 240px 1fr 320px;
+  gap: var(--mantine-spacing-sm);
+}
+
+.navbar {
+  box-sizing: border-box;
+  position: sticky;
+  left: 0;
+  top: 0;
+  padding: var(--mantine-spacing-md) 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.search {
+  z-index: 99;
+  position: sticky;
+  top: 0;
+  padding: 8px 0;
+  background-color: #f8f8f8;
+}
+
+.header {
+  z-index: 99;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 58px;
+  margin: calc(-1 * var(--mantine-spacing-sm));
+  padding: 8px var(--mantine-spacing-sm);
+  /* background-color: rgba(248, 248, 248, 0.5);
+  backdrop-filter: blur(4px); */
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-picture {
+  position: absolute;
+  top: -64px;
+  left: 0;
+  border: 3px solid white;
+}
+
+.custom-tabs {
+  position: relative;
+  border-radius: var(--mantine-radius-sm);
+  height: 42px;
+}
+
+.custom-tabs button {
+  height: 100%;
+  font-weight: 500;
+  font-size: var(--mantine-font-size-md);
+  border: 1px solid var(--mantine-color-gray-4);
+  background-color: var(--mantine-color-white);
+}
+
+.custom-tabs button:hover {
+  background-color: var(--mantine-color-gray-0);
+}
+
+.custom-tabs button:first-of-type {
+  border-top-left-radius: var(--mantine-radius-sm);
+  border-bottom-left-radius: var(--mantine-radius-sm);
+}
+
+.custom-tabs button:last-of-type {
+  border-top-right-radius: var(--mantine-radius-sm);
+  border-bottom-right-radius: var(--mantine-radius-sm);
+}
+
+.custom-tabs button:not(:first-of-type) {
+  border-left: none;
+}
+
+.custom-tabs [data-active] {
+  border-color: var(--mantine-color-srobarka-filled);
+  background-color: var(--mantine-color-srobarka-filled);
+  color: var(--mantine-color-white);
+}
+
+.custom-tabs [data-active]:hover {
+  background-color: var(--mantine-color-srobarka-filled-hover);
+}
+
+.menu-item {
+  border-radius: var(--mantine-radius-sm);
+}

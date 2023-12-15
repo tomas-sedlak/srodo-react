@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useLoaderData } from "react-router-dom";
-import { AspectRatio, Card, Box, Avatar, Text, Group, Button } from '@mantine/core';
-import { IconCalendar, IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
+import { useLoaderData, Link } from "react-router-dom";
+import { AspectRatio, Card, Box, Avatar, Text, Group, Image, Button, ActionIcon } from '@mantine/core';
+import { IconArrowLeft, IconCalendar, IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
 import Post from "../templates/post";
 
 export default function User() {
@@ -16,11 +16,22 @@ export default function User() {
 
     return (
         <>
-            <Card padding="lg" radius="md" mb="sm" withBorder>
+            <div className="header">
+                <Group>
+                    <Link to="../">
+                        <ActionIcon variant="subtle" color="dark" radius="lg">
+                            <IconArrowLeft />
+                        </ActionIcon>
+                    </Link>
+                    <Text fw={700} size="xl" style={{ lineHeight: 1 }}>Display name</Text>
+                </Group>
+            </div>
+
+            <Card padding="lg" radius="md" mt="xl" mb="sm" withBorder>
                 <Card.Section>
-                    <AspectRatio ratio={10 / 2}>
-                        {/* <Image src="https://images.pexels.com/photos/11554408/pexels-photo-11554408.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" /> */}
-                        <Box bg="blue.1"></Box>
+                    <AspectRatio ratio={10 / 3}>
+                        <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
+                        {/* <Box bg="blue.1"></Box> */}
                     </AspectRatio>
                 </Card.Section>
 

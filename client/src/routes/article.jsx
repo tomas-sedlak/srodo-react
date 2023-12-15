@@ -27,7 +27,7 @@ export default function Article() {
     }, [])
 
     return (
-                    <Card padding="lg" radius="md" mb="md" withBorder>
+                    <Card padding="lg" radius="md" mt={8} mb="md" withBorder>
                         <Card.Section>
                             <AspectRatio ratio={10 / 4}>
                                 <Image src={post.image} />

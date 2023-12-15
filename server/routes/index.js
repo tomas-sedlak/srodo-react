@@ -6,6 +6,7 @@ var User = require("../models/user")
 
 router.get('/', function(req, res, next) {
   Post.find({})
+    .sort("createdAt")
     .then((posts) => res.send(posts))
 });
 

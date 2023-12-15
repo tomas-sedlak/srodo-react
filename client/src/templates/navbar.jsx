@@ -34,10 +34,10 @@ const menu = [
 
 export default function Navbar() {
     return (
-        <aside className="navbar">
-            <div>
+        <header className="navbar">
+            <nav>
                 {/* Srodo logo */}
-                <Text fw={800} fz="lg" mb="lg">Šrodo</Text>
+                <Text fw={700} fz="lg" ml="sm" mb="lg">Šrodo</Text>
 
                 {/* Menu items */}
                 {menu.map((item) => <MenuItem item={item} />)}
@@ -75,10 +75,10 @@ export default function Navbar() {
                 >
                     Prihlásiť sa
                 </Button> */}
-            </div>
+            </nav>
 
             <Profile user={{username: "Admin", displayName: "Name"}} />
-        </aside>
+        </header>
     )
 }
 
