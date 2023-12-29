@@ -1,18 +1,31 @@
 import React from "react";
+
+// Libraries import
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
-import '@mantine/core/styles.css';
-import "./css/index.css";
-import '@mantine/tiptap/styles.css';
-import { MantineProvider, createTheme } from "@mantine/core"
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./routes/root.jsx"
-import Home from "./routes/home.jsx"
-import User, {loader as userLoader} from "./routes/user.jsx"
-import Tag, {loader as tagLoader} from "./routes/tag.jsx"
-import Article, {loader as articleLoader} from "./routes/article.jsx"
-import Create from "./routes/create.jsx"
+import { MantineProvider, createTheme } from "@mantine/core";
+
+// Routes import
+import Root from "./routes/root.jsx";
+import Home from "./routes/home.jsx";
+import User, {loader as userLoader} from "./routes/user.jsx";
+import Subjects from "./routes/subjects.jsx";
+import News from "./routes/news.jsx";
+import Saves from "./routes/saves.jsx";
+import Article, {loader as articleLoader} from "./routes/article.jsx";
+import CreateArticle from "./routes/create-article.jsx";
+import CreateQuiz from "./routes/create-quiz.jsx";
+import CreateDiscussion from "./routes/create-discussion.jsx";
+
+// CSS imports
+import "@mantine/core/styles.css";
+import "@mantine/tiptap/styles.css";
+import "./css/index.css";
 
 // Heroku.com
+
+const queryClient = new QueryClient();
 
 const theme = createTheme({
     colors: {
@@ -28,35 +41,57 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />
+                element: <Home />,
+            },
+            {
+                path: "predmety",
+                element: <Subjects />,
+            },
+            {
+                path: "novinky",
+                element: <News />,
+            },
+            {
+                path: "ulozene",
+                element: <Saves />,
             },
             {
                 path: ":username",
                 element: <User />,
-                loader: userLoader
+                loader: userLoader,
             },
             {
                 path: ":username/:article",
                 element: <Article />,
-                loader: articleLoader
+                loader: articleLoader,
             },
-            {
-                path: "tags/:tag",
-                element: <Tag />,
-                loader: tagLoader
-            },
-        ]
+        ],
     },
     {
         path: "new",
-        element: <Create />
+        children: [
+            {
+                path: "article",
+                element: <CreateArticle />,
+            },
+            {
+                path: "quiz",
+                element: <CreateQuiz />,
+            },
+            {
+                path: "discussion",
+                element: <CreateDiscussion />,
+            }
+        ],
     }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <MantineProvider theme={theme}>
-        <RouterProvider router={router} />
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+        <MantineProvider theme={theme}>
+            <RouterProvider router={router} />
+        </MantineProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

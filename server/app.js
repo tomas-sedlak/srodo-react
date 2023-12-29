@@ -6,8 +6,10 @@ var logger = require('morgan');
 var cors = require("cors");
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var userRouter = require('./routes/user');
 var populateRouter = require('./routes/populate');
+var createRouter = require('./routes/create');
+var contentRouter = require('./routes/content');
 
 var app = express();
 
@@ -23,8 +25,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
 app.use('/populate', populateRouter);
+app.use('/create', createRouter);
+app.use('/content', contentRouter);
 
 // connect to MongoDB
 var mongoose = require("mongoose");

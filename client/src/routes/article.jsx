@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useLoaderData, Link } from "react-router-dom";
-import { Box, Card, AspectRatio, Image, Text, Group, Title, NumberFormatter, Button } from '@mantine/core';
+import { useLoaderData } from "react-router-dom";
+import { Card, AspectRatio, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Box, Tooltip } from '@mantine/core';
+import { Link } from "react-router-dom";
 import Profile from "../templates/profile";
-import News from "../templates/aside";
+import Header from "../templates/header";
+
 import moment from "moment";
 import "moment/dist/locale/sk";
 moment.locale("sk");
@@ -13,29 +15,62 @@ export default function Article() {
     const [post, setPost] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3000/post/" + article)
+        fetch("http://localhost:3000/content/article?id=" + article)
             .then(result => result.json())
-            .then(post => {
-                setPost(post)
-            })
+            .then(data => setPost(data))
 
-        fetch("http://localhost:3000/username/" + username)
+        fetch("http://localhost:3000/user?username=" + username)
             .then(result => result.json())
-            .then(user => {
-                setUser(user)
-            })
+            .then(data => setUser(data))
     }, [])
 
     return (
-                    <Card padding="lg" radius="md" mt={8} mb="md" withBorder>
-                        <Card.Section>
-                            <AspectRatio ratio={10 / 4}>
-                                <Image src={post.image} />
-                            </AspectRatio>
-                        </Card.Section>
-                        
-                        <Group mt="lg" mb="sm" gap="xs">
-                            <Profile user={user} />
+        <>
+            <Header title="Príspevok" arrowBack />
+
+            <Card className="custom-card" padding="lg" mt={8} mb="md">
+                <Card.Section>
+                    <AspectRatio ratio={10 / 4}>
+                        <Image src={post.image + "?w=600"} />
+                    </AspectRatio>
+                </Card.Section>
+
+                <Group align="flex-start" wrap="nowrap" mt="md" gap="sm">
+                    <Avatar />
+
+                    <Box w="100%">
+                        <Group gap={4} align="flex-start">
+                            <Link to="username">
+                                <Text fw={700} size="sm">
+                                    Display name
+                                </Text>
+                            </Link>
+                            <Text
+                                c="gray"
+                                size="sm"
+                            >
+                                &middot;
+                            </Text>
+                            <Text
+                                c="gray"
+                                size="sm"
+                            >
+                                Biologia
+                            </Text>
+                            <Text
+                                c="gray"
+                                size="sm"
+                            >
+                                &middot;
+                            </Text>
+                            <Tooltip label="12:20 18. Decembra 2023" openDelay={600}>
+                                <Text
+                                    c="gray"
+                                    size="sm"
+                                >
+                                    20m
+                                </Text>
+                            </Tooltip>
                         </Group>
 
                         <Title
@@ -47,47 +82,44 @@ export default function Article() {
                             {post.title}
                         </Title>
 
-                        {/* <Box mb="lg">
-                            <Tags tags={post.tags} />
-                        </Box> */}
+                        <TypographyStylesProvider p={0} m={0}>
+                            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                        </TypographyStylesProvider>
+                    </Box>
+                </Group>
 
-                        <Text c="gray" size="sm" mb="lg">
-                            {"Vytvorené " + moment(post.createdAt).fromNow()} &middot;
-                            {/* {post.createdAt != post.updatedAt && "Upravené " + moment(post.updatedAt).fromNow()} &middot; */}
-                            13 min read &middot;
-                            Biology
-                        </Text>
+                {/* <Group mt="lg" mb="sm" gap="xs">
+                    <Profile user={user} />
+                </Group> */}
 
-                        <Text mb="md">{post.content}</Text>
 
-                    </Card>
-        //         </Box>
-        //         <Box w={340}>
-        //             <Card padding="md" radius="md" mb="md" withBorder>
-        //                 <Profile user={user} size="lg" />
 
-        //                 <Text mt="md">
-        //                     {user.description ? user.description : "No user description"}
-        //                 </Text>
+                {/* <Box mb="lg">
+                    <Tags tags={post.tags} />
+                </Box> */}
 
-        //                 <Group mt="md" gap="xl">
-        //                     <Text>
-        //                         <b><NumberFormatter value={user.posts} thousandSeparator /></b> Posts
-        //                     </Text>
-        //                     <Text>
-        //                         <b><NumberFormatter value={user.likes} thousandSeparator /></b> Likes
-        //                     </Text>
-        //                 </Group>
+                {/* <Text c="gray" size="sm" mb="lg">
+                    {"Vytvorené " + moment(post.createdAt).fromNow()} &middot; */}
+                    {/* {post.createdAt != post.updatedAt && "Upravené " + moment(post.updatedAt).fromNow()} &middot; */}
+                    {/* 13 min read &middot;
+                    Biology
+                </Text>
 
-        //                 <Button mt="md">
-        //                     Follow
-        //                 </Button>
-        //             </Card>
+                <Title
+                    fw={800}
+                    fz={32}
+                    mb="sm"
+                    style={{ lineHeight: 1.2 }}
+                >
+                    {post.title}
+                </Title>
 
-        //             <News />
-        //         </Box>
-        //     </Group>
-        // </Box>
+                <TypographyStylesProvider>
+                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                </TypographyStylesProvider> */}
+
+            </Card>
+        </>
     )
 }
 

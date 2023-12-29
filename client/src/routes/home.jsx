@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Text, Box, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import Post from "../templates/post";
+import Header from "../templates/header";
 
 export default function Home() {
     const [posts, setPosts] = useState([])
@@ -8,40 +9,25 @@ export default function Home() {
     useEffect(() => {
         fetch("http://localhost:3000/")
             .then(response => response.json())
-            .then(posts => setPosts(posts))
+            .then(data => setPosts(data))
     }, [])
 
     return (
         <>
             <div className="header">
-                <Text fw={700} size="xl">Domov</Text>
-                <Tabs variant="unstyled" defaultValue="relevant">
-                    <Tabs.List className="custom-tabs">
-                        <Tabs.Tab
-                            size="md"
-                            value="relevant"
-                        >
-                            Relevantné
-                        </Tabs.Tab>
-                        <Tabs.Tab
-                        size="md"
-                            value="top"
-                        >
+                <Tabs defaultValue="top" variant="unstyled" h="100%" style={{ flex: 1 }}>
+                    <Tabs.List className="custom-tabs-home">
+                        <Tabs.Tab value="top">
                             Top
                         </Tabs.Tab>
-                        <Tabs.Tab
-                        size="md"
-                            value="latest"
-                        >
+                        <Tabs.Tab value="latest">
                             Najnovšie
                         </Tabs.Tab>
                     </Tabs.List>
                 </Tabs>
             </div>
-            
-            <Box mt="xl">
-                {posts.map((post) => <Post post={post} />)}
-            </Box>
+
+            {posts.map((post) => <Post post={post} />)}
         </>
     )
 }

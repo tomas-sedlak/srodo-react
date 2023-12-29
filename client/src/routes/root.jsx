@@ -10,7 +10,7 @@ export default function Root() {
 
             <Box>
                 <Outlet />
-                <Text ta="center" p="lg">Dostal si sa az na koniec stranky 🥳</Text>
+                <Text ta="center" py="lg">Dostal si sa az na koniec stranky 🥳</Text>
             </Box>
 
             <Aside />

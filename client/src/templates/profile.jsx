@@ -7,8 +7,8 @@ export default function Profile({ user, size }) {
             <Link to={user.username}>
                 <Avatar src={user.profilePicture} size={size} />
             </Link>
-            <Stack gap={4}>
-                <Text fw={600} size="md" style={{ lineHeight: 1 }}>
+            <Stack gap={5}>
+                <Text fw={700} size="md" style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
                 <Group gap={5}>
@@ -56,27 +56,20 @@ export function ProfileHover({ user }) {
                     </Group>
                 </HoverCard.Dropdown>
             </HoverCard>
-            <Stack gap={4}>
-                <Text fw={600} size="md" style={{ lineHeight: 1 }}>
+            <Group gap={4} align="flex-start">
+                <Text fw={700}  style={{ lineHeight: 1 }}>
                     {user.displayName}
                 </Text>
-                <Group gap={0}>
-                    <Link to={user.username}>
-                        <Text
-                            c="gray"
-                            size="sm"
-                            style={{ lineHeight: 1 }}
-                        >
-                            @{user.username}
-                        </Text>
-                    </Link>
-                    {/* {user.badges.map((badge) => {
-                        return (
-                            <Badge variant="light" size="sm">{badge}</Badge>
-                        )
-                    })} */}
-                </Group>
-            </Stack>
+                <Link to={user.username}>
+                    <Text
+                        c="gray"
+                        
+                        style={{ lineHeight: 1 }}
+                    >
+                        @{user.username}
+                    </Text>
+                </Link>
+            </Group>
         </>
     )
 }
