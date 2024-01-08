@@ -1,33 +1,57 @@
-import { useState, useEffect } from 'react';
-import { Tabs } from "@mantine/core";
+import { useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { LoadingOverlay, Text } from "@mantine/core";
 import Post from "../templates/post";
-import Header from "../templates/header";
 
 export default function Home() {
-    const [posts, setPosts] = useState([])
+    const { ref, inView } = useInView();
+
+    const fetchPosts = async ({ pageParam }) => {
+        console.log(pageParam)
+        const response = await fetch("http://localhost:3000/?page=" + pageParam);
+        return response.json();
+    }
+
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        status,
+    } = useInfiniteQuery({
+        queryKey: ["posts", "homepage"],
+        queryFn: fetchPosts,
+        initialPageParam: 1,
+        getNextPageParam: (lastPage, allPages) => {
+            const nextPage = lastPage.length ? allPages.length + 1 : undefined
+            return nextPage
+        },
+    })
 
     useEffect(() => {
-        fetch("http://localhost:3000/")
-            .then(response => response.json())
-            .then(data => setPosts(data))
-    }, [])
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, fetchNextPage, hasNextPage]);
 
-    return (
-        <>
-            <div className="header">
-                <Tabs defaultValue="top" variant="unstyled" h="100%" style={{ flex: 1 }}>
-                    <Tabs.List className="custom-tabs-home">
-                        <Tabs.Tab value="top">
-                            Top
-                        </Tabs.Tab>
-                        <Tabs.Tab value="latest">
-                            Najnovšie
-                        </Tabs.Tab>
-                    </Tabs.List>
-                </Tabs>
-            </div>
-
-            {posts.map((post) => <Post post={post} />)}
-        </>
+    return status === "pending" ? (
+        <div className="content">
+            <LoadingOverlay visible={true} />
+        </div>
+    ) : status === "error" ? (
+        <p>Nastala chyba!</p>
+    ) : (
+        <div className="content">
+            {data.pages.map((page) => (
+                page.map((post, i) => {
+                    if (page.length === i + 1) {
+                        return <Post ref={ref} post={post} />
+                    }
+                    return <Post post={post} />
+                })
+            ))}
+            {isFetchingNextPage && <Text py="lg" bg="red">Loading...</Text>}
+        </div>
     )
 }

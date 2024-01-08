@@ -178,8 +178,8 @@ export default function CreateArticle() {
                                 <RichTextEditor.OrderedList />
                                 <RichTextEditor.Subscript />
                                 <RichTextEditor.Superscript />
-                                <button onClick={imageModalHandlers.open}></button>
-                                <button onClick={addVideo}></button>
+                                <button onClick={imageModalHandlers.open}>Obrázok</button>
+                                <button onClick={addVideo}>Video</button>
                             </RichTextEditor.ControlsGroup>
 
                             <RichTextEditor.ControlsGroup>

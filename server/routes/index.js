@@ -4,8 +4,13 @@ var Article = require("../models/article")
 var Category = require("../models/category")
 
 router.get('/', function(req, res, next) {
-  Article.find({})
+  const page = req.query.page || 1
+  const perPage = 2
+
+  Article.find()
     .sort("createdAt")
+    .limit(perPage)
+    .skip(perPage * (page - 1))
     .then((posts) => res.send(posts))
 });
 

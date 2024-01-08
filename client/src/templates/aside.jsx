@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Card, Box, Text, Divider, Autocomplete, ActionIcon, Group, NumberFormatter, Button, Avatar, AspectRatio, Image } from '@mantine/core';
+import { Card, Box, Text, Divider, Autocomplete, Stack, ScrollArea, Group, NumberFormatter, Button, Avatar, AspectRatio, Image } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
 import Profile from "../templates/profile";
@@ -32,7 +32,7 @@ export default function Aside() {
 
     return (
         <aside className="aside">
-            <Autocomplete
+            {/* <Autocomplete
                 className="search"
                 size="md"
                 placeholder="Hľadať"
@@ -41,9 +41,9 @@ export default function Aside() {
                         <IconSearch />
                     </ActionIcon>
                 }
-            />
+            /> */}
 
-            <Card className="custom-card" mb="md">
+            {/* <Card className="custom-card" mb="md">
                 <Profile user={user} size="lg" />
                 
                 {user.description &&
@@ -64,43 +64,41 @@ export default function Aside() {
                 <Button mt="md" size="md">
                     Sledovať
                 </Button>
-            </Card>
+            </Card> */}
 
-            <Card className="custom-card" mb="md" p={0}>
-                <Text fw={700} size="lg" p="md" style={{ lineHeight: 1 }}>Novinky vo vede</Text>
-                <Divider color="#f2f2f2" />
-                {scienceArticles.slice(0, 5).map((article, index) => {
-                    return (
-                        <>
-                            <Box p="md">
-                                <Link to={article.url} target="_blank">
-                                    <Text className="link" mb="xs" style={{ lineHeight: 1.2 }}>{article.title}</Text>
-                                    <Text c="gray" size="sm">{article.source.name} &middot; {article.author}</Text>
-                                </Link>
-                            </Box>
-                            {index < 4 && <Divider color="#f2f2f2" />}
-                        </>
-                    )
-                })}
-            </Card>
+            <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
+                <Stack>
+                <Card padding="lg" bg="gray.1" radius="lg">
+                    <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>Novinky vo vede</Text>
+                    
+                    <Stack>
+                    {scienceArticles.slice(0, 5).map((article) => {
+                        return (
+                            <Link to={article.url} target="_blank">
+                                <Text className="link" lineClamp={2} mb={4} style={{ lineHeight: 1.4 }}>{article.title}</Text>
+                                <Text c="gray" size="sm">{article.author}</Text>
+                            </Link>
+                        )
+                    })}
+                    </Stack>
+                </Card>
 
-            <Card className="custom-card" mb="md" p={0}>
-                <Text fw={700} size="lg" p="md" style={{ lineHeight: 1 }}>Novinky v technologiach</Text>
-                <Divider color="#f2f2f2" />
-                {technologyArticles.slice(0, 5).map((article, index) => {
-                    return (
-                        <>
-                            <Box p="md">
-                                <Link to={article.url} target="_blank">
-                                    <Text mb="xs" c="dark" style={{ lineHeight: 1.2 }}>{article.title}</Text>
-                                    <Text c="gray" size="sm">{article.source.name} &middot; {article.author}</Text>
-                                </Link>
-                            </Box>
-                            {index < 4 && <Divider color="#f2f2f2" />}
-                        </>
-                    )
-                })}
-            </Card>
+                <Card padding="lg" bg="gray.1" radius="lg">
+                    <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>Novinky v technologiach</Text>
+                    
+                    <Stack>
+                    {technologyArticles.slice(0, 5).map((article) => {
+                        return (
+                            <Link to={article.url} target="_blank">
+                                <Text className="link" lineClamp={2} mb={4} style={{ lineHeight: 1.4 }}>{article.title}</Text>
+                                <Text c="gray" size="sm">{article.author}</Text>
+                            </Link>
+                        )
+                    })}
+                    </Stack>
+                </Card>
+                </Stack>
+            </ScrollArea>
         </aside>
     )
 }

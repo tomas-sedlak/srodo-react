@@ -1,5 +1,6 @@
-import { Badge, Button, Group, Text, Menu } from '@mantine/core';
-import { IconPlus, IconHome, IconNews, IconBookmark, IconRobot, IconSchool, IconChevronRight, IconPencilPlus, IconMessageCircleQuestion, IconCopyCheck } from '@tabler/icons-react';
+import { useDisclosure } from '@mantine/hooks';
+import { Badge, Button, Collapse, Text, ScrollArea } from '@mantine/core';
+import { IconPlus, IconHome, IconNews, IconBookmark, IconRobot, IconChevronUp, IconChevronDown, IconPencilPlus, IconMessageCircleQuestion, IconCopyCheck } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import Profile from "../templates/profile";
 
@@ -7,43 +8,125 @@ const menu = [
     {
         label: "Domov",
         link: "/",
-        emoji: <IconHome stroke={1.75} />
+        leftSection: <IconHome stroke={1.25} />
     },
     {
         label: "Šrodo AI",
         link: "/ai",
-        emoji: <IconRobot stroke={1.75} />,
+        leftSection: <IconRobot stroke={1.25} />,
         badge: "Nové!"
-    },
-    {
-        label: "Predmety",
-        link: "/predmety",
-        emoji: <IconSchool stroke={1.75} />
     },
     {
         label: "Novinky",
         link: "/novinky",
-        emoji: <IconNews stroke={1.75} />
+        leftSection: <IconNews stroke={1.25} />
     },
     {
         label: "Uložené",
         link: "/ulozene",
-        emoji: <IconBookmark stroke={1.75} />
+        leftSection: <IconBookmark stroke={1.25} />
+    },
+]
+
+const categories = [
+    {
+        label: "Matematika",
+        link: "/",
+        leftSection: "📈"
+    },
+    {
+        label: "Informatika",
+        link: "/",
+        leftSection: "💻"
+    },
+    {
+        label: "Jazyky",
+        link: "/",
+        leftSection: "💬"
+    },
+    {
+        label: "Biológia",
+        link: "/",
+        leftSection: "🧬"
+    },
+    {
+        label: "Chémia",
+        link: "/",
+        leftSection: "🧪"
+    },
+    {
+        label: "Fyzika",
+        link: "/",
+        leftSection: "⚡"
+    },
+    {
+        label: "Geografia",
+        link: "/",
+        leftSection: "🌍"
+    },
+    {
+        label: "Umenie",
+        link: "/",
+        leftSection: "🎨"
+    },
+    {
+        label: "Šport",
+        link: "/",
+        leftSection: "💪"
     },
 ]
 
 export default function Navbar() {
+    const [opened, { toggle }] = useDisclosure(true);
+
     return (
-        <header className="navbar">
-            <nav>
-                {/* Srodo logo */}
-                <Text fw={700} size="xl" ml="sm" mb="lg" style={{ lineHeight: 1 }}>Šrodo</Text>
+        <nav className="navbar">
+            {/* Srodo logo */}
+            {/* <Text fw={700} size="xl" ml="sm" mb="lg" style={{ lineHeight: 1 }}>Šrodo</Text> */}
+            
+            <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
 
                 {/* Menu items */}
                 {menu.map((item) => <MenuItem item={item} />)}
 
+                <Text fw={700} size="lg" px="md" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
+
+                {categories.slice(0, 6).map((item) => <MenuItem item={item} />)}
+
+                
+                <Collapse in={opened}>
+                    {categories.slice(6).map((item) => <MenuItem item={item} />)}
+                </Collapse>
+
+                {/* <Button
+                onClick={toggle}
+                className="menu-button"
+                fw={400}
+                mt="sm"
+                size="sm"
+                radius="lg"
+                variant="subtle"
+                color="dark"
+                justify="flex-start"
+            >
+                Zobraziť viac
+            </Button> */}
+
+            <Button
+            onClick={toggle}
+                className="menu-button"
+                fw={400}
+                size="md"
+                leftSection={opened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
+                variant="subtle"
+                color="dark"
+                justify="flex-start"
+                fullWidth
+            >
+                {opened ? "Zobraziť menej" : "Zobraziť viac"}
+            </Button>
                 {/* Navbar buttons */}
-                <Menu width={240}>
+                {/* <Menu width={240}>
                     <Menu.Target>
                         <Button
                             mt="lg"
@@ -76,7 +159,7 @@ export default function Navbar() {
                             </Menu.Item>
                         </Link>
                     </Menu.Dropdown>
-                </Menu>
+                </Menu> */}
                 
                 {/* <Button
                     mt="lg"
@@ -97,9 +180,9 @@ export default function Navbar() {
                 >
                     Prihlásiť sa
                 </Button> */}
-            </nav>
+            </ScrollArea>
             
-            <Link to="nastavenia">
+            {/* <Link to="nastavenia">
                 <Button
                     px="sm"
                     variant="subtle"
@@ -112,8 +195,8 @@ export default function Navbar() {
                         <IconChevronRight stroke={1.75} />
                     </Group>
                 </Button>
-            </Link>
-        </header>
+            </Link> */}
+        </nav>
     )
 }
 
@@ -121,12 +204,13 @@ function MenuItem({ item }) {
     return (
         <Link key={item.label} to={item.link}>
             <Button
-                px="sm"
-                leftSection={item.emoji}
+                className="menu-button"
+                fw={400}
+                size="md"
+                leftSection={item.leftSection}
                 rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
                 variant="subtle"
                 color="dark"
-                size="md"
                 justify="flex-start"
                 fullWidth
             >

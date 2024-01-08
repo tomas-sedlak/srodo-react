@@ -24,12 +24,14 @@
     "@tiptap/pm": "^2.1.13",
     "@tiptap/react": "^2.1.13",
     "@tiptap/starter-kit": "^2.1.13",
+    "axios": "^1.6.4",
     "cors": "^2.8.5",
     "moment": "^2.29.4",
     "newsapi": "^2.4.1",
     "pexels": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-intersection-observer": "^9.5.3",
     "react-router-dom": "^6.20.1"
   },
   "devDependencies": {

@@ -32,6 +32,7 @@ const theme = createTheme({
         srobarka: ["#ffe5e8", "#ffb3bb", "#ff808e", "#ff4d61", "#ff1a34", "#e6001b", "#b30015", "#80000f", "#4d0009", "#1a0003"]
     },
     primaryColor: "srobarka",
+    defaultRadius: "md",
 })
 
 const router = createBrowserRouter([
