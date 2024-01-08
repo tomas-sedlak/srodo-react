@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { LoadingOverlay, Text } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import Post from "../templates/post";
 
 export default function Home() {
     const { ref, inView } = useInView();
 
     const fetchPosts = async ({ pageParam }) => {
-        console.log(pageParam)
         const response = await fetch("http://localhost:3000/?page=" + pageParam);
         return response.json();
     }
@@ -33,14 +32,18 @@ export default function Home() {
         if (inView && hasNextPage) {
             fetchNextPage();
         }
-    }, [inView, fetchNextPage, hasNextPage]);
+    }, [inView, fetchNextPage, hasNextPage])
 
     return status === "pending" ? (
-        <div className="content">
-            <LoadingOverlay visible={true} />
+        <div className="content loader-center">
+            <Loader />
         </div>
     ) : status === "error" ? (
-        <p>Nastala chyba!</p>
+        <div className="content loader-center">
+            {/* TODO: make custom error messages ;) */}
+            <p>Nastala chyba!</p>
+            {/* TODO: make custom error messages ;) */}
+        </div>
     ) : (
         <div className="content">
             {data.pages.map((page) => (
@@ -51,7 +54,8 @@ export default function Home() {
                     return <Post post={post} />
                 })
             ))}
-            {isFetchingNextPage && <Text py="lg" bg="red">Loading...</Text>}
+
+            {isFetchingNextPage && <div className="loader-center"><Loader /></div>}
         </div>
     )
 }

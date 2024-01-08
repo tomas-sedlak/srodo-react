@@ -3,7 +3,7 @@ var router = express.Router();
 var Article = require("../models/article")
 var Category = require("../models/category")
 
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
   const page = req.query.page || 1
   const perPage = 2
 
@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
     .then((posts) => res.send(posts))
 });
 
-router.get("/categories", function(req, res) {
+router.get("/categories", function (req, res) {
   Category.find({})
     .sort("index")
     .then((categories) => res.send(categories))

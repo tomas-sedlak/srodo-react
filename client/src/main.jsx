@@ -1,8 +1,8 @@
 import React from "react";
+import ReactDOM from "react-dom/client";
 
 // Libraries import
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 
@@ -10,7 +10,6 @@ import { MantineProvider, createTheme } from "@mantine/core";
 import Root from "./routes/root.jsx";
 import Home from "./routes/home.jsx";
 import User, {loader as userLoader} from "./routes/user.jsx";
-import Subjects from "./routes/subjects.jsx";
 import News from "./routes/news.jsx";
 import Saves from "./routes/saves.jsx";
 import Article, {loader as articleLoader} from "./routes/article.jsx";
@@ -45,10 +44,6 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "predmety",
-                element: <Subjects />,
-            },
-            {
                 path: "novinky",
                 element: <News />,
             },
@@ -69,18 +64,18 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: "new",
+        path: "novy",
         children: [
             {
-                path: "article",
+                path: "clanok",
                 element: <CreateArticle />,
             },
             {
-                path: "quiz",
+                path: "kviz",
                 element: <CreateQuiz />,
             },
             {
-                path: "discussion",
+                path: "diskusia",
                 element: <CreateDiscussion />,
             }
         ],

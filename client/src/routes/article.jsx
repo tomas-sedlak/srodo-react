@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from "react-router-dom";
-import { Card, AspectRatio, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Box, Tooltip } from '@mantine/core';
+import { AspectRatio, Image, Text, Group, Title, TypographyStylesProvider, Avatar } from '@mantine/core';
 import { Link } from "react-router-dom";
-import Profile from "../templates/profile";
-import Header from "../templates/header";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
@@ -25,101 +23,41 @@ export default function Article() {
     }, [])
 
     return (
-        <>
-            <Header title="Príspevok" arrowBack />
+        <div className="content">
+            <div className="post-card">
+                <AspectRatio ratio={10 / 4}>
+                    <Image radius="lg" src={post.image + "?w=600"} />
+                </AspectRatio>
 
-            <Card className="custom-card" padding="lg" mt={8} mb="md">
-                <Card.Section>
-                    <AspectRatio ratio={10 / 4}>
-                        <Image src={post.image + "?w=600"} />
-                    </AspectRatio>
-                </Card.Section>
-
-                <Group align="flex-start" wrap="nowrap" mt="md" gap="sm">
+                <Group gap={4} align="center" mt="sm">
                     <Avatar />
 
-                    <Box w="100%">
-                        <Group gap={4} align="flex-start">
-                            <Link to="username">
-                                <Text fw={700} size="sm">
-                                    Display name
-                                </Text>
-                            </Link>
-                            <Text
-                                c="gray"
-                                size="sm"
-                            >
-                                &middot;
-                            </Text>
-                            <Text
-                                c="gray"
-                                size="sm"
-                            >
-                                Biologia
-                            </Text>
-                            <Text
-                                c="gray"
-                                size="sm"
-                            >
-                                &middot;
-                            </Text>
-                            <Tooltip label="12:20 18. Decembra 2023" openDelay={600}>
-                                <Text
-                                    c="gray"
-                                    size="sm"
-                                >
-                                    20m
-                                </Text>
-                            </Tooltip>
-                        </Group>
-
-                        <Title
-                            fw={800}
-                            fz={32}
-                            mb="sm"
-                            style={{ lineHeight: 1.2 }}
-                        >
-                            {post.title}
-                        </Title>
-
-                        <TypographyStylesProvider p={0} m={0}>
-                            <div dangerouslySetInnerHTML={{ __html: post.content }} />
-                        </TypographyStylesProvider>
-                    </Box>
+                    <Link to="username">
+                        <Text fw={600} c="gray" size="sm">
+                            Display name
+                        </Text>
+                    </Link>
+                    <Text c="gray" size="sm">
+                        &middot; Článok &middot; {moment(post.createdAt).fromNow()}
+                    </Text>
                 </Group>
-
-                {/* <Group mt="lg" mb="sm" gap="xs">
-                    <Profile user={user} />
-                </Group> */}
-
-
-
-                {/* <Box mb="lg">
-                    <Tags tags={post.tags} />
-                </Box> */}
-
-                {/* <Text c="gray" size="sm" mb="lg">
-                    {"Vytvorené " + moment(post.createdAt).fromNow()} &middot; */}
-                    {/* {post.createdAt != post.updatedAt && "Upravené " + moment(post.updatedAt).fromNow()} &middot; */}
-                    {/* 13 min read &middot;
-                    Biology
-                </Text>
 
                 <Title
                     fw={800}
                     fz={32}
-                    mb="sm"
+                    mt="sm"
                     style={{ lineHeight: 1.2 }}
                 >
                     {post.title}
                 </Title>
 
-                <TypographyStylesProvider>
+                <TypographyStylesProvider p={0} mt="sm">
                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
-                </TypographyStylesProvider> */}
+                </TypographyStylesProvider>
+            </div>
 
-            </Card>
-        </>
+            {/* TODO: add comment section */}
+        </div>
     )
 }
 
