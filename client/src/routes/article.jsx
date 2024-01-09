@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from "react-router-dom";
-import { AspectRatio, Image, Text, Group, Title, TypographyStylesProvider, Avatar } from '@mantine/core';
+import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar } from '@mantine/core';
 import { Link } from "react-router-dom";
 
 import moment from "moment";
@@ -24,7 +24,7 @@ export default function Article() {
 
     return (
         <div className="content">
-            <div className="post-card">
+            <Box p="sm">
                 <AspectRatio ratio={10 / 4}>
                     <Image radius="lg" src={post.image + "?w=600"} />
                 </AspectRatio>
@@ -54,7 +54,7 @@ export default function Article() {
                 <TypographyStylesProvider p={0} mt="sm">
                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
                 </TypographyStylesProvider>
-            </div>
+            </Box>
 
             {/* TODO: add comment section */}
         </div>

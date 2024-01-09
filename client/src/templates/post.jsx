@@ -78,8 +78,6 @@ const Post = forwardRef(({ post }, ref) => {
                     </div>
                 </Group>
             </div>
-
-            <Divider color="gray.2" />
         </Link>
     )
 

@@ -5,7 +5,7 @@ var Category = require("../models/category")
 
 router.get('/', function (req, res, next) {
   const page = req.query.page || 1
-  const perPage = 2
+  const perPage = 5
 
   Article.find()
     .sort("createdAt")

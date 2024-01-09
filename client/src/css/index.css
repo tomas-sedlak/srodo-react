@@ -100,14 +100,19 @@ main {
 
 .profile-picture {
   position: absolute;
-  top: -64px;
-  left: 0;
+  top: -50px;
+  left: var(--mantine-spacing-md);
   border: 4px solid var(--mantine-color-white);
 }
 
 /* All custom cards START */
+.card {
+  border-bottom: 1px solid var(--mantine-color-gray-2);
+}
+
 .post-card {
   padding: var(--mantine-spacing-sm);
+  border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
 .post-card:hover {
@@ -143,7 +148,7 @@ main {
   font-size: var(--mantine-font-size-md);
   border: 1px solid var(--mantine-color-gray-4);
   background-color: var(--mantine-color-white);
-  border-radius: var(--mantine-radius-sm);
+  border-radius: var(--mantine-radius-md);
 }
 
 .custom-tabs button:hover {
@@ -211,7 +216,6 @@ main {
     grid-template-columns: 1fr 340px;
   }
 }
-
 
 /* Tablets and mobiles */
 @media screen and (max-width: 768px) {
