@@ -131,10 +131,21 @@ main {
 
 /* All custom cards END */
 
-.title-input input {
+/* OLD article title css */
+
+/* .title-input  {
   font-size: 32px;
   font-weight: 700;
+} */
+
+/* NEW custom textarea css START*/
+
+.mantine-Textarea-input {
+  font-size: 32px;
+  font-weight: 700; 
 }
+
+/* NEW custom textarea css END */
 
 /* Dont know if we will use this if NOT, DONT FORGET TO DELETE! */
 .custom-tabs {

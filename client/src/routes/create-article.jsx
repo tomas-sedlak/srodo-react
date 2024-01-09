@@ -1,6 +1,6 @@
 // import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Card, TextInput, Button, Select, Badge, AspectRatio, Image as MantineImage } from '@mantine/core';
+import { Box, Group, Card, TextInput, Button, Select, Badge, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "../templates/imagesModal";
 import { RichTextEditor, Link } from '@mantine/tiptap';
@@ -64,6 +64,7 @@ const categories = [
     },
 ]
 
+
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
 
@@ -121,6 +122,15 @@ export default function CreateArticle() {
         }).then(console.log("success"))
     }
 
+    // NEW stuff (Character count)
+    let [count, getCount] = useState(0);
+
+    const keyhandler = e => {
+        getCount(e.target.value.length);
+      };
+
+    const MaxCharacterLenght = 64
+
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
@@ -142,15 +152,34 @@ export default function CreateArticle() {
                         </AspectRatio>
                     </Card.Section>
 
-
-                    <TextInput
+                    {/* OLD title input */}
+                    {/* <TextInput
                         mt="md"
                         variant="unstyled"
                         placeholder="Názov článku"
                         className="title-input"
                         value={title}
                         onChange={event => { setTitle(event.currentTarget.value) }}
-                    />
+                    /> */}
+
+                    {/* NEW title input */}
+                    <Textarea 
+                        maxRows={1} 
+                        autosize 
+                        mt="md"
+                        w="100%"
+                        variant="unstyled"
+                        placeholder="Názov článku"
+                        className="title-input"
+                        value={title}
+                        onChange={event => { setTitle(event.currentTarget.value) }}
+                        maxLength={MaxCharacterLenght}  
+                        onKeyUp={e => keyhandler(e)} >
+                        
+                    </Textarea>
+                    <Text c="dimmed" w="100%" ta="end">{count}/{MaxCharacterLenght}</Text>
+                   
+
 
                     <Select
                         placeholder="Vybrať predmet"

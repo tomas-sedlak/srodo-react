@@ -1,12 +1,12 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack } from '@mantine/core';
-import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout } from '@tabler/icons-react';
+import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconX } from '@tabler/icons-react';
 
 export default function Header() {
     return (
         <header>
             <div className="header-inner">
                 <Text fw={700} size="lg" p="sm">Šrodo</Text>
-                <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />} className="search" />
+                <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />}  className="search" />
 
                 {/* NEEDS SOME TWEAKS: add user information and login */}
 
