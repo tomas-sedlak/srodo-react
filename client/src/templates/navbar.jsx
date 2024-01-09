@@ -98,12 +98,12 @@ export default function Navbar() {
 
                 <Button
                     onClick={toggle}
-                    className="menu-button"
+                    className="dark-hover"
                     fw={400}
                     size="md"
                     leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
                     variant="subtle"
-                    color="dark"
+                    color="black"
                     justify="flex-start"
                     fullWidth
                 >
@@ -118,7 +118,7 @@ function MenuItem({ item }) {
     return (
         <Link key={item.label} to={item.link}>
             <Button
-                className="menu-item"
+                className="dark-hover"
                 fw={400}
                 size="md"
                 leftSection={item.leftSection}

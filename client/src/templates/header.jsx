@@ -1,81 +1,74 @@
-
-import { Text, Autocomplete, Group, Avatar, Menu, Flex,} from '@mantine/core';
-import { IconSearch, IconPencilPlus , IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout} from '@tabler/icons-react';
-
-function clearThis(target) {
-    target.value= "";
-}
+import { Text, Autocomplete, Group, Avatar, Menu, Stack } from '@mantine/core';
+import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout } from '@tabler/icons-react';
 
 export default function Header() {
-
-
     return (
         <header>
             <div className="header-inner">
                 <Text fw={700} size="lg" p="sm">Šrodo</Text>
                 <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />} className="search" />
-                
-         
-            
+
                 {/* NEEDS SOME TWEAKS: add user information and login */}
 
                 <Group justify="flex-end">
-                    <IconBell></IconBell>
-                    <Menu width={240}>
+                    <IconBell className="pointer" stroke={1.25} />
+
+                    <Menu position="bottom-end" width={180}>
                         <Menu.Target>
-                            <IconPlus className='MenuTrigger'></IconPlus>
+                            <IconPlus className="pointer" stroke={1.25} />
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Item>
                                 <Group>
-                                    <IconPencilPlus></IconPencilPlus>
+                                    <IconPencilPlus stroke={1.25} />
                                     <Text>Článok</Text>
-                                </Group>                                
+                                </Group>
                             </Menu.Item>
                             <Menu.Item>
                                 <Group>
-                                    <IconMessageCircleQuestion></IconMessageCircleQuestion>
+                                    <IconMessageCircleQuestion stroke={1.25} />
                                     <Text>Diskusia</Text>
                                 </Group>
                             </Menu.Item>
                             <Menu.Item>
                                 <Group>
-                                    <IconCopyCheck></IconCopyCheck>
+                                    <IconCopyCheck stroke={1.25} />
                                     <Text>Kvíz</Text>
                                 </Group>
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
-                    
-                    <Menu width={240}>
+
+                    <Menu position="bottom-end" width={240}>
                         <Menu.Target>
-                            <Avatar className='MenuTrigger'></Avatar>
+                            <Avatar className="pointer" />
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Item>
                                 <Group>
-                                    <Avatar size="sm"></Avatar>
-                                    <Flex gap={0} direction="column">
-                                        <Text size="xs">DisplayName</Text>
-                                        <Text size="xs">UserName</Text>
-                                    </Flex>
+                                    <Avatar />
+                                    <Stack gap={4}>
+                                        <Text fw={700} size="sm" style={{ lineHeight: 1 }}>DisplayName</Text>
+                                        <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@username</Text>
+                                    </Stack>
                                 </Group>
                             </Menu.Item>
                             <Menu.Item>
                                 <Group>
-                                    <IconSettings></IconSettings>
+                                    <IconSettings stroke={1.25} />
                                     <Text>Nastavenia</Text>
-                                </Group>                                
+                                </Group>
                             </Menu.Item>
                             <Menu.Item>
                                 <Group>
-                                    <IconChartBar></IconChartBar>
+                                    <IconChartBar stroke={1.25} />
                                     <Text>Štatistiky</Text>
-                                </Group>                                
+                                </Group>
                             </Menu.Item>
+                            <Menu.Divider />
                             <Menu.Item>
                                 <Group>
-                                    <IconLogout></IconLogout>
+                                    <IconLogout stroke={1.25} />
                                     <Text>Odhlásiť sa</Text>
                                 </Group>
                             </Menu.Item>

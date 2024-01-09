@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { useState } from 'react';
-import { AspectRatio, Group, Image, Text, Avatar, Divider } from '@mantine/core';
+import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 
@@ -17,7 +17,7 @@ const Post = forwardRef(({ post }, ref) => {
 
     const postContent = (
         <Link to={url}>
-            <div key={post._id} className="post-card">
+            <Box key={post._id} className="border-bottom" p="sm">
                 <AspectRatio ratio={650 / 273}>
                     <Image radius="lg" src={post.image} />
                 </AspectRatio>
@@ -77,7 +77,7 @@ const Post = forwardRef(({ post }, ref) => {
                         </Group>
                     </div>
                 </Group>
-            </div>
+            </Box>
         </Link>
     )
 

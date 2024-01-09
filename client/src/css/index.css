@@ -91,10 +91,6 @@ main {
   background-color: var(--mantine-color-gray-2);
 }
 
-.MenuTrigger:hover {
-  cursor: pointer;
-}
-
 .loader-center {
   padding: var(--mantine-spacing-lg) 0;
   display: flex;
@@ -109,19 +105,23 @@ main {
   border: 4px solid var(--mantine-color-white);
 }
 
-/* All custom cards START */
-.card {
+.pointer {
+  cursor: pointer;
+}
+
+.border-bottom {
   border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
-.post-card {
-  padding: var(--mantine-spacing-sm);
-  border-bottom: 1px solid var(--mantine-color-gray-2);
-}
-
-.post-card:hover {
+.light-hover:hover {
   background-color: var(--mantine-color-gray-0);
 }
+
+.dark-hover:hover {
+  background-color: var(--mantine-color-gray-1);
+}
+
+/* All custom cards START */
 
 .news-card {
   border-radius: var(--mantine-radius-lg);
@@ -130,10 +130,6 @@ main {
 }
 
 /* All custom cards END */
-
-.menu-item:hover {
-  background-color: var(--mantine-color-gray-1);
-}
 
 .title-input input {
   font-size: 32px;
