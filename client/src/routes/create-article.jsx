@@ -85,6 +85,7 @@ export default function CreateArticle() {
     });
 
     const [title, setTitle] = useState("");
+    const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
@@ -122,12 +123,15 @@ export default function CreateArticle() {
         }).then(console.log("success"))
     }
 
-    // NEW stuff (Character count)
-    let [count, getCount] = useState(0);
-
     const keyhandler = e => {
-        getCount(e.target.value.length);
+        setCount(e.target.value.length);
+        // blocking ENTER (it did NOT work lol)
+        // if(e. === 'Enter') {
+        //      e.preventDefault();
+        // }
       };
+
+    
 
     const MaxCharacterLenght = 64
 
@@ -163,8 +167,7 @@ export default function CreateArticle() {
                     /> */}
 
                     {/* NEW title input */}
-                    <Textarea 
-                        maxRows={1} 
+                    <Textarea
                         autosize 
                         mt="md"
                         w="100%"
@@ -172,11 +175,19 @@ export default function CreateArticle() {
                         placeholder="Názov článku"
                         className="title-input"
                         value={title}
-                        onChange={event => { setTitle(event.currentTarget.value) }}
-                        maxLength={MaxCharacterLenght}  
-                        onKeyUp={e => keyhandler(e)} >
+                        maxLength={MaxCharacterLenght} 
+                        onInput={e => keyhandler(e)} 
+                        onChange={event => {
+                            setTitle(event.target.value)
+                            
+                        }}
                         
-                    </Textarea>
+                        onKeyDown={function(e){  // This is should be in the KeyHandler but I didn't find a way to put it there xd
+                            if(e.key === "Enter") {
+                                e.preventDefault();
+                            }
+                        }}
+                    />
                     <Text c="dimmed" w="100%" ta="end">{count}/{MaxCharacterLenght}</Text>
                    
 
