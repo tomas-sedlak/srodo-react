@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var Article = require("../models/article")
+var Post = require("../models/post")
 
-router.get("/article", (req, res) => {
-    Article.findById(req.query.id)
+router.get("/post", (req, res) => {
+    Post.findById(req.query.id)
         .then((article) => res.send(article))
 });
 

@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
@@ -12,25 +12,32 @@ moment.locale("sk");
 const Post = forwardRef(({ post }, ref) => {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
+    // const [user, setUser] = useState(null);
     // const url = "/" + user.username + "/" + post._id;
     const url = "/user/" + post._id;
+
+    // useEffect(() => {
+    //     fetch("http://localhost:3000/user?id=" + post.authorId)
+    //         .then(response => response.json())
+    //         .then(user => setUser(user))
+    // }, [])
 
     const postContent = (
         <Link to={url}>
             <Box key={post._id} className="border-bottom" p="sm">
                 <AspectRatio ratio={650 / 273}>
-                    <Image radius="lg" src={post.image} />
+                    <Image radius="lg" src={post.coverImage} />
                 </AspectRatio>
 
                 {/* Post information */}
                 <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
-                    <Avatar />
+                    <Avatar src={post.author.profilePicture} />
 
                     <div>
                         <Group gap={4} align="center">
                             <Link to="username">
                                 <Text fw={600} c="gray" size="sm">
-                                    Display name
+                                    {post.author.displayName}
                                 </Text>
                             </Link>
                             <Text c="gray" size="sm">
@@ -56,13 +63,13 @@ const Post = forwardRef(({ post }, ref) => {
                                     className={`icon-wrapper ${liked ? "like-selected" : "like"}`}
                                     onClick={(event) => { event.preventDefault(); setLiked(!liked) }}>
                                         {liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                        <span>{liked ? 500 + 1 : 500}</span>
+                                        <span>{liked ? post.likes.length + 1 : post.likes.length}</span>
                                 </div>
 
                                 {/* Comments button */}
                                 <div className="icon-wrapper">
                                     <IconMessageCircle stroke={1.25} />
-                                    <span>14</span>
+                                    <span>{post.comments.length}</span>
                                 </div>
 
                                 {/* Save button */}
