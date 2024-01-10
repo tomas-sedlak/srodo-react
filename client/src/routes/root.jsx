@@ -7,8 +7,11 @@ export default function Root() {
     return (
         <main className="home-wrapper">
             <Header />
+            
             <Navbar />
-            <Outlet />
+            <div className="content">
+                <Outlet />
+            </div>
             <Aside />
         </main>
     )

@@ -23,7 +23,7 @@ export default function Article() {
     }, [])
 
     return (
-        <div className="content">
+        <>
             <Box p="sm">
                 <AspectRatio ratio={10 / 4}>
                     <Image radius="lg" src={post.image + "?w=600"} />
@@ -57,7 +57,7 @@ export default function Article() {
             </Box>
 
             {/* TODO: add comment section */}
-        </div>
+        </>
     )
 }
 

@@ -1,12 +1,13 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack } from '@mantine/core';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconX } from '@tabler/icons-react';
+import { Link } from "react-router-dom";
 
 export default function Header() {
     return (
         <header>
             <div className="header-inner">
                 <Text fw={700} size="lg" p="sm">Šrodo</Text>
-                <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />}  className="search" />
+                <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />} className="search" />
 
                 {/* NEEDS SOME TWEAKS: add user information and login */}
 
@@ -19,22 +20,28 @@ export default function Header() {
                         </Menu.Target>
                         <Menu.Dropdown>
                             <Menu.Item>
-                                <Group>
-                                    <IconPencilPlus stroke={1.25} />
-                                    <Text>Článok</Text>
-                                </Group>
+                                <Link to="/novy/clanok">
+                                    <Group>
+                                        <IconPencilPlus stroke={1.25} />
+                                        <Text>Článok</Text>
+                                    </Group>
+                                </Link>
                             </Menu.Item>
                             <Menu.Item>
-                                <Group>
-                                    <IconMessageCircleQuestion stroke={1.25} />
-                                    <Text>Diskusia</Text>
-                                </Group>
+                                <Link to="/novy/diskusia">
+                                    <Group>
+                                        <IconMessageCircleQuestion stroke={1.25} />
+                                        <Text>Diskusia</Text>
+                                    </Group>
+                                </Link>
                             </Menu.Item>
                             <Menu.Item>
-                                <Group>
-                                    <IconCopyCheck stroke={1.25} />
-                                    <Text>Kvíz</Text>
-                                </Group>
+                                <Link to="/novy/kviz">
+                                    <Group>
+                                        <IconCopyCheck stroke={1.25} />
+                                        <Text>Kvíz</Text>
+                                    </Group>
+                                </Link>
                             </Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
@@ -65,7 +72,6 @@ export default function Header() {
                                     <Text>Štatistiky</Text>
                                 </Group>
                             </Menu.Item>
-                            <Menu.Divider />
                             <Menu.Item>
                                 <Group>
                                     <IconLogout stroke={1.25} />

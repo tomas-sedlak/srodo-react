@@ -35,17 +35,17 @@ export default function Home() {
     }, [inView, fetchNextPage, hasNextPage])
 
     return status === "pending" ? (
-        <div className="content loader-center">
+        <div className="loader-center">
             <Loader />
         </div>
     ) : status === "error" ? (
-        <div className="content loader-center">
+        <div className="loader-center">
             {/* TODO: make custom error messages ;) */}
             <p>Nastala chyba!</p>
             {/* TODO: make custom error messages ;) */}
         </div>
     ) : (
-        <div className="content">
+        <>
             {data.pages.map((page) => (
                 page.map((post, i) => {
                     if (page.length === i + 1) {
@@ -56,6 +56,6 @@ export default function Home() {
             ))}
 
             {isFetchingNextPage && <div className="loader-center"><Loader /></div>}
-        </div>
+        </>
     )
 }

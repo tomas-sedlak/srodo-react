@@ -22,7 +22,7 @@ export default function User() {
     }, [])
 
     return (
-        <div className="content">
+        <>
             <Box p="sm" className="card">
                 <AspectRatio ratio={1000 / 280}>
                     <Image radius="lg" src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
@@ -68,7 +68,7 @@ export default function User() {
             </Box>
 
             {posts.map((post) => <Post post={post} />)}
-        </div>
+        </>
     );
 }
 

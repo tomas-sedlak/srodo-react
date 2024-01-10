@@ -15,7 +15,7 @@ export default function News() {
     const [activeTab, setActiveTab] = useState("veda");
 
     return (
-        <div className="content">
+        <>
             <Card className="custom-card" mb={8}>
                 <Tabs variant="unstyled" value={activeTab} onChange={setActiveTab}>
                     <Tabs.List className="custom-tabs">
@@ -36,6 +36,6 @@ export default function News() {
                     </Box>
                 </Group>
             </Card>
-        </div>
+        </>
     )
 }

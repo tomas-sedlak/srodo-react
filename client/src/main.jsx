@@ -61,25 +61,25 @@ const router = createBrowserRouter([
                 element: <Article />,
                 loader: articleLoader,
             },
-        ],
-    },
-    {
-        path: "novy",
-        children: [
             {
-                path: "clanok",
-                element: <CreateArticle />,
-            },
-            {
-                path: "kviz",
-                element: <CreateQuiz />,
-            },
-            {
-                path: "diskusia",
-                element: <CreateDiscussion />,
+                path: "novy",
+                children: [
+                    {
+                        path: "clanok",
+                        element: <CreateArticle />,
+                    },
+                    {
+                        path: "kviz",
+                        element: <CreateQuiz />,
+                    },
+                    {
+                        path: "diskusia",
+                        element: <CreateDiscussion />,
+                    }
+                ],
             }
         ],
-    }
+    },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
