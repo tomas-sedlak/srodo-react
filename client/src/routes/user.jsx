@@ -12,11 +12,11 @@ export default function User() {
     const [posts, setPosts] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3000/user?username=" + username)
+        fetch(import.meta.env.VITE_API_URL + "/user?username=" + username)
             .then(response => response.json())
             .then(data => setUser(data))
 
-        fetch("http://localhost:3000/")
+        fetch(import.meta.env.VITE_API_URL)
             .then(response => response.json())
             .then(data => setPosts(data))
     }, [])

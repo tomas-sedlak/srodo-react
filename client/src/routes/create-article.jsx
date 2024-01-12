@@ -116,7 +116,7 @@ export default function CreateArticle() {
             author: "658f13c1a41b9463468b8118",
         }
 
-        fetch("http://localhost:3000/create/article", {
+        fetch(import.meta.env.VITE_API_URL + "/create/article", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),

@@ -8,7 +8,7 @@ export default function Home() {
     const { ref, inView } = useInView();
 
     const fetchPosts = async ({ pageParam }) => {
-        const response = await fetch("http://localhost:3000/?page=" + pageParam);
+        const response = await fetch(import.meta.env.VITE_API_URL + "?page=" + pageParam);
         return response.json();
     }
 

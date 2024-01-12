@@ -5,7 +5,7 @@ import { createClient } from 'pexels';
 import { IconSearch, IconInfoCircle } from '@tabler/icons-react';
 
 export default function ImagesModal({ opened, close, setImage }) {
-    const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
+    const client = createClient(import.meta.env.VITE_PEXELS_KEY);
 
     const [visible, loadingHandlers] = useDisclosure(false);
     const [query, setQuery] = useState("");

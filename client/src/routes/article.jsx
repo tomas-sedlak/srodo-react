@@ -15,11 +15,11 @@ export default function Article() {
     const [post, setPost] = useState([])
 
     useEffect(() => {
-        fetch("http://localhost:3000/content/article?id=" + article)
+        fetch(import.meta.env.VITE_API_URL + "/content/article?id=" + article)
             .then(result => result.json())
             .then(data => setPost(data))
 
-        fetch("http://localhost:3000/user?username=" + username)
+        fetch(import.meta.env.VITE_API_URL + "/user?username=" + username)
             .then(result => result.json())
             .then(data => setUser(data))
     }, [])
