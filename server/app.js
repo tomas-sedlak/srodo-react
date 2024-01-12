@@ -8,7 +8,6 @@ var cors = require("cors");
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var populateRouter = require('./routes/populate');
-var contentRouter = require('./routes/content');
 
 var app = express();
 
@@ -26,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/populate', populateRouter);
-app.use('/content', contentRouter);
 
 // connect to MongoDB
 var mongoose = require("mongoose");

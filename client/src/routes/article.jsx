@@ -10,18 +10,13 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 export default function Article() {
-    const [username, article] = useLoaderData();
-    const [user, setUser] = useState([])
+    const [postId] = useLoaderData();
     const [post, setPost] = useState([])
 
     useEffect(() => {
-        fetch(import.meta.env.VITE_API_URL + "/content/article?id=" + article)
+        fetch(import.meta.env.VITE_API_URL + "/post?id=" + postId)
             .then(result => result.json())
             .then(data => setPost(data))
-
-        fetch(import.meta.env.VITE_API_URL + "/user?username=" + username)
-            .then(result => result.json())
-            .then(data => setUser(data))
     }, [])
 
     const [openned, { toggle }] = useDisclosure(false)
@@ -29,20 +24,20 @@ export default function Article() {
     return (
         <>
             <Box p="sm">
-                <AspectRatio ratio={10 / 4}>
-                    <Image radius="lg" src={post.image + "?w=600"} />
+                <AspectRatio ratio={650 / 273}>
+                    <Image radius="lg" src={post.coverImage} />
                 </AspectRatio>
 
                 <Group gap={4} align="center" mt="sm">
-                    <Avatar />
+                    <Avatar src={post.author?.profilePicture} />
 
                     <Link to="username">
                         <Text fw={600} c="gray" size="sm">
-                            Display name
+                            {post.author?.displayName}
                         </Text>
                     </Link>
                     <Text c="gray" size="sm">
-                        &middot; Článok &middot; {moment(post.createdAt).fromNow()}
+                        &middot; Clanok &middot; {moment(post.createdAt).fromNow()}
                     </Text>
                 </Group>
 
@@ -131,5 +126,5 @@ export default function Article() {
 }
 
 export function loader({ params }) {
-    return [params.username, params.article];
+    return [params.article];
 }

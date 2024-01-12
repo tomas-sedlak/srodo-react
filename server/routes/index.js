@@ -19,7 +19,15 @@ router.get('/', (req, res, next) => {
     .sort("createdAt")
     .limit(perPage)
     .skip(perPage * (page - 1))
-    .populate("author", "displayName profilePicture")
+    .populate("author", "username displayName profilePicture")
+    .populate("subject")
+    .populate("comments")
+    .then((posts) => res.send(posts))
+});
+
+router.get("/post", (req, res) => {
+  Post.findById(req.query.id)
+    .populate("author", "username displayName profilePicture")
     .populate("subject")
     .populate("comments")
     .then((posts) => res.send(posts))
@@ -47,11 +55,11 @@ router.post("/create", (req, res) => {
   const authorId = req.body.authorId;
 
   Post.create({
-      type: type,
-      coverImage: coverImage,
-      title: title,
-      content: content,
-      author: authorId,
+    type: type,
+    coverImage: coverImage,
+    title: title,
+    content: content,
+    author: authorId,
   });
 });
 

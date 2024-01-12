@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
@@ -12,15 +12,7 @@ moment.locale("sk");
 const Post = forwardRef(({ post }, ref) => {
     const [liked, setLiked] = useState(false);
     const [saved, setSaved] = useState(false);
-    // const [user, setUser] = useState(null);
-    // const url = "/" + user.username + "/" + post._id;
-    const url = "/user/" + post._id;
-
-    // useEffect(() => {
-    //     fetch("http://localhost:3000/user?id=" + post.authorId)
-    //         .then(response => response.json())
-    //         .then(user => setUser(user))
-    // }, [])
+    const url = "/" + post.author.username + "/" + post._id;
 
     const postContent = (
         <Link to={url}>
