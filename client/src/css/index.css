@@ -199,13 +199,13 @@ main {
 }
 
 .image-item-left {
-  top: var(--mantine-spacing-md);
-  left: var(--mantine-spacing-md);
+  top: var(--mantine-spacing-sm);
+  left: var(--mantine-spacing-sm);
 }
 
 .image-item-right {
-  top: var(--mantine-spacing-md);
-  right: var(--mantine-spacing-md);
+  top: var(--mantine-spacing-sm);
+  right: var(--mantine-spacing-sm);
 }
 
 .icon-wrapper {

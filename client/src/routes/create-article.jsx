@@ -1,5 +1,6 @@
 // import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { redirect } from "react-router-dom";
 import { Box, Group, Card, TextInput, Button, Select, Badge, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "../templates/imagesModal";
@@ -84,6 +85,7 @@ export default function CreateArticle() {
         content: ""
     });
 
+    const maxCharacterLenght = 64
     const [title, setTitle] = useState("");
     const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
@@ -110,140 +112,108 @@ export default function CreateArticle() {
 
     const publish = () => {
         const data = {
-            image: coverImage,
+            type: "article",
+            coverImage: coverImage,
             title: title,
             content: editor.getHTML(),
-            author: "658f13c1a41b9463468b8118",
+            authorId: "659ef40eb36f7ff659561ce2",
         }
 
-        fetch(import.meta.env.VITE_API_URL + "/create/article", {
+        fetch(import.meta.env.VITE_API_URL + "/create", {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
-        }).then(console.log("success"))
+        }).then(window.location.href = "/")
     }
 
-    const keyhandler = e => {
-        setCount(e.target.value.length);
-        // blocking ENTER (it did NOT work lol)
-        // if(e. === 'Enter') {
-        //      e.preventDefault();
-        // }
-      };
-
-    
-
-    const MaxCharacterLenght = 64
 
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} setImage={addImage} />
 
-            <Box maw={600} m="auto" pt="lg">
-                <Card padding="md" mb="md" className="custom-card">
-                    <Card.Section>
-                        <div className="image-item-left">
-                            <Badge color="black" c="white" variant="light">Článok</Badge>
-                        </div>
-                        <div className="image-item-right">
-                            <Button onClick={coverImageModalHandlers.open}>
-                                Nahrať obrázok
-                            </Button>
-                        </div>
-                        <AspectRatio ratio={650 / 273}>
-                            <MantineImage src={coverImage} />
-                        </AspectRatio>
-                    </Card.Section>
-
-                    {/* OLD title input */}
-                    {/* <TextInput
-                        mt="md"
-                        variant="unstyled"
-                        placeholder="Názov článku"
-                        className="title-input"
-                        value={title}
-                        onChange={event => { setTitle(event.currentTarget.value) }}
-                    /> */}
-
-                    {/* NEW title input */}
-                    <Textarea
-                        autosize 
-                        mt="md"
-                        w="100%"
-                        variant="unstyled"
-                        placeholder="Názov článku"
-                        className="title-input"
-                        value={title}
-                        maxLength={MaxCharacterLenght} 
-                        onInput={e => keyhandler(e)} 
-                        onChange={event => {
-                            setTitle(event.target.value)
-                            
-                        }}
-                        
-                        onKeyDown={function(e){  // This is should be in the KeyHandler but I didn't find a way to put it there xd
-                            if(e.key === "Enter") {
-                                e.preventDefault();
-                            }
-                        }}
-                    />
-                    <Text c="dimmed" w="100%" ta="end">{count}/{MaxCharacterLenght}</Text>
-                   
-
-
-                    <Select
-                        placeholder="Vybrať predmet"
-                        data={Array.from(categories, (category) => category.leftSection + " " + category.label)}
-                        mt="md"
-                    />
-
-                    <RichTextEditor editor={editor} mt="md">
-                        <RichTextEditor.Toolbar sticky>
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.H3 />
-                                <RichTextEditor.Bold />
-                                <RichTextEditor.Italic />
-                                <RichTextEditor.Underline />
-                                <RichTextEditor.Strikethrough />
-                                <RichTextEditor.ClearFormatting />
-                                <RichTextEditor.Highlight />
-                                <RichTextEditor.Code />
-                            </RichTextEditor.ControlsGroup>
-
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.Blockquote />
-                                <RichTextEditor.Hr />
-                                <RichTextEditor.BulletList />
-                                <RichTextEditor.OrderedList />
-                                <RichTextEditor.Subscript />
-                                <RichTextEditor.Superscript />
-                                <button onClick={imageModalHandlers.open}>Obrázok</button>
-                                <button onClick={addVideo}>Video</button>
-                            </RichTextEditor.ControlsGroup>
-
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.Link />
-                                <RichTextEditor.Unlink />
-                            </RichTextEditor.ControlsGroup>
-
-                            <RichTextEditor.ControlsGroup>
-                                <RichTextEditor.AlignLeft />
-                                <RichTextEditor.AlignCenter />
-                                <RichTextEditor.AlignJustify />
-                                <RichTextEditor.AlignRight />
-                            </RichTextEditor.ControlsGroup>
-                        </RichTextEditor.Toolbar>
-
-                        <RichTextEditor.Content />
-                    </RichTextEditor>
-
-                    <Group gap="sm" mt="md">
-                        <Button onClick={publish}>
-                            Vytvoriť
+            <Box p="sm">
+                <Box pos="relative">
+                    <div className="image-item-right">
+                        <Button onClick={coverImageModalHandlers.open}>
+                            Nahrať obrázok
                         </Button>
-                    </Group>
-                </Card>
+                    </div>
+
+                    <AspectRatio ratio={650 / 273}>
+                        <MantineImage radius="lg" src={coverImage} />
+                    </AspectRatio>
+                </Box>
+
+                <Textarea
+                    autosize
+                    mt="md"
+                    w="100%"
+                    variant="unstyled"
+                    placeholder="Názov článku"
+                    className="title-input"
+                    value={title}
+                    maxLength={maxCharacterLenght}
+                    onChange={event => {
+                        setTitle(event.target.value)
+                        setCount(event.target.value.length)
+                    }}
+                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+                />
+                {/* Character counter for Textarea */}
+                <Text c="gray" size="sm" ta="end">{count}/{maxCharacterLenght}</Text>
+
+                <Select
+                    placeholder="Vybrať predmet"
+                    data={Array.from(categories, (category) => category.leftSection + " " + category.label)}
+                    mt="sm"
+                />
+
+                <RichTextEditor editor={editor} mt="sm">
+                    <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)">
+                        <RichTextEditor.ControlsGroup>
+                            <RichTextEditor.H3 />
+                            <RichTextEditor.Bold />
+                            <RichTextEditor.Italic />
+                            <RichTextEditor.Underline />
+                            <RichTextEditor.Strikethrough />
+                            <RichTextEditor.ClearFormatting />
+                            <RichTextEditor.Highlight />
+                            <RichTextEditor.Code />
+                        </RichTextEditor.ControlsGroup>
+
+                        <RichTextEditor.ControlsGroup>
+                            <RichTextEditor.Blockquote />
+                            <RichTextEditor.Hr />
+                            <RichTextEditor.BulletList />
+                            <RichTextEditor.OrderedList />
+                            <RichTextEditor.Subscript />
+                            <RichTextEditor.Superscript />
+                            <button onClick={imageModalHandlers.open}>Obrázok</button>
+                            <button onClick={addVideo}>Video</button>
+                        </RichTextEditor.ControlsGroup>
+
+                        <RichTextEditor.ControlsGroup>
+                            <RichTextEditor.Link />
+                            <RichTextEditor.Unlink />
+                        </RichTextEditor.ControlsGroup>
+
+                        <RichTextEditor.ControlsGroup>
+                            <RichTextEditor.AlignLeft />
+                            <RichTextEditor.AlignCenter />
+                            <RichTextEditor.AlignJustify />
+                            <RichTextEditor.AlignRight />
+                        </RichTextEditor.ControlsGroup>
+                    </RichTextEditor.Toolbar>
+
+                    <RichTextEditor.Content />
+                </RichTextEditor>
+
+                <Group gap="sm" mt="lg">
+                    <Button onClick={publish}>
+                        Publikovať článok
+                    </Button>
+                </Group>
             </Box>
         </>
     );

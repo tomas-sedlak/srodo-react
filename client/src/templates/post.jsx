@@ -23,11 +23,13 @@ const Post = forwardRef(({ post }, ref) => {
 
                 {/* Post information */}
                 <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
-                    <Avatar src={post.author.profilePicture} />
+                    <Link to={"/" + post.author.username}>
+                        <Avatar src={post.author.profilePicture} />
+                    </Link>
 
                     <div>
                         <Group gap={4} align="center">
-                            <Link to="username">
+                            <Link to={"/" + post.author.username}>
                                 <Text fw={600} c="gray" size="sm">
                                     {post.author.displayName}
                                 </Text>
@@ -49,13 +51,13 @@ const Post = forwardRef(({ post }, ref) => {
 
                         <Group justify="space-between" mt={8}>
                             <Group gap={8}>
-                                
+
                                 {/* Likes button */}
                                 <div
                                     className={`icon-wrapper ${liked ? "like-selected" : "like"}`}
                                     onClick={(event) => { event.preventDefault(); setLiked(!liked) }}>
-                                        {liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                        <span>{liked ? post.likes.length + 1 : post.likes.length}</span>
+                                    {liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
+                                    <span>{liked ? post.likes.length + 1 : post.likes.length}</span>
                                 </div>
 
                                 {/* Comments button */}
@@ -68,8 +70,8 @@ const Post = forwardRef(({ post }, ref) => {
                                 <div
                                     className={`icon-wrapper ${saved ? "save-selected" : "save"}`}
                                     onClick={(event) => { event.preventDefault(); setSaved(!saved) }}>
-                                        {saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
-                                        <span>{saved ? "Uložené" : "Uložiť"}</span>
+                                    {saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
+                                    <span>{saved ? "Uložené" : "Uložiť"}</span>
                                 </div>
 
                             </Group>

@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
   const perPage = 5
 
   Post.find()
-    .sort("createdAt")
+    .sort({ createdAt: -1 })
     .limit(perPage)
     .skip(perPage * (page - 1))
     .populate("author", "username displayName profilePicture")
