@@ -24,7 +24,7 @@ export default function Article() {
     return (
         <>
             <Box p="sm">
-                <AspectRatio ratio={650 / 273}>
+                <AspectRatio ratio={2 / 1}>
                     <Image radius="lg" src={post.coverImage} />
                 </AspectRatio>
 

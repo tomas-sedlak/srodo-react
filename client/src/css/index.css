@@ -68,7 +68,7 @@ main {
   height: calc(100vh - var(--header-height));
 }
 
-.search {
+.header-inner .search {
   margin: 8px 0;
 }
 
@@ -157,10 +157,20 @@ main {
 
 .mantine-Textarea-input {
   font-size: 32px;
-  font-weight: 700; 
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 0;
 }
 
 /* NEW custom textarea css END */
+
+.images-modal-search  {
+  position: sticky;
+  top: 52px;
+  padding-bottom: var(--mantine-spacing-sm);
+  z-index: 1001;
+  background-color: var(--mantine-color-white);
+}
 
 /* Dont know if we will use this if NOT, DONT FORGET TO DELETE! */
 .custom-tabs {

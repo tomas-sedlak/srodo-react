@@ -7,7 +7,12 @@ export default function Header() {
         <header>
             <div className="header-inner">
                 <Text fw={700} size="lg" p="sm">Šrodo</Text>
-                <Autocomplete data={["test", "admin"]} placeholder="Hľadať" leftSection={<IconSearch color="black" stroke={1.25} />} className="search" />
+                <Autocomplete
+                    data={["test", "admin"]}
+                    placeholder="Hľadať"
+                    leftSection={<IconSearch stroke={1.25} />}
+                    className="search"
+                />
 
                 {/* NEEDS SOME TWEAKS: add user information and login */}
 

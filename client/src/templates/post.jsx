@@ -17,7 +17,7 @@ const Post = forwardRef(({ post }, ref) => {
     const postContent = (
         <Link to={url}>
             <Box key={post._id} className="border-bottom" p="sm">
-                <AspectRatio ratio={650 / 273}>
+                <AspectRatio ratio={2 / 1}>
                     <Image radius="lg" src={post.coverImage} />
                 </AspectRatio>
 
@@ -40,7 +40,7 @@ const Post = forwardRef(({ post }, ref) => {
                         </Group>
 
                         <Text
-                            fw={700}
+                            fw={800}
                             fz={24}
                             underline="never"
                             style={{ lineHeight: 1.2 }}
@@ -49,7 +49,7 @@ const Post = forwardRef(({ post }, ref) => {
                             {post.title}
                         </Text>
 
-                        <Group justify="space-between" mt={8}>
+                        <Group justify="space-between" mt="sm">
                             <Group gap={8}>
 
                                 {/* Likes button */}

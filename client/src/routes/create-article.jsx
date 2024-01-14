@@ -1,8 +1,8 @@
 // import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { redirect } from "react-router-dom";
-import { Box, Group, Card, TextInput, Button, Select, Badge, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
+import { Box, Group, ActionIcon, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconCameraPlus } from '@tabler/icons-react';
 import ImagesModal from "../templates/imagesModal";
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -89,6 +89,8 @@ export default function CreateArticle() {
     const [title, setTitle] = useState("");
     const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
+    const [subjects, setSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState();
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
 
@@ -96,6 +98,10 @@ export default function CreateArticle() {
         client.photos.curated({ per_page: 1 }).then(
             response => setCoverImage(response.photos[0].src.landscape)
         )
+
+        fetch(import.meta.env.VITE_API_URL + "/subjects")
+            .then(response => response.json())
+            .then(json => setSubjects(json))
     }, []);
 
     const addImage = url => {
@@ -113,6 +119,7 @@ export default function CreateArticle() {
     const publish = () => {
         const data = {
             type: "article",
+            subjectId: selectedSubject,
             coverImage: coverImage,
             title: title,
             content: editor.getHTML(),
@@ -126,6 +133,13 @@ export default function CreateArticle() {
         }).then(window.location.href = "/")
     }
 
+    const selectData = []
+    subjects.map((subject) => {
+        selectData.push({
+            value: subject._id,
+            label: subject.emoji + " " + subject.label,
+        })
+    })
 
     return (
         <>
@@ -134,14 +148,8 @@ export default function CreateArticle() {
 
             <Box p="sm">
                 <Box pos="relative">
-                    <div className="image-item-right">
-                        <Button onClick={coverImageModalHandlers.open}>
-                            Nahrať obrázok
-                        </Button>
-                    </div>
-
-                    <AspectRatio ratio={650 / 273}>
-                        <MantineImage radius="lg" src={coverImage} />
+                    <AspectRatio ratio={2 / 1}>
+                        <MantineImage onClick={coverImageModalHandlers.open} className="pointer" radius="lg" src={coverImage} />
                     </AspectRatio>
                 </Box>
 
@@ -164,9 +172,10 @@ export default function CreateArticle() {
                 <Text c="gray" size="sm" ta="end">{count}/{maxCharacterLenght}</Text>
 
                 <Select
-                    placeholder="Vybrať predmet"
-                    data={Array.from(categories, (category) => category.leftSection + " " + category.label)}
                     mt="sm"
+                    placeholder="Vybrať predmet"
+                    data={selectData}
+                    onChange={(subjectId) => setSelectedSubject(subjectId)}
                 />
 
                 <RichTextEditor editor={editor} mt="sm">

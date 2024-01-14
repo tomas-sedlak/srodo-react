@@ -49,6 +49,7 @@ router.get("/news", (req, res) => {
 
 router.post("/create", (req, res) => {
   const type = req.body.type;
+  const subjectId = req.body.subjectId;
   const coverImage = req.body.coverImage;
   const title = req.body.title;
   const content = req.body.content;
@@ -56,6 +57,7 @@ router.post("/create", (req, res) => {
 
   Post.create({
     type: type,
+    subject: subjectId,
     coverImage: coverImage,
     title: title,
     content: content,

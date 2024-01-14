@@ -35,30 +35,36 @@ export default function Aside() {
 
 function NewsCard({ data, title }) {
     const [opened, { toggle }] = useDisclosure(false);
+    const visbleNews = 4;
+    const maxNews = 10;
 
     return (
         <div className="news-card">
             <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
 
             <Stack>
-                {data.slice(0, 4).map((article) => <NewsContent article={article} />)}
+                {data.slice(0, visbleNews).map((article) => <NewsContent article={article} />)}
             </Stack>
 
-            <Collapse in={opened} mt="sm">
-                <Stack>
-                    {data.slice(4, 10).map((article) => <NewsContent article={article} />)}
-                </Stack>
-            </Collapse>
-
-            <Text
-                mt="sm"
-                className="pointer"
-                size="sm"
-                fw={600}
-                onClick={toggle}
-            >
-                {opened ? "Zobraziť menej" : "Zobraziť viac"}
-            </Text>
+            {data.length > visbleNews &&
+                <>
+                    <Collapse in={opened} mt="sm">
+                        <Stack>
+                            {data.slice(visbleNews, maxNews).map((article) => <NewsContent article={article} />)}
+                        </Stack>
+                    </Collapse>
+                    
+                    <Text
+                        mt="sm"
+                        className="pointer"
+                        size="sm"
+                        fw={600}
+                        onClick={toggle}
+                    >
+                        {opened ? "Zobraziť menej" : "Zobraziť viac"}
+                    </Text>
+                </>
+            }
         </div>
     )
 }
