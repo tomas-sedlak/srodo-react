@@ -7,12 +7,16 @@ export default function Root() {
     return (
         <main className="home-wrapper">
             <Header />
-            
-            <Navbar />
+
+            <nav className="navbar">
+                <Navbar />
+            </nav>
+
             <div className="content">
                 <Outlet />
             </div>
-            <Aside />
+
+            <Aside />            
         </main>
     )
 }

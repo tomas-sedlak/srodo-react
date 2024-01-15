@@ -133,36 +133,6 @@ main {
 
 /* All custom cards END */
 
-/* Comments START */
-
-/* Clickable text for comment answers */
-
-
-/* Comment text */
-.Comment {
-  border: 1px solid var(--mantine-color-gray-3);
-  border-radius: 24px;
-}
-
-/* Comments END */
-
-/* OLD article title css */
-
-/* .title-input  {
-  font-size: 32px;
-  font-weight: 700;
-} */
-
-/* NEW custom textarea css START*/
-
-.mantine-Textarea-input {
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 1.2;
-  padding: 0;
-}
-
-/* NEW custom textarea css END */
 
 .images-modal-search  {
   position: sticky;

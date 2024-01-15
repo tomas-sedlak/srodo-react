@@ -81,36 +81,34 @@ export default function Navbar() {
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     return (
-        <nav className="navbar">
-            <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
+        <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
 
-                {/* Navigation items */}
-                {menu.map((item) => <MenuItem item={item} />)}
+            {/* Navigation items */}
+            {menu.map((item) => <MenuItem item={item} />)}
 
-                {/* Subject items */}
-                <Text fw={700} size="lg" px="md" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
+            {/* Subject items */}
+            <Text fw={700} size="lg" px="md" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
 
-                {categories.slice(0, 6).map((item) => <MenuItem item={item} />)}
+            {categories.slice(0, 6).map((item) => <MenuItem item={item} />)}
 
-                <Collapse in={subjectsOpened}>
-                    {categories.slice(6).map((item) => <MenuItem item={item} />)}
-                </Collapse>
+            <Collapse in={subjectsOpened}>
+                {categories.slice(6).map((item) => <MenuItem item={item} />)}
+            </Collapse>
 
-                <Button
-                    onClick={toggle}
-                    className="dark-hover"
-                    fw={400}
-                    size="md"
-                    leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
-                    variant="subtle"
-                    color="black"
-                    justify="flex-start"
-                    fullWidth
-                >
-                    {subjectsOpened ? "Zobraziť menej" : "Zobraziť viac"}
-                </Button>
-            </ScrollArea>
-        </nav>
+            <Button
+                onClick={toggle}
+                className="dark-hover"
+                fw={400}
+                size="md"
+                leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
+                variant="subtle"
+                color="black"
+                justify="flex-start"
+                fullWidth
+            >
+                {subjectsOpened ? "Zobraziť menej" : "Zobraziť viac"}
+            </Button>
+        </ScrollArea>
     )
 }
 

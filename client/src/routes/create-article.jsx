@@ -159,7 +159,13 @@ export default function CreateArticle() {
                     w="100%"
                     variant="unstyled"
                     placeholder="Názov článku"
-                    className="title-input"
+                    // className="title-input"
+                    styles={{
+                        input: {
+                            fontSize: "32px",
+                            fontWeight: "700"
+                        },
+                    }}
                     value={title}
                     maxLength={maxCharacterLenght}
                     onChange={event => {
