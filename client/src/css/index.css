@@ -72,11 +72,6 @@ main {
   margin: 8px 0;
 }
 
-/* This NEEDS to be fixed with better solution */
-.search div div {
-  left: 8px;
-}
-/* This NEEDS to be fixed with better solution */
 
 .search input {
   line-height: 1.2;

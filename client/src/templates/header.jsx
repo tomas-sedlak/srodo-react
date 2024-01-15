@@ -1,12 +1,14 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, ActionIcon, Drawer, Burger } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, Burger } from '@mantine/core';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
-import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
+import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconX } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import Navbar from './navbar';
 
 
-
+function clear() {
+    document.getElementsByClassName("search").value = "";
+}
 
 export default function Header() {
 
@@ -15,26 +17,46 @@ export default function Header() {
     const [opened, setOpened] = useState(false);
     const title = opened ? 'Close navigation' : 'Open navigation';
 
+    const [value, SetValue] = useState("");
+
+
     return (
         <>
             <header>
                 <div className="header-inner">
                     <Group>
-                        <Burger 
-                        style={!isMobile && { display: "none" }}
-                        opened={opened}
-                        onClick={() => setOpened((o) => !o)}
-                        title={title}
-                        p="sm"
+                        <Burger
+                            style={!isMobile && { display: "none" }}
+                            opened={opened}
+                            onClick={() => setOpened((o) => !o)}
+                            title={title}
+                            p="sm"
                         />
                         <Text fw={700} size="lg" p="sm" style={isMobile && { display: "none" }}>Šrodo</Text>
                     </Group>
 
                     <Autocomplete
                         data={["test", "admin"]}
+            
                         placeholder="Hľadať"
                         leftSection={<IconSearch stroke={1.25} />}
+                        rightSection={
+                            value !== '' && (
+                                <CloseButton
+                                    size="sm"
+                                    onMouseDown={(event) => event.preventDefault()}
+                                    onClick={() => SetValue('')}
+                                    aria-label="Clear value"
+                                />)
+                        }
                         className="search"
+                        styles={{
+                            section: {
+                                margin: "8px"
+                            },
+                        }}
+                        value={value}
+                        onChange={SetValue}
                     />
 
                     {/* NEEDS SOME TWEAKS: add user information and login */}
@@ -113,11 +135,11 @@ export default function Header() {
                 </div>
             </header>
 
-            <Drawer 
-            opened={opened} 
-            onClose={() => setOpened(false)} 
-            title="Šrodo"
-            >                
+            <Drawer
+                opened={opened}
+                onClose={() => setOpened(false)}
+                title="Šrodo"
+            >
                 <Navbar />
             </Drawer>
         </>
