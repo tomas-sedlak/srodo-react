@@ -213,6 +213,14 @@ main {
     display: none;
   }
 
+ .header-inner {
+    display: flex;
+    gap: var(--mantine-spacing-sm)
+  }
+
+  .header-inner .search {
+    flex: 1;
+  }
   main {
     grid-template-columns: 1fr 340px;
   }
@@ -223,6 +231,8 @@ main {
   .aside {
     display: none;
   }
+
+ 
 
   main {
     grid-template-columns: 1fr;

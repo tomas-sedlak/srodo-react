@@ -1,6 +1,6 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, Burger } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon } from '@mantine/core';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
-import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconX } from '@tabler/icons-react';
+import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import Navbar from './navbar';
@@ -12,7 +12,7 @@ function clear() {
 
 export default function Header() {
 
-    const isMobile = useMediaQuery("(max-width: 768px)");
+    const isMobile = useMediaQuery("(max-width: 992px)");
 
     const [opened, setOpened] = useState(false);
     const title = opened ? 'Close navigation' : 'Open navigation';
@@ -24,26 +24,34 @@ export default function Header() {
         <>
             <header>
                 <div className="header-inner">
-                    <Group>
-                        <Burger
-                            style={!isMobile && { display: "none" }}
-                            opened={opened}
+                    <Group p="sm" >
+                        <ActionIcon
+                            variant="subtle"
+                            style={{ display: !isMobile ? "none" : "flex" }}                            
                             onClick={() => setOpened((o) => !o)}
-                            title={title}
-                            p="sm"
-                        />
-                        <Text fw={700} size="lg" p="sm" style={isMobile && { display: "none" }}>Šrodo</Text>
+                            color="black"
+                            size="lg"
+                            radius="lg"
+                            >
+                            <IconMenu2
+
+                            />
+                        </ActionIcon>
+
+                        <Text fw={700} size="lg" style={isMobile && { display: "none" }}>Šrodo</Text>
                     </Group>
 
                     <Autocomplete
                         data={["test", "admin"]}
-            
+                        width="100%"
                         placeholder="Hľadať"
                         leftSection={<IconSearch stroke={1.25} />}
                         rightSection={
                             value !== '' && (
                                 <CloseButton
-                                    size="sm"
+                                    variant="subtle"
+                                    radius="lg"
+                                    c="gray"
                                     onMouseDown={(event) => event.preventDefault()}
                                     onClick={() => SetValue('')}
                                     aria-label="Clear value"
@@ -61,7 +69,7 @@ export default function Header() {
 
                     {/* NEEDS SOME TWEAKS: add user information and login */}
 
-                    <Group justify="flex-end">
+                    <Group justify="flex-end" p="sm" >
                         <IconBell className="pointer" stroke={1.25} />
 
                         <Menu position="bottom-end" width={180}>
