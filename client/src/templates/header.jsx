@@ -24,18 +24,18 @@ export default function Header() {
         <>
             <header>
                 <div className="header-inner">
-                    <Group p="sm" >
+                    <Group>
                         <ActionIcon
                             variant="subtle"
-                            style={{ display: !isMobile ? "none" : "flex" }}                            
+                            style={!isMobile && { display: "none" }}
                             onClick={() => setOpened((o) => !o)}
-                            color="black"
-                            size="lg"
-                            radius="lg"
-                            >
-                            <IconMenu2
-
-                            />
+                            c="black"
+                            color="gray"
+                            w={40}
+                            h={40}
+                            radius="xl"
+                        >
+                            <IconMenu2 stroke={1.25} />
                         </ActionIcon>
 
                         <Text fw={700} size="lg" style={isMobile && { display: "none" }}>Šrodo</Text>
@@ -47,15 +47,16 @@ export default function Header() {
                         placeholder="Hľadať"
                         leftSection={<IconSearch stroke={1.25} />}
                         rightSection={
-                            value !== '' && (
+                            value !== "" && (
                                 <CloseButton
                                     variant="subtle"
                                     radius="lg"
                                     c="gray"
                                     onMouseDown={(event) => event.preventDefault()}
-                                    onClick={() => SetValue('')}
+                                    onClick={() => SetValue("")}
                                     aria-label="Clear value"
-                                />)
+                                />
+                            )
                         }
                         className="search"
                         styles={{
@@ -69,12 +70,30 @@ export default function Header() {
 
                     {/* NEEDS SOME TWEAKS: add user information and login */}
 
-                    <Group justify="flex-end" p="sm" >
-                        <IconBell className="pointer" stroke={1.25} />
+                    <Group justify="flex-end" gap={4}>
+                        <ActionIcon
+                            variant="subtle"
+                            c="black"
+                            color="gray"
+                            w={40}
+                            h={40}
+                            radius="xl"
+                        >
+                            <IconBell stroke={1.25} />
+                        </ActionIcon>
 
                         <Menu position="bottom-end" width={180}>
                             <Menu.Target>
-                                <IconPlus className="pointer" stroke={1.25} />
+                                <ActionIcon
+                                    variant="subtle"
+                                    c="black"
+                                    color="gray"
+                                    w={40}
+                                    h={40}
+                                    radius="xl"
+                                >
+                                    <IconPlus stroke={1.25} />
+                                </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item>

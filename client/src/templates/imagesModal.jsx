@@ -101,7 +101,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                                         <Grid gutter={4}>
                                             {data.pages.map(page => (
                                                 page.map((photo, i) => (
-                                                    <Grid.Col ref={page.length === i + 1 ? ref : undefined} span={isMobile ? 12 : 6} key={photo.id}>
+                                                    <Grid.Col ref={page.length === i + 1 ? ref : undefined} span={6} key={photo.id}>
                                                         <AspectRatio ratio={2 / 1}>
                                                             <Image
                                                                 src={photo.src.landscape}
