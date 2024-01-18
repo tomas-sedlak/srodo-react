@@ -45,7 +45,7 @@ const scrape = async () => {
             }
         });
     });
-
+    
     console.log("Done!");
 }
 

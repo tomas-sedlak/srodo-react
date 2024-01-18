@@ -8,6 +8,11 @@ const userSchema = new Schema({
         type: String,
         default: "default.jpg"
     },
+    // saved: [{
+    //     type: String,
+    //     ref: "Post"
+    // }],
+    saved: [],
 })
 
 module.exports = mongoose.model("User", userSchema)

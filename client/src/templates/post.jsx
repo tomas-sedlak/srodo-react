@@ -10,9 +10,33 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 const Post = forwardRef(({ post }, ref) => {
-    const [liked, setLiked] = useState(false);
-    const [saved, setSaved] = useState(false);
+    const [liked, setLiked] = useState(post.liked);
+    const [saved, setSaved] = useState(post.saved);
     const url = "/" + post.author.username + "/" + post._id;
+
+    const handleLikeButton = async (event) => {
+        event.preventDefault()
+        setLiked(!liked)
+
+        fetch(`${import.meta.env.VITE_API_URL}/post/${post._id}/like`, {
+            method: "PUT",
+            headers: { 'Content-Type': 'application/json' },
+            cors: "no-cors",
+            body: JSON.stringify({ userId: "65a971b4abd72acd1db48cc2" }),
+        })
+    }
+
+    const handleSaveButton = async (event) => {
+        event.preventDefault()
+        setSaved(!saved)
+
+        fetch(`${import.meta.env.VITE_API_URL}/user/65a971b4abd72acd1db48cc2/saves`, {
+            method: "PUT",
+            headers: { 'Content-Type': 'application/json' },
+            cors: "no-cors",
+            body: JSON.stringify({ postId: post._id }),
+        })
+    }
 
     const postContent = (
         <Link to={url}>
@@ -55,21 +79,21 @@ const Post = forwardRef(({ post }, ref) => {
                                 {/* Likes button */}
                                 <div
                                     className={`icon-wrapper ${liked ? "like-selected" : "like"}`}
-                                    onClick={(event) => { event.preventDefault(); setLiked(!liked) }}>
+                                    onClick={handleLikeButton}>
                                     {liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                    <span>{liked ? post.likes.length + 1 : post.likes.length}</span>
+                                    <span>{post.likesCount}</span>
                                 </div>
 
                                 {/* Comments button */}
                                 <div className="icon-wrapper">
                                     <IconMessageCircle stroke={1.25} />
-                                    <span>{post.comments.length}</span>
+                                    <span>{post.commentsCount}</span>
                                 </div>
 
                                 {/* Save button */}
                                 <div
                                     className={`icon-wrapper ${saved ? "save-selected" : "save"}`}
-                                    onClick={(event) => { event.preventDefault(); setSaved(!saved) }}>
+                                    onClick={handleSaveButton}>
                                     {saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
                                     <span>{saved ? "Uložené" : "Uložiť"}</span>
                                 </div>
