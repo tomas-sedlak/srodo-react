@@ -31,3 +31,5 @@ To start the **client** open new terminal in root directory and type:
 cd client
 npm run dev
 ```
+
+You also need `.env` file which you can download from our [Discord](https://discord.gg/8tUrh52HTf)
