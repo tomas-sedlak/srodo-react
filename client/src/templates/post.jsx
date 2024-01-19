@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { useState } from 'react';
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
@@ -12,44 +12,33 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 const Post = forwardRef(({ post }, ref) => {
-    const [liked, setLiked] = useState(post.liked);
-    const [saved, setSaved] = useState(post.saved);
+    const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
-
-    const handleLikeButton = async (event) => {
-        event.preventDefault()
-        console.log(likeMutation)
-        await likeMutation.mutateAsync(post._id)
-        // setLiked(!liked)
-
-        // fetch(`${import.meta.env.VITE_API_URL}/post/${post._id}/like`, {
-        //     method: "PUT",
-        //     headers: { 'Content-Type': 'application/json' },
-        //     cors: "no-cors",
-        //     body: JSON.stringify({ userId: "65a971b4abd72acd1db48cc2" }),
-        // })
-    }
+    const userId = "65aaabe625c014aea920db03"
 
     const likePost = async (postId) => {
-        const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, postId);
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
+        return response.data;
+    }
+    
+    const savePost = async (postId) => {
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/saved`, { postId });
         return response.data;
     }
 
     const likeMutation = useMutation({
-        mutationFn: likePost
+        mutationFn: likePost,
+        onSuccess: () => {
+            queryClient.invalidateQueries("posts")
+        },
     })
 
-    const handleSaveButton = async (event) => {
-        event.preventDefault()
-        setSaved(!saved)
-
-        fetch(`${import.meta.env.VITE_API_URL}/user/65a971b4abd72acd1db48cc2/saves`, {
-            method: "PUT",
-            headers: { 'Content-Type': 'application/json' },
-            cors: "no-cors",
-            body: JSON.stringify({ postId: post._id }),
-        })
-    }
+    const saveMutation = useMutation({
+        mutationFn: savePost,
+        onSuccess: () => {
+            queryClient.invalidateQueries("posts")
+        },
+    })
 
     const postContent = (
         <Link to={url}>
@@ -91,10 +80,13 @@ const Post = forwardRef(({ post }, ref) => {
 
                                 {/* Likes button */}
                                 <div
-                                    className={`icon-wrapper ${liked ? "like-selected" : "like"}`}
-                                    onClick={handleLikeButton}>
-                                    {liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                    <span>{post.likesCount}</span>
+                                    className={`icon-wrapper ${post.liked ? "like-selected" : "like"}`}
+                                    onClick={event => {
+                                        event.preventDefault()
+                                        likeMutation.mutate(post._id)
+                                    }}>
+                                    {post.liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
+                                    <span>{userId ? post.likesCount : "login"}</span>
                                 </div>
 
                                 {/* Comments button */}
@@ -105,10 +97,13 @@ const Post = forwardRef(({ post }, ref) => {
 
                                 {/* Save button */}
                                 <div
-                                    className={`icon-wrapper ${saved ? "save-selected" : "save"}`}
-                                    onClick={handleSaveButton}>
-                                    {saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
-                                    <span>{saved ? "Uložené" : "Uložiť"}</span>
+                                    className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
+                                    onClick={event => {
+                                        event.preventDefault()
+                                        saveMutation.mutate(post._id)
+                                    }}>
+                                    {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
+                                    <span>{post.saved ? "Uložené" : "Uložiť"}</span>
                                 </div>
 
                             </Group>

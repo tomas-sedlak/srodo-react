@@ -14,31 +14,29 @@ schedule.scheduleJob("0 0 * * *", scraper);
 
 router.get('/', async (req, res) => {
   const page = req.query.page || 1
-  const perPage = 5
-  const userId = "65a971b4abd72acd1db48cc2" // req.query.userId
-
-  const user = await User.findById(userId);
+  const limit = req.query.limit || 5
+  const userId = req.query.userId || undefined
 
   const posts = await Post.find()
     .sort({ createdAt: -1 })
-    .limit(perPage)
-    .skip(perPage * (page - 1))
+    .limit(limit)
+    .skip(limit * (page - 1))
     .populate("author", "username displayName profilePicture")
     .populate("subject")
     .populate("comments")
 
+  let user
+  if (userId) user = await User.findById(userId)
+  
   const processedPosts = posts.map(post => {
-    const saved = user.saved.includes(post._id)
-    const liked = post.likes.includes(user._id)
-
     return {
       _id: post._id,
       type: post.postType,
       coverImage: post.coverImage,
       title: post.title,
       author: post.author,
-      saved: saved,
-      liked: liked,
+      saved: user ? user.saved.includes(post._id) : false,
+      liked: user ? post.likes.includes(user._id) : false,
       likesCount: post.likes.length,
       commentsCount: post.comments.length,
     }

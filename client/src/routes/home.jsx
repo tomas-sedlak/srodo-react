@@ -6,9 +6,10 @@ import Post from "../templates/post";
 
 export default function Home() {
     const { ref, inView } = useInView();
+    const userId = "65aaabe625c014aea920db03"
 
     const fetchPosts = async ({ pageParam }) => {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}?page=${pageParam}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}?page=${pageParam}&userId=${userId}`);
         return response.json();
     }
 
@@ -19,7 +20,7 @@ export default function Home() {
         isFetchingNextPage,
         status,
     } = useInfiniteQuery({
-        queryKey: ["posts", "homepage"],
+        queryKey: ["posts"],
         queryFn: fetchPosts,
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
