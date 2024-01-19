@@ -1,8 +1,10 @@
 import { forwardRef } from "react";
 import { useState } from 'react';
+import { useMutation } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 // Setup Moment.js for Slovak language
 import moment from "moment";
@@ -16,15 +18,26 @@ const Post = forwardRef(({ post }, ref) => {
 
     const handleLikeButton = async (event) => {
         event.preventDefault()
-        setLiked(!liked)
+        console.log(likeMutation)
+        await likeMutation.mutateAsync(post._id)
+        // setLiked(!liked)
 
-        fetch(`${import.meta.env.VITE_API_URL}/post/${post._id}/like`, {
-            method: "PUT",
-            headers: { 'Content-Type': 'application/json' },
-            cors: "no-cors",
-            body: JSON.stringify({ userId: "65a971b4abd72acd1db48cc2" }),
-        })
+        // fetch(`${import.meta.env.VITE_API_URL}/post/${post._id}/like`, {
+        //     method: "PUT",
+        //     headers: { 'Content-Type': 'application/json' },
+        //     cors: "no-cors",
+        //     body: JSON.stringify({ userId: "65a971b4abd72acd1db48cc2" }),
+        // })
     }
+
+    const likePost = async (postId) => {
+        const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, postId);
+        return response.data;
+    }
+
+    const likeMutation = useMutation({
+        mutationFn: likePost
+    })
 
     const handleSaveButton = async (event) => {
         event.preventDefault()

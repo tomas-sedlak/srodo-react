@@ -59,16 +59,17 @@ router.put("/post/:postId/like", async (req, res) => {
   const postId = req.params.postId;
   const userId = req.body.userId;
 
-  const post = await Post.findById(postId);
+  const post = await Post.findById(postId)
 
-  const userIndex = post.likes.indexOf(userId);
-  if (userIndex === -1) {
-    post.likes.push(userId);
-  } else {
-    post.likes.splice(userId, 1);
-  }
+  const liked = post.likes.includes(userId)
+  liked ? post.likes.splice(userId, 1) : post.likes.push(userId)
 
   post.save();
+
+  res.send({
+    liked: liked,
+    likesCount: post.likes.length,
+  });
 });
 
 router.get("/subjects", (req, res) => {
