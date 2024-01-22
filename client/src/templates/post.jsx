@@ -84,7 +84,8 @@ const Post = forwardRef(({ post }, ref) => {
                                     onClick={event => {
                                         event.preventDefault()
                                         likeMutation.mutate(post._id)
-                                    }}>
+                                    }}
+                                >
                                     {post.liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
                                     <span>{userId ? post.likesCount : "login"}</span>
                                 </div>
@@ -101,7 +102,8 @@ const Post = forwardRef(({ post }, ref) => {
                                     onClick={event => {
                                         event.preventDefault()
                                         saveMutation.mutate(post._id)
-                                    }}>
+                                    }}
+                                >
                                     {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
                                     <span>{post.saved ? "Uložené" : "Uložiť"}</span>
                                 </div>
