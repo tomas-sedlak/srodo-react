@@ -16,55 +16,7 @@ import Youtube from '@tiptap/extension-youtube';
 // import Superscript from '@tiptap/extension-superscript';
 // import SubScript from '@tiptap/extension-subscript';
 import { createClient } from 'pexels';
-
-const categories = [
-    {
-        label: "Matematika",
-        link: "/",
-        leftSection: "📈"
-    },
-    {
-        label: "Informatika",
-        link: "/",
-        leftSection: "💻"
-    },
-    {
-        label: "Jazyky",
-        link: "/",
-        leftSection: "💬"
-    },
-    {
-        label: "Biológia",
-        link: "/",
-        leftSection: "🧬"
-    },
-    {
-        label: "Chémia",
-        link: "/",
-        leftSection: "🧪"
-    },
-    {
-        label: "Fyzika",
-        link: "/",
-        leftSection: "⚡"
-    },
-    {
-        label: "Geografia",
-        link: "/",
-        leftSection: "🌍"
-    },
-    {
-        label: "Umenie",
-        link: "/",
-        leftSection: "🎨"
-    },
-    {
-        label: "Šport",
-        link: "/",
-        leftSection: "💪"
-    },
-]
-
+import axios from "axios";
 
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
@@ -116,21 +68,19 @@ export default function CreateArticle() {
         })
     }
 
-    const publish = () => {
+    const publish = async () => {
         const data = {
             type: "article",
             subjectId: selectedSubject,
             coverImage: coverImage,
             title: title,
             content: editor.getHTML(),
-            authorId: "659ef40eb36f7ff659561ce2",
+            authorId: "65aaabe625c014aea920db03",
         }
+        console.log(data)
 
-        fetch(import.meta.env.VITE_API_URL + "/create", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        }).then(window.location.href = "/")
+        axios.post(import.meta.env.VITE_API_URL + "/create", data)
+        window.location.href = "/"
     }
 
     const selectData = []

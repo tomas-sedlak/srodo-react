@@ -6,6 +6,7 @@ var Post = require("../models/post")
 var User = require("../models/user")
 var Subject = require("../models/subject")
 var News = require("../models/news")
+var Comment = require("../models/comment")
 
 // Initial call for scraper
 scraper();
@@ -70,6 +71,27 @@ router.put("/post/:postId/like", async (req, res) => {
   });
 });
 
+router.get("/post/:postId/comment", async (req, res) => {
+  const comments = await Comment.find({ post: req.params.postId })
+    .sort({ createdAt: -1 })
+    .populate("author", "username displayName profilePicture")
+
+  res.send(comments)
+})
+
+router.post("/post/:postId/comment", (req, res) => {
+  const postId = req.body.postId;
+  const userId = req.body.userId;
+  const content = req.body.content;
+  const reaction = req.body.reaction;
+
+  Comment.create({
+    post: postId,
+    author: userId,
+    content: content,
+  })
+})
+
 router.get("/subjects", (req, res) => {
   Subject.find({})
     .sort("index")
@@ -85,6 +107,8 @@ router.get("/news", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
+
+  console.log(req.body)
   const type = req.body.type;
   const subjectId = req.body.subjectId;
   const coverImage = req.body.coverImage;

@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from "react-router-dom";
-import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, TextInput, ActionIcon, Flex, Paper, UnstyledButton, Collapse, Textarea, Card, Button } from '@mantine/core';
+import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, ActionIcon, Textarea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconSend, IconHeart, IconHeartFilled, IconMessageCircle } from '@tabler/icons-react';
+import { IconSend } from '@tabler/icons-react';
 import Comment from "../templates/comment"
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
@@ -12,16 +13,25 @@ moment.locale("sk");
 
 export default function Article() {
     const [postId] = useLoaderData();
-    const [post, setPost] = useState([])
+    const [post, setPost] = useState([]);
+    const [comment, setComment] = useState("");
+    const [comments, setComments] = useState([]);
+    const userId = "65aaabe625c014aea920db03";
+
+    const fetchPost = async () => {
+        const post = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId)
+        setPost(post.data)
+    }
+
+    const fetchComments = async () => {
+        const comments = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment")
+        setComments(comments.data)
+    }
 
     useEffect(() => {
-        fetch(import.meta.env.VITE_API_URL + "/post?id=" + postId)
-            .then(result => result.json())
-            .then(data => setPost(data))
+        fetchPost()
+        fetchComments()
     }, [])
-
-    const [openned, { toggle }] = useDisclosure(false)
-    const [liked, setLiked] = useState(false);
 
     return (
         <>
@@ -72,10 +82,21 @@ export default function Article() {
                         minRows={2}
                         autosize
                         radius="lg"
+                        value={comment}
+                        onChange={event => setComment(event.target.value)}
                         rightSection={
                             <ActionIcon
                                 radius="xl"
                                 variant="subtle"
+                                onClick={() => {
+                                    axios.post(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment", {
+                                        postId: postId,
+                                        userId: userId,
+                                        content: comment,
+                                    })
+                                    fetchComments()
+                                    setComment("")
+                                }}
                             >
                                 <IconSend stroke={1.25} />
                             </ActionIcon>
@@ -83,9 +104,7 @@ export default function Article() {
                     />
                 </Group>
 
-                <Comment depth={0} />
-                <Comment depth={1} />
-                <Comment depth={2} />
+                {comments.map(comment => <Comment data={comment} />)}
 
             </Box>
         </>

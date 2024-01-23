@@ -14,10 +14,14 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Subject",
     },
-    likes: [Schema.Types.ObjectId],
+    likes: [{
+        type: [Schema.Types.ObjectId],
+        default: [],
+    }],
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: "Comment"
+        ref: "Comment",
+        default: [],
     }],
 }, {
     timestamps: true

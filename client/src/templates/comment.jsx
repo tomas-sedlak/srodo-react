@@ -3,18 +3,18 @@ import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, 
 import { IconSend, IconHeart, IconHeartFilled, IconMessageCircle } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 
-export default function Comment({ depth }) {
+export default function Comment({ data, depth }) {
     const [liked, setLiked] = useState(false);
 
     return (
         <Group gap={8} align="flex-start" mt="sm" ml={depth * 46}>
-            <Avatar />
+            <Avatar src={ data.author.profilePicture } />
 
             <Box py={8} style={{ flex: 1 }}>
                 <Group gap={4}>
-                    <Link to="username">
+                    <Link to={ "/" + data.author.username}>
                         <Text fw={600} c="gray" size="sm">
-                            Display name
+                            { data.author.displayName }
                         </Text>
                     </Link>
                     <Text c="gray" size="sm">
@@ -22,7 +22,7 @@ export default function Comment({ depth }) {
                     </Text>
                 </Group>
 
-                <Text my={8}>Awesome comment</Text>
+                <Text my={8}>{ data.content }</Text>
 
                 <Group gap={8}>
                     <div
