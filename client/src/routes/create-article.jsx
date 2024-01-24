@@ -76,7 +76,7 @@ export default function CreateArticle() {
             coverImage: coverImage,
             title: title,
             content: editor.getHTML(),
-            authorId: "65aaabe625c014aea920db03",
+            authorId: "65b1848bfbb5fbbc9cda4acd",
         }
 
         axios.post(import.meta.env.VITE_API_URL + "/create", data)

@@ -14,7 +14,7 @@ moment.locale("sk");
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
-    const userId = "65aaabe625c014aea920db03"
+    const userId = "65b1848bfbb5fbbc9cda4acd"
 
     const likePost = async (postId) => {
         const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });

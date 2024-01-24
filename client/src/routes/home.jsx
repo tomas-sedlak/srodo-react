@@ -6,7 +6,7 @@ import Post from "../templates/post";
 
 export default function Home() {
     const { ref, inView } = useInView();
-    const userId = "65aaabe625c014aea920db03"
+    const userId = "65b1848bfbb5fbbc9cda4acd"
 
     const fetchPosts = async ({ pageParam }) => {
         const response = await fetch(`${import.meta.env.VITE_API_URL}?page=${pageParam}&userId=${userId}`);

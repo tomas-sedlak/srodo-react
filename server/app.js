@@ -9,6 +9,9 @@ var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var populateRouter = require('./routes/populate');
 
+var dotenv = require("dotenv");
+dotenv.config();
+
 var app = express();
 
 // view engine setup
@@ -28,9 +31,9 @@ app.use('/populate', populateRouter);
 
 // connect to MongoDB
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/srodo", {
-    family: 4 // Important! Otherwise it returns timeout error
-});
+mongoose.connect(
+  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@srodo.wererc7.mongodb.net/srodo?retryWrites=true&w=majority`
+);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -18,9 +18,7 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Subject",
     },
-    likes: [{
-        type: [Schema.Types.ObjectId],
-    }],
+    likes: [Schema.Types.ObjectId],
     comments: [{
         type: Schema.Types.ObjectId,
         ref: "Comment",

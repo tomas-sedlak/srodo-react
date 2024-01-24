@@ -16,7 +16,7 @@ export default function Article() {
     const [post, setPost] = useState([]);
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
-    const userId = "65aaabe625c014aea920db03";
+    const userId = "65b1848bfbb5fbbc9cda4acd";
 
     const fetchPost = async () => {
         const post = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId)
