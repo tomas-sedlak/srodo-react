@@ -1,4 +1,4 @@
-// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Box, Group, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -37,7 +37,8 @@ export default function CreateArticle() {
         content: ""
     });
 
-    const maxCharacterLenght = 64
+    const maxCharacterLenght = 64;
+    const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
@@ -77,10 +78,9 @@ export default function CreateArticle() {
             content: editor.getHTML(),
             authorId: "65aaabe625c014aea920db03",
         }
-        console.log(data)
 
         axios.post(import.meta.env.VITE_API_URL + "/create", data)
-        window.location.href = "/"
+        navigate("/")
     }
 
     const selectData = []

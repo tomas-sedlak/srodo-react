@@ -6,6 +6,10 @@ const postSchema = new Schema({
     coverImage: String,
     title: String,
     content: String,
+    quizz: [{
+        type: Schema.Types.ObjectId,
+        ref: "Quizz",
+    }],
     author: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -16,12 +20,10 @@ const postSchema = new Schema({
     },
     likes: [{
         type: [Schema.Types.ObjectId],
-        default: [],
     }],
     comments: [{
         type: Schema.Types.ObjectId,
         ref: "Comment",
-        default: [],
     }],
 }, {
     timestamps: true
