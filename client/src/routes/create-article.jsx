@@ -1,6 +1,6 @@
 // import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, ActionIcon, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
+import { Box, Group, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconCameraPlus } from '@tabler/icons-react';
 import ImagesModal from "../templates/imagesModal";
@@ -47,7 +47,7 @@ export default function CreateArticle() {
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
 
     useEffect(() => {
-        client.photos.curated({ per_page: 1 }).then(
+        client.photos.curated({ per_page: 1, page: 1 }).then(
             response => setCoverImage(response.photos[0].src.landscape)
         )
 

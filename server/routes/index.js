@@ -40,18 +40,20 @@ router.get('/', async (req, res) => {
       liked: user ? post.likes.includes(user._id) : false,
       likesCount: post.likes.length,
       commentsCount: post.comments.length,
+      createdAt: post.createdAt,
     }
   })
 
   res.send(processedPosts)
 });
 
-router.get("/post/:postId", (req, res) => {
-  Post.findById(req.params.postId)
+router.get("/post/:postId", async (req, res) => {
+  const post = await Post.findById(req.params.postId)
     .populate("author", "username displayName profilePicture")
     .populate("subject")
     .populate("comments")
-    .then((posts) => res.send(posts))
+
+  res.send(post)
 });
 
 router.put("/post/:postId/like", async (req, res) => {
@@ -92,23 +94,21 @@ router.post("/post/:postId/comment", (req, res) => {
   })
 })
 
-router.get("/subjects", (req, res) => {
-  Subject.find({})
+router.get("/subjects", async (req, res) => {
+  const subjects = await Subject.find({})
     .sort("index")
-    .then((subjects) => res.send(subjects))
+  
+  res.send(subjects)
 });
 
-router.get("/news", (req, res) => {
-  const category = req.query.category;
-
-  News.find({ category: category })
+router.get("/news", async (req, res) => {
+  const news = await News.find({ category:  req.query.category })
     .sort("index")
-    .then((news) => res.send(news))
+  
+  res.send(news)
 });
 
 router.post("/create", (req, res) => {
-
-  console.log(req.body)
   const type = req.body.type;
   const subjectId = req.body.subjectId;
   const coverImage = req.body.coverImage;

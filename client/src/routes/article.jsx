@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from "react-router-dom";
 import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, ActionIcon, Textarea } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { IconSend } from '@tabler/icons-react';
 import Comment from "../templates/comment"
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+// Setup Moment.js for Slovak language
 import moment from "moment";
 import "moment/dist/locale/sk";
 moment.locale("sk");

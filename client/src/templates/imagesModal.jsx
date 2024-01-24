@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Loader, Text, Image, TextInput, Modal, Grid, AspectRatio } from '@mantine/core';
+import { Loader, Text, Image, TextInput, Modal, Grid, AspectRatio, CloseButton } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
 import { useInView } from "react-intersection-observer";
@@ -81,6 +81,23 @@ export default function ImagesModal({ opened, close, setImage }) {
                                 value={query}
                                 onChange={event => setQuery(event.currentTarget.value)}
                                 leftSection={<IconSearch stroke={1.25} />}
+                                rightSection={
+                                    query !== "" && (
+                                        <CloseButton
+                                            variant="subtle"
+                                            radius="lg"
+                                            c="gray"
+                                            onMouseDown={(event) => event.preventDefault()}
+                                            onClick={() => setQuery("")}
+                                            aria-label="Clear value"
+                                        />
+                                    )
+                                }
+                                styles={{
+                                    section: {
+                                        margin: "8px"
+                                    },
+                                }}
                             />
 
                             {status === "pending" ? (
