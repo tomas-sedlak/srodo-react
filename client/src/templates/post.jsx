@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-import { useState } from 'react';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
@@ -14,13 +13,13 @@ moment.locale("sk");
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
-    const userId = "65b1848bfbb5fbbc9cda4acd"
+    const userId = "65b1848bfbb5fbbc9cda4acd";
 
     const likePost = async (postId) => {
         const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
         return response.data;
     }
-    
+
     const savePost = async (postId) => {
         const response = await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/saved`, { postId });
         return response.data;
@@ -91,10 +90,10 @@ const Post = forwardRef(({ post }, ref) => {
                                 </div>
 
                                 {/* Comments button */}
-                                <div className="icon-wrapper">
+                                <Link to={url + "#komentare"} className="icon-wrapper">
                                     <IconMessageCircle stroke={1.25} />
                                     <span>{post.commentsCount}</span>
-                                </div>
+                                </Link>
 
                                 {/* Save button */}
                                 <div

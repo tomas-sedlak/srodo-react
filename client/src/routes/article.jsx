@@ -69,7 +69,7 @@ export default function Article() {
 
             {/* TODO: add comment section */}
 
-            <Box p="sm">
+            <Box id="komentare" p="sm">
 
                 {/* Adding new comments */}
 
@@ -81,7 +81,6 @@ export default function Article() {
                         placeholder="Tu mi napíš niečo pekné"
                         minRows={2}
                         autosize
-                        radius="lg"
                         value={comment}
                         onChange={event => setComment(event.target.value)}
                         rightSection={
