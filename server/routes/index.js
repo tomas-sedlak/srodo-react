@@ -24,25 +24,26 @@ router.get('/', async (req, res) => {
     .skip(limit * (page - 1))
     .populate("author", "username displayName profilePicture")
     .populate("subject")
-    .populate("comments")
 
   let user
   if (userId) user = await User.findById(userId)
-  
-  const processedPosts = posts.map(post => {
+
+  const processedPosts = await Promise.all(posts.map(async post => {
+    const comments = await Comment.find({ post: post._id })
+
     return {
       _id: post._id,
-      type: post.postType,
+      postType: post.postType,
       coverImage: post.coverImage,
       title: post.title,
       author: post.author,
       saved: user ? user.saved.includes(post._id) : false,
       liked: user ? post.likes.includes(user._id) : false,
       likesCount: post.likes.length,
-      commentsCount: post.comments.length,
+      commentsCount: comments.length,
       createdAt: post.createdAt,
     }
-  })
+  }))
 
   res.send(processedPosts)
 });
@@ -51,7 +52,6 @@ router.get("/post/:postId", async (req, res) => {
   const post = await Post.findById(req.params.postId)
     .populate("author", "username displayName profilePicture")
     .populate("subject")
-    .populate("comments")
 
   res.send(post)
 });
@@ -97,14 +97,14 @@ router.post("/post/:postId/comment", (req, res) => {
 router.get("/subjects", async (req, res) => {
   const subjects = await Subject.find({})
     .sort("index")
-  
+
   res.send(subjects)
 });
 
 router.get("/news", async (req, res) => {
-  const news = await News.find({ category:  req.query.category })
+  const news = await News.find({ category: req.query.category })
     .sort("index")
-  
+
   res.send(news)
 });
 

@@ -49,7 +49,7 @@ export default function Article() {
                         </Text>
                     </Link>
                     <Text c="gray" size="sm">
-                        &middot; Clanok &middot; {moment(post.createdAt).fromNow()}
+                        &middot; {moment(post.createdAt).fromNow()}
                     </Text>
                 </Group>
 

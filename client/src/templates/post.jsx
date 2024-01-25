@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AspectRatio, Group, Image, Text, Avatar, Box } from '@mantine/core';
+import { AspectRatio, Group, Image, Text, Avatar, Box, Badge } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,12 @@ import axios from "axios";
 import moment from "moment";
 import "moment/dist/locale/sk";
 moment.locale("sk");
+
+const typeNames = {
+    article: "Článok",
+    quizz: "Kvíz",
+    discussion: "Diskusia",
+}
 
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
@@ -42,9 +48,19 @@ const Post = forwardRef(({ post }, ref) => {
     const postContent = (
         <Link to={url}>
             <Box key={post._id} className="border-bottom" p="sm">
-                <AspectRatio ratio={2 / 1}>
-                    <Image radius="lg" src={post.coverImage} />
-                </AspectRatio>
+                <Box pos="relative">
+                    <Badge
+                        className="image-item-left"
+                        color="black"
+                        c="white"
+                        variant="light"
+                    >
+                        {typeNames[post.postType]}
+                    </Badge>
+                    <AspectRatio ratio={2 / 1}>
+                        <Image radius="lg" src={post.coverImage} />
+                    </AspectRatio>
+                </Box>
 
                 {/* Post information */}
                 <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
@@ -60,7 +76,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 </Text>
                             </Link>
                             <Text c="gray" size="sm">
-                                &middot; Článok &middot; {moment(post.createdAt).fromNow()}
+                                &middot; {moment(post.createdAt).fromNow()}
                             </Text>
                         </Group>
 
