@@ -3,7 +3,6 @@
 ## Requirements
 
 - Node.js
-- MongoDB
 
 ## Installation
 
@@ -13,7 +12,7 @@ Install required packages for client and server:
 cd server
 npm i
 cd ../client
-npm i
+npm i --force
 ```
 
 ## Usage
@@ -32,4 +31,4 @@ cd client
 npm run dev
 ```
 
-You also need `.env` file which you can download from our [Discord](https://discord.gg/8tUrh52HTf)
+You also need `.env` files which you can download from our [Discord](https://discord.gg/8tUrh52HTf)
