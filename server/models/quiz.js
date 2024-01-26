@@ -1,11 +1,11 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
-const quizzSchema = new Schema({
+const quizSchema = new Schema({
     question: String,
     image: String,
     options: [String],
-    correctOption: Number,
+    correctOption: String,
 })
 
-module.exports = mongoose.model("News", quizzSchema)
+module.exports = mongoose.model("Quiz", quizSchema)

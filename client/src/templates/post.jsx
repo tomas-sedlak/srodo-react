@@ -12,7 +12,7 @@ moment.locale("sk");
 
 const typeNames = {
     article: "Článok",
-    quizz: "Kvíz",
+    quiz: "Kvíz",
     discussion: "Diskusia",
 }
 

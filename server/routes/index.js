@@ -7,6 +7,7 @@ var User = require("../models/user")
 var Subject = require("../models/subject")
 var News = require("../models/news")
 var Comment = require("../models/comment")
+var Quiz = require("../models/quiz")
 
 // Initial call for scraper
 scraper();
@@ -81,13 +82,13 @@ router.get("/post/:postId/comment", async (req, res) => {
   res.send(comments)
 })
 
-router.post("/post/:postId/comment", (req, res) => {
+router.post("/post/:postId/comment", async (req, res) => {
   const postId = req.body.postId;
   const userId = req.body.userId;
   const content = req.body.content;
   const reaction = req.body.reaction;
 
-  Comment.create({
+  await Comment.create({
     post: postId,
     author: userId,
     content: content,
@@ -108,7 +109,7 @@ router.get("/news", async (req, res) => {
   res.send(news)
 });
 
-router.post("/create", (req, res) => {
+router.post("/create", async (req, res) => {
   const type = req.body.type;
   const subjectId = req.body.subjectId;
   const coverImage = req.body.coverImage;
@@ -116,14 +117,31 @@ router.post("/create", (req, res) => {
   const content = req.body.content;
   const authorId = req.body.authorId;
 
-  Post.create({
+  const postData = {
     postType: type,
     subject: subjectId,
     coverImage: coverImage,
     title: title,
     content: content,
     author: authorId,
-  });
+  };
+
+  if (type === "quiz") {
+    const questions = req.body.questions;
+
+    questions.map(async question => {
+      const quiz = await Quiz.create({
+        question: question.question,
+        image: question.image,
+        options: question.options,
+        correctOption: question.correctOption,
+      })
+
+      postData.quiz.push(quiz._id)
+    })
+  }
+
+  Post.create(postData);
 });
 
 module.exports = router;

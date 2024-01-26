@@ -6,9 +6,9 @@ const postSchema = new Schema({
     coverImage: String,
     title: String,
     content: String,
-    quizz: [{
+    quiz: [{
         type: Schema.Types.ObjectId,
-        ref: "Quizz",
+        ref: "Quiz",
     }],
     author: {
         type: Schema.Types.ObjectId,
