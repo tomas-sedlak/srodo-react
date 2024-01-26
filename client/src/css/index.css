@@ -115,6 +115,10 @@ main {
   border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
+.border-bottom:hover {
+  background-color: var(--mantine-color-gray-0); //hover effect, might change the color later
+}
+
 .light-hover:hover {
   background-color: var(--mantine-color-gray-0);
 }
