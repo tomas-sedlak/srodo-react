@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useLoaderData } from "react-router-dom";
-import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, ActionIcon, Textarea } from '@mantine/core';
-import { IconSend } from '@tabler/icons-react';
+import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
 import Comment from "../templates/comment"
 import { Link } from "react-router-dom";
 import axios from "axios";
+
+// TipTap editor
+import { useEditor } from '@tiptap/react';
+import { RichTextEditor } from '@mantine/tiptap';
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
 
 // Setup Moment.js for Slovak language
 import moment from "moment";
@@ -14,9 +19,16 @@ moment.locale("sk");
 export default function Article() {
     const [postId] = useLoaderData();
     const [post, setPost] = useState([]);
-    const [comment, setComment] = useState("");
     const [comments, setComments] = useState([]);
     const userId = "65b1848bfbb5fbbc9cda4acd";
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Placeholder.configure({ placeholder: "Napíš komentár" })
+        ],
+        content: ""
+    })
 
     const fetchPost = async () => {
         const post = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId)
@@ -67,40 +79,37 @@ export default function Article() {
                 </TypographyStylesProvider>
             </Box>
 
-            {/* TODO: add comment section */}
-
-            <Box id="komentare" p="sm">
-
-                {/* Adding new comments */}
+            <Box id="komentare" p="sm" className="border-bottom">
 
                 <Group align="flex-start" gap={8}>
                     <Avatar />
 
-                    <Textarea
+                    <RichTextEditor
+                        editor={editor}
                         style={{ flex: 1 }}
-                        placeholder="Tu mi napíš niečo pekné"
-                        minRows={2}
-                        autosize
-                        value={comment}
-                        onChange={event => setComment(event.target.value)}
-                        rightSection={
-                            <ActionIcon
-                                radius="xl"
-                                variant="subtle"
-                                onClick={() => {
-                                    axios.post(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment", {
-                                        postId: postId,
-                                        userId: userId,
-                                        content: comment,
-                                    })
-                                    fetchComments()
-                                    setComment("")
-                                }}
-                            >
-                                <IconSend stroke={1.25} />
-                            </ActionIcon>
-                        }
-                    />
+                    >
+                        <RichTextEditor.Content />
+                    </RichTextEditor>
+                </Group>
+
+                <Group mt={8} justify="flex-end">
+                    <Button
+                        onClick={async () => {
+                            // Check if not empty
+                            if (editor.getText().replace(/\s/g,"") !== "") {
+                                await axios.post(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment", {
+                                    postId: postId,
+                                    userId: userId,
+                                    content: editor.getHTML(),
+                                })
+
+                                fetchComments()
+                                editor.commands.clearContent()
+                            }
+                        }}
+                    >
+                        Publikovať
+                    </Button>
                 </Group>
 
                 {comments.map(comment => <Comment data={comment} />)}

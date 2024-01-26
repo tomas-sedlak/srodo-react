@@ -29,7 +29,8 @@ iframe {
   width: 100%;
   height: auto;
   border: none;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid var(--mantine-color-gray-2);
 }
 /* For YouTube videos */
 
@@ -209,6 +210,10 @@ main {
 
 .icon-wrapper.save:hover, .icon-wrapper.save-selected {
   color: var(--mantine-color-srobarka-filled);
+}
+
+.user-text p {
+  margin-bottom: var(--mantine-spacing-sm);
 }
 
 /* Small PC screens */

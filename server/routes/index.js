@@ -53,6 +53,7 @@ router.get("/post/:postId", async (req, res) => {
   const post = await Post.findById(req.params.postId)
     .populate("author", "username displayName profilePicture")
     .populate("subject")
+    .populate("quiz")
 
   res.send(post)
 });
@@ -93,6 +94,8 @@ router.post("/post/:postId/comment", async (req, res) => {
     author: userId,
     content: content,
   })
+
+  res.sendStatus(201)
 })
 
 router.get("/subjects", async (req, res) => {

@@ -1,30 +1,35 @@
-import { useState } from 'react';
-import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, TextInput, ActionIcon, Flex, Paper, UnstyledButton, Collapse, Textarea, Card, Button } from '@mantine/core';
-import { IconSend, IconHeart, IconHeartFilled, IconMessageCircle } from '@tabler/icons-react';
+import { Box, Text, Group, Avatar, TypographyStylesProvider } from '@mantine/core';
 import { Link } from "react-router-dom";
 
-export default function Comment({ data, depth }) {
-    const [liked, setLiked] = useState(false);
+import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
+
+export default function Comment({ data }) {
+    // const [liked, setLiked] = useState(false);
 
     return (
-        <Group gap={8} align="flex-start" mt="sm" ml={depth * 46}>
-            <Avatar src={ data.author.profilePicture } />
+        <Box mt={8}>
+            <Group gap={8}>
+                <Avatar src={data.author.profilePicture} />
 
-            <Box py={8} style={{ flex: 1 }}>
                 <Group gap={4}>
-                    <Link to={ "/" + data.author.username}>
+                    <Link to={"/" + data.author.username}>
                         <Text fw={600} c="gray" size="sm">
-                            { data.author.displayName }
+                            {data.author.displayName}
                         </Text>
                     </Link>
                     <Text c="gray" size="sm">
-                        &middot; pred 13 min
+                        &middot; {moment(data.createdAt).fromNow()}
                     </Text>
                 </Group>
+            </Group>
 
-                <Text my={8}>{ data.content }</Text>
+            <TypographyStylesProvider p={0} ml={46}>
+                <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
+            </TypographyStylesProvider>
 
-                <Group gap={8}>
+            {/* <Group gap={8}>
                     <div
                         className={`icon-wrapper ${liked ? "like-selected" : "like"}`}
                         onClick={(event) => { event.preventDefault(); setLiked(!liked) }}
@@ -37,8 +42,7 @@ export default function Comment({ data, depth }) {
                         <IconMessageCircle stroke={1.25} />
                         <span>Odpovedať</span>
                     </div>
-                </Group>
-            </Box>
-        </Group>
+                </Group> */}
+        </Box>
     )
 }
