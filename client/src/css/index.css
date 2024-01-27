@@ -175,6 +175,21 @@ main {
   background-color: var(--mantine-color-srobarka-filled-hover);
 }
 
+// custom text editor START
+.mantine-RichTextEditor-control {
+  border: none;
+  border-radius: var(--mantine-radius-lg);
+}
+ 
+.m-c2207da6 {
+  border: none;
+  border-radius: var(--mantine-radius-lg);
+}
+// both classes are for the editor buttons, I don't think it's the right way to delete the borders
+
+
+// custom text editor END
+
 /* This also needs to be DELETED or REMADE, because we need to think about a way to tell user type of the post */
 .image-item-left, .image-item-right {
   z-index: 9;
@@ -239,13 +254,13 @@ main {
   }
 }
 
+
 /* Tablets and mobiles */
 @media screen and (max-width: 768px) {
   .aside {
     display: none;
   }
 
- 
 
   main {
     grid-template-columns: 1fr;

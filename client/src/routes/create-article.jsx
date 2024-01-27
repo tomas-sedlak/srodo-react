@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text } from '@mantine/core';
+import { Box, Group, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text, Divider, Menu, ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCameraPlus } from '@tabler/icons-react';
+import { IconCameraPlus, IconDots, IconList, IconPhoto, IconChevronDown, IconPlus } from '@tabler/icons-react';
 import ImagesModal from "../templates/imagesModal";
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -138,31 +138,86 @@ export default function CreateArticle() {
                     <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)">
                         <RichTextEditor.ControlsGroup>
                             <RichTextEditor.H3 />
+                        </RichTextEditor.ControlsGroup>
+                        <Divider orientation="vertical" />
+                        <RichTextEditor.ControlsGroup>
                             <RichTextEditor.Bold />
                             <RichTextEditor.Italic />
-                            <RichTextEditor.Underline />
+                            <Menu>
+                                <Menu.Target>
+                                    <ActionIcon variant="subtle" color="gray.4" radius={0} ><IconDots stroke={1.25} color="black" /></ActionIcon>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+
+                                    <Menu.Item leftSection={<RichTextEditor.Underline />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Highlight />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Strikethrough />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.ClearFormatting />}>
+                                        ...
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                            {/* <RichTextEditor.Underline />
                             <RichTextEditor.Strikethrough />
                             <RichTextEditor.ClearFormatting />
                             <RichTextEditor.Highlight />
-                            <RichTextEditor.Code />
+                            <RichTextEditor.Code /> */}
                         </RichTextEditor.ControlsGroup>
-
+                        <Divider orientation="vertical" />
                         <RichTextEditor.ControlsGroup>
-                            <RichTextEditor.Blockquote />
-                            <RichTextEditor.Hr />
-                            <RichTextEditor.BulletList />
-                            <RichTextEditor.OrderedList />
-                            <RichTextEditor.Subscript />
-                            <RichTextEditor.Superscript />
-                            <button onClick={imageModalHandlers.open}>Obrázok</button>
-                            <button onClick={addVideo}>Video</button>
+                            <Menu>
+                                <Menu.Target>
+                                    <ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item leftSection={<RichTextEditor.BulletList />} >
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.OrderedList />}>
+                                        ...
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
                         </RichTextEditor.ControlsGroup>
-
+                        <Divider orientation="vertical" />
                         <RichTextEditor.ControlsGroup>
                             <RichTextEditor.Link />
                             <RichTextEditor.Unlink />
-                        </RichTextEditor.ControlsGroup>
+                            <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4"><IconPhoto stroke={1.25} color="black" /></ActionIcon>
 
+                            <Menu>
+                                <Menu.Target>
+                                    <ActionIcon variant="subtle" color="gray.4"><IconChevronDown stroke={1.25} color="black" /></ActionIcon>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item leftSection={<RichTextEditor.Blockquote />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Subscript />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Superscript />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Hr />}>
+                                        ...
+                                    </Menu.Item>
+                                    <Menu.Item leftSection={<RichTextEditor.Code />}>
+                                        ...
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                            {/*                      
+                            <button onClick={imageModalHandlers.open}>Obrázok</button>
+                            <button onClick={addVideo}>Video</button> */}
+                        </RichTextEditor.ControlsGroup>
+                        <Divider orientation="vertical" />
                         <RichTextEditor.ControlsGroup>
                             <RichTextEditor.AlignLeft />
                             <RichTextEditor.AlignCenter />
