@@ -1,9 +1,24 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 const userSchema = new Schema({
-    username: String,
-    displayName: String,
+    username: {
+        type: String,
+        max: 32,
+        required: true,
+        unique: true,
+    },
+    email: {
+        type: String,
+        max: 255,
+        required: true,
+        unique: true,
+    },
+    password: String,
+    displayName: {
+        type: String,
+        max: 32,
+    },
     profilePicture: {
         type: String,
         default: "default.jpg"
@@ -12,6 +27,10 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Post"
     }],
+}, {
+    timestamps: true,
 })
 
-module.exports = mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema);
+
+export default User;

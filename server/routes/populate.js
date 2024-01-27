@@ -1,9 +1,13 @@
-var router = require('express').Router();
-var mongoose = require('mongoose');
-var Post = require("../models/post");
-var Subject = require("../models/subject");
-var Comment = require("../models/comment");
-var User = require("../models/user");
+import express from "express";
+import mongoose from "mongoose";
+
+// MODELS
+import Post from "../models/Post.js";
+import Subject from "../models/Subject.js";
+import Comment from "../models/Comment.js";
+import User from "../models/User.js";
+
+const router = express.Router();
 
 const subjects = [
     {

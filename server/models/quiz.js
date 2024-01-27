@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const quizSchema = new Schema({
@@ -8,4 +8,6 @@ const quizSchema = new Schema({
     correctOption: String,
 })
 
-module.exports = mongoose.model("Quiz", quizSchema)
+const Quiz = mongoose.model("Quiz", quizSchema)
+
+export default Quiz;
