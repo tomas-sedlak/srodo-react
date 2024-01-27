@@ -20,9 +20,10 @@ const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
     const userId = "65b1848bfbb5fbbc9cda4acd";
-
+    const isLiked = post.likes.includes(userId);
+    
     const likePost = async (postId) => {
-        const response = await axios.put(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
+        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
         return response.data;
     }
 
@@ -95,14 +96,14 @@ const Post = forwardRef(({ post }, ref) => {
 
                                 {/* Likes button */}
                                 <div
-                                    className={`icon-wrapper ${post.liked ? "like-selected" : "like"}`}
+                                    className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                                     onClick={event => {
                                         event.preventDefault()
                                         likeMutation.mutate(post._id)
                                     }}
                                 >
-                                    {post.liked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                    <span>{userId ? post.likesCount : "login"}</span>
+                                    {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
+                                    <span>{userId ? post.likes.length : "login"}</span>
                                 </div>
 
                                 {/* Comments button */}

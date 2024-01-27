@@ -13,7 +13,7 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Quiz",
     }],
-    userId: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: "User",
     },

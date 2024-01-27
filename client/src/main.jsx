@@ -22,11 +22,6 @@ import "@mantine/core/styles.css";
 import "@mantine/tiptap/styles.css";
 import "./css/index.css";
 
-// import "dotenv/config.js";
-// dotenv.config();
-
-// Heroku.com
-
 const queryClient = new QueryClient();
 
 const theme = createTheme({

@@ -1,10 +1,11 @@
 import Post from "../models/Post.js";
+import Subject from "../models/Subject.js"
 
 // CREATE
 export const createPost = async (req, res) => {
     try {
         const {
-            userId,
+            author,
             postType,
             subject,
             coverImage,
@@ -13,7 +14,7 @@ export const createPost = async (req, res) => {
         } = req.body;
 
         const newPost = new Post({
-            userId,
+            author,
             postType,
             subject,
             coverImage,
@@ -32,7 +33,16 @@ export const createPost = async (req, res) => {
 // READ
 export const getFeedPosts = async (req, res) => {
     try {
-        const posts = await Post.find();
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 5;
+
+        const posts = await Post.find()
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .skip(limit * (page - 1))
+            .populate("author", "username displayName profilePicture")
+            .populate("subject")
+
         res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -42,7 +52,7 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        const post = await Post.find({ userId });
+        const post = await Post.find({ author: userId });
         res.status(200).json(post);
     } catch (err) {
         res.status(404).json({ message: err.message });
