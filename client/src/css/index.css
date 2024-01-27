@@ -115,10 +115,6 @@ main {
   border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
-.border-bottom:hover {
-  background-color: var(--mantine-color-gray-0); //hover effect, might change the color later
-}
-
 .light-hover:hover {
   background-color: var(--mantine-color-gray-0);
 }
@@ -176,17 +172,15 @@ main {
 }
 
 // custom text editor START
+
 .mantine-RichTextEditor-control {
   border: none;
-  border-radius: var(--mantine-radius-lg);
 }
  
 .m-c2207da6 {
   border: none;
-  border-radius: var(--mantine-radius-lg);
 }
 // both classes are for the editor buttons, I don't think it's the right way to delete the borders
-
 
 // custom text editor END
 

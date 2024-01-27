@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Box, Group, Button, Select, AspectRatio, Image as MantineImage, Textarea, Text, Divider, Menu, ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCameraPlus, IconDots, IconList, IconPhoto, IconChevronDown, IconPlus } from '@tabler/icons-react';
+import { IconDots, IconList, IconPhoto, IconChevronDown, IconLetterCase, IconBold, IconItalic, IconUnderline, IconHighlight, IconStrikethrough, IconClearFormatting, IconLink, IconUnlink, IconBlockquote, IconSubscript, IconSuperscript, IconCode, IconListNumbers, IconLineDashed } from '@tabler/icons-react';
 import ImagesModal from "../templates/imagesModal";
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -136,94 +136,83 @@ export default function CreateArticle() {
 
                 <RichTextEditor editor={editor} mt="sm">
                     <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)">
-                        <RichTextEditor.ControlsGroup>
-                            <RichTextEditor.H3 />
-                        </RichTextEditor.ControlsGroup>
+                        <ActionIcon variant="subtle" color="gray.4" ><IconLetterCase stroke={1.25} color="black" /></ActionIcon>
                         <Divider orientation="vertical" />
-                        <RichTextEditor.ControlsGroup>
-                            <RichTextEditor.Bold />
-                            <RichTextEditor.Italic />
-                            <Menu>
-                                <Menu.Target>
-                                    <ActionIcon variant="subtle" color="gray.4" radius={0} ><IconDots stroke={1.25} color="black" /></ActionIcon>
-                                </Menu.Target>
-                                <Menu.Dropdown>
+                        <ActionIcon variant="subtle" color="gray.4" ><IconBold stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" ><IconItalic stroke={1.25} color="black" /></ActionIcon>
+                        <Menu>
+                            <Menu.Target>
+                                <ActionIcon variant="subtle" color="gray.4" radius={0} ><IconDots stroke={1.25} color="black" /></ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
 
-                                    <Menu.Item leftSection={<RichTextEditor.Underline />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Highlight />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Strikethrough />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.ClearFormatting />}>
-                                        ...
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
-                            {/* <RichTextEditor.Underline />
-                            <RichTextEditor.Strikethrough />
-                            <RichTextEditor.ClearFormatting />
-                            <RichTextEditor.Highlight />
-                            <RichTextEditor.Code /> */}
-                        </RichTextEditor.ControlsGroup>
-                        <Divider orientation="vertical" />
-                        <RichTextEditor.ControlsGroup>
-                            <Menu>
-                                <Menu.Target>
-                                    <ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    <Menu.Item leftSection={<RichTextEditor.BulletList />} >
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.OrderedList />}>
-                                        ...
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
-                        </RichTextEditor.ControlsGroup>
-                        <Divider orientation="vertical" />
-                        <RichTextEditor.ControlsGroup>
-                            <RichTextEditor.Link />
-                            <RichTextEditor.Unlink />
-                            <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4"><IconPhoto stroke={1.25} color="black" /></ActionIcon>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconUnderline stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconHighlight stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconStrikethrough stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconClearFormatting stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
 
-                            <Menu>
-                                <Menu.Target>
-                                    <ActionIcon variant="subtle" color="gray.4"><IconChevronDown stroke={1.25} color="black" /></ActionIcon>
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    <Menu.Item leftSection={<RichTextEditor.Blockquote />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Subscript />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Superscript />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Hr />}>
-                                        ...
-                                    </Menu.Item>
-                                    <Menu.Item leftSection={<RichTextEditor.Code />}>
-                                        ...
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
-                            {/*                      
-                            <button onClick={imageModalHandlers.open}>Obrázok</button>
-                            <button onClick={addVideo}>Video</button> */}
-                        </RichTextEditor.ControlsGroup>
+                        {/* <RichTextEditor.Underline />
+                        <RichTextEditor.Strikethrough />
+                        <RichTextEditor.ClearFormatting />
+                        <RichTextEditor.Highlight />
+                        <RichTextEditor.Code /> */}
+
                         <Divider orientation="vertical" />
-                        <RichTextEditor.ControlsGroup>
-                            <RichTextEditor.AlignLeft />
-                            <RichTextEditor.AlignCenter />
-                            <RichTextEditor.AlignJustify />
-                            <RichTextEditor.AlignRight />
-                        </RichTextEditor.ControlsGroup>
+
+                        <Menu>
+                            <Menu.Target>
+                                <ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>} >
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconListNumbers stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                        <Divider orientation="vertical" />
+                        <ActionIcon variant="subtle" color="gray.4" ><IconLink stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" ><IconUnlink stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4"><IconPhoto stroke={1.25} color="black" /></ActionIcon>
+                        <Menu>
+                            <Menu.Target>
+                                <ActionIcon variant="subtle" color="gray.4"><IconChevronDown stroke={1.25} color="black" /></ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconBlockquote stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconSubscript stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconSuperscript stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconLineDashed stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconCode stroke={1.25} color="black" /></ActionIcon>}>
+                                    ...
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+
+                        {/*                      
+                        <button onClick={imageModalHandlers.open}>Obrázok</button>
+                        <button onClick={addVideo}>Video</button> */}
+
                     </RichTextEditor.Toolbar>
 
                     <RichTextEditor.Content />
