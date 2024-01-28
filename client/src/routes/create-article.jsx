@@ -15,6 +15,7 @@ import Youtube from '@tiptap/extension-youtube';
 // import TextAlign from '@tiptap/extension-text-align';
 // import Superscript from '@tiptap/extension-superscript';
 // import SubScript from '@tiptap/extension-subscript';
+import PostTitle from "../templates/postTitle";
 import { createClient } from 'pexels';
 import axios from "axios";
 
@@ -37,10 +38,8 @@ export default function CreateArticle() {
         content: ""
     });
 
-    const maxCharacterLenght = 64;
     const navigate = useNavigate();
-    const [title, setTitle] = useState("");
-    const [count, setCount] = useState(0);
+    const [title] = useState("");
     const [coverImage, setCoverImage] = useState("");
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState();
@@ -103,29 +102,8 @@ export default function CreateArticle() {
                     </AspectRatio>
                 </Box>
 
-                <Textarea
-                    autosize
-                    mt="md"
-                    w="100%"
-                    variant="unstyled"
-                    placeholder="Názov článku"
-                    // className="title-input"
-                    styles={{
-                        input: {
-                            fontSize: "32px",
-                            fontWeight: "700"
-                        },
-                    }}
-                    value={title}
-                    maxLength={maxCharacterLenght}
-                    onChange={event => {
-                        setTitle(event.target.value)
-                        setCount(event.target.value.length)
-                    }}
-                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
-                />
-                {/* Character counter for Textarea */}
-                <Text c="gray" size="sm" ta="end">{count}/{maxCharacterLenght}</Text>
+                <PostTitle />
+
 
                 <Select
                     mt="sm"
@@ -136,26 +114,50 @@ export default function CreateArticle() {
 
                 <RichTextEditor editor={editor} mt="sm">
                     <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)">
-                        <ActionIcon variant="subtle" color="gray.4" ><IconLetterCase stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" c="black" >
+                            <IconLetterCase stroke={1.25} />
+                        </ActionIcon>
                         <Divider orientation="vertical" />
-                        <ActionIcon variant="subtle" color="gray.4" ><IconBold stroke={1.25} color="black" /></ActionIcon>
-                        <ActionIcon variant="subtle" color="gray.4" ><IconItalic stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" c="black" >
+                            <IconBold stroke={1.25} />
+                        </ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" c="black" >
+                            <IconItalic stroke={1.25}  />
+                        </ActionIcon>
                         <Menu>
                             <Menu.Target>
-                                <ActionIcon variant="subtle" color="gray.4" radius={0} ><IconDots stroke={1.25} color="black" /></ActionIcon>
+                                <ActionIcon variant="subtle" color="gray.4" c="black" radius={0} >
+                                    <IconDots stroke={1.25} />
+                                </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
 
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconUnderline stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconUnderline stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconHighlight stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconHighlight stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconStrikethrough stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconStrikethrough stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconClearFormatting stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconClearFormatting stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
                             </Menu.Dropdown>
@@ -171,39 +173,77 @@ export default function CreateArticle() {
 
                         <Menu>
                             <Menu.Target>
-                                <ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>
+                                <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                    <IconList stroke={1.25} />
+                                </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconList stroke={1.25} color="black" /></ActionIcon>} >
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconList stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconListNumbers stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconListNumbers stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
                         <Divider orientation="vertical" />
-                        <ActionIcon variant="subtle" color="gray.4" ><IconLink stroke={1.25} color="black" /></ActionIcon>
-                        <ActionIcon variant="subtle" color="gray.4" ><IconUnlink stroke={1.25} color="black" /></ActionIcon>
-                        <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4"><IconPhoto stroke={1.25} color="black" /></ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" c="black" >
+                            <IconLink stroke={1.25} />
+                        </ActionIcon>
+                        <ActionIcon variant="subtle" color="gray.4" c="black" >
+                            <IconUnlink stroke={1.25} />
+                        </ActionIcon>
+                        <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4" c="black">
+                            <IconPhoto stroke={1.25} />
+                        </ActionIcon>
                         <Menu>
                             <Menu.Target>
-                                <ActionIcon variant="subtle" color="gray.4"><IconChevronDown stroke={1.25} color="black" /></ActionIcon>
+                                <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                    <IconChevronDown stroke={1.25} />
+                                </ActionIcon>
                             </Menu.Target>
                             <Menu.Dropdown>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconBlockquote stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconBlockquote stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconSubscript stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconSubscript stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconSuperscript stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconSuperscript stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconLineDashed stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black">
+                                        <IconLineDashed stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
-                                <Menu.Item leftSection={<ActionIcon variant="subtle" color="gray.4" ><IconCode stroke={1.25} color="black" /></ActionIcon>}>
+                                <Menu.Item leftSection={
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconCode stroke={1.25} />
+                                    </ActionIcon>
+                                }>
                                     ...
                                 </Menu.Item>
                             </Menu.Dropdown>
