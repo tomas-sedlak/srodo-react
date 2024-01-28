@@ -21,7 +21,7 @@ const Post = forwardRef(({ post }, ref) => {
     const url = "/" + post.author.username + "/" + post._id;
     const userId = "65b1848bfbb5fbbc9cda4acd";
     const isLiked = post.likes.includes(userId);
-    
+
     const likePost = async (postId) => {
         const response = await axios.patch(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
         return response.data;
@@ -29,13 +29,22 @@ const Post = forwardRef(({ post }, ref) => {
 
     const savePost = async (postId) => {
         const response = await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/saved`, { postId });
-        return response.data;
+        return await response.data;
     }
 
     const likeMutation = useMutation({
         mutationFn: likePost,
-        onSuccess: () => {
-            queryClient.invalidateQueries("posts")
+        onSuccess: (updatePost) => {
+            queryClient.setQueryData(["posts"], data => {
+                return  {
+                    ...data,
+                    pages: data.pages.map(page =>
+                        page.map(post => 
+                            post._id === updatePost._id ? updatePost : post
+                        )
+                    )
+                }
+            })
         },
     })
 
