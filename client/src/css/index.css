@@ -171,7 +171,7 @@ main {
   background-color: var(--mantine-color-srobarka-filled-hover);
 }
 
-// custom text editor START
+/* // custom text editor START */
 
 .mantine-RichTextEditor-control {
   border: none;
@@ -180,9 +180,9 @@ main {
 .m-c2207da6 {
   border: none;
 }
-// both classes are for the editor buttons, I don't think it's the right way to delete the borders
+/* // both classes are for the editor buttons, I don't think it's the right way to delete the borders
 
-// custom text editor END
+// custom text editor END */
 
 /* This also needs to be DELETED or REMADE, because we need to think about a way to tell user type of the post */
 .image-item-left, .image-item-right {

@@ -3,16 +3,16 @@ import ReactDOM from "react-dom/client";
 
 // Libraries import
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 
 // Routes import
 import Root from "./routes/root.jsx";
 import Home from "./routes/home.jsx";
-import User, {loader as userLoader} from "./routes/user.jsx";
 import News from "./routes/news.jsx";
 import Saves from "./routes/saves.jsx";
-import Article, {loader as articleLoader} from "./routes/article.jsx";
+import User from "./routes/user.jsx";
+import Article from "./routes/article.jsx";
 import CreateArticle from "./routes/create-article.jsx";
 import CreateQuiz from "./routes/create-quiz.jsx";
 import CreateDiscussion from "./routes/create-discussion.jsx";
@@ -21,6 +21,35 @@ import CreateDiscussion from "./routes/create-discussion.jsx";
 import "@mantine/core/styles.css";
 import "@mantine/tiptap/styles.css";
 import "./css/index.css";
+
+// Redux
+import authReducer from "./state";
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import { PersistGate } from "redux-persist/integration/react";
+
+const persistConfig = { key: "root", storage, version: 1 };
+const persistedReducer = persistReducer(persistConfig, authReducer);
+const store = configureStore({
+    reducer: persistedReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }),
+});
 
 const queryClient = new QueryClient();
 
@@ -32,60 +61,31 @@ const theme = createTheme({
     defaultRadius: "md",
 })
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Root />,
-        children: [
-            {
-                index: true,
-                element: <Home />,
-            },
-            {
-                path: "novinky",
-                element: <News />,
-            },
-            {
-                path: "ulozene",
-                element: <Saves />,
-            },
-            {
-                path: ":username",
-                element: <User />,
-                loader: userLoader,
-            },
-            {
-                path: ":username/:article",
-                element: <Article />,
-                loader: articleLoader,
-            },
-            {
-                path: "novy",
-                children: [
-                    {
-                        path: "clanok",
-                        element: <CreateArticle />,
-                    },
-                    {
-                        path: "kviz",
-                        element: <CreateQuiz />,
-                    },
-                    {
-                        path: "diskusia",
-                        element: <CreateDiscussion />,
-                    }
-                ],
-            }
-        ],
-    },
-]);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <React.StrictMode>
         <MantineProvider theme={theme}>
-            <RouterProvider router={router} />
+            <QueryClientProvider client={queryClient}>
+                <Provider store={store}>
+                    <PersistGate loading={null} persistor={persistStore(store)}>
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path="/" element={<Root />}>
+                                    <Route index element={<Home />} />
+                                    <Route path="novinky" element={<News />} />
+                                    <Route path="ulozene" element={<Saves />} />
+                                    <Route path=":username" element={<User />} />
+                                    <Route path=":username/:postId" element={<Article />} />
+                                    <Route path="novy">
+                                        <Route path="clanok" element={<CreateArticle />} />
+                                        <Route path="kviz" element={<CreateQuiz />} />
+                                        <Route path="diskusia" element={<CreateDiscussion />} />
+                                    </Route>
+                                </Route>
+                            </Routes>
+                        </BrowserRouter>
+                    </PersistGate>
+                </Provider>
+            </QueryClientProvider>
         </MantineProvider>
-    </QueryClientProvider>
-  </React.StrictMode>
+    </React.StrictMode>
 );
