@@ -1,24 +1,14 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon } from '@mantine/core';
-import { useMediaQuery, useDisclosure } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import Navbar from './navbar';
 
-
-function clear() {
-    document.getElementsByClassName("search").value = "";
-}
-
 export default function Header() {
-
     const isMobile = useMediaQuery("(max-width: 992px)");
-
     const [opened, setOpened] = useState(false);
-    const title = opened ? 'Close navigation' : 'Open navigation';
-
     const [value, SetValue] = useState("");
-
 
     return (
         <>
@@ -28,7 +18,7 @@ export default function Header() {
                         <ActionIcon
                             variant="subtle"
                             style={!isMobile && { display: "none" }}
-                            onClick={() => setOpened((o) => !o)}
+                            onClick={() => setOpened(true)}
                             c="black"
                             color="gray"
                             w={40}

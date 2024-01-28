@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box } from '@mantine/core';
 import { IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
 import Post from "../templates/post";
 
 export default function User() {
-    const username = useLoaderData();
-
+    const { username } = useParams();
     const [following, setFollowing] = useState(false);
     const [user, setUser] = useState([])
     const [posts, setPosts] = useState([])
@@ -70,8 +69,4 @@ export default function User() {
             {posts.map((post) => <Post post={post} />)}
         </>
     );
-}
-
-export function loader({ params }) {
-    return params.username;
 }

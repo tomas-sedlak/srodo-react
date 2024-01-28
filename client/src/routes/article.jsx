@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
 import Comment from "../templates/comment"
 import { Link } from "react-router-dom";
@@ -17,7 +17,7 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 export default function Article() {
-    const [postId] = useLoaderData();
+    const { postId } = useParams();
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
     const userId = "65b1848bfbb5fbbc9cda4acd";
@@ -117,8 +117,4 @@ export default function Article() {
             </Box>
         </>
     )
-}
-
-export function loader({ params }) {
-    return [params.article];
 }
