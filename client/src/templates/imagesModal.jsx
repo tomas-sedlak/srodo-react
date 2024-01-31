@@ -25,7 +25,6 @@ export default function ImagesModal({ opened, close, setImage }) {
     }
 
     async function querySearch(pageParam) {
-        console.log(pageParam)
         const response = await client.photos.search({ query, per_page: 10, page: pageParam })
         return response.photos
     }
@@ -57,13 +56,12 @@ export default function ImagesModal({ opened, close, setImage }) {
             opened={opened}
             onClose={close}
             size="lg"
-            radius="lg"
             padding="sm"
             fullScreen={isMobile}
         >
             <Modal.Overlay />
 
-            <Modal.Content radius="lg">
+            <Modal.Content radius={isMobile ? 0 : "lg"}>
                 <Modal.Header>
                     <Text ml="sm" onClick={() => setTab("pexels")}>Pexels</Text>
                     <Text ml="sm" onClick={() => setTab("url")}>URL</Text>

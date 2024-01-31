@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box, Badge } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 // Setup Moment.js for Slovak language
@@ -19,7 +20,7 @@ const typeNames = {
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
-    const userId = "65b1848bfbb5fbbc9cda4acd";
+    const userId = useSelector(state => state?.user?._id);
     const isLiked = post.likes.includes(userId);
 
     const likePost = async (postId) => {
@@ -118,7 +119,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 {/* Comments button */}
                                 <Link to={url + "#komentare"} className="icon-wrapper">
                                     <IconMessageCircle stroke={1.25} />
-                                    <span>{post.commentsCount}</span>
+                                    <span>{post.comments.length}</span>
                                 </Link>
 
                                 {/* Save button */}
