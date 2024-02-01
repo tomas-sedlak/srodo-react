@@ -1,23 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, Select, AspectRatio, Image as MantineImage } from '@mantine/core';
+import { Box, Group, Button, Select, AspectRatio, Textarea, Text, Image as MantineImage } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import ImagesModal from "../templates/imagesModal";
 // import Highlight from '@tiptap/extension-highlight';
 // import Underline from '@tiptap/extension-underline';
 // import TextAlign from '@tiptap/extension-text-align';
 // import Superscript from '@tiptap/extension-superscript';
 // import SubScript from '@tiptap/extension-subscript';
-import PostTitle from "../templates/postTitle";
+import ImagesModal from "templates/imagesModal";
+import TextEditor from "templates/TextEditor";
 import { createClient } from 'pexels';
 import axios from "axios";
-import TextEditor from "../templates/TextEditor";
 
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
 
+    const maxCharacterLenght = 64;
     const navigate = useNavigate();
-    const [title] = useState("");
+    const [title, setTitle] = useState("");
+    const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState();
@@ -80,7 +81,28 @@ export default function CreateArticle() {
                     </AspectRatio>
                 </Box>
 
-                <PostTitle />
+                <Textarea
+                    autosize
+                    mt="md"
+                    w="100%"
+                    variant="unstyled"
+                    placeholder="Názov článku"
+                    // className="title-input"
+                    styles={{
+                        input: {
+                            fontSize: "32px",
+                            fontWeight: "700"
+                        },
+                    }}
+                    value={title}
+                    maxLength={maxCharacterLenght}
+                    onChange={event => {
+                        setTitle(event.target.value)
+                        setCount(event.target.value.length)
+                    }}
+                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+                />
+                <Text c="gray" size="sm" ta="end">{count}/{maxCharacterLenght}</Text>
 
                 <Select
                     mt="sm"

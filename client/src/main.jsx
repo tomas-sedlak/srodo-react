@@ -7,15 +7,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 
 // Routes import
-import Root from "./routes/root.jsx";
-import Home from "./routes/home.jsx";
-import News from "./routes/news.jsx";
-import Saves from "./routes/saves.jsx";
-import User from "./routes/user.jsx";
-import Article from "./routes/article.jsx";
-import CreateArticle from "./routes/create-article.jsx";
-import CreateQuiz from "./routes/create-quiz.jsx";
-import CreateDiscussion from "./routes/create-discussion.jsx";
+import Root from "templates/root.jsx";
+import Home from "routes/home";
+import News from "routes/news";
+import Saved from "routes/saved";
+import User from "routes/user";
+import Post from "routes/post";
+import CreateArticle from "routes/create_article";
+import CreateQuiz from "routes/create_quiz";
+import CreateDiscussion from "routes/create_discussion";
 
 // CSS imports
 import "@mantine/core/styles.css";
@@ -72,9 +72,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                                 <Route path="/" element={<Root />}>
                                     <Route index element={<Home />} />
                                     <Route path="novinky" element={<News />} />
-                                    <Route path="ulozene" element={<Saves />} />
+                                    <Route path="ulozene" element={<Saved />} />
                                     <Route path=":username" element={<User />} />
-                                    <Route path=":username/:postId" element={<Article />} />
+                                    <Route path=":username/:postId" element={<Post />} />
                                     <Route path="novy">
                                         <Route path="clanok" element={<CreateArticle />} />
                                         <Route path="kviz" element={<CreateQuiz />} />

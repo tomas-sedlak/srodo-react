@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box } from '@mantine/core';
 import { IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
-import Post from "../templates/post";
+import Post from "templates/post";
 
 export default function User() {
     const { username } = useParams();

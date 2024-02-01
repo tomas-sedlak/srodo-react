@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
-import Comment from "../templates/comment"
+import Comment from "templates/comment"
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -16,7 +16,7 @@ import moment from "moment";
 import "moment/dist/locale/sk";
 moment.locale("sk");
 
-export default function Article() {
+export default function Post() {
     const { postId } = useParams();
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);

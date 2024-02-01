@@ -3,7 +3,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
-import Navbar from './navbar';
+import Navbar from 'templates/navbar';
 
 export default function Header() {
     const isMobile = useMediaQuery("(max-width: 992px)");
