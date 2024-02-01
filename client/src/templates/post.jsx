@@ -109,11 +109,15 @@ const Post = forwardRef(({ post }, ref) => {
                                     className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                                     onClick={event => {
                                         event.preventDefault()
-                                        likeMutation.mutate(post._id)
+                                        if (userId) {
+                                            likeMutation.mutate(post._id)
+                                        } else {
+                                            console.log("User not logged in!")
+                                        }
                                     }}
                                 >
                                     {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                    <span>{userId ? post.likes.length : "login"}</span>
+                                    <span>{post.likes.length}</span>
                                 </div>
 
                                 {/* Comments button */}
