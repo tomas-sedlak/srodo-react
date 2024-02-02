@@ -1,31 +1,38 @@
 import { useState, useEffect } from 'react';
-import { Loader, Text, Image, TextInput, Modal, Grid, AspectRatio, CloseButton } from '@mantine/core';
+import { Loader, Text, Image, TextInput, Modal, Grid, AspectRatio, CloseButton, Box, Group } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
-import { useInView } from "react-intersection-observer";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { IconSearch } from '@tabler/icons-react';
+import { FixedSizeGrid } from "react-window";
+import InfiniteLoader from "react-window-infinite-loader";
+import AutoSizer from "react-virtualized-auto-sizer";
 
 export default function ImagesModal({ opened, close, setImage }) {
     const client = createClient(import.meta.env.VITE_PEXELS_KEY);
-    const { ref, inView } = useInView();
+
+    const COLUMNS = 2;
+    const LIMIT = 10;
 
     const [query, setQuery] = useState("");
+    const [itemCount, setItemCount] = useState(0);
     const [tab, setTab] = useState("pexels");
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     async function search({ pageParam }) {
-        if (query === "") return emptySearch(pageParam)
-        else return querySearch(pageParam)
+        if (query === "") return await emptySearch(pageParam)
+        else return await querySearch(pageParam)
     }
 
     async function emptySearch(pageParam) {
-        const response = await client.photos.curated({ per_page: 10, page: pageParam })
+        const response = await client.photos.curated({ per_page: LIMIT, page: pageParam })
+        setItemCount(response.total_results)
         return response.photos
     }
 
     async function querySearch(pageParam) {
-        const response = await client.photos.search({ query, per_page: 10, page: pageParam })
+        const response = await client.photos.search({ query, per_page: LIMIT, page: pageParam })
+        setItemCount(response.total_results)
         return response.photos
     }
 
@@ -45,12 +52,6 @@ export default function ImagesModal({ opened, close, setImage }) {
         },
     })
 
-    useEffect(() => {
-        if (inView && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, fetchNextPage, hasNextPage])
-
     return (
         <Modal.Root
             opened={opened}
@@ -61,7 +62,7 @@ export default function ImagesModal({ opened, close, setImage }) {
         >
             <Modal.Overlay />
 
-            <Modal.Content radius={isMobile ? 0 : "lg"}>
+            <Modal.Content radius={isMobile ? 0 : "lg"} h="100%" style={{ overflow: "hidden" }}>
                 <Modal.Header>
                     <Text ml="sm" onClick={() => setTab("pexels")}>Pexels</Text>
                     <Text ml="sm" onClick={() => setTab("url")}>URL</Text>
@@ -70,7 +71,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                     <Modal.CloseButton />
                 </Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body h="calc(100% - 52px)">
                     {tab === "pexels" ? (
                         <>
                             <TextInput
@@ -107,34 +108,58 @@ export default function ImagesModal({ opened, close, setImage }) {
                                     <Text>Nastala chyba</Text>
                                 </div>
                             ) : (
-                                <>
-                                    {data.pages[0].length <= 0 ?
-                                        <div className="loader-center">
-                                            <Text>Neboli nájdené žiadne obrázky. Skontroluj či vyhľadávaš po anglicky 🤔</Text>
-                                        </div>
-                                        :
-                                        <Grid gutter={4}>
-                                            {data.pages.map(page => (
-                                                page.map((photo, i) => (
-                                                    <Grid.Col ref={page.length === i + 1 ? ref : undefined} span={6} key={photo.id}>
-                                                        <AspectRatio ratio={2 / 1}>
+                                <AutoSizer>
+                                    {({ width, height }) => (
+                                        <InfiniteLoader
+                                            isItemLoaded={index => index < data.pages.length * LIMIT}
+                                            itemCount={itemCount}
+                                            loadMoreItems={fetchNextPage}
+                                        >
+                                            {({ onItemsRendered, ref }) => (
+                                                <FixedSizeGrid
+                                                    height={height}
+                                                    width={width}
+                                                    columnCount={COLUMNS}
+                                                    columnWidth={width / COLUMNS}
+                                                    rowCount={data.pages.length * LIMIT / COLUMNS}
+                                                    rowHeight={width / COLUMNS / 2}
+                                                    ref={ref}
+                                                    // onItemsRendered={onItemsRendered}
+                                                    onItemsRendered={gridProps => {
+                                                        onItemsRendered({
+                                                            overscanStartIndex: gridProps.overscanRowStartIndex * COLUMNS,
+                                                            overscanStopIndex: gridProps.overscanRowStopIndex * COLUMNS,
+                                                            visibleStartIndex: gridProps.visibleRowStartIndex * COLUMNS,
+                                                            visibleStopIndex: gridProps.visibleRowStopIndex * COLUMNS
+                                                        });
+                                                    }}
+                                                >
+                                                    {({ rowIndex, columnIndex, style }) => {
+                                                        const index = rowIndex * COLUMNS + columnIndex;
+                                                        let image;
+                                                        try {
+                                                            image = data.pages[Math.floor(index / LIMIT)][index % LIMIT].src.landscape;
+                                                        } catch {
+                                                            return (<></>)
+                                                        }
+
+                                                        return (
                                                             <Image
-                                                                src={photo.src.landscape}
-                                                                onClick={event => {
-                                                                    setImage(photo.src.landscape)
+                                                                src={image}
+                                                                radius="lg"
+                                                                onClick={() => {
+                                                                    setImage(image)
                                                                     close()
                                                                 }}
-                                                                style={{ cursor: "pointer" }}
-                                                                radius="lg"
+                                                                style={{ ...style, cursor: "pointer" }}
                                                             />
-                                                        </AspectRatio>
-                                                    </Grid.Col>
-                                                ))
-                                            ))}
-                                        </Grid>}
-
-                                    {hasNextPage && <div className="loader-center-x"><Loader /></div>}
-                                </>
+                                                        )
+                                                    }}
+                                                </FixedSizeGrid>
+                                            )}
+                                        </InfiniteLoader>
+                                    )}
+                                </AutoSizer>
                             )}
                         </>
                     ) : tab === "url" ? (
