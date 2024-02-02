@@ -133,7 +133,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                                             ))}
                                         </Grid>}
 
-                                    {isFetchingNextPage && <div className="loader-center"><Loader /></div>}
+                                    {hasNextPage && <div className="loader-center-x"><Loader /></div>}
                                 </>
                             )}
                         </>

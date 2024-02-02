@@ -34,7 +34,7 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
     try {
         const page = req.query.page || 1;
-        const limit = req.query.limit || 5;
+        const limit = req.query.limit || 3;
 
         const posts = await Post.find()
             .sort({ createdAt: -1 })

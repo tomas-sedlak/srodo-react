@@ -53,7 +53,7 @@ export default function Home() {
                 })
             ))}
 
-            {isFetchingNextPage && <div className="loader-center"><Loader /></div>}
+            {hasNextPage && <div className="loader-center-x"><Loader /></div>}
         </>
     )
 }
