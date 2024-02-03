@@ -13,6 +13,8 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import postRoutes from "./routes/post.js";
+import subjectsRoutes from "./routes/subjects.js";
+import newsRoutes from "./routes/news.js";
 
 // CONTROLLERS
 import { register } from "./controllers/auth.js";
@@ -52,6 +54,8 @@ app.post("/post", verifyToken, upload.single("coverImage"), createPost);
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/post", postRoutes);
+app.use("/subjects", subjectsRoutes);
+app.use("/news", newsRoutes);
 
 // MONGOOSE SETUP
 const PORT = process.env.PORT || 3000;

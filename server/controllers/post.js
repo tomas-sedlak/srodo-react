@@ -1,5 +1,5 @@
 import Post from "../models/Post.js";
-import Subject from "../models/Subject.js"
+import Subject from "../models/Subject.js" // NECCESSARY FOR POPULATING
 
 // CREATE
 export const createPost = async (req, res) => {
