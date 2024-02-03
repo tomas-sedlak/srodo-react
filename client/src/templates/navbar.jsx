@@ -81,7 +81,7 @@ export default function Navbar() {
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     return (
-        <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
+        <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
 
             {/* Navigation items */}
             {menu.map((item) => <MenuItem item={item} />)}

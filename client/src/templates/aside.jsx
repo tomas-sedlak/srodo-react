@@ -23,7 +23,7 @@ export default function Aside() {
 
     return (
         <aside className="aside">
-            <ScrollArea p="sm" scrollbarSize={8} scrollHideDelay={0} h="100%">
+            <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
                 <Stack>
                     <NewsCard data={scienceArticles} title="Novinky vo vede" />
                     <NewsCard data={technologyArticles} title="Novinky v technológiách" />

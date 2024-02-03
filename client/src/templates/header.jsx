@@ -156,6 +156,8 @@ export default function Header() {
                 opened={opened}
                 onClose={() => setOpened(false)}
                 title="Šrodo"
+                size="xs"
+                padding="sm"
             >
                 <Navbar />
             </Drawer>
