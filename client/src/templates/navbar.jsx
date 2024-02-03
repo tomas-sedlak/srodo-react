@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Badge, Button, Collapse, Text, ScrollArea } from '@mantine/core';
 import { IconHome, IconNews, IconBookmark, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const menu = [
     {
@@ -31,75 +31,76 @@ const menu = [
 const categories = [
     {
         label: "Matematika",
-        link: "/",
+        link: "/matematika",
         leftSection: "📈"
     },
     {
         label: "Informatika",
-        link: "/",
+        link: "/informatika",
         leftSection: "💻"
     },
     {
         label: "Jazyky",
-        link: "/",
+        link: "/jazyky",
         leftSection: "💬"
     },
     {
         label: "Biológia",
-        link: "/",
+        link: "/biologia",
         leftSection: "🧬"
     },
     {
         label: "Chémia",
-        link: "/",
+        link: "/chemia",
         leftSection: "🧪"
     },
     {
         label: "Fyzika",
-        link: "/",
+        link: "/fyzika",
         leftSection: "⚡"
     },
     {
         label: "Geografia",
-        link: "/",
+        link: "/geografia",
         leftSection: "🌍"
     },
     {
         label: "Umenie",
-        link: "/",
+        link: "/umenie",
         leftSection: "🎨"
     },
     {
         label: "Šport",
-        link: "/",
+        link: "/sport",
         leftSection: "💪"
     },
 ]
 // Should be loaded from database!!!
 
-export default function Navbar() {
+export default function Navbar({ setOpened }) {
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     return (
         <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
 
             {/* Navigation items */}
-            {menu.map((item) => <MenuItem item={item} />)}
+            {menu.map((item) => <MenuItem item={item} setOpened={setOpened} />)}
 
             {/* Subject items */}
-            <Text fw={700} size="lg" px="md" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
+            <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
 
-            {categories.slice(0, 6).map((item) => <MenuItem item={item} />)}
+            {categories.slice(0, 6).map((item) => <MenuItem item={item} setOpened={setOpened} />)}
 
             <Collapse in={subjectsOpened}>
-                {categories.slice(6).map((item) => <MenuItem item={item} />)}
+                {categories.slice(6).map((item) => <MenuItem item={item} setOpened={setOpened} />)}
             </Collapse>
 
             <Button
                 onClick={toggle}
-                className="dark-hover"
+                className="light-hover"
                 fw={400}
                 size="md"
+                px="sm"
                 leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
                 variant="subtle"
                 color="black"
@@ -112,22 +113,31 @@ export default function Navbar() {
     )
 }
 
-function MenuItem({ item }) {
+function MenuItem({ item, setOpened }) {
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
+
     return (
-        <Link key={item.label} to={item.link}>
-            <Button
-                className="dark-hover"
-                fw={400}
-                size="md"
-                leftSection={item.leftSection}
-                rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
-                variant="subtle"
-                color="black"
-                justify="flex-start"
-                fullWidth
-            >
-                {item.label}
-            </Button>
-        </Link>
+        <Button
+            key={item.label}
+            className="light-hover"
+            fw={400}
+            size="md"
+            px="sm"
+            leftSection={item.leftSection}
+            rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
+            variant="subtle"
+            color="black"
+            bg={item.link === pathname ? "gray.1" : "white"}
+            mod={[item.link === pathname && "data-selected", "data-block"]}
+            justify="flex-start"
+            fullWidth
+            onClick={() => {
+                setOpened && setOpened(false)
+                navigate(item.link)
+            }}
+        >
+            {item.label}
+        </Button>
     )
 }

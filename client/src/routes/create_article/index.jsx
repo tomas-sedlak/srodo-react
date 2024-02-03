@@ -87,11 +87,10 @@ export default function CreateArticle() {
                     w="100%"
                     variant="unstyled"
                     placeholder="Názov článku"
-                    // className="title-input"
                     styles={{
                         input: {
                             fontSize: "32px",
-                            fontWeight: "700"
+                            fontWeight: "800"
                         },
                     }}
                     value={title}

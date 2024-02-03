@@ -119,12 +119,12 @@ main {
   border-bottom: 1px solid var(--mantine-color-gray-2);
 }
 
-.light-hover:hover {
-  background-color: var(--mantine-color-gray-0);
+.light-hover:not([data-selected]):hover {
+  background-color: var(--mantine-color-gray-0)!important;
 }
 
-.dark-hover:hover {
-  background-color: var(--mantine-color-gray-1);
+.dark-hover:not([data-selected]):hover {
+  background-color: var(--mantine-color-gray-1)!important
 }
 
 /* All custom cards START */

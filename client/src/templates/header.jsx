@@ -159,7 +159,7 @@ export default function Header() {
                 size="xs"
                 padding="sm"
             >
-                <Navbar />
+                <Navbar setOpened={setOpened} />
             </Drawer>
         </>
     )
