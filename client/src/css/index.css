@@ -20,7 +20,7 @@ a {
 
 img {
   border-radius: var(--mantine-radius-lg);
-  border: 1px solid var(--mantine-color-gray-2);
+  /* border: 1px solid var(--mantine-color-gray-2); */
 }
 
 /* For YouTube videos to change size based on screen size */
