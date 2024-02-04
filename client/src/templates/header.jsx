@@ -12,7 +12,7 @@ export default function Header() {
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
     const [loginOpened, loginHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
-    const userId = useSelector(state => state?.user?._id);
+    const user = useSelector(state => state.user);
 
     return (
         <>
@@ -64,8 +64,7 @@ export default function Header() {
                         onChange={setSearchValue}
                     />
 
-                    {/* NEEDS SOME TWEAKS: add user information and login */}
-                    {userId ? (
+                    {user ? (
                         <Group justify="flex-end" gap={4}>
                             <ActionIcon
                                 variant="subtle"
@@ -121,15 +120,15 @@ export default function Header() {
 
                             <Menu position="bottom-end" width={240}>
                                 <Menu.Target>
-                                    <Avatar className="pointer" />
+                                    <Avatar className="pointer" src={user.profilePicture} />
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                     <Menu.Item>
                                         <Group>
-                                            <Avatar />
+                                            <Avatar src={user.profilePicture} />
                                             <Stack gap={4}>
-                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>DisplayName</Text>
-                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@username</Text>
+                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
+                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
                                             </Stack>
                                         </Group>
                                     </Menu.Item>

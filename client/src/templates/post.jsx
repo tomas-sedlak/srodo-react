@@ -20,7 +20,7 @@ const typeNames = {
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
-    const userId = useSelector(state => state?.user?._id);
+    const userId = useSelector(state => state.user?._id);
     const isLiked = post.likes.includes(userId);
 
     const likePost = async (postId) => {

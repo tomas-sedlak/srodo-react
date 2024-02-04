@@ -28,6 +28,7 @@ export default function LoginModal({ opened, close }) {
             padding="sm"
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
+            centered
         >
             <Title align="center" >
                 Welcome back!
