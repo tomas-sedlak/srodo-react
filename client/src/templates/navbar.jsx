@@ -77,22 +77,22 @@ const categories = [
 ]
 // Should be loaded from database!!!
 
-export default function Navbar({ setOpened }) {
+export default function Navbar({ close }) {
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     return (
         <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
 
             {/* Navigation items */}
-            {menu.map((item) => <MenuItem item={item} setOpened={setOpened} />)}
+            {menu.map((item) => <MenuItem item={item} close={close} />)}
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
 
-            {categories.slice(0, 6).map((item) => <MenuItem item={item} setOpened={setOpened} />)}
+            {categories.slice(0, 6).map((item) => <MenuItem item={item} close={close} />)}
 
             <Collapse in={subjectsOpened}>
-                {categories.slice(6).map((item) => <MenuItem item={item} setOpened={setOpened} />)}
+                {categories.slice(6).map((item) => <MenuItem item={item} close={close} />)}
             </Collapse>
 
             <Button
@@ -113,7 +113,7 @@ export default function Navbar({ setOpened }) {
     )
 }
 
-function MenuItem({ item, setOpened }) {
+function MenuItem({ item, close }) {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
@@ -133,7 +133,7 @@ function MenuItem({ item, setOpened }) {
             justify="flex-start"
             fullWidth
             onClick={() => {
-                setOpened && setOpened(false)
+                close && close()
                 navigate(item.link)
             }}
         >

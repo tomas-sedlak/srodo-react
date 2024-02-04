@@ -1,24 +1,30 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button } from '@mantine/core';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
+import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { Link } from "react-router-dom";
-import { useState } from 'react';
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import Navbar from 'templates/navbar';
+import LoginModal from "templates/LoginModal";
 
 export default function Header() {
     const isMobile = useMediaQuery("(max-width: 992px)");
-    const [opened, setOpened] = useState(false);
-    const [value, SetValue] = useState("");
+    const [drawerOpened, drawerHandlers] = useDisclosure(false);
+    const [loginOpened, loginHandlers] = useDisclosure(false);
+    const [searchValue, setSearchValue] = useState("");
+    const userId = useSelector(state => state?.user?._id);
 
     return (
         <>
+            <LoginModal opened={loginOpened} close={loginHandlers.close} />
+
             <header>
                 <div className="header-inner">
                     <Group>
                         <ActionIcon
                             variant="subtle"
                             style={!isMobile && { display: "none" }}
-                            onClick={() => setOpened(true)}
+                            onClick={drawerHandlers.open}
                             c="black"
                             color="gray"
                             w={40}
@@ -37,13 +43,13 @@ export default function Header() {
                         placeholder="Hľadať"
                         leftSection={<IconSearch stroke={1.25} />}
                         rightSection={
-                            value !== "" && (
+                            searchValue !== "" && (
                                 <CloseButton
                                     variant="subtle"
                                     radius="lg"
                                     c="gray"
                                     onMouseDown={(event) => event.preventDefault()}
-                                    onClick={() => SetValue("")}
+                                    onClick={() => setSearchValue("")}
                                     aria-label="Clear value"
                                 />
                             )
@@ -54,112 +60,120 @@ export default function Header() {
                                 margin: "8px"
                             },
                         }}
-                        value={value}
-                        onChange={SetValue}
+                        value={searchValue}
+                        onChange={setSearchValue}
                     />
 
                     {/* NEEDS SOME TWEAKS: add user information and login */}
+                    {userId ? (
+                        <Group justify="flex-end" gap={4}>
+                            <ActionIcon
+                                variant="subtle"
+                                c="black"
+                                color="gray"
+                                w={40}
+                                h={40}
+                                radius="xl"
+                            >
+                                <IconBell stroke={1.25} />
+                            </ActionIcon>
 
-                    <Group justify="flex-end" gap={4}>
-                        <ActionIcon
-                            variant="subtle"
-                            c="black"
-                            color="gray"
-                            w={40}
-                            h={40}
-                            radius="xl"
+                            <Menu position="bottom-end" width={180}>
+                                <Menu.Target>
+                                    <ActionIcon
+                                        variant="subtle"
+                                        c="black"
+                                        color="gray"
+                                        w={40}
+                                        h={40}
+                                        radius="xl"
+                                    >
+                                        <IconPlus stroke={1.25} />
+                                    </ActionIcon>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item>
+                                        <Link to="/novy/clanok">
+                                            <Group>
+                                                <IconPencilPlus stroke={1.25} />
+                                                <Text>Článok</Text>
+                                            </Group>
+                                        </Link>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Link to="/novy/diskusia">
+                                            <Group>
+                                                <IconMessageCircleQuestion stroke={1.25} />
+                                                <Text>Diskusia</Text>
+                                            </Group>
+                                        </Link>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Link to="/novy/kviz">
+                                            <Group>
+                                                <IconCopyCheck stroke={1.25} />
+                                                <Text>Kvíz</Text>
+                                            </Group>
+                                        </Link>
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+
+                            <Menu position="bottom-end" width={240}>
+                                <Menu.Target>
+                                    <Avatar className="pointer" />
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item>
+                                        <Group>
+                                            <Avatar />
+                                            <Stack gap={4}>
+                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>DisplayName</Text>
+                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@username</Text>
+                                            </Stack>
+                                        </Group>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Group>
+                                            <IconSettings stroke={1.25} />
+                                            <Text>Nastavenia</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Group>
+                                            <IconChartBar stroke={1.25} />
+                                            <Text>Štatistiky</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Group>
+                                            <IconLogout stroke={1.25} />
+                                            <Text>Odhlásiť sa</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                        </Group>
+                    ) : (
+                        <Button
+                            my={10}
+                            ml="auto"
+                            onClick={loginHandlers.open}
                         >
-                            <IconBell stroke={1.25} />
-                        </ActionIcon>
-
-                        <Menu position="bottom-end" width={180}>
-                            <Menu.Target>
-                                <ActionIcon
-                                    variant="subtle"
-                                    c="black"
-                                    color="gray"
-                                    w={40}
-                                    h={40}
-                                    radius="xl"
-                                >
-                                    <IconPlus stroke={1.25} />
-                                </ActionIcon>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Item>
-                                    <Link to="/novy/clanok">
-                                        <Group>
-                                            <IconPencilPlus stroke={1.25} />
-                                            <Text>Článok</Text>
-                                        </Group>
-                                    </Link>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Link to="/novy/diskusia">
-                                        <Group>
-                                            <IconMessageCircleQuestion stroke={1.25} />
-                                            <Text>Diskusia</Text>
-                                        </Group>
-                                    </Link>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Link to="/novy/kviz">
-                                        <Group>
-                                            <IconCopyCheck stroke={1.25} />
-                                            <Text>Kvíz</Text>
-                                        </Group>
-                                    </Link>
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-
-                        <Menu position="bottom-end" width={240}>
-                            <Menu.Target>
-                                <Avatar className="pointer" />
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Item>
-                                    <Group>
-                                        <Avatar />
-                                        <Stack gap={4}>
-                                            <Text fw={700} size="sm" style={{ lineHeight: 1 }}>DisplayName</Text>
-                                            <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@username</Text>
-                                        </Stack>
-                                    </Group>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Group>
-                                        <IconSettings stroke={1.25} />
-                                        <Text>Nastavenia</Text>
-                                    </Group>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Group>
-                                        <IconChartBar stroke={1.25} />
-                                        <Text>Štatistiky</Text>
-                                    </Group>
-                                </Menu.Item>
-                                <Menu.Item>
-                                    <Group>
-                                        <IconLogout stroke={1.25} />
-                                        <Text>Odhlásiť sa</Text>
-                                    </Group>
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    </Group>
-
+                            Prihlásiť sa
+                        </Button>
+                    )}
                 </div>
             </header>
 
             <Drawer
-                opened={opened}
-                onClose={() => setOpened(false)}
+                opened={drawerOpened}
+                onClose={drawerHandlers.close}
                 title="Šrodo"
                 size="xs"
                 padding="sm"
             >
-                <Navbar setOpened={setOpened} />
+                <Navbar close={drawerHandlers.close} />
             </Drawer>
         </>
     )
