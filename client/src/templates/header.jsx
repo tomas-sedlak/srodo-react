@@ -4,7 +4,7 @@ import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoginModal } from "state";
+import { setLogout, setLoginModal } from "state";
 import Navbar from 'templates/navbar';
 
 export default function Header() {
@@ -142,7 +142,7 @@ export default function Header() {
                                             <Text>Štatistiky</Text>
                                         </Group>
                                     </Menu.Item>
-                                    <Menu.Item>
+                                    <Menu.Item onClick={() => dispatch(setLogout())}>
                                         <Group>
                                             <IconLogout stroke={1.25} />
                                             <Text>Odhlásiť sa</Text>

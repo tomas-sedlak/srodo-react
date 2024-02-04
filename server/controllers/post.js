@@ -73,12 +73,12 @@ export const likePost = async (req, res) => {
         const isLiked = post.likes.includes(userId);
 
         if (isLiked) {
-            post.likes.splice(userId, 1);
+            post.likes.pull(userId);
         } else {
             post.likes.push(userId);
         }
 
-        post.save();
+        await post.save();
 
         res.status(200).json(post);
     } catch (err) {
