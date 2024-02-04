@@ -3,21 +3,19 @@ import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, I
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoginModal } from "state";
 import Navbar from 'templates/navbar';
-import LoginModal from "templates/LoginModal";
 
 export default function Header() {
     const isMobile = useMediaQuery("(max-width: 992px)");
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
-    const [loginOpened, loginHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
     const user = useSelector(state => state.user);
+    const dispatch = useDispatch();
 
     return (
         <>
-            <LoginModal opened={loginOpened} close={loginHandlers.close} />
-
             <header>
                 <div className="header-inner">
                     <Group>
@@ -157,7 +155,7 @@ export default function Header() {
                         <Button
                             my={10}
                             ml="auto"
-                            onClick={loginHandlers.open}
+                            onClick={() => dispatch(setLoginModal(true))}
                         >
                             Prihlásiť sa
                         </Button>

@@ -16,7 +16,7 @@ export default function Root() {
                 <Outlet />
             </div>
 
-            <Aside />            
+            <Aside />
         </main>
     )
 }

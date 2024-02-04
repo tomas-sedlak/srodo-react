@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box, Badge } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoginModal } from "state";
 import axios from "axios";
 
 // Setup Moment.js for Slovak language
@@ -22,6 +23,7 @@ const Post = forwardRef(({ post }, ref) => {
     const url = "/" + post.author.username + "/" + post._id;
     const userId = useSelector(state => state.user?._id);
     const isLiked = post.likes.includes(userId);
+    const dispatch = useDispatch();
 
     const likePost = async (postId) => {
         const response = await axios.patch(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
@@ -109,11 +111,8 @@ const Post = forwardRef(({ post }, ref) => {
                                     className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                                     onClick={event => {
                                         event.preventDefault()
-                                        if (userId) {
-                                            likeMutation.mutate(post._id)
-                                        } else {
-                                            console.log("User not logged in!")
-                                        }
+                                        if (userId) likeMutation.mutate(post._id)
+                                        else dispatch(setLoginModal(true))
                                     }}
                                 >
                                     {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
@@ -131,7 +130,8 @@ const Post = forwardRef(({ post }, ref) => {
                                     className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
                                     onClick={event => {
                                         event.preventDefault()
-                                        saveMutation.mutate(post._id)
+                                        if (userId) saveMutation.mutate(post._id)
+                                        else dispatch(setLoginModal(true))
                                     }}
                                 >
                                     {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}

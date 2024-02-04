@@ -15,6 +15,7 @@ import CreateArticle from "routes/create_article";
 import CreateQuiz from "routes/create_quiz";
 import CreateDiscussion from "routes/create_discussion";
 
+import LoginModal from "templates/loginModal";
 
 export default function App() {
     const isAuth = Boolean(useSelector(state => state.token));
@@ -29,27 +30,29 @@ export default function App() {
 
     return (
         <MantineProvider theme={theme}>
-            <QueryClientProvider client={queryClient}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="/" element={<Root />}>
-                            {/* PUBLIC ROUTES */}
-                            <Route index element={<Home />} />
-                            <Route path="novinky" element={<News />} />
-                            <Route path=":username" element={<User />} />
-                            <Route path=":username/:postId" element={<Post />} />
+                <QueryClientProvider client={queryClient}>
+                    <LoginModal />
 
-                            {/* PRIVATE ROUTES */}
-                            <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
-                            <Route path="novy" element={!isAuth && <Navigate to="/" />}>
-                                <Route path="clanok" element={<CreateArticle />} />
-                                <Route path="kviz" element={<CreateQuiz />} />
-                                <Route path="diskusia" element={<CreateDiscussion />} />
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/" element={<Root />}>
+                                {/* PUBLIC ROUTES */}
+                                <Route index element={<Home />} />
+                                <Route path="novinky" element={<News />} />
+                                <Route path=":username" element={<User />} />
+                                <Route path=":username/:postId" element={<Post />} />
+
+                                {/* PRIVATE ROUTES */}
+                                <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
+                                <Route path="novy" element={!isAuth && <Navigate to="/" />}>
+                                    <Route path="clanok" element={<CreateArticle />} />
+                                    <Route path="kviz" element={<CreateQuiz />} />
+                                    <Route path="diskusia" element={<CreateDiscussion />} />
+                                </Route>
                             </Route>
-                        </Route>
-                    </Routes>
-                </BrowserRouter>
-            </QueryClientProvider>
+                        </Routes>
+                    </BrowserRouter>
+                </QueryClientProvider>
         </MantineProvider>
     )
 }

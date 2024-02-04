@@ -17,14 +17,18 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { GoogleIcon } from "./GoogleIcon";
 import { IconBrandFacebook } from "@tabler/icons-react";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoginModal } from "state";
 
-export default function LoginModal({ opened, close }) {
+export default function LoginModal() {
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const opened = useSelector(state => state.loginModal);
+    const dispatch = useDispatch();
 
     return (
         <Modal
             opened={opened}
-            onClose={close}
+            onClose={() => dispatch(setLoginModal(false))}
             padding="sm"
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
