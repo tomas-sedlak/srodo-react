@@ -49,25 +49,12 @@ export const getFeedPosts = async (req, res) => {
     }
 };
 
-export const getUserPosts = async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const post = await Post.find({ author: userId })
-            .populate("author", "username displayName profilePicture")
-            .populate("subject")
-        
-        res.status(200).json(post);
-    } catch (err) {
-        res.status(404).json({ message: err.message });
-    }
-};
-
 // UPDATE
 export const likePost = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { postId } = req.params;
         const { userId } = req.body;
-        const post = await Post.findById(id)
+        const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
         const isLiked = post.likes.includes(userId);

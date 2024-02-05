@@ -1,18 +1,20 @@
 import express from "express";
 import {
+    createPost,
     getFeedPosts,
-    getUserPosts,
     likePost
 } from "../controllers/post.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
+// CREATE
+router.post("/create", verifyToken, createPost);
+
 // READ
 router.get("/", getFeedPosts);
-router.get("/:userId/posts", verifyToken, getUserPosts);
 
 // UPDATE
-router.patch("/:id/like", likePost);
+router.patch("/:postId/like", verifyToken, likePost);
 
 export default router;

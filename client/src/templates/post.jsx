@@ -22,11 +22,16 @@ const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
     const url = "/" + post.author.username + "/" + post._id;
     const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
     const isLiked = post.likes.includes(userId);
     const dispatch = useDispatch();
 
-    const likePost = async (postId) => {
-        const response = await axios.patch(`${import.meta.env.VITE_API_URL}/post/${postId}/like`, { userId });
+    const likePost = async () => {
+        const response = await axios.patch(
+            `${import.meta.env.VITE_API_URL}/post/${post._id}/like`,
+            { userId },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
         return response.data;
     }
 
@@ -89,7 +94,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 </Text>
                             </Link>
                             <Text c="gray" size="sm">
-                                &middot; {moment(post.createdAt).fromNow()}
+                                &middot; {post.subject?.label} &middot; {moment(post.createdAt).fromNow()}
                             </Text>
                         </Group>
 
@@ -111,7 +116,7 @@ const Post = forwardRef(({ post }, ref) => {
                                     className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                                     onClick={event => {
                                         event.preventDefault()
-                                        if (userId) likeMutation.mutate(post._id)
+                                        if (userId) likeMutation.mutate()
                                         else dispatch(setLoginModal(true))
                                     }}
                                 >
