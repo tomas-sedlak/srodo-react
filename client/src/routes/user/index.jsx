@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"
+import { useMediaQuery } from '@mantine/hooks';;
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box } from '@mantine/core';
 import { IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
 import Post from "templates/post";
@@ -10,6 +11,7 @@ export default function User() {
     const [following, setFollowing] = useState(false);
     const [user, setUser] = useState([])
     const [posts, setPosts] = useState([])
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const getData = async () => {
         const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${username}`);
@@ -29,6 +31,7 @@ export default function User() {
                     <Image radius="lg" src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
                 </AspectRatio>
 
+
                 <div style={{ position: "relative" }}>
                     <Avatar
                         className="profile-picture"
@@ -37,18 +40,29 @@ export default function User() {
                     />
                 </div>
 
-                <Group ml={120} mt={8} mb="sm" justify="space-between">
-                    <Stack gap={4}>
-                        <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
-                            {user.displayName}
-                        </Text>
-                        <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{user.username}</Text>
-                    </Stack>
+                <Group ml={108} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
+                    {!isMobile &&
+                        <Stack gap={4}>
+                            <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
+                                {user.displayName}
+                            </Text>
+                            <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                        </Stack>
+                    }
 
                     <Button variant={following ? "light" : "filled"} onClick={() => setFollowing(!following)}>
                         {following ? "Sledované" : "Sledovať"}
                     </Button>
                 </Group>
+
+                {isMobile &&
+                    <Stack mb="sm" gap={4}>
+                        <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
+                            {user.displayName}
+                        </Text>
+                        <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                    </Stack>
+                }
 
                 <Text style={{ lineHeight: 1.4 }}>
                     Kratky text o mne a mojich zaujmoch.

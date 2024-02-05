@@ -107,7 +107,7 @@ main {
 .profile-picture {
   position: absolute;
   top: -50px;
-  left: var(--mantine-spacing-md);
+  left: 0;
   border: 4px solid var(--mantine-color-white);
 }
 
