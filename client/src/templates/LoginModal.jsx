@@ -10,6 +10,8 @@ import { setLogin } from "state";
 import { useState } from "react";
 import * as yup from "yup";
 import axios from "axios";
+import { FloatingTextInput, FloatingPasswordInput } from "./FloatingInput";
+
 
 const registerSchema = yup.object().shape({
     username: yup.string().max(64).required(),
@@ -34,7 +36,7 @@ const initialValuesLogin = {
 }
 
 export default function LoginModal() {
-    const [pageType, setPageType] = useState("login");
+    const [pageType, setPageType] = useState("register");
     const isLogin = pageType === "login";
     const isRegister = pageType === "register";
 
@@ -80,18 +82,19 @@ export default function LoginModal() {
         if (isRegister) await register(values, onSubmitProps);
     };
 
+
+
     return (
         <Modal
             opened={opened}
             onClose={() => dispatch(setLoginModal(false))}
-            padding="sm"
+            padding="lg"
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
+        // title="Prihlasenie"
         >
-            <Title align="center" >
-                Welcome back!
-            </Title>
+
 
             <Formik
                 onSubmit={handleFormSubmit}
@@ -111,71 +114,76 @@ export default function LoginModal() {
                     <form onSubmit={handleSubmit}>
                         {isRegister ? (
                             <>
-                                <TextInput
-                                    label="Uername"
-                                    placeholder="username"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.username}
+                                <FloatingTextInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
+                                    label="Username"
                                     name="username"
-                                    error={
-                                        Boolean(touched.username) && Boolean(errors.username)
-                                    }
+                                    error={touched.username && errors.username}
                                 />
-                                <TextInput
+
+                                <FloatingTextInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
                                     label="Email"
-                                    placeholder="example@gmail.com"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.email}
                                     name="email"
-                                    error={
-                                        Boolean(touched.email) && Boolean(errors.email)
-                                    }
+                                    error={touched.email && errors.email}
                                 />
-                                <PasswordInput
-                                    placeholder="Password"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.password}
+
+                                <FloatingPasswordInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
+                                    label="Password"
                                     name="password"
-                                    error={
-                                        Boolean(touched.password) && Boolean(errors.password)
-                                    }
+                                    error={touched.password && errors.password}
                                 />
+
+                                <Flex justify="Space-between">
+                                    <Anchor href="#" size="sm" c="dimmed" >
+                                        Forgot password?
+                                    </Anchor>
+
+                                </Flex>
                             </>
                         ) : (
                             <>
-                                <TextInput
+                                <FloatingTextInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
                                     label="Email"
-                                    placeholder="example@gmail.com"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.email}
                                     name="email"
-                                    error={
-                                        Boolean(touched.email) && Boolean(errors.email)
-                                    }
+                                    error={touched.email && errors.email}
                                 />
-                                <PasswordInput
-                                    placeholder="Password"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.password}
+
+                                <FloatingPasswordInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
+                                    label="Password"
                                     name="password"
-                                    error={
-                                        Boolean(touched.password) && Boolean(errors.password)
-                                    }
+                                    error={touched.password && errors.password}
                                 />
+
+                                <Flex justify="Space-between">
+                                    <Anchor href="#" size="sm" c="dimmed" >
+                                        Forgot password?
+                                    </Anchor>
+
+                                </Flex>
                             </>
                         )}
 
                         <Button
                             fullWidth
                             type="submit"
+                            mt="md"
                         >
                             {isLogin ? "Sign in" : "Sign up"}
                         </Button>
+                        <Divider mt="md" />
+                        <Anchor href="#" c="dimmed" size="sm" >
+                            Nemáte účet? Zaregistrujte sa
+                        </Anchor>
+
                     </form>
                 )}
             </Formik>

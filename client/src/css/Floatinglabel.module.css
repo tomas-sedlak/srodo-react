@@ -1,0 +1,27 @@
+.root {
+    position: relative;
+  }
+  
+  .input {
+    background-color: var(--mantine-color-body);
+  }
+  
+.label {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    top: 5px; /* it is NOT centered, fix this later */
+    left: 10px;
+    color: var(--mantine-color-placeholder);
+    padding: 2px 5px;
+    background-color: white;
+    font-weight: 400 !important;
+    font-size: var(--mantine-font-size-sm);
+    transition: color 100ms ease, transform 100ms ease, font-size 100ms ease;
+  
+    &[data-floating] {
+      transform: translateY(-15px);
+      font-size: var(--mantine-font-size-xs);
+      color: var(--mantine-color-text);
+    }
+}
