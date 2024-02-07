@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
-import Comment from "templates/comment"
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
+import Comment from "templates/comment"
 
 // TipTap editor
 import { useEditor } from '@tiptap/react';
@@ -20,7 +21,7 @@ export default function Post() {
     const { postId } = useParams();
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
-    const userId = "65b1848bfbb5fbbc9cda4acd";
+    const userId = useSelector(state => state.user?._id);
 
     const editor = useEditor({
         extensions: [
@@ -52,17 +53,19 @@ export default function Post() {
                     <Image radius="lg" src={post.coverImage} />
                 </AspectRatio>
 
-                <Group gap={4} align="center" mt="sm">
+                <Group gap="sm" align="center" mt="sm" wrap="nowrap">
                     <Avatar src={post.author?.profilePicture} />
 
-                    <Link to="username">
-                        <Text fw={600} c="gray" size="sm">
-                            {post.author?.displayName}
+                    <Group gap={4}>
+                        <Link to="username">
+                            <Text fw={600} c="gray" size="sm">
+                                {post.author?.displayName}
+                            </Text>
+                        </Link>
+                        <Text c="gray" size="sm">
+                            &middot; {post.subject?.label} &middot; {moment(post.createdAt).fromNow()}
                         </Text>
-                    </Link>
-                    <Text c="gray" size="sm">
-                        &middot; {moment(post.createdAt).fromNow()}
-                    </Text>
+                    </Group>
                 </Group>
 
                 <Title
@@ -96,7 +99,7 @@ export default function Post() {
                     <Button
                         onClick={async () => {
                             // Check if not empty
-                            if (editor.getText().replace(/\s/g,"") !== "") {
+                            if (editor.getText().replace(/\s/g, "") !== "") {
                                 await axios.post(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment", {
                                     postId: postId,
                                     userId: userId,

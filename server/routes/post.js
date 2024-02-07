@@ -2,6 +2,7 @@ import express from "express";
 import {
     createPost,
     getFeedPosts,
+    getPost,
     likePost
 } from "../controllers/post.js";
 import { verifyToken } from "../middleware/auth.js";
@@ -13,6 +14,7 @@ router.post("/create", verifyToken, createPost);
 
 // READ
 router.get("/", getFeedPosts);
+router.get("/:postId", getPost);
 
 // UPDATE
 router.patch("/:postId/like", verifyToken, likePost);
