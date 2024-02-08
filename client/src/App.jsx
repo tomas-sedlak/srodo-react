@@ -15,7 +15,7 @@ import CreateArticle from "routes/create_article";
 import CreateQuiz from "routes/create_quiz";
 import CreateDiscussion from "routes/create_discussion";
 
-import LoginModal from "templates/loginModal";
+import LoginModal from "templates/LoginModal";
 import React from "react";
 
 export default function App() {
