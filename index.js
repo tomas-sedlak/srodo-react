@@ -68,7 +68,7 @@ if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging")
 // MONGOOSE SETUP
 const PORT = process.env.PORT || 5000;
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect("mongodb+srv://tsedlak24:a9LDaNzdAbUbQicQ@srodo.wererc7.mongodb.net/srodo?retryWrites=true&w=majority")
   .then(() => {
     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
   })
