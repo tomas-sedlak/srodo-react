@@ -9,7 +9,7 @@ import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 export default function ImagesModal({ opened, close, setImage }) {
-    const client = createClient(import.meta.env.VITE_PEXELS_KEY);
+    const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
 
     const COLUMNS = 2;
     const LIMIT = 10;
