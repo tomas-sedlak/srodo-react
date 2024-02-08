@@ -48,7 +48,7 @@ const upload = multer({ storage });
 
 // ROUTES WITH FILES
 app.post("/api/auth/register", upload.single("profilePicture"), register);
-app.post("/api/post", verifyToken, upload.single("coverImage"), createPost);
+app.post("/api/post", verifyToken, createPost);
 
 // ROUTES
 app.use("/api/auth", authRoutes);
