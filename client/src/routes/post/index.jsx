@@ -99,16 +99,16 @@ export default function Post() {
                     <Button
                         onClick={async () => {
                             // Check if not empty
-                            if (editor.getText().replace(/\s/g, "") !== "") {
-                                await axios.post(`/api/post/${postId}/comment`, {
-                                    postId: postId,
-                                    userId: userId,
-                                    content: editor.getHTML(),
-                                })
+                            // if (editor.getText().replace(/\s/g, "") !== "") {
+                            //     await axios.post(`/api/post/${postId}/comment`, {
+                            //         postId: postId,
+                            //         userId: userId,
+                            //         content: editor.getHTML(),
+                            //     })
 
-                                fetchComments()
-                                editor.commands.clearContent()
-                            }
+                            //     fetchComments()
+                            //     editor.commands.clearContent()
+                            // }
                         }}
                     >
                         Publikovať
