@@ -43,7 +43,7 @@ export default function Post() {
 
     useEffect(() => {
         fetchPost()
-        fetchComments()
+        // fetchComments()
     }, [])
 
     return (
