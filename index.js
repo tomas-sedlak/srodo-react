@@ -47,18 +47,26 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ROUTES WITH FILES
-app.post("/auth/register", upload.single("profilePicture"), register);
-app.post("/post", verifyToken, upload.single("coverImage"), createPost);
+app.post("/api/auth/register", upload.single("profilePicture"), register);
+app.post("/api/post", verifyToken, upload.single("coverImage"), createPost);
 
 // ROUTES
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
-app.use("/post", postRoutes);
-app.use("/subjects", subjectsRoutes);
-app.use("/news", newsRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
+app.use("/api/subjects", subjectsRoutes);
+app.use("/api/news", newsRoutes);
+
+// PRODUCTION REACT ROUTES
+if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
+  app.use(express.static(path.join(__dirname, "client/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/client/dist/index.html"));
+  });
+}
 
 // MONGOOSE SETUP
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {

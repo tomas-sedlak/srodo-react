@@ -14,8 +14,8 @@ export default function User() {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     const getData = async () => {
-        const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${username}`);
-        const posts = await axios.get(`${import.meta.env.VITE_API_URL}/user/${user.data._id}/posts`);
+        const user = await axios.get(`/api/user/${username}`);
+        const posts = await axios.get(`/api/user/${user.data._id}/posts`);
         setUser(user.data);
         setPosts(posts.data);
     }

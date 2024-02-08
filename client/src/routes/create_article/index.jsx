@@ -41,7 +41,7 @@ export default function CreateArticle() {
             response => setCoverImage(response.photos[0].src.landscape)
         )
 
-        fetch(import.meta.env.VITE_API_URL + "/subjects")
+        fetch("/api/subjects")
             .then(response => response.json())
             .then(json => setSubjects(json))
     }, []);
@@ -85,7 +85,7 @@ export default function CreateArticle() {
         }
 
         await axios.post(
-            `${import.meta.env.VITE_API_URL}/post/create`,
+            "/api/post/create",
             data,
             { headers: { Authorization: `Bearer ${token}` } },
         );

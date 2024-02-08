@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/create", verifyToken, createPost);
 
 // READ
-router.get("/", getFeedPosts);
+router.get("/", (req, res, next) => {console.log("snajdns"); next();}, getFeedPosts);
 router.get("/:postId", getPost);
 
 // UPDATE

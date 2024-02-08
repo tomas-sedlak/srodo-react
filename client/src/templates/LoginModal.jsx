@@ -47,7 +47,7 @@ export default function LoginModal() {
 
     const register = async (values, onSubmitProps) => {
         const savedUserResponse = await axios.post(
-            `${import.meta.env.VITE_API_URL}/auth/register`,
+            "/api/auth/register",
             values,
         )
 
@@ -61,7 +61,7 @@ export default function LoginModal() {
 
     const login = async (values, onSubmitProps) => {
         const loggedInResponse = await axios.post(
-            `${import.meta.env.VITE_API_URL}/auth/login`,
+            "/api/auth/login",
             values,
         )
         const loggedIn = loggedInResponse.data;

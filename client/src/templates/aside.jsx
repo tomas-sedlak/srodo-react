@@ -8,11 +8,11 @@ export default function Aside() {
     const [technologyArticles, setTechnologyArticles] = useState([])
 
     function fetchArticles() {
-        fetch(import.meta.env.VITE_API_URL + "/news?category=science")
+        fetch("/api/news?category=science")
             .then(response => response.json())
             .then(json => setScienceArticles(json))
 
-        fetch(import.meta.env.VITE_API_URL + "/news?category=technology")
+        fetch("/api/news?category=technology")
             .then(response => response.json())
             .then(json => setTechnologyArticles(json))
     }

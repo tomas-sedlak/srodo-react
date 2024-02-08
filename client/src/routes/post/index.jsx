@@ -32,12 +32,12 @@ export default function Post() {
     })
 
     const fetchPost = async () => {
-        const post = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId)
+        const post = await axios.get(`/api/post/${postId}`)
         setPost(post.data)
     }
 
     const fetchComments = async () => {
-        const comments = await axios.get(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment")
+        const comments = await axios.get(`/api/post/${postId}/comment`)
         setComments(comments.data)
     }
 
@@ -100,7 +100,7 @@ export default function Post() {
                         onClick={async () => {
                             // Check if not empty
                             if (editor.getText().replace(/\s/g, "") !== "") {
-                                await axios.post(import.meta.env.VITE_API_URL + "/post/" + postId + "/comment", {
+                                await axios.post(`/api/post/${postId}/comment`, {
                                     postId: postId,
                                     userId: userId,
                                     content: editor.getHTML(),

@@ -28,7 +28,7 @@ const Post = forwardRef(({ post }, ref) => {
 
     const likePost = async () => {
         const response = await axios.patch(
-            `${import.meta.env.VITE_API_URL}/post/${post._id}/like`,
+            `/api/post/${post._id}/like`,
             { userId },
             { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -36,7 +36,7 @@ const Post = forwardRef(({ post }, ref) => {
     }
 
     const savePost = async (postId) => {
-        const response = await axios.put(`${import.meta.env.VITE_API_URL}/user/${userId}/saved`, { postId });
+        const response = await axios.put(`/api/user/${userId}/saved`, { postId });
         return await response.data;
     }
 
