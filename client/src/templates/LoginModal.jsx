@@ -36,7 +36,7 @@ const initialValuesLogin = {
 }
 
 export default function LoginModal() {
-    const [pageType, setPageType] = useState("register");
+    const [pageType, setPageType] = useState("login");
     const isLogin = pageType === "login";
     const isRegister = pageType === "register";
 
@@ -89,10 +89,11 @@ export default function LoginModal() {
             opened={opened}
             onClose={() => dispatch(setLoginModal(false))}
             padding="lg"
+            size="sm"
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
-        // title="Prihlasenie"
+            title={isLogin ? "Prihlásenie" : "Registrácia"}
         >
 
 
@@ -180,8 +181,12 @@ export default function LoginModal() {
                             {isLogin ? "Sign in" : "Sign up"}
                         </Button>
                         <Divider mt="md" />
-                        <Anchor href="#" c="dimmed" size="sm" >
-                            Nemáte účet? Zaregistrujte sa
+                        {/* Just for looks, it should be in both register and login */}
+                        <Anchor
+                            c="dimmed"
+                            size="sm"
+                            onClick={() => setPageType(isLogin ? "register" : "login")} >
+                            {isLogin ? "Nemáte účet? Zaregistrovať sa" : "Už máte účet? Prihlásiť sa"}
                         </Anchor>
 
                     </form>

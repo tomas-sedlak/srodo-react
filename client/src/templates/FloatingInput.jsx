@@ -23,14 +23,15 @@ export function FloatingTextInput({ handleChange, handleBlur, label, name, error
             onBlur={(event) => {
                 if (event.currentTarget.value.length > 0) {setFocused(true)} // I don't know if this is the right way
                 else {setFocused(false)}                
-                handleBlur()
+                handleBlur(event)
             }}
             onChange={event => {
-                handleChange()
+                handleChange(event)
                 setValue(event.currentTarget.value)
             }}
             name={name}
             error={error}
+            autoComplete="none" // this is def NOT the right way to do it
         />
     )
 }
@@ -55,10 +56,10 @@ export function FloatingPasswordInput({ handleChange, handleBlur, label, name, e
             onBlur={(event) => {
                 if (event.currentTarget.value.length > 0) {setFocused(true)} // I don't know if this is the right way
                 else {setFocused(false)}                
-                handleBlur()
+                handleBlur(event)
             }}
             onChange={event => {
-                handleChange()
+                handleChange(event)
                 setValue(event.currentTarget.value)
             }}
             name={name}
