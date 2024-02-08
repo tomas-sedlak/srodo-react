@@ -12,7 +12,6 @@ import * as yup from "yup";
 import axios from "axios";
 import { FloatingTextInput, FloatingPasswordInput } from "./FloatingInput";
 
-
 const registerSchema = yup.object().shape({
     username: yup.string().max(64).required(),
     email: yup.string().email().required(),
