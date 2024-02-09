@@ -84,7 +84,7 @@ export default function CreateArticle() {
         }
 
         await axios.post(
-            "/api/post/create",
+            "/api/post",
             data,
             { headers: { Authorization: `Bearer ${token}` } },
         );
