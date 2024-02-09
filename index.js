@@ -58,7 +58,6 @@ app.use("/api/subjects", subjectsRoutes);
 app.use("/api/news", newsRoutes);
 
 // PRODUCTION REACT ROUTES
-console.log(process.env.NODE_ENV)
 if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
   app.use(express.static(path.join(__dirname, "client/dist")));
   app.get("*", (req, res) => {
@@ -67,7 +66,6 @@ if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging")
 }
 
 // MONGOOSE SETUP
-console.log(process.env.PORT)
 const PORT = process.env.PORT || 5000;
 mongoose
   .connect("mongodb+srv://tsedlak24:a9LDaNzdAbUbQicQ@srodo.wererc7.mongodb.net/srodo?retryWrites=true&w=majority")
