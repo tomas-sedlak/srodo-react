@@ -9,7 +9,7 @@ export function FloatingTextInput({ handleChange, handleBlur, label, name, error
 
     return (
         <TextInput
-            mt="sm"
+            mt={focus ? 0 : "sm"}
             label={label}
             labelProps={{ "data-floating": floating }}
             classNames={{
@@ -41,7 +41,7 @@ export function FloatingPasswordInput({ handleChange, handleBlur, label, name, e
 
     return (
         <PasswordInput
-            mt="sm"
+            mt={focus ? 0 : "sm"}
             label={label}
             labelProps={{ "data-floating": floating }}
             classNames={{

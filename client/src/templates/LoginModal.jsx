@@ -1,5 +1,5 @@
 import { FloatingTextInput, FloatingPasswordInput } from "./FloatingInput";
-import { Anchor, Button, Divider, Flex, Modal } from "@mantine/core";
+import { Button, Modal, Text } from "@mantine/core";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -89,7 +89,7 @@ export default function LoginModal() {
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
-            title={isLogin ? "Prihlásenie" : "Registrácia"}
+            title={<Text fw={600}>{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
         >
             <Formik
                 onSubmit={handleFormSubmit}
@@ -153,11 +153,15 @@ export default function LoginModal() {
                                     error={touched.password && errors.password}
                                 />
 
-                                <Flex justify="Space-between">
-                                    <Anchor size="sm" c="gray" >
-                                        Forgot password?
-                                    </Anchor>
-                                </Flex>
+                                <Text
+                                    mt={4}
+                                    ta="right"
+                                    size="sm"
+                                    c="gray"
+                                    className="pointer"
+                                >
+                                    Zabudnuté heslo?
+                                </Text>
                             </>
                         )}
 
@@ -169,18 +173,26 @@ export default function LoginModal() {
                             {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
                         </Button>
 
-                        <Divider mt="md" />
-
-                        <Anchor
+                        <Text
+                            mt="sm"
+                            ta="center"
                             c="gray"
                             size="sm"
-                            onClick={() => {
-                                resetForm()
-                                setPageType(isLogin ? "register" : "login")
-                            }} >
-                            {isLogin ? "Nemáte účet? Zaregistrovať sa" : "Už máte účet? Prihlásiť sa"}
-                        </Anchor>
-
+                        >
+                            {isLogin ? "Nemáte účet? " : "Už máte účet? "}
+                            <Text
+                                span
+                                c="srobarka"
+                                fw={600}
+                                className="pointer"
+                                onClick={() => {
+                                    resetForm()
+                                    setPageType(isLogin ? "register" : "login")
+                                }}
+                            >
+                                {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                            </Text>
+                        </Text>
                     </form>
                 )}
             </Formik>
