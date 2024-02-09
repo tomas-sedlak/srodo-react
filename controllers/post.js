@@ -92,7 +92,7 @@ export const viewPost = async (req, res) => {
         const post = await Post.findById(postId);
 
         const today = new Date().toISOString().split("T")[0];
-        const view = post.views.find(v => v.date === today);
+        const view = post.views.find(v => v.date.toISOString().split("T")[0] === today);
 
         if (view) {
             view.count += 1;
