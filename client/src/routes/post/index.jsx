@@ -4,7 +4,7 @@ import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, 
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import Comment from "templates/comment"
+import Comment from "templates/Comment"
 
 // TipTap editor
 import { useEditor } from '@tiptap/react';

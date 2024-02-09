@@ -5,7 +5,7 @@ import { MantineProvider, createTheme } from "@mantine/core";
 import { useSelector } from "react-redux";
 
 // Routes import
-import Root from "templates/root";
+import Root from "templates/Root";
 import Home from "routes/home";
 import News from "routes/news";
 import Saved from "routes/saved";

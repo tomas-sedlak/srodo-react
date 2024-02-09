@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Loader } from "@mantine/core";
-import Post from "templates/post";
+import Post from "templates/Post";
 
 export default function Home() {
     const { ref, inView } = useInView();

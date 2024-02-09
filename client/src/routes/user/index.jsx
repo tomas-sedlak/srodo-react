@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { useMediaQuery } from '@mantine/hooks';;
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box } from '@mantine/core';
 import { IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
-import Post from "templates/post";
+import Post from "templates/Post";
 import axios from 'axios';
 
 export default function User() {
