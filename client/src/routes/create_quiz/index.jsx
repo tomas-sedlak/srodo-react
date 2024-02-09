@@ -1,11 +1,3 @@
-
-
-
 export default function CreateQuiz() {
-    
-    return (
-        <>
-            
-        </>
-    )
+    return (<></>)
 }
