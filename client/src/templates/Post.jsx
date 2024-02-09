@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box, Badge } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
+import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -110,6 +110,10 @@ const Post = forwardRef(({ post }, ref) => {
 
                         <Group justify="space-between" mt="sm">
                             <Group gap={8}>
+                                <div className="icon-wrapper">
+                                    <IconEye stroke={1.25} />
+                                    <span>{post.views.reduce((acc, view) => acc + view.count, 0)}</span>
+                                </div>
 
                                 {/* Likes button */}
                                 <div

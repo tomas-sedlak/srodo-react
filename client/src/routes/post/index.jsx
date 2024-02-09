@@ -22,6 +22,7 @@ export default function Post() {
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
     const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
 
     const editor = useEditor({
         extensions: [
@@ -30,6 +31,10 @@ export default function Post() {
         ],
         content: ""
     })
+
+    const addView = async () => {
+        await axios.patch(`/api/post/${postId}/view`)
+    }
 
     const fetchPost = async () => {
         const post = await axios.get(`/api/post/${postId}`)
@@ -44,6 +49,12 @@ export default function Post() {
     useEffect(() => {
         fetchPost()
         // fetchComments()
+
+        const timeoutId = setTimeout(() => {
+            addView()
+        }, 10000)
+
+        return () => clearTimeout(timeoutId)
     }, [])
 
     return (
