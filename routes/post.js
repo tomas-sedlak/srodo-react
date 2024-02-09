@@ -9,7 +9,7 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 // READ
-router.get("/", (req, res, next) => {console.log("snajdns"); next();}, getFeedPosts);
+router.get("/", getFeedPosts);
 router.get("/:postId", getPost);
 
 // UPDATE
