@@ -21,6 +21,10 @@ const postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "Subject",
     },
+    views: [{
+        date: Date,
+        count: Number,
+    }],
     likes: [Schema.Types.ObjectId],
     comments: [Schema.Types.ObjectId],
 }, {

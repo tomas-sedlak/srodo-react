@@ -85,3 +85,24 @@ export const likePost = async (req, res) => {
         res.status(404).json({ message: err.message });
     }
 };
+
+export const viewPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findById(postId);
+
+        const today = new Date().toISOString().split("T")[0];
+        const view = post.views.find(v => v.date === today);
+
+        if (view) {
+            view.count += 1;
+        } else {
+            post.views.push({ date: today, count: 1 });
+        }
+
+        await post.save();
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
