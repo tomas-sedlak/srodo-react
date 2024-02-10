@@ -21,7 +21,7 @@ export default function Post() {
     const { postId } = useParams();
     const [post, setPost] = useState([]);
     const [comments, setComments] = useState([]);
-    const userId = useSelector(state => state.user?._id);
+    const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
     const editor = useEditor({
@@ -96,7 +96,7 @@ export default function Post() {
             <Box id="komentare" p="sm" className="border-bottom">
 
                 <Group align="flex-start" gap={8}>
-                    <Avatar />
+                    <Avatar src={user.profilePicture} />
 
                     <RichTextEditor
                         editor={editor}

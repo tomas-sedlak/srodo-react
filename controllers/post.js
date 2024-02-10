@@ -1,4 +1,5 @@
 import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 import Subject from "../models/Subject.js" // NECCESSARY FOR POPULATING
 
 // CREATE
@@ -29,6 +30,24 @@ export const createPost = async (req, res) => {
     }
 };
 
+export const createComment = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const { author, content } = req.body;
+
+        const comment = new Comment({
+            postId,
+            author,
+            content,
+        });
+        await comment.save();
+
+        res.status(201).json(comment);
+    } catch (err) {
+        res.status(409).json({ message: err.message })
+    }
+}
+
 // READ
 export const getFeedPosts = async (req, res) => {
     try {
@@ -41,6 +60,7 @@ export const getFeedPosts = async (req, res) => {
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
             .populate("subject")
+            .populate("comment")
 
         res.status(200).json(posts);
     } catch (err) {
@@ -55,6 +75,7 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
+            .populate("comment")
 
         res.status(200).json(post);
     } catch (err) {
@@ -82,7 +103,7 @@ export const likePost = async (req, res) => {
 
         res.status(200).json(post);
     } catch (err) {
-        res.status(404).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
 

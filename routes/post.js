@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    createComment,
     getFeedPosts,
     getPost,
     likePost,
@@ -8,6 +9,9 @@ import {
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
+
+// CREATE
+router.post("/:postId/comment", verifyToken, createComment);
 
 // READ
 router.get("/", getFeedPosts);

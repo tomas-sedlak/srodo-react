@@ -8,10 +8,6 @@ const commentSchema = new Schema({
         ref: "User",
     },
     content: String,
-    reaction: {
-        type: Schema.Types.ObjectId,
-        ref: "Comment",
-    },
 }, {
     timestamps: true
 })
