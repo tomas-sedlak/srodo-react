@@ -20,7 +20,6 @@ moment.locale("sk");
 export default function Post() {
     const { postId } = useParams();
     const [post, setPost] = useState([]);
-    const [comments, setComments] = useState([]);
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
@@ -41,14 +40,8 @@ export default function Post() {
         setPost(post.data)
     }
 
-    const fetchComments = async () => {
-        const comments = await axios.get(`/api/post/${postId}/comment`)
-        setComments(comments.data)
-    }
-
     useEffect(() => {
         fetchPost()
-        // fetchComments()
 
         const timeoutId = setTimeout(() => {
             addView()
@@ -94,40 +87,37 @@ export default function Post() {
             </Box>
 
             <Box id="komentare" p="sm" className="border-bottom">
-
-                <Group align="flex-start" gap={8}>
-                    <Avatar src={user.profilePicture} />
-
-                    <RichTextEditor
-                        editor={editor}
-                        style={{ flex: 1 }}
-                    >
-                        <RichTextEditor.Content />
-                    </RichTextEditor>
-                </Group>
+                <RichTextEditor
+                    editor={editor}
+                    style={{ flex: 1 }}
+                >
+                    <RichTextEditor.Content />
+                </RichTextEditor>
 
                 <Group mt={8} justify="flex-end">
                     <Button
                         onClick={async () => {
                             // Check if not empty
-                            // if (editor.getText().replace(/\s/g, "") !== "") {
-                            //     await axios.post(`/api/post/${postId}/comment`, {
-                            //         postId: postId,
-                            //         userId: userId,
-                            //         content: editor.getHTML(),
-                            //     })
+                            if (editor.getText().replace(/\s/g, "") !== "") {
+                                await axios.post(`/api/post/${postId}/comment`, {
+                                    postId: postId,
+                                    author: user._id,
+                                    content: editor.getHTML(),
+                                }, {
+                                    headers: { Authorization: `Bearer ${token}` }
+                                })
 
-                            //     fetchComments()
-                            //     editor.commands.clearContent()
-                            // }
+                                editor.commands.clearContent()
+                            }
                         }}
                     >
                         Publikovať
                     </Button>
                 </Group>
+            </Box>
 
-                {comments.map(comment => <Comment data={comment} />)}
-
+            <Box p="sm">
+                {post.comments?.map(comment => <Comment data={comment} />)}
             </Box>
         </>
     )

@@ -42,6 +42,10 @@ export const createComment = async (req, res) => {
         });
         await comment.save();
 
+        const post = await Post.findById(postId);
+        post.comments.push(comment._id);
+        await post.save();
+
         res.status(201).json(comment);
     } catch (err) {
         res.status(409).json({ message: err.message })
@@ -60,7 +64,6 @@ export const getFeedPosts = async (req, res) => {
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
             .populate("subject")
-            .populate("comment")
 
         res.status(200).json(posts);
     } catch (err) {
@@ -75,7 +78,14 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
-            .populate("comment")
+            // .populate("comments")
+            .populate({
+                path: "comments",
+                populate: {
+                    path: "author",
+                    select: "username displayName profilePicture",
+                }
+            })
 
         res.status(200).json(post);
     } catch (err) {
