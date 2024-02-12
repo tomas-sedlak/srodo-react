@@ -8,6 +8,8 @@ const commentSchema = new Schema({
         ref: "User",
     },
     content: String,
+    upvotes: [Schema.Types.ObjectId],
+    downvotes: [Schema.Types.ObjectId],
 }, {
     timestamps: true
 })

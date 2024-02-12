@@ -78,7 +78,6 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
-            // .populate("comments")
             .populate({
                 path: "comments",
                 populate: {
@@ -86,6 +85,10 @@ export const getPost = async (req, res) => {
                     select: "username displayName profilePicture",
                 }
             })
+
+        post.comments.sort((a, b) => {
+            return (b.upvotes.length - b.downvotes.length) - (a.upvotes.length - a.downvotes.length);
+        })
 
         res.status(200).json(post);
     } catch (err) {
