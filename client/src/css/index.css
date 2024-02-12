@@ -230,7 +230,7 @@ main {
 }
 
 .user-text p {
-  margin-bottom: var(--mantine-spacing-sm);
+  margin-bottom: 0;
 }
 
 /* Small PC screens */
