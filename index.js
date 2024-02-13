@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import postRoutes from "./routes/post.js";
+import commentRoutes from "./routes/comment.js";
 import subjectsRoutes from "./routes/subjects.js";
 import newsRoutes from "./routes/news.js";
 
@@ -54,6 +55,7 @@ app.post("/api/post", verifyToken, createPost);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/comment", commentRoutes);
 app.use("/api/subjects", subjectsRoutes);
 app.use("/api/news", newsRoutes);
 
