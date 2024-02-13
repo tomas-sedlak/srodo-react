@@ -78,19 +78,24 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
-            .populate({
-                path: "comments",
-                populate: {
-                    path: "author",
-                    select: "username displayName profilePicture",
-                }
-            })
 
-        post.comments.sort((a, b) => {
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
+export const getPostComments = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const comments = await Comment.find({ post: postId })
+            .populate("author", "username displayName profilePicture")
+
+        comments.sort((a, b) => {
             return (b.upvotes.length - b.downvotes.length) - (a.upvotes.length - a.downvotes.length);
         })
 
-        res.status(200).json(post);
+        res.status(200).json(comments);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }

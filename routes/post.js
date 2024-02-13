@@ -3,6 +3,7 @@ import {
     createComment,
     getFeedPosts,
     getPost,
+    getPostComments,
     likePost,
     viewPost,
 } from "../controllers/post.js";
@@ -16,6 +17,7 @@ router.post("/:postId/comment", verifyToken, createComment);
 // READ
 router.get("/", getFeedPosts);
 router.get("/:postId", getPost);
+router.get("/:postId/comments", getPostComments);
 
 // UPDATE
 router.patch("/:postId/like", verifyToken, likePost);
