@@ -6,7 +6,7 @@ export const upvoteComment = async (req, res) => {
         const { commentId } = req.params;
         const { userId } = req.body;
 
-        const comment = Comment.findById(commentId);
+        const comment = await Comment.findById(commentId);
 
         if (comment.downvotes.includes(userId)) {
             comment.downvotes.pull(userId);
@@ -31,7 +31,7 @@ export const downvoteComment = async (req, res) => {
         const { commentId } = req.params;
         const { userId } = req.body;
 
-        const comment = Comment.findById(commentId);
+        const comment = await Comment.findById(commentId);
 
         if (comment.upvotes.includes(userId)) {
             comment.upvotes.pull(userId);
