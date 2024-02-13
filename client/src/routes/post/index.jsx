@@ -2,15 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import axios from "axios";
-import Comment from "templates/Comment"
-
-// TipTap editor
-import { useEditor } from '@tiptap/react';
-import { RichTextEditor } from '@mantine/tiptap';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
+import Comments from "templates/Comments";
 
 // Setup Moment.js for Slovak language
 import moment from "moment";
@@ -20,16 +13,6 @@ moment.locale("sk");
 export default function Post() {
     const { postId } = useParams();
     const [post, setPost] = useState([]);
-    const user = useSelector(state => state.user);
-    const token = useSelector(state => state.token);
-
-    const editor = useEditor({
-        extensions: [
-            StarterKit,
-            Placeholder.configure({ placeholder: "Napíš komentár" })
-        ],
-        content: ""
-    })
 
     const addView = async () => {
         await axios.patch(`/api/post/${postId}/view`)
@@ -86,39 +69,7 @@ export default function Post() {
                 </TypographyStylesProvider>
             </Box>
 
-            <Box id="komentare" p="sm" className="border-bottom">
-                <RichTextEditor
-                    editor={editor}
-                    style={{ flex: 1 }}
-                >
-                    <RichTextEditor.Content />
-                </RichTextEditor>
-
-                <Group mt={8} justify="flex-end">
-                    <Button
-                        onClick={async () => {
-                            // Check if not empty
-                            if (editor.getText().replace(/\s/g, "") !== "") {
-                                await axios.post(`/api/post/${postId}/comment`, {
-                                    postId: postId,
-                                    author: user._id,
-                                    content: editor.getHTML(),
-                                }, {
-                                    headers: { Authorization: `Bearer ${token}` }
-                                })
-
-                                editor.commands.clearContent()
-                            }
-                        }}
-                    >
-                        Publikovať
-                    </Button>
-                </Group>
-            </Box>
-
-            <Box p="sm">
-                {post.comments?.map(comment => <Comment data={comment} />)}
-            </Box>
+            <Comments comments={post.comments} postId={postId} />
         </>
     )
 }
