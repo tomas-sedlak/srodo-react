@@ -1,5 +1,6 @@
-import { Box, Group, Button } from '@mantine/core';
-import { useSelector } from "react-redux";
+import { Box, Group, Button, Loader } from '@mantine/core';
+import { useSelector, useDispatch } from "react-redux";
+import { setLoginModal } from "state";
 import { useQuery } from "@tanstack/react-query";
 import Comment from "templates/Comment";
 import axios from "axios";
@@ -10,9 +11,10 @@ import { RichTextEditor } from '@mantine/tiptap';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 
-export default function Comments({ comments, postId }) {
-    const userId = useSelector(state => state.user._id);
+export default function Comments({ postId }) {
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
+    const dispatch = useDispatch();
 
     const editor = useEditor({
         extensions: [
@@ -23,15 +25,24 @@ export default function Comments({ comments, postId }) {
     })
 
     const fetchComments = async () => {
-        await axios.get()
+        const response = await axios.get(`/api/post/${postId}/comments`);
+        return response.data;
     }
 
-    const { status, data } = useQuery({
+    const { status, data, refetch } = useQuery({
         queryKey: ["comments"],
         queryFn: fetchComments,
     });
 
-    return (
+    return status === "pending" ? (
+        <div className="loader-center-x">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <>
             <Box p="sm" className="border-bottom">
                 <RichTextEditor
@@ -44,17 +55,22 @@ export default function Comments({ comments, postId }) {
                 <Group mt={8} justify="flex-end">
                     <Button
                         onClick={async () => {
-                            // Check if not empty
-                            if (editor.getText().replace(/\s/g, "") !== "") {
-                                await axios.post(`/api/post/${postId}/comment`, {
-                                    postId: postId,
-                                    author: userId,
-                                    content: editor.getHTML(),
-                                }, {
-                                    headers: { Authorization: `Bearer ${token}` }
-                                })
-
-                                editor.commands.clearContent()
+                            if (userId) {
+                                // Check if not empty
+                                if (editor.getText().replace(/\s/g, "") !== "") {
+                                    await axios.post(`/api/post/${postId}/comment`, {
+                                        postId: postId,
+                                        author: userId,
+                                        content: editor.getHTML(),
+                                    }, {
+                                        headers: { Authorization: `Bearer ${token}` }
+                                    })
+    
+                                    editor.commands.clearContent()
+                                    refetch()
+                                }
+                            } else {
+                                dispatch(setLoginModal(true))
                             }
                         }}
                     >
@@ -64,7 +80,7 @@ export default function Comments({ comments, postId }) {
             </Box>
 
             <Box p="sm">
-                {comments?.map(comment => <Comment data={comment} />)}
+                {data.map(comment => <Comment data={comment} />)}
             </Box>
         </>
     )

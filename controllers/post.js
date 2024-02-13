@@ -88,7 +88,8 @@ export const getPost = async (req, res) => {
 export const getPostComments = async (req, res) => {
     try {
         const { postId } = req.params;
-        const comments = await Comment.find({ post: postId })
+        const comments = await Comment.find({ postId })
+            .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture")
 
         comments.sort((a, b) => {

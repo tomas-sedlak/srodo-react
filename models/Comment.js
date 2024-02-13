@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const commentSchema = new Schema({
-    post: Schema.Types.ObjectId,
+    postId: Schema.Types.ObjectId,
     author: {
         type: Schema.Types.ObjectId,
         ref: "User",

@@ -1,7 +1,9 @@
 import { Box, Text, Group, Avatar, TypographyStylesProvider } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setLogin, setLoginModal } from "state";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 import moment from "moment";
@@ -9,8 +11,10 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 export default function Comment({ data }) {
-    const userId = useSelector(state => state.user._id);
+    const queryClient = useQueryClient();
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
+    const dispatch = useDispatch();
 
     const upvote = async () => {
         await axios.patch(`/api/comment/${data._id}/upvote`,
@@ -25,6 +29,20 @@ export default function Comment({ data }) {
             { headers: { Authorization: `Bearer ${token}` } }
         );
     }
+
+    const upvoteMutation = useMutation({
+        mutationFn: upvote,
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments"]);
+        }
+    })
+
+    const downvoteMutation = useMutation({
+        mutationFn: downvote,
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments"]);
+        }
+    })
 
     return (
         <Box mt={8}>
@@ -50,13 +68,13 @@ export default function Comment({ data }) {
             <Group ml={46} gap={8}>
                 <div className="icon-wrapper">
                     {!data.upvotes.includes(userId) ?
-                        <IconArrowBigUp stroke={1.25} onClick={upvote} />
-                        : <IconArrowBigUpFilled stroke={1.25} onClick={upvote} />
+                        <IconArrowBigUp stroke={1.25} onClick={() => userId ? upvoteMutation.mutate : dispatch(setLoginModal(true))} />
+                        : <IconArrowBigUpFilled stroke={1.25} onClick={() => userId ? upvoteMutation.mutate : dispatch(setLoginModal(true))} />
                     }
                     <span>{data.upvotes.length - data.downvotes.length}</span>
                     {!data.downvotes.includes(userId) ?
-                        <IconArrowBigDown stroke={1.25} onClick={downvote} />
-                        : <IconArrowBigDownFilled stroke={1.25} onClick={downvote} />
+                        <IconArrowBigDown stroke={1.25} onClick={() => userId ? downvoteMutation.mutate : dispatch(setLoginModal(true))} />
+                        : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteMutation.mutate : dispatch(setLoginModal(true))} />
                     }
                 </div>
             </Group>
