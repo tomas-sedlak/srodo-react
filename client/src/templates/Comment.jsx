@@ -68,13 +68,13 @@ export default function Comment({ data }) {
             <Group ml={46} gap={8}>
                 <div className="icon-wrapper">
                     {!data.upvotes.includes(userId) ?
-                        <IconArrowBigUp stroke={1.25} onClick={() => userId ? upvoteMutation.mutate : dispatch(setLoginModal(true))} />
-                        : <IconArrowBigUpFilled stroke={1.25} onClick={() => userId ? upvoteMutation.mutate : dispatch(setLoginModal(true))} />
+                        <IconArrowBigUp stroke={1.25} onClick={() => userId ? upvoteMutation.mutate() : dispatch(setLoginModal(true))} />
+                        : <IconArrowBigUpFilled stroke={1.25} onClick={() => userId ? upvoteMutation.mutate() : dispatch(setLoginModal(true))} />
                     }
                     <span>{data.upvotes.length - data.downvotes.length}</span>
                     {!data.downvotes.includes(userId) ?
-                        <IconArrowBigDown stroke={1.25} onClick={() => userId ? downvoteMutation.mutate : dispatch(setLoginModal(true))} />
-                        : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteMutation.mutate : dispatch(setLoginModal(true))} />
+                        <IconArrowBigDown stroke={1.25} onClick={() => userId ? downvoteMutation.mutate() : dispatch(setLoginModal(true))} />
+                        : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteMutation.mutate() : dispatch(setLoginModal(true))} />
                     }
                 </div>
             </Group>
