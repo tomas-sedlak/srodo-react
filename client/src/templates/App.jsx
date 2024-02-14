@@ -14,6 +14,7 @@ import Post from "routes/post";
 import CreateArticle from "routes/create_article";
 import CreateQuiz from "routes/create_quiz";
 import CreateDiscussion from "routes/create_discussion";
+import Stats from "routes/stats";
 
 import LoginModal from "templates/LoginModal";
 import React from "react";
@@ -41,6 +42,7 @@ export default function App() {
                             <Route path="novinky" element={<News />} />
                             <Route path=":username" element={<User />} />
                             <Route path=":username/:postId" element={<Post />} />
+                            <Route path="stats" element={<Stats />} />
 
                             {/* PRIVATE ROUTES */}
                             <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
