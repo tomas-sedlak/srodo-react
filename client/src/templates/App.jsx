@@ -15,6 +15,7 @@ import CreateArticle from "routes/create_article";
 import CreateQuiz from "routes/create_quiz";
 import CreateDiscussion from "routes/create_discussion";
 import Stats from "routes/stats";
+import Settings from "routes/settings";
 
 import LoginModal from "templates/LoginModal";
 import React from "react";
@@ -46,6 +47,7 @@ export default function App() {
 
                             {/* PRIVATE ROUTES */}
                             <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
+                            <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
                             <Route path="novy" element={!isAuth && <Navigate to="/" />}>
                                 <Route path="clanok" element={<CreateArticle />} />
                                 <Route path="kviz" element={<CreateQuiz />} />

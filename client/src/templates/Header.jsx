@@ -133,10 +133,12 @@ export default function Header() {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Group>
-                                            <IconSettings stroke={1.25} />
-                                            <Text>Nastavenia</Text>
-                                        </Group>
+                                        <Link to="/nastavenia">
+                                            <Group>
+                                                <IconSettings stroke={1.25} />
+                                                <Text>Nastavenia</Text>
+                                            </Group>
+                                        </Link>
                                     </Menu.Item>
                                     <Menu.Item>
                                         <Group>
