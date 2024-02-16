@@ -122,13 +122,15 @@ export default function Header() {
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                     <Menu.Item>
-                                        <Group>
-                                            <Avatar src={user.profilePicture} />
-                                            <Stack gap={4}>
-                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
-                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
-                                            </Stack>
-                                        </Group>
+                                        <Link to={`/${user.username}`}>
+                                            <Group>
+                                                <Avatar src={user.profilePicture} />
+                                                <Stack gap={4}>
+                                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
+                                                    <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                                                </Stack>
+                                            </Group>
+                                        </Link>
                                     </Menu.Item>
                                     <Menu.Item>
                                         <Group>
