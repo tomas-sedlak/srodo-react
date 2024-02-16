@@ -8,6 +8,7 @@ import multer from "multer";
 import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
+import { rateLimit } from "express-rate-limit";
 
 // ROUTES
 import authRoutes from "./routes/auth.js";
@@ -27,6 +28,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config();
 const app = express();
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+});
+
+app.use(limiter)
 app.use(express.json());
 // app.use(helmet());
 // app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
