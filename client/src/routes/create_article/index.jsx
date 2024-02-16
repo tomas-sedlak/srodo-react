@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, Select, AspectRatio, Textarea, Text, Image as MantineImage, ActionIcon, Divider, Menu } from '@mantine/core';
-import { IconDots, IconList, IconPhoto, IconChevronDown, IconLetterCase, IconBold, IconItalic, IconUnderline, IconHighlight, IconStrikethrough, IconClearFormatting, IconLink, IconUnlink, IconBlockquote, IconSubscript, IconSuperscript, IconCode, IconListNumbers, IconLineDashed } from '@tabler/icons-react';
+import { Tooltip, Box, Group, Button, Select, AspectRatio, Textarea, Text, Image as MantineImage, ActionIcon, Divider, Menu } from '@mantine/core';
+import { IconDots, IconList, IconPhoto, IconChevronDown, IconHeading, IconBold, IconItalic, IconCode, IconStrikethrough, IconClearFormatting, IconLink, IconUnlink, IconBlockquote, IconSubscript, IconSuperscript, IconListNumbers, IconLineDashed } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
@@ -111,27 +111,33 @@ export default function CreateArticle() {
                     </AspectRatio>
                 </Box>
 
-                <Textarea
-                    autosize
-                    mt="md"
-                    w="100%"
-                    variant="unstyled"
-                    placeholder="Názov článku"
-                    styles={{
-                        input: {
-                            fontSize: "32px",
-                            fontWeight: "800"
-                        },
-                    }}
-                    value={title}
-                    maxLength={maxCharacterLenght}
-                    onChange={event => {
-                        setTitle(event.target.value)
-                        setCount(event.target.value.length)
-                    }}
-                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
-                />
-                <Text c="gray" size="sm" ta="end">{count}/{maxCharacterLenght}</Text>
+                <Box pos="relative">
+                    <Textarea
+                        autosize
+                        mt="md"
+                        w="100%"
+                        variant="unstyled"
+                        placeholder="Názov článku"
+                        styles={{
+                            input: {
+                                fontSize: "32px",
+                                fontWeight: "800",
+                                lineHeight: 1.2,
+                                borderRadius: 0,
+                                padding: 0,
+                                paddingRight: 36,
+                            },
+                        }}
+                        value={title}
+                        maxLength={maxCharacterLenght}
+                        onChange={event => {
+                            setTitle(event.target.value)
+                            setCount(event.target.value.length)
+                        }}
+                        onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+                    />
+                    <Text c="gray" size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
+                </Box>
 
                 <Select
                     mt="sm"
@@ -142,51 +148,44 @@ export default function CreateArticle() {
 
                 <RichTextEditor editor={editor} mt="sm">
                     <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)">
-                        <ActionIcon variant="subtle" color="gray.4" c="black" >
-                            <IconLetterCase stroke={1.25} />
-                        </ActionIcon>
+                        <Tooltip label="Nadpis">
+                            <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                <IconHeading stroke={1.25} />
+                            </ActionIcon>
+                        </Tooltip>
                         <Divider orientation="vertical" />
-                        <ActionIcon variant="subtle" color="gray.4" c="black" >
-                            <IconBold stroke={1.25} />
-                        </ActionIcon>
-                        <ActionIcon variant="subtle" color="gray.4" c="black" >
-                            <IconItalic stroke={1.25} />
-                        </ActionIcon>
-                        <Menu>
+                        <Tooltip label="Tučné Ctrl+B">
+                            <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                <IconBold stroke={1.25} />
+                            </ActionIcon>
+                        </Tooltip>
+                        <Tooltip label="Kurzíva Ctrl+I">
+                            <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                <IconItalic stroke={1.25} />
+                            </ActionIcon>
+                        </Tooltip>
+                        <Menu position="bottom-start">
                             <Menu.Target>
-                                <ActionIcon variant="subtle" color="gray.4" c="black" radius={0} >
-                                    <IconDots stroke={1.25} />
-                                </ActionIcon>
+                                <Tooltip label="Viac formátovania">
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconDots stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
-
-                                <Menu.Item leftSection={
-                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                        <IconUnderline stroke={1.25} />
-                                    </ActionIcon>
-                                }>
-                                    ...
-                                </Menu.Item>
-                                <Menu.Item leftSection={
-                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                        <IconHighlight stroke={1.25} />
-                                    </ActionIcon>
-                                }>
-                                    ...
-                                </Menu.Item>
                                 <Menu.Item leftSection={
                                     <ActionIcon variant="subtle" color="gray.4" c="black" >
                                         <IconStrikethrough stroke={1.25} />
                                     </ActionIcon>
                                 }>
-                                    ...
+                                    Preškrtnuté
                                 </Menu.Item>
                                 <Menu.Item leftSection={
                                     <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                        <IconClearFormatting stroke={1.25} />
+                                        <IconCode stroke={1.25} />
                                     </ActionIcon>
                                 }>
-                                    ...
+                                    Kód
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
@@ -199,11 +198,13 @@ export default function CreateArticle() {
 
                         <Divider orientation="vertical" />
 
-                        <Menu>
+                        <Menu position="bottom-start">
                             <Menu.Target>
-                                <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                    <IconList stroke={1.25} />
-                                </ActionIcon>
+                                <Tooltip label="Zoznam">
+                                    <ActionIcon variant="subtle" color="gray.4" c="black" >
+                                        <IconList stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
                             </Menu.Target>
                             <Menu.Dropdown>
                                 <Menu.Item leftSection={
@@ -211,14 +212,14 @@ export default function CreateArticle() {
                                         <IconList stroke={1.25} />
                                     </ActionIcon>
                                 }>
-                                    ...
+                                    Odrážky
                                 </Menu.Item>
                                 <Menu.Item leftSection={
                                     <ActionIcon variant="subtle" color="gray.4" c="black" >
                                         <IconListNumbers stroke={1.25} />
                                     </ActionIcon>
                                 }>
-                                    ...
+                                    Očíslovaný
                                 </Menu.Item>
                             </Menu.Dropdown>
                         </Menu>
@@ -286,7 +287,7 @@ export default function CreateArticle() {
                     <RichTextEditor.Content />
                 </RichTextEditor>
 
-                <Group gap="sm" mt="lg">
+                <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish}>
                         Publikovať článok
                     </Button>

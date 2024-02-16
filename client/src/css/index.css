@@ -205,6 +205,12 @@ main {
   right: var(--mantine-spacing-sm);
 }
 
+.input-counter {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+}
+
 .icon-wrapper {
   display: flex;
   align-items: center;
