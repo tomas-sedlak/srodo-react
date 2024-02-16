@@ -36,7 +36,11 @@ const Post = forwardRef(({ post }, ref) => {
     }
 
     const savePost = async (postId) => {
-        const response = await axios.put(`/api/user/${userId}/saved`, { postId });
+        const response = await axios.patch(
+            `/api/user/${userId}/save`,
+            { postId },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
         return await response.data;
     }
 
@@ -44,10 +48,10 @@ const Post = forwardRef(({ post }, ref) => {
         mutationFn: likePost,
         onSuccess: (updatePost) => {
             queryClient.setQueryData(["posts"], data => {
-                return  {
+                return {
                     ...data,
                     pages: data.pages.map(page =>
-                        page.map(post => 
+                        page.map(post =>
                             post._id === updatePost._id ? updatePost : post
                         )
                     )
@@ -146,7 +150,6 @@ const Post = forwardRef(({ post }, ref) => {
                                     {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
                                     <span>{post.saved ? "Uložené" : "Uložiť"}</span>
                                 </div>
-
                             </Group>
                         </Group>
                     </div>

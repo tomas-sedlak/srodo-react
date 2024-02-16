@@ -35,7 +35,7 @@ export const addSaved = async (req, res) => {
         const isSaved = user.saved.includes(postId);
 
         if (isSaved) {
-            user.saved.splice(postId, 1);
+            user.saved.pull(postId);
         } else {
             user.saved.push(postId);
         }
