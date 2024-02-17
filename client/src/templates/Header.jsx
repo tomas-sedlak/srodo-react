@@ -146,7 +146,7 @@ export default function Header() {
                                             <Text>Štatistiky</Text>
                                         </Group>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => dispatch(setLogout())}>
+                                    <Menu.Item color="red" onClick={() => dispatch(setLogout())}>
                                         <Group>
                                             <IconLogout stroke={1.25} />
                                             <Text>Odhlásiť sa</Text>

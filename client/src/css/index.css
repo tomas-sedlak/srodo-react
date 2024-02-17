@@ -127,6 +127,12 @@ main {
   background-color: var(--mantine-color-gray-1)!important
 }
 
+.post-dots {
+  position: absolute;
+  top: -2px;
+  right: 0;
+}
+
 /* All custom cards START */
 
 .news-card {

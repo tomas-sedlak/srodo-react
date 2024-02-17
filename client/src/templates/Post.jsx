@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AspectRatio, Group, Image, Text, Avatar, Box, Badge } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye } from '@tabler/icons-react';
+import { AspectRatio, Group, Image, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
+import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -68,40 +68,87 @@ const Post = forwardRef(({ post }, ref) => {
     })
 
     const postContent = (
-        <Link to={url}>
-            <Box key={post._id} className="border-bottom light-hover" p="sm">
-                <Box pos="relative">
-                    <Badge
-                        className="image-item-left"
-                        color="black"
-                        c="white"
-                        variant="light"
-                    >
-                        {typeNames[post.postType]}
-                    </Badge>
+        <Box key={post._id} className="border-bottom light-hover" p="sm">
+            <Box pos="relative">
+                <Badge
+                    className="image-item-left"
+                    color="black"
+                    c="white"
+                    variant="light"
+                >
+                    {typeNames[post.postType]}
+                </Badge>
+                <Link to={url}>
                     <AspectRatio ratio={2 / 1}>
                         <Image radius="lg" src={post.coverImage} />
                     </AspectRatio>
-                </Box>
+                </Link>
+            </Box>
 
-                {/* Post information */}
-                <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
-                    <Link to={"/" + post.author.username}>
-                        <Avatar src={post.author.profilePicture} />
-                    </Link>
+            {/* Post information */}
+            <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
+                <Link to={"/" + post.author.username}>
+                    <Avatar src={post.author.profilePicture} />
+                </Link>
 
-                    <div>
-                        <Group gap={4} align="center">
-                            <Link to={"/" + post.author.username}>
-                                <Text fw={600} c="gray" size="sm">
-                                    {post.author.displayName}
-                                </Text>
-                            </Link>
-                            <Text c="gray" size="sm">
-                                &middot; {post.subject?.label} &middot; {moment(post.createdAt).fromNow()}
+                <Box pos="relative" w="100%">
+                    {post.author._id === userId && (
+                        <Menu position="bottom-end" width={180}>
+                            <Menu.Target>
+                                <ActionIcon
+                                    className="post-dots"
+                                    variant="transparent"
+                                    c="black"
+                                >
+                                    <IconDots stroke={1.25} />
+                                </ActionIcon>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item>
+                                    <Group>
+                                        <IconPencil stroke={1.25} />
+                                        <Text>Upraviť</Text>
+                                    </Group>
+                                </Menu.Item>
+                                <Menu.Item>
+                                    <Group>
+                                        <IconChartBar stroke={1.25} />
+                                        <Text>Štatistiky</Text>
+                                    </Group>
+                                </Menu.Item>
+                                <Menu.Item color="red">
+                                    <Group>
+                                        <IconTrash stroke={1.25} />
+                                        <Text>Odstrániť</Text>
+                                    </Group>
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                    )}
+
+                    <Group gap={4} align="center" pr={28}>
+                        <Link to={"/" + post.author.username}>
+                            <Text fw={600} c="gray" size="sm">
+                                {post.author.displayName}
                             </Text>
-                        </Group>
+                        </Link>
+                        <Text c="gray" size="sm">
+                            &middot;
+                        </Text>
+                        <Link to={post.subject.url}>
+                            <Text c="gray" size="sm">
+                                {post.subject.label}
+                            </Text>
+                        </Link>
+                        <Text c="gray" size="sm">
+                            &middot;
+                        </Text>
+                        <Text c="gray" size="sm">
+                            {moment(post.createdAt).fromNow()}
+                        </Text>
+                    </Group>
 
+                    <Link to={url}>
                         <Text
                             fw={800}
                             fz={24}
@@ -111,51 +158,51 @@ const Post = forwardRef(({ post }, ref) => {
                         >
                             {post.title}
                         </Text>
+                    </Link>
 
-                        <Group justify="space-between" mt="sm">
-                            <Group gap={8}>
-                                <div className="icon-wrapper">
-                                    <IconEye stroke={1.25} />
-                                    <span>{post.views.reduce((acc, view) => acc + view.count, 0)}</span>
-                                </div>
+                    <Group justify="space-between" mt="sm">
+                        <Group gap={8}>
+                            <div className="icon-wrapper">
+                                <IconEye stroke={1.25} />
+                                <span>{post.views.reduce((acc, view) => acc + view.count, 0)}</span>
+                            </div>
 
-                                {/* Likes button */}
-                                <div
-                                    className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
-                                    onClick={event => {
-                                        event.preventDefault()
-                                        if (userId) likeMutation.mutate()
-                                        else dispatch(setLoginModal(true))
-                                    }}
-                                >
-                                    {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                    <span>{post.likes.length}</span>
-                                </div>
+                            {/* Likes button */}
+                            <div
+                                className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
+                                onClick={event => {
+                                    event.preventDefault()
+                                    if (userId) likeMutation.mutate()
+                                    else dispatch(setLoginModal(true))
+                                }}
+                            >
+                                {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
+                                <span>{post.likes.length}</span>
+                            </div>
 
-                                {/* Comments button */}
-                                <Link to={url + "#komentare"} className="icon-wrapper">
-                                    <IconMessageCircle stroke={1.25} />
-                                    <span>{post.comments.length}</span>
-                                </Link>
+                            {/* Comments button */}
+                            <Link to={url + "#komentare"} className="icon-wrapper">
+                                <IconMessageCircle stroke={1.25} />
+                                <span>{post.comments.length}</span>
+                            </Link>
 
-                                {/* Save button */}
-                                <div
-                                    className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
-                                    onClick={event => {
-                                        event.preventDefault()
-                                        if (userId) saveMutation.mutate(post._id)
-                                        else dispatch(setLoginModal(true))
-                                    }}
-                                >
-                                    {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
-                                    <span>{post.saved ? "Uložené" : "Uložiť"}</span>
-                                </div>
-                            </Group>
+                            {/* Save button */}
+                            <div
+                                className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
+                                onClick={event => {
+                                    event.preventDefault()
+                                    if (userId) saveMutation.mutate(post._id)
+                                    else dispatch(setLoginModal(true))
+                                }}
+                            >
+                                {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
+                                <span>{post.saved ? "Uložené" : "Uložiť"}</span>
+                            </div>
                         </Group>
-                    </div>
-                </Group>
-            </Box>
-        </Link>
+                    </Group>
+                </Box>
+            </Group>
+        </Box>
     )
 
     // Ref is used for infinte scroll. Checks if last post is visible on screen and then loads new posts
