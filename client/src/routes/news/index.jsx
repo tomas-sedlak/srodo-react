@@ -1,40 +1,50 @@
 import { useState, useEffect } from 'react';
-import { Text, Box, Card, Image, Group, Tabs } from "@mantine/core";
+import { Box, Tabs } from "@mantine/core";
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const categories = [
     {
-        label: "veda"
+        label: "veda",
+        category: "science",
     },
     {
-        label: "technologie"
+        label: "technologie",
+        category: "technology",
     }
 ]
 
 export default function News() {
-    const [activeTab, setActiveTab] = useState("veda");
+    const [activeTab, setActiveTab] = useState(categories[0].category);
+    const [news, setNews] = useState([]);
+
+    const fetchNews = async (category) => {
+        const response = await axios.get(`/api/news?category=${category}`);
+        setActiveTab(category)
+        setNews(response.data);
+    }
+
+    useEffect(() => {
+        fetchNews(categories[0].category);
+    }, [])
 
     return (
         <>
-            <Card className="custom-card" mb={8}>
-                <Tabs variant="unstyled" value={activeTab} onChange={setActiveTab}>
-                    <Tabs.List className="custom-tabs">
-                        {categories.map(subject => 
-                            <Tabs.Tab value={subject.label}>
-                                {subject.label}
-                            </Tabs.Tab>
-                        )}
-                    </Tabs.List>
-                </Tabs>
-            </Card>
+            <Tabs variant="unstyled" value={activeTab} onChange={fetchNews} p="sm" className="border-bottom">
+                <Tabs.List className="custom-tabs">
+                    {categories.map(subject =>
+                        <Tabs.Tab value={subject.category}>
+                            {subject.label}
+                        </Tabs.Tab>
+                    )}
+                </Tabs.List>
+            </Tabs>
 
-            <Card className="custom-card" mb={8}>
-                <Group>
-                    <Box>
-                        <Text>V gejzíroch ľadového mesiaca Saturnu môžeme objaviť stavebné kamene života</Text>
-                        <Text>zive.sk</Text>
-                    </Box>
-                </Group>
-            </Card>
+            {news.map((article) => (
+                <Box className="border-bottom" p="sm">
+                    <Link to={article.url} target="_blank">{article.title}</Link>
+                </Box>
+            ))}
         </>
     )
 }
