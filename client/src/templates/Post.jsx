@@ -20,7 +20,7 @@ const typeNames = {
 
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
-    const url = "/" + post.author.username + "/" + post._id;
+    const url = `/${post.author.username}/${post._id}`;
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const isLiked = post.likes.includes(userId);
@@ -104,17 +104,19 @@ const Post = forwardRef(({ post }, ref) => {
                                 w={32}
                                 h={32}
                             >
-                                <IconDots stroke={1.25} style={{ width: "80%", height: "80%" }} />
+                                <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
                             </ActionIcon>
                         </Menu.Target>
                         <Menu.Dropdown>
                             {post.author._id === userId ? (
                                 <>
                                     <Menu.Item>
-                                        <Group>
-                                            <IconPencil stroke={1.25} />
-                                            <Text>Upraviť</Text>
-                                        </Group>
+                                        <Link to={`${url}/upravit`}>
+                                            <Group>
+                                                <IconPencil stroke={1.25} />
+                                                <Text>Upraviť</Text>
+                                            </Group>
+                                        </Link>
                                     </Menu.Item>
                                     <Menu.Item>
                                         <Group>
@@ -195,7 +197,7 @@ const Post = forwardRef(({ post }, ref) => {
                             </div>
 
                             {/* Comments button */}
-                            <Link to={url + "#komentare"} className="icon-wrapper">
+                            <Link to={`${url}#komentare`} className="icon-wrapper">
                                 <IconMessageCircle stroke={1.25} />
                                 <span>{post.comments.length}</span>
                             </Link>
