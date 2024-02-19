@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar } from '@tabler/icons-react';
+import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDotsVertical, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -92,39 +92,49 @@ const Post = forwardRef(({ post }, ref) => {
                 </Link>
 
                 <Box pos="relative" w="100%">
-                    {post.author._id === userId && (
-                        <Menu position="bottom-end" width={180}>
-                            <Menu.Target>
-                                <ActionIcon
-                                    className="post-dots"
-                                    variant="transparent"
-                                    c="black"
-                                >
-                                    <IconDots stroke={1.25} />
-                                </ActionIcon>
-                            </Menu.Target>
-                            <Menu.Dropdown>
+
+                    <Menu position="bottom-end" width={180}>
+                        <Menu.Target>
+                            <ActionIcon
+                                className="post-dots"
+                                variant="transparent"
+                                c="black"
+                            >
+                                <IconDotsVertical stroke={1.25} />
+                            </ActionIcon>
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            {post.author._id === userId ? (
+                                <>
+                                    <Menu.Item>
+                                        <Group>
+                                            <IconPencil stroke={1.25} />
+                                            <Text>Upraviť</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                    <Menu.Item>
+                                        <Group>
+                                            <IconChartBar stroke={1.25} />
+                                            <Text>Štatistiky</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                    <Menu.Item color="red">
+                                        <Group>
+                                            <IconTrash stroke={1.25} />
+                                            <Text>Odstrániť</Text>
+                                        </Group>
+                                    </Menu.Item>
+                                </>
+                            ) : (
                                 <Menu.Item>
                                     <Group>
-                                        <IconPencil stroke={1.25} />
-                                        <Text>Upraviť</Text>
+                                        <IconFlag stroke={1.25} />
+                                        <Text>Nahlásiť</Text>
                                     </Group>
                                 </Menu.Item>
-                                <Menu.Item>
-                                    <Group>
-                                        <IconChartBar stroke={1.25} />
-                                        <Text>Štatistiky</Text>
-                                    </Group>
-                                </Menu.Item>
-                                <Menu.Item color="red">
-                                    <Group>
-                                        <IconTrash stroke={1.25} />
-                                        <Text>Odstrániť</Text>
-                                    </Group>
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    )}
+                            )}
+                        </Menu.Dropdown>
+                    </Menu>
 
                     <Group gap={4} align="center" pr={28}>
                         <Link to={"/" + post.author.username}>

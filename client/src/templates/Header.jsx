@@ -132,6 +132,7 @@ export default function Header() {
                                             </Group>
                                         </Link>
                                     </Menu.Item>
+                                    <Menu.Divider />
                                     <Menu.Item>
                                         <Link to="/nastavenia">
                                             <Group>
