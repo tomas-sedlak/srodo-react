@@ -129,7 +129,7 @@ main {
 
 .post-dots {
   position: absolute;
-  top: 0;
+  top: 3px;
   right: 0;
 }
 

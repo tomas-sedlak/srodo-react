@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Image, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDotsVertical, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
+import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -97,10 +97,14 @@ const Post = forwardRef(({ post }, ref) => {
                         <Menu.Target>
                             <ActionIcon
                                 className="post-dots"
-                                variant="transparent"
+                                variant="subtle"
+                                color="gray"
                                 c="black"
+                                radius="xl"
+                                w={32}
+                                h={32}
                             >
-                                <IconDotsVertical stroke={1.25} />
+                                <IconDots stroke={1.25} style={{ width: "80%", height: "80%" }} />
                             </ActionIcon>
                         </Menu.Target>
                         <Menu.Dropdown>
