@@ -145,3 +145,21 @@ export const viewPost = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 }
+
+// DELETE
+export const deletePost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findById(postId);
+
+        if (post.author != req.user.id) {
+            return res.status(403).send("Access Denied");
+        }
+
+        await Post.findByIdAndDelete(postId);
+
+        res.status(200).send("Success");
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
+}
