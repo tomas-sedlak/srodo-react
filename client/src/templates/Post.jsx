@@ -67,6 +67,14 @@ const Post = forwardRef(({ post }, ref) => {
         },
     })
 
+    const deletePost = async () => {
+        const response = await axios.delete(
+            `/api/post/${post._id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return await response.data;
+    }
+
     const postContent = (
         <Box key={post._id} className="border-bottom light-hover" p="sm">
             <Box pos="relative">
@@ -126,7 +134,7 @@ const Post = forwardRef(({ post }, ref) => {
                                     </Menu.Item>
                                     <Menu.Divider />
                                     <Menu.Item color="red">
-                                        <Group>
+                                        <Group onClick={deletePost}>
                                             <IconTrash stroke={1.25} />
                                             <Text>Odstrániť</Text>
                                         </Group>
