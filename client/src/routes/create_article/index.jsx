@@ -1,24 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Tooltip, Box, Group, Button, Select, AspectRatio, Textarea, Text, Image as MantineImage, ActionIcon, Divider, Menu } from '@mantine/core';
-import { IconDots, IconList, IconPhoto, IconChevronDown, IconHeading, IconBold, IconItalic, IconCode, IconStrikethrough, IconClearFormatting, IconLink, IconUnlink, IconBlockquote, IconSubscript, IconSuperscript, IconListNumbers, IconLineDashed, IconVideo } from '@tabler/icons-react';
+import { Box, Group, Button, AspectRatio, Textarea, Text, Image } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
 import { createClient } from 'pexels';
+import { SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
+import { useCurrentEditor } from "@tiptap/react";
 import axios from "axios";
-
-import { useEditor } from '@tiptap/react';
-import { RichTextEditor, Link } from '@mantine/tiptap';
-// import Highlight from '@tiptap/extension-highlight';
-// import Underline from '@tiptap/extension-underline';
-// import TextAlign from '@tiptap/extension-text-align';
-// import Superscript from '@tiptap/extension-superscript';
-// import SubScript from '@tiptap/extension-subscript';
-import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
-import Placeholder from '@tiptap/extension-placeholder';
-import Youtube from '@tiptap/extension-youtube';
 
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
@@ -30,48 +19,16 @@ export default function CreateArticle() {
     const [title, setTitle] = useState("");
     const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
-    const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState();
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
+    const [text, setText] = useState("");
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
             response => setCoverImage(response.photos[0].src.landscape)
         )
-
-        fetch("/api/subjects")
-            .then(response => response.json())
-            .then(json => setSubjects(json))
     }, []);
-
-    const editor = useEditor({
-        extensions: [
-            StarterKit,
-            Image,
-            Youtube,
-            // Underline,
-            Link,
-            // Superscript,
-            // SubScript,
-            // Highlight,
-            //   TextAlign.configure({ types: ['heading', 'paragraph'] }),
-            Placeholder.configure({ placeholder: "Tu začni písať svoj článok..." })
-        ],
-        content: ""
-    });
-
-    const addImage = url => {
-        editor.chain().focus().setImage({ src: url }).run()
-    }
-
-    const addVideo = () => {
-        const url = prompt("URL")
-
-        editor.commands.setYoutubeVideo({
-            src: url,
-        })
-    }
 
     const publish = async () => {
         const data = {
@@ -79,7 +36,7 @@ export default function CreateArticle() {
             subject: selectedSubject,
             coverImage: coverImage,
             title: title,
-            content: editor.getHTML(),
+            content: text,
             author: userId,
         }
 
@@ -91,23 +48,15 @@ export default function CreateArticle() {
         navigate("/")
     }
 
-    const selectData = []
-    subjects.map((subject) => {
-        selectData.push({
-            value: subject._id,
-            label: subject.emoji + " " + subject.label,
-        })
-    })
-
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
-            <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} setImage={addImage} />
+            <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
             <Box p="sm">
                 <Box pos="relative">
                     <AspectRatio ratio={2 / 1}>
-                        <MantineImage onClick={coverImageModalHandlers.open} className="pointer" radius="lg" src={coverImage} />
+                        <Image onClick={coverImageModalHandlers.open} className="pointer" radius="lg" src={coverImage} />
                     </AspectRatio>
                 </Box>
 
@@ -139,75 +88,9 @@ export default function CreateArticle() {
                     <Text c="gray" size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
                 </Box>
 
-                <Select
-                    mt="sm"
-                    placeholder="Vybrať predmet"
-                    data={selectData}
-                    onChange={(subjectId) => setSelectedSubject(subjectId)}
-                />
+                <SubjectSelect setSelectedSubject={setSelectedSubject} />
 
-                <RichTextEditor editor={editor} mt="sm">
-                    <RichTextEditor.Toolbar sticky stickyOffset="var(--header-height)" p="sm" style={{ gap: 4 }}>
-                        <Tooltip label="Nadpis">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconHeading stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Tučné">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconBold stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Kurzíva">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconItalic stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Preškrtnuté">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconStrikethrough stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-
-                        <Divider orientation="vertical" mx={4} />
-
-                        <Tooltip label="Link">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconLink stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Odrážky">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconList stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Očíslované">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconListNumbers stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-
-                        <Divider orientation="vertical" mx={4} />
-
-                        <Tooltip label="Kód">
-                            <ActionIcon variant="subtle" color="gray.4" c="black" >
-                                <IconCode stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="Obrázok">
-                            <ActionIcon onClick={imageModalHandlers.open} variant="subtle" color="gray.4" c="black">
-                                <IconPhoto stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                        <Tooltip label="YouTube video">
-                            <ActionIcon variant="subtle" color="gray.4" c="black">
-                                <IconVideo stroke={1.25} />
-                            </ActionIcon>
-                        </Tooltip>
-                    </RichTextEditor.Toolbar>
-
-                    <RichTextEditor.Content />
-                </RichTextEditor>
+                <TextEditor setText={setText} placeholder="Tu začni písať svoj článok..." />
 
                 <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish}>
