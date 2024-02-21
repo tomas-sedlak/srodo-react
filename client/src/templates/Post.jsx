@@ -124,6 +124,7 @@ const Post = forwardRef(({ post }, ref) => {
                                             <Text>Štatistiky</Text>
                                         </Group>
                                     </Menu.Item>
+                                    <Menu.Divider />
                                     <Menu.Item color="red">
                                         <Group>
                                             <IconTrash stroke={1.25} />

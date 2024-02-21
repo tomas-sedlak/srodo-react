@@ -147,6 +147,7 @@ export default function Header() {
                                             <Text>Štatistiky</Text>
                                         </Group>
                                     </Menu.Item>
+                                    <Menu.Divider />
                                     <Menu.Item color="red" onClick={() => dispatch(setLogout())}>
                                         <Group>
                                             <IconLogout stroke={1.25} />
