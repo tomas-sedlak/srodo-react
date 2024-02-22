@@ -16,9 +16,11 @@ a {
   color: var(--mantine-color-black);
 }
 
-img {
+.lazy-image {
+  background-color: var(--mantine-color-gray-1);
+  background-position: center;
+  background-size: cover;
   border-radius: var(--mantine-radius-lg);
-  /* border: 1px solid var(--mantine-color-gray-2); */
 }
 
 /* For YouTube videos to change size based on screen size */

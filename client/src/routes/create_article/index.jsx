@@ -56,7 +56,11 @@ export default function CreateArticle() {
             <Box p="sm">
                 <Box pos="relative">
                     <AspectRatio ratio={2 / 1}>
-                        <Image onClick={coverImageModalHandlers.open} className="pointer" radius="lg" src={coverImage} />
+                        <Box
+                            className="lazy-image pointer"
+                            style={{ backgroundImage: `url(${coverImage})` }}
+                            onClick={coverImageModalHandlers.open}
+                        ></Box>
                     </AspectRatio>
                 </Box>
 

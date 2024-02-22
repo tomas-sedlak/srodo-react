@@ -37,7 +37,7 @@ export default function Post() {
         <>
             <Box p="sm" className="border-bottom">
                 <AspectRatio ratio={2 / 1}>
-                    <Image radius="lg" src={post.coverImage} />
+                    <Box className="lazy-image" style={{ backgroundImage: `url(${post.coverImage})` }}></Box>
                 </AspectRatio>
 
                 <Group gap="sm" align="center" mt="sm" wrap="nowrap">

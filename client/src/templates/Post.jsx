@@ -88,7 +88,7 @@ const Post = forwardRef(({ post }, ref) => {
                 </Badge>
                 <Link to={url}>
                     <AspectRatio ratio={2 / 1}>
-                        <Image radius="lg" src={post.coverImage} />
+                        <Box className="lazy-image" style={{ backgroundImage: `url(${post.coverImage})` }}></Box>
                     </AspectRatio>
                 </Link>
             </Box>
