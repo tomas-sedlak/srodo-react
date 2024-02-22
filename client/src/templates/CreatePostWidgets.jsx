@@ -136,7 +136,67 @@ const EditorMenu = () => {
     )
 }
 
-export function TextEditor({ setText, placeholder = "", content = "" }) {
+const EditorMenuSimple = () => {
+    const { editor } = useCurrentEditor()
+
+    return (
+        <Group className="text-editor-menu">
+            <Tooltip label="Tučné">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleBold().run()}
+                >
+                    <IconBold stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Kurzíva">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleItalic().run()}
+                >
+                    <IconItalic stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Preškrtnuté">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleStrike().run()}
+                >
+                    <IconStrikethrough stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Kód">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                >
+                    <IconCode stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+
+            <Divider orientation="vertical" mx={4} />
+
+            <Tooltip label="Odrážky">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                >
+                    <IconList stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+            <Tooltip label="Očíslované">
+                <ActionIcon
+                    variant="subtle" color="gray.4" c="black"
+                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                >
+                    <IconListNumbers stroke={1.25} />
+                </ActionIcon>
+            </Tooltip>
+        </Group>
+    )
+}
+
+export function TextEditor({ setText, placeholder = "", content = "", simple }) {
     const extensions = [
         StarterKit,
         Image,
@@ -147,7 +207,7 @@ export function TextEditor({ setText, placeholder = "", content = "" }) {
     return (
         <Box className="text-editor">
             <EditorProvider
-                slotBefore={<EditorMenu />}
+                slotBefore={simple ? <EditorMenuSimple /> : <EditorMenu />}
                 extensions={extensions}
                 content={content}
                 onUpdate={({ editor }) => setText(editor.getHTML())}

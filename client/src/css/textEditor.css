@@ -10,7 +10,7 @@
     border-top-left-radius: var(--mantine-radius-md);
     border-top-right-radius: var(--mantine-radius-md);
     gap: 4px;
-    z-index: 99;
+    z-index: 98;
     background-color: var(--mantine-color-white);
     position: sticky;
     top: var(--header-height);

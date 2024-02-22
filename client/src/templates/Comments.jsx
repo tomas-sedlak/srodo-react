@@ -1,28 +1,17 @@
+import { useState } from "react";
 import { Box, Group, Button, Loader } from '@mantine/core';
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
 import { useQuery } from "@tanstack/react-query";
+import { TextEditor } from "templates/CreatePostWidgets";
 import Comment from "templates/Comment";
 import axios from "axios";
-
-// TipTap editor
-import { useEditor } from '@tiptap/react';
-import { RichTextEditor } from '@mantine/tiptap';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
 
 export default function Comments({ postId }) {
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
-
-    const editor = useEditor({
-        extensions: [
-            StarterKit,
-            Placeholder.configure({ placeholder: "Napíš komentár" })
-        ],
-        content: ""
-    })
+    const [text, setText] = useState("");
 
     const fetchComments = async () => {
         const response = await axios.get(`/api/post/${postId}/comments`);
@@ -45,28 +34,22 @@ export default function Comments({ postId }) {
     ) : (
         <>
             <Box p="sm" className="border-bottom">
-                <RichTextEditor
-                    editor={editor}
-                    style={{ flex: 1 }}
-                >
-                    <RichTextEditor.Content />
-                </RichTextEditor>
+                <TextEditor setText={setText} placeholder="Napíš komentár" simple />
 
                 <Group mt={8} justify="flex-end">
                     <Button
                         onClick={async () => {
                             if (userId) {
                                 // Check if not empty
-                                if (editor.getText().replace(/\s/g, "") !== "") {
+                                if (text.trim() !== "") {
                                     await axios.post(`/api/post/${postId}/comment`, {
                                         postId: postId,
                                         author: userId,
-                                        content: editor.getHTML(),
+                                        content: text.trim(),
                                     }, {
                                         headers: { Authorization: `Bearer ${token}` }
                                     })
     
-                                    editor.commands.clearContent()
                                     refetch()
                                 }
                             } else {
