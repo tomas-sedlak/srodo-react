@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Group, Button, Loader } from '@mantine/core';
+import { Box, Group, Button, Loader, Text } from '@mantine/core';
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
 import { useQuery } from "@tanstack/react-query";
@@ -49,7 +49,7 @@ export default function Comments({ postId }) {
                                     }, {
                                         headers: { Authorization: `Bearer ${token}` }
                                     })
-    
+
                                     refetch()
                                 }
                             } else {

@@ -104,7 +104,7 @@ const Post = forwardRef(({ post }, ref) => {
                     <Menu position="bottom-end" width={180}>
                         <Menu.Target>
                             <ActionIcon
-                                className="post-dots"
+                                className="dots"
                                 variant="subtle"
                                 color="gray"
                                 c="black"

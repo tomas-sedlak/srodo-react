@@ -1,5 +1,5 @@
-import { Box, Text, Group, Avatar, TypographyStylesProvider } from '@mantine/core';
-import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled } from '@tabler/icons-react';
+import { Box, Text, Group, Avatar, TypographyStylesProvider, Menu, ActionIcon } from '@mantine/core';
+import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogin, setLoginModal } from "state";
@@ -8,6 +8,7 @@ import axios from "axios";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
+import { IconTrash } from '@tabler/icons-react';
 moment.locale("sk");
 
 export default function Comment({ data }) {
@@ -45,7 +46,51 @@ export default function Comment({ data }) {
     })
 
     return (
-        <Box mt={8}>
+        <Box mt={8} pos="relative">
+            <Menu position="bottom-end" width={180}>
+                <Menu.Target>
+                    <ActionIcon
+                        className="dots"
+                        variant="subtle"
+                        color="gray"
+                        c="black"
+                        radius="xl"
+                        w={32}
+                        h={32}
+                    >
+                        <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
+                    </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                    {data.author._id === userId ? (
+                        <>
+                            <Menu.Item>
+                                <Link to={`/upravit`}>
+                                    <Group>
+                                        <IconPencil stroke={1.25} />
+                                        <Text>Upraviť</Text>
+                                    </Group>
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Divider />
+                            <Menu.Item color="red">
+                                <Group>
+                                    <IconTrash stroke={1.25} />
+                                    <Text>Odstrániť</Text>
+                                </Group>
+                            </Menu.Item>
+                        </>
+                    ) : (
+                        <Menu.Item>
+                            <Group>
+                                <IconFlag stroke={1.25} />
+                                <Text>Nahlásiť</Text>
+                            </Group>
+                        </Menu.Item>
+                    )}
+                </Menu.Dropdown>
+            </Menu>
+
             <Group gap={8}>
                 <Avatar src={data.author.profilePicture} />
 
