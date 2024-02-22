@@ -1,23 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, AspectRatio, Textarea, Text, Image } from '@mantine/core';
+import { Box, Group, Button, AspectRatio } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
 import { createClient } from 'pexels';
-import { SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
-import { useCurrentEditor } from "@tiptap/react";
+import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
 import axios from "axios";
 
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
-    const userId = useSelector(state => state.user?._id);
+    const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
-    const maxCharacterLenght = 64;
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
-    const [count, setCount] = useState(0);
     const [coverImage, setCoverImage] = useState("");
     const [selectedSubject, setSelectedSubject] = useState();
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -36,15 +33,15 @@ export default function CreateArticle() {
             subject: selectedSubject,
             coverImage: coverImage,
             title: title,
-            content: text,
-            author: userId,
+            content: text.trim(),
+            author: user._id,
         }
 
-        await axios.post(
-            "/api/post",
-            data,
-            { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        }
+
+        await axios.post("/api/post", data, { headers });
         navigate("/")
     }
 
@@ -64,37 +61,19 @@ export default function CreateArticle() {
                     </AspectRatio>
                 </Box>
 
-                <Box pos="relative">
-                    <Textarea
-                        autosize
-                        mt="md"
-                        w="100%"
-                        variant="unstyled"
-                        placeholder="Názov článku"
-                        styles={{
-                            input: {
-                                fontSize: "32px",
-                                fontWeight: "800",
-                                lineHeight: 1.2,
-                                borderRadius: 0,
-                                padding: 0,
-                                paddingRight: 36,
-                            },
-                        }}
-                        value={title}
-                        maxLength={maxCharacterLenght}
-                        onChange={event => {
-                            setTitle(event.target.value)
-                            setCount(event.target.value.length)
-                        }}
-                        onKeyDown={event => event.key === "Enter" && event.preventDefault()}
-                    />
-                    <Text c="gray" size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
-                </Box>
+                <TitleInput
+                    title={title}
+                    setTitle={setTitle}
+                />
 
-                <SubjectSelect setSelectedSubject={setSelectedSubject} />
+                <SubjectSelect
+                    setSelectedSubject={setSelectedSubject}
+                />
 
-                <TextEditor setText={setText} placeholder="Tu začni písať svoj článok..." />
+                <TextEditor
+                    setText={setText}
+                    placeholder="Tu začni písať svoj článok..."
+                />
 
                 <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish}>

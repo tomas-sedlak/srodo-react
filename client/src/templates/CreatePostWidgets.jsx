@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Group, Select, Tooltip, Box, ActionIcon, Divider } from "@mantine/core";
+import { Group, Select, Tooltip, Box, ActionIcon, Divider, Textarea, Text } from "@mantine/core";
 import { IconList, IconPhoto, IconHeading, IconBold, IconItalic, IconCode, IconStrikethrough, IconLink, IconListNumbers, IconVideo } from '@tabler/icons-react';
 import axios from "axios";
 
@@ -10,7 +10,42 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 
-export function SubjectSelect({ setSelectedSubject }) {
+export function TitleInput({ title, setTitle }) {
+    const maxCharacterLenght = 64;
+    const [count, setCount] = useState(0);
+
+    return (
+        <Box pos="relative">
+            <Textarea
+                autosize
+                mt="md"
+                w="100%"
+                variant="unstyled"
+                placeholder="Názov článku"
+                styles={{
+                    input: {
+                        fontSize: "32px",
+                        fontWeight: "800",
+                        lineHeight: 1.2,
+                        borderRadius: 0,
+                        padding: 0,
+                        paddingRight: 36,
+                    },
+                }}
+                value={title}
+                maxLength={maxCharacterLenght}
+                onChange={event => {
+                    setTitle(event.target.value)
+                    setCount(event.target.value.length)
+                }}
+                onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+            />
+            <Text c="gray" size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
+        </Box>
+    )
+}
+
+export function SubjectSelect({ setSelectedSubject, selectedSubject }) {
     const [subjects, setSubjects] = useState([])
 
     const fetchSubjects = async () => {
@@ -33,7 +68,8 @@ export function SubjectSelect({ setSelectedSubject }) {
             mt="sm"
             placeholder="Vybrať predmet"
             data={selectData}
-            onChange={subjectId => setSelectedSubject(subjectId)}
+            value={selectedSubject}
+            onChange={setSelectedSubject}
         />
     )
 }
