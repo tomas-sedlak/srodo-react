@@ -1,12 +1,15 @@
 import { useState } from 'react';
-import { Loader, Text, Image, TextInput, Modal, CloseButton, Box } from '@mantine/core';
-import { IconSearch,IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
+import { Loader, Text, Image, TextInput, Modal, CloseButton, Box, Group, rem } from '@mantine/core';
+import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FixedSizeGrid } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
+
+
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
 export default function ImagesModal({ opened, close, setImage }) {
     const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
@@ -177,6 +180,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                             onReject={(files) => console.log('rejected files', files)}
                             maxSize={5 * 1024 ** 2}
                             accept={IMAGE_MIME_TYPE}
+                            
                         >
                             <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
                                 <Dropzone.Accept>
@@ -184,6 +188,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                                         style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
                                         stroke={1.5}
                                     />
+                                    {setImage()}
                                 </Dropzone.Accept>
                                 <Dropzone.Reject>
                                     <IconX
