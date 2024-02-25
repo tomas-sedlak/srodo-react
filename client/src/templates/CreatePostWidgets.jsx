@@ -232,7 +232,7 @@ const EditorMenuSimple = () => {
     )
 }
 
-export function TextEditor({ setText, placeholder = "", content = "", simple }) {
+export function TextEditor({ setText, placeholder = "", content = "", slotAfter, simple }) {
     const extensions = [
         StarterKit,
         Image,
@@ -244,6 +244,7 @@ export function TextEditor({ setText, placeholder = "", content = "", simple }) 
         <Box className="text-editor">
             <EditorProvider
                 slotBefore={simple ? <EditorMenuSimple /> : <EditorMenu />}
+                slotAfter={slotAfter}
                 extensions={extensions}
                 content={content}
                 onUpdate={({ editor }) => setText(editor.getHTML())}

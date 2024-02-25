@@ -4,13 +4,46 @@ import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
 import { useQuery } from "@tanstack/react-query";
 import { TextEditor } from "templates/CreatePostWidgets";
+import { useCurrentEditor } from "@tiptap/react";
 import Comment from "templates/Comment";
 import axios from "axios";
 
-export default function Comments({ postId }) {
+const PublishButton = ({ postId, text, refetch }) => {
+    const { editor } = useCurrentEditor()
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
+
+    return (
+        <Group px="sm" pb={8} justify="flex-end">
+            <Button
+                onClick={async () => {
+                    if (userId) {
+                        // Check if not empty
+                        if (text.trim() !== "") {
+                            await axios.post(`/api/post/${postId}/comment`, {
+                                postId: postId,
+                                author: userId,
+                                content: text.trim(),
+                            }, {
+                                headers: { Authorization: `Bearer ${token}` }
+                            })
+
+                            editor.commands.clearContent()
+                            refetch()
+                        }
+                    } else {
+                        dispatch(setLoginModal(true))
+                    }
+                }}
+            >
+                Publikovať
+            </Button>
+        </Group>
+    )
+}
+
+export default function Comments({ postId }) {
     const [text, setText] = useState("");
 
     const fetchComments = async () => {
@@ -34,32 +67,14 @@ export default function Comments({ postId }) {
     ) : (
         <>
             <Box p="sm" className="border-bottom">
-                <TextEditor setText={setText} placeholder="Napíš komentár" simple />
-
-                <Group mt={8} justify="flex-end">
-                    <Button
-                        onClick={async () => {
-                            if (userId) {
-                                // Check if not empty
-                                if (text.trim() !== "") {
-                                    await axios.post(`/api/post/${postId}/comment`, {
-                                        postId: postId,
-                                        author: userId,
-                                        content: text.trim(),
-                                    }, {
-                                        headers: { Authorization: `Bearer ${token}` }
-                                    })
-
-                                    refetch()
-                                }
-                            } else {
-                                dispatch(setLoginModal(true))
-                            }
-                        }}
-                    >
-                        Publikovať
-                    </Button>
-                </Group>
+                <TextEditor
+                    setText={setText}
+                    placeholder="Napíš komentár"
+                    simple
+                    slotAfter={
+                        <PublishButton postId={postId} text={text} refetch={refetch} />
+                    }
+                />
             </Box>
 
             <Box p="sm">
