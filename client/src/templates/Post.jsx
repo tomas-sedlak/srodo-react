@@ -127,10 +127,12 @@ const Post = forwardRef(({ post }, ref) => {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Group>
-                                            <IconChartBar stroke={1.25} />
-                                            <Text>Štatistiky</Text>
-                                        </Group>
+                                        <Link to={`/statistiky/${post._id}`}>
+                                            <Group>
+                                                <IconChartBar stroke={1.25} />
+                                                <Text>Štatistiky</Text>
+                                            </Group>
+                                        </Link>
                                     </Menu.Item>
                                     <Menu.Divider />
                                     <Menu.Item color="red">

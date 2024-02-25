@@ -1,14 +1,37 @@
+import { useState, useEffect } from "react";
 import { Box, Text } from "@mantine/core";
 import { AreaChart } from "@mantine/charts";
-import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 export default function Stats() {
+    const { postId } = useParams();
     const [post, setPost] = useState([]);
-    const postId = "65c690ec78f68a71a4d8c3c3";
 
     const fetchPost = async () => {
         const response = await axios.get(`/api/post/${postId}`);
+        let views = response.data.views
+        views.reduce((acc, views) => {
+            let count = views.count
+            views.count = acc
+            return acc + count
+        }, 0)
+
+        const now = new Date();
+        let newViews = [];
+        for (var d = new Date(views[0].date), i = 0; d <= now; d.setDate(d.getDate() + 1)) {
+            if (d.toISOString().split("T")[0] == new Date(views[i].date).toISOString().split("T")[0]) {
+                newViews.push(views[i])
+                if (i < views.length - 1) i++
+            } else {
+                newViews.push({
+                    date: d.toISOString().split("T")[0],
+                    count: views[i].count
+                })
+            }
+        }
+
+        response.data.views = newViews
         setPost(response.data);
     }
 
