@@ -1,56 +1,97 @@
-import { useState, useEffect } from "react";
-import { Box, Text } from "@mantine/core";
+import { Box, Group, Loader, Text } from "@mantine/core";
+import { IconHeart, IconMessageCircle, IconBookmark, } from '@tabler/icons-react';
 import { AreaChart } from "@mantine/charts";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import moment from "moment";
 
 export default function Stats() {
     const { postId } = useParams();
-    const [post, setPost] = useState([]);
 
     const fetchPost = async () => {
         const response = await axios.get(`/api/post/${postId}`);
-        let views = response.data.views
-        views.reduce((acc, views) => {
-            let count = views.count
-            views.count = acc
-            return acc + count
-        }, 0)
+        let post = response.data
+        let views = post.views
 
-        const now = new Date();
-        let newViews = [];
-        for (var d = new Date(views[0].date), i = 0; d <= now; d.setDate(d.getDate() + 1)) {
-            if (d.toISOString().split("T")[0] == new Date(views[i].date).toISOString().split("T")[0]) {
-                newViews.push(views[i])
-                if (i < views.length - 1) i++
-            } else {
-                newViews.push({
-                    date: d.toISOString().split("T")[0],
-                    count: views[i].count
-                })
+        if (views.length != 0) {
+            let newViews = []
+            let start = moment(views[0].date).subtract(1, "days");
+            let end = moment()
+            for (let m = start, i = -1; m.isBefore(end); m.add(1, "days")) {
+                let newDate, newCount
+
+                // Add day before publish with 0 views so chart will start from 0
+                if (i == -1) {
+                    newDate = m.format("DD-MM")
+                    newCount = 0
+                    i = 0
+                } else if (moment(views[i].date).format("DD-MM") == m.format("DD-MM")) {
+                    newDate = moment(views[i].date).format("DD-MM")
+                    newCount = views[i].count + newViews[newViews.length - 1].count
+                    if (i < views.length - 1) i++
+                } else {
+                    newDate = m.format("DD-MM")
+                    newCount = newViews[newViews.length - 1].count
+                }
+
+                newViews.push({ date: newDate, count: newCount })
             }
+
+            post.views = newViews
+        } else {
+            delete post.views
         }
 
-        response.data.views = newViews
-        setPost(response.data);
+        return post
     }
 
-    useEffect(() => {
-        fetchPost();
-    }, [])
+    const { data, status } = useQuery({
+        queryFn: fetchPost,
+        queryKey: ["post-stats"],
+    })
 
-    return (
+    return status == "pending" ? (
+        <div className="loader-center">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <Box p="sm">
-            <Text fw={800} fz={24}>{post.title}</Text>
-            <AreaChart
-                mt="sm"
-                h={300}
-                data={post.views}
-                dataKey="date"
-                series={[
-                    { name: "count", label: "Views", color: "srobarka" }
-                ]}
-            />
+            <Text fw={800} fz={24}>{data.title}</Text>
+
+            <Group gap={8}>
+                <div className="icon-wrapper">
+                    <IconHeart stroke={1.25} />
+                    <span>{data.likes.length}</span>
+                </div>
+                <div className="icon-wrapper">
+                    <IconMessageCircle stroke={1.25} />
+                    <span>{data.comments.length}</span>
+                </div>
+                <div className="icon-wrapper">
+                    <IconBookmark stroke={1.25} />
+                    <span>{0}</span>
+                </div>
+            </Group>
+
+            <Text mt="md">Zhliadnutia od publikovania</Text>
+            {data.views ? (
+                <AreaChart
+                    mt="sm"
+                    h={300}
+                    data={data.views}
+                    dataKey="date"
+                    series={[
+                        { name: "count", label: "Views", color: "srobarka" }
+                    ]}
+                />
+            ) : (
+                <Text>Zatiaľ žiadne dáta</Text>
+            )}
         </Box>
     )
 }
