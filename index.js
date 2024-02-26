@@ -21,6 +21,7 @@ import newsRoutes from "./routes/news.js";
 // CONTROLLERS
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/post.js";
+import { uploadProfilePicture } from "./controllers/user.js";
 import { verifyToken } from "./middleware/auth.js";
 
 // CONFIGURATION
@@ -46,19 +47,13 @@ app.use(cors());
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 // FILE STORAGE
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/images");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // ROUTES WITH FILES
 app.post("/api/auth/register", upload.single("profilePicture"), register);
 app.post("/api/post", verifyToken, createPost);
+app.patch("/api/user/:userId/profilePicture", verifyToken, uploadProfilePicture);
 
 // ROUTES
 app.use("/api/auth", authRoutes);

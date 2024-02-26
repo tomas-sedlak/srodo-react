@@ -9,7 +9,7 @@ export default function Settings() {
             <Avatar size="lg" src={user.profilePicture} />
             <TextInput mt="sm" label="Display name" value={user.displayName} />
             <TextInput mt="sm" label="Použivateľské meno" value={user.username} />
-            <Textarea mt="sm" label="Bio"/>
+            <Textarea mt="sm" label="Bio" />
         </Box>
     )
 }

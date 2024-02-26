@@ -1,11 +1,14 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
+import sharp from "sharp";
+import axios from "axios";
 
 // READ
 export const getUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await User.findOne({ $or: [ { "id_": id }, { "username": id } ] });
+        const user = await User.findOne({ $or: [{ "id_": id }, { "username": id }] });
+
         res.status(200).json(user);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -40,10 +43,35 @@ export const addSaved = async (req, res) => {
             user.saved.push(postId);
         }
 
-        user.save();
+        await user.save();
 
         res.status(200).json(user);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
 };
+
+export const uploadProfilePicture = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { url } = req.body;
+        const response = await axios.get(url, {
+            responseType: "arraybuffer",
+        })
+        const buffer = Buffer.from(response.data, "base64")
+
+        const croppedImageBuffer = await sharp(buffer)
+            .resize(92, 92)
+            .toBuffer();
+
+        const user = await User.findById(userId);
+        const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
+        user.profilePicture = imageUrl;
+        await user.save();
+
+        res.status(200).send("Success");
+    } catch (err) {
+        console.log(err.message)
+        res.status(400).json({ message: err.message })
+    }
+}
