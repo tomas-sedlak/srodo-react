@@ -1,8 +1,10 @@
-import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group } from "@mantine/core";
+import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea } from "@mantine/core";
 import ImagesModal from "templates/ImagesModal";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
+import PostTitle from "templates/PostTitle";
+import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
 import axios from "axios";
 
 
@@ -20,6 +22,8 @@ export default function CreateQuiz() {
     const [coverImage, setCoverImage] = useState("");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
+    const [selectedSubject, setSelectedSubject] = useState();
+    const [title, setTitle] = useState("");
 
 
     const [questions, setQuestions] = useState([{ question: '', options: [] }]);
@@ -47,22 +51,46 @@ export default function CreateQuiz() {
     };
 
 
+    const descriptionMaxCharacterLenght = 192;
+
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
+
+            <Card>
+                <Box pos="relative" pb="sm">
+                    <AspectRatio ratio={2 / 1}>
+                        <Box
+                            className="lazy-image pointer"
+                            style={{ backgroundImage: `url(${coverImage})` }}
+                            onClick={coverImageModalHandlers.open}
+                        ></Box>
+                    </AspectRatio>
+                </Box>
+                <TitleInput
+                    title={title}
+                    setTitle={setTitle}
+                />
+                <SubjectSelect
+                    setSelectedSubject={setSelectedSubject}
+                />
+                <Textarea
+                    mt="sm"
+                    autosize
+                    placeholder="Description"
+                    maxLength={descriptionMaxCharacterLenght}
+                    onChange={event => {
+                        setCount(event.target.value.length)
+                    }}
+                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+                />
+            </Card>
+
             {questions.map((question, questionIndex) => (
-                <Card key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} withBorder mb="md">
-                    <Box pos="relative" pb="sm">
-                        <AspectRatio ratio={2 / 1}>
-                            <Box
-                                className="lazy-image pointer"
-                                style={{ backgroundImage: `url(${coverImage})` }}
-                                onClick={coverImageModalHandlers.open}
-                            ></Box>
-                        </AspectRatio>
-                    </Box>
+                <Card key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} withBorder mb="md" radius={0} >
+
                     <TextInput
                         fw="bold"
                         placeholder="Ask a question"
@@ -82,27 +110,23 @@ export default function CreateQuiz() {
                             />
                         </Flex>
                     ))}
+                    <Flex>
+                        <Button
+                            variant="subtle"
+                            c="black"
+                            color="gray"
+                            onClick={() => handleAddOption(questionIndex)}
+                        >
+                            Add an answer
+                        </Button>
+                    </Flex>
 
-                    <Button
-                        variant="subtle"
-                        c="black"
-                        color="gray"
-                        onClick={() => handleAddOption(questionIndex)}
-                    >
-                        Add an answer
-                    </Button>
                     <Group grow>
                         <Button
                             mt="sm"
                             onClick={handleAddQuestion}
                         >
                             Add another question
-                        </Button>
-                        <Button
-                            mt="sm"
-                            onClick={imageModalHandlers.open}
-                        >
-                            Add a picture
                         </Button>
                         <Button
                             mt="sm"
