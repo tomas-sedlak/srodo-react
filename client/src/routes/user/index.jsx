@@ -26,12 +26,11 @@ export default function User() {
 
     return (
         <>
-            <Box p="sm" className="border-bottom">
-                <AspectRatio ratio={1000 / 280}>
-                    <Image radius="lg" src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
-                </AspectRatio>
+            <AspectRatio ratio={1000 / 280}>
+                <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
+            </AspectRatio>
 
-
+            <Box px="sm" pb="sm" className="border-bottom">
                 <div style={{ position: "relative" }}>
                     <Avatar
                         className="profile-picture"

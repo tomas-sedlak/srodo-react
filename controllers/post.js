@@ -1,6 +1,8 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import Subject from "../models/Subject.js" // NECCESSARY FOR POPULATING
+import sharp from "sharp";
+import axios from "axios";
 
 // CREATE
 export const createPost = async (req, res) => {
@@ -14,11 +16,22 @@ export const createPost = async (req, res) => {
             content,
         } = req.body;
 
+        const response = await axios.get(coverImage, {
+            responseType: "arraybuffer",
+        })
+        const buffer = Buffer.from(response.data, "base64")
+
+        const croppedImageBuffer = await sharp(buffer)
+            .resize(1200, 600)
+            .toBuffer();
+
+        const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
+
         const newPost = new Post({
             author,
             postType,
             subject,
-            coverImage,
+            coverImage: imageUrl,
             title,
             content,
         });

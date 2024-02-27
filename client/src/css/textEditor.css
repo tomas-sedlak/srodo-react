@@ -5,7 +5,7 @@
 }
 
 .text-editor-menu {
-    padding: var(--mantine-spacing-sm);
+    padding: 8px var(--mantine-spacing-sm);
     border-bottom: 1px solid var(--mantine-color-gray-3);
     border-top-left-radius: var(--mantine-radius-md);
     border-top-right-radius: var(--mantine-radius-md);
@@ -19,6 +19,10 @@
 .tiptap {
     margin: var(--mantine-spacing-sm);
     outline: none;
+
+    p {
+      margin: 0.5em 0;  
+    }
 
     >*+* {
         margin-top: 0.75em;
@@ -38,24 +42,13 @@
         line-height: 1.1;
     }
 
-    code {
-        background-color: rgba(#616161, 0.1);
-        color: #616161;
-    }
-
     pre {
-        background: #0D0D0D;
-        color: #FFF;
-        font-family: "JetBrainsMono", monospace;
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-
-        code {
-            color: inherit;
-            padding: 0;
-            background: none;
-            font-size: 0.8rem;
-        }
+        background-color: var(--mantine-color-gray-0);
+        font-family: var(--mantine-font-family-monospace);
+        font-size: var(--mantine-font-size-xs);
+        line-height: var(--mantine-line-height);
+        padding: var(--mantine-spacing-xs);
+        border-radius: var(--mantine-radius-sm);
     }
 
     img {

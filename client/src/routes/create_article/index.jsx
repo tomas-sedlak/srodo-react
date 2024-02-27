@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, AspectRatio } from '@mantine/core';
+import { Box, Group, Button, AspectRatio, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
@@ -14,6 +14,7 @@ export default function CreateArticle() {
     const token = useSelector(state => state.token);
 
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [title, setTitle] = useState("");
     const [coverImage, setCoverImage] = useState("");
     const [selectedSubject, setSelectedSubject] = useState();
@@ -28,6 +29,21 @@ export default function CreateArticle() {
     }, []);
 
     const publish = async () => {
+        if (!title) {
+            setError("Nadpis je povinný")
+            return
+        }
+
+        if (!selectedSubject) {
+            setError("Predmet je povinný")
+            return
+        }
+
+        if (!text) {
+            setError("Text je povinný")
+            return
+        }
+
         const data = {
             postType: "article",
             subject: selectedSubject,
@@ -74,6 +90,8 @@ export default function CreateArticle() {
                     setText={setText}
                     placeholder="Tu začni písať svoj článok..."
                 />
+
+                <Text c="red">{error}</Text>
 
                 <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish}>

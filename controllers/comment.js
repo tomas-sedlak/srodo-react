@@ -50,3 +50,21 @@ export const downvoteComment = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
+// DELTE
+export const deleteComment = async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        const comment = await Comment.findById(commentId);
+
+        if (comment.author != req.user.id) {
+            return res.status(403).send("Access Denied");
+        }
+
+        await Comment.findByIdAndDelete(commentId);
+
+        res.status(200).send("Success");
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}

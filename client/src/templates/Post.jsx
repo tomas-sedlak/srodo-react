@@ -44,6 +44,14 @@ const Post = forwardRef(({ post }, ref) => {
         return await response.data;
     }
 
+    const deletePost = async () => {
+        const response = await axios.delete(
+            `/api/post/${post._id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return await response.data;
+    }
+
     const likeMutation = useMutation({
         mutationFn: likePost,
         onSuccess: (updatePost) => {
@@ -67,13 +75,12 @@ const Post = forwardRef(({ post }, ref) => {
         },
     })
 
-    const deletePost = async () => {
-        const response = await axios.delete(
-            `/api/post/${post._id}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        return await response.data;
-    }
+    const deleteMutation = useMutation({
+        mutationFn: deletePost,
+        onSuccess: () => {
+            queryClient.invalidateQueries("posts")
+        },
+    })
 
     const postContent = (
         <Box key={post._id} className="border-bottom light-hover" p="sm">
@@ -127,14 +134,16 @@ const Post = forwardRef(({ post }, ref) => {
                                         </Link>
                                     </Menu.Item>
                                     <Menu.Item>
-                                        <Group>
-                                            <IconChartBar stroke={1.25} />
-                                            <Text>Štatistiky</Text>
-                                        </Group>
+                                        <Link to={`/statistiky/${post._id}`}>
+                                            <Group>
+                                                <IconChartBar stroke={1.25} />
+                                                <Text>Štatistiky</Text>
+                                            </Group>
+                                        </Link>
                                     </Menu.Item>
                                     <Menu.Divider />
                                     <Menu.Item color="red">
-                                        <Group onClick={deletePost}>
+                                        <Group onClick={deleteMutation.mutate}>
                                             <IconTrash stroke={1.25} />
                                             <Text>Odstrániť</Text>
                                         </Group>

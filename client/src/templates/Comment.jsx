@@ -17,29 +17,43 @@ export default function Comment({ data }) {
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
 
-    const upvote = async () => {
+    const upvoteComment = async () => {
         await axios.patch(`/api/comment/${data._id}/upvote`,
             { userId },
             { headers: { Authorization: `Bearer ${token}` } }
         );
     }
 
-    const downvote = async () => {
+    const downvoteComment = async () => {
         await axios.patch(`/api/comment/${data._id}/downvote`,
             { userId },
             { headers: { Authorization: `Bearer ${token}` } }
         );
     }
 
+    const deleteComment = async () => {
+        await axios.delete(
+            `/api/comment/${data._id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+    }
+
     const upvoteMutation = useMutation({
-        mutationFn: upvote,
+        mutationFn: upvoteComment,
         onSuccess: () => {
             queryClient.invalidateQueries(["comments"]);
         }
     })
 
     const downvoteMutation = useMutation({
-        mutationFn: downvote,
+        mutationFn: downvoteComment,
+        onSuccess: () => {
+            queryClient.invalidateQueries(["comments"]);
+        }
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteComment,
         onSuccess: () => {
             queryClient.invalidateQueries(["comments"]);
         }
@@ -74,7 +88,7 @@ export default function Comment({ data }) {
                             </Menu.Item>
                             <Menu.Divider />
                             <Menu.Item color="red">
-                                <Group>
+                                <Group onClick={deleteMutation.mutate}>
                                     <IconTrash stroke={1.25} />
                                     <Text>Odstrániť</Text>
                                 </Group>
