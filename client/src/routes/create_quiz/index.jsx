@@ -5,6 +5,7 @@ import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
 import PostTitle from "templates/PostTitle";
 import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
+import { IconPlus } from "@tabler/icons-react";
 import axios from "axios";
 
 
@@ -110,12 +111,15 @@ export default function CreateQuiz() {
                             />
                         </Flex>
                     ))}
-                    <Flex>
+                    <Flex> {/* theres gotta be a better way of centering this */}
                         <Button
+                            pr={70}
                             variant="subtle"
                             c="black"
                             color="gray"
                             onClick={() => handleAddOption(questionIndex)}
+                            leftSection={<IconPlus stroke={1.25} />}
+                            w="50%"
                         >
                             Add an answer
                         </Button>
@@ -123,8 +127,12 @@ export default function CreateQuiz() {
 
                     <Group grow>
                         <Button
+                            variant="subtle"
+                            c="black"
+                            color="gray"
                             mt="sm"
                             onClick={handleAddQuestion}
+                            leftSection={<IconPlus stroke={1.25} />}
                         >
                             Add another question
                         </Button>
