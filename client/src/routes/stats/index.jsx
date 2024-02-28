@@ -48,7 +48,7 @@ export default function Stats() {
 
     const { data, status } = useQuery({
         queryFn: fetchPost,
-        queryKey: ["post-stats"],
+        queryKey: ["postStats", postId],
     })
 
     return status == "pending" ? (

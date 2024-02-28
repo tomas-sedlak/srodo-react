@@ -21,7 +21,6 @@ export default function User() {
     const { data, status } = useQuery({
         queryFn: getData,
         queryKey: ["userPage", username],
-        keepPreviousData: false
     })
 
     return status === "pending" ? (

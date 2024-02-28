@@ -19,7 +19,7 @@ export default function Edit() {
     }
 
     const { data, status } = useQuery({
-        queryKey: ["editPost"],
+        queryKey: ["editPost", postId],
         queryFn: fetchPost,
     })
 
