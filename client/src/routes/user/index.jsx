@@ -1,30 +1,38 @@
-import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom"
-import { useMediaQuery } from '@mantine/hooks';;
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box } from '@mantine/core';
-import { IconBrandDiscord, IconBrandYoutube } from '@tabler/icons-react';
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useMediaQuery } from "@mantine/hooks";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader } from "@mantine/core";
+import { IconBrandDiscord, IconBrandYoutube } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
-import axios from 'axios';
+import axios from "axios";
 
 export default function User() {
     const { username } = useParams();
     const [following, setFollowing] = useState(false);
-    const [user, setUser] = useState([])
-    const [posts, setPosts] = useState([])
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     const getData = async () => {
         const user = await axios.get(`/api/user/${username}`);
         const posts = await axios.get(`/api/user/${user.data._id}/posts`);
-        setUser(user.data);
-        setPosts(posts.data);
+        return { user: user.data, posts: posts.data }
     }
 
-    useEffect(() => {
-        getData();
-    }, [])
+    const { data, status } = useQuery({
+        queryFn: getData,
+        queryKey: ["userPage", username],
+        keepPreviousData: false
+    })
 
-    return (
+    return status === "pending" ? (
+        <div className="loader-center">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <>
             <AspectRatio ratio={1000 / 280}>
                 <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
@@ -35,7 +43,7 @@ export default function User() {
                     <Avatar
                         className="profile-picture"
                         size={100}
-                        src={user.profilePicture}
+                        src={data.user.profilePicture}
                     />
                 </div>
 
@@ -43,9 +51,9 @@ export default function User() {
                     {!isMobile &&
                         <Stack gap={4}>
                             <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
-                                {user.displayName}
+                                {data.user.displayName}
                             </Text>
-                            <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                            <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
                         </Stack>
                     }
 
@@ -57,9 +65,9 @@ export default function User() {
                 {isMobile &&
                     <Stack mb="sm" gap={4}>
                         <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
-                            {user.displayName}
+                            {data.user.displayName}
                         </Text>
-                        <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                        <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
                     </Stack>
                 }
 
@@ -69,7 +77,7 @@ export default function User() {
 
                 <Group mt={8}>
                     <Group gap={4}>
-                        <Text fw={700} style={{ lineHeight: 1 }}>{posts.length}</Text>
+                        <Text fw={700} style={{ lineHeight: 1 }}>{data.posts.length}</Text>
                         <Text c="gray" style={{ lineHeight: 1 }}>Príspevkov</Text>
                     </Group>
                     <Group gap={4}>
@@ -91,7 +99,7 @@ export default function User() {
                 </Group>
             </Box>
 
-            {posts.map((post) => <Post post={post} />)}
+            {data.posts.map((post) => <Post post={post} />)}
         </>
     );
 }
