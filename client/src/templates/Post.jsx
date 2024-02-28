@@ -1,10 +1,11 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AspectRatio, Group, Image, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
+import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
+import { modals } from "@mantine/modals";
 import axios from "axios";
 
 // Setup Moment.js for Slovak language
@@ -23,8 +24,9 @@ const Post = forwardRef(({ post }, ref) => {
     const url = `/${post.author.username}/${post._id}`;
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
-    const isLiked = post.likes.includes(userId);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const isLiked = post.likes.includes(userId);
 
     const likePost = async () => {
         const response = await axios.patch(
@@ -125,25 +127,28 @@ const Post = forwardRef(({ post }, ref) => {
                         <Menu.Dropdown>
                             {post.author._id === userId ? (
                                 <>
-                                    <Menu.Item>
-                                        <Link to={`${url}/upravit`}>
-                                            <Group>
-                                                <IconPencil stroke={1.25} />
-                                                <Text>Upraviť</Text>
-                                            </Group>
-                                        </Link>
+                                    <Menu.Item onClick={() => navigate(`${url}/upravit`)}>
+                                        <Group>
+                                            <IconPencil stroke={1.25} />
+                                            <Text>Upraviť</Text>
+                                        </Group>
                                     </Menu.Item>
-                                    <Menu.Item>
-                                        <Link to={`/statistiky/${post._id}`}>
-                                            <Group>
-                                                <IconChartBar stroke={1.25} />
-                                                <Text>Štatistiky</Text>
-                                            </Group>
-                                        </Link>
+                                    <Menu.Item onClick={() => navigate(`/statistiky/${post._id}`)}>
+                                        <Group>
+                                            <IconChartBar stroke={1.25} />
+                                            <Text>Štatistiky</Text>
+                                        </Group>
                                     </Menu.Item>
                                     <Menu.Divider />
-                                    <Menu.Item color="red">
-                                        <Group onClick={deleteMutation.mutate}>
+                                    <Menu.Item color="red" onClick={() => modals.openConfirmModal({
+                                        title: "Zmazať príspevok",
+                                        children: <Text>Určite chceš zmazať tento príspevok?</Text>,
+                                        centered: true,
+                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                        confirmProps: { color: "red" },
+                                        onConfirm: () => deleteMutation.mutate(),
+                                    })}>
+                                        <Group>
                                             <IconTrash stroke={1.25} />
                                             <Text>Odstrániť</Text>
                                         </Group>
