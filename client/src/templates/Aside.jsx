@@ -1,32 +1,35 @@
+import { Text, Stack, ScrollArea, Collapse, Loader } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { Text, Stack, ScrollArea, Collapse } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { useDisclosure } from '@mantine/hooks';
+import axios from "axios";
 
 export default function Aside() {
-    const [scienceArticles, setScienceArticles] = useState([])
-    const [technologyArticles, setTechnologyArticles] = useState([])
-
-    function fetchArticles() {
-        fetch("/api/news?category=science")
-            .then(response => response.json())
-            .then(json => setScienceArticles(json))
-
-        fetch("/api/news?category=technology")
-            .then(response => response.json())
-            .then(json => setTechnologyArticles(json))
+    const fetchArticles = async () => {
+        const science = await axios.get("/api/news?category=science")
+        const technology = await axios.get("/api/news?category=technology")
+        return { science: science.data, technology: technology.data }
     }
 
-    // TODO: replace useEffect with TanstackQuery
-    useEffect(fetchArticles, [])
-    // TODO: replace useEffect with TanstackQuery
+    const { data, status } = useQuery({
+        queryFn: fetchArticles,
+        queryKey: ["news"],
+    })
 
-    return (
+    return status === "pending" ? (
+        <div className="loader-center-x">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <aside className="aside">
             <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
                 <Stack>
-                    <NewsCard data={scienceArticles} title="Novinky vo vede" />
-                    <NewsCard data={technologyArticles} title="Novinky v technológiách" />
+                    <NewsCard data={data.science} title="Novinky vo vede" />
+                    <NewsCard data={data.technology} title="Novinky v technológiách" />
                 </Stack>
             </ScrollArea>
         </aside>
@@ -53,7 +56,7 @@ function NewsCard({ data, title }) {
                             {data.slice(visbleNews, maxNews).map((article) => <NewsContent article={article} />)}
                         </Stack>
                     </Collapse>
-                    
+
                     <Text
                         mt="sm"
                         className="pointer"
