@@ -18,8 +18,8 @@ import Stats from "routes/stats";
 import Settings from "routes/settings";
 import Edit from "routes/edit";
 
+import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
-import React from "react";
 
 export default function App() {
     const isAuth = Boolean(useSelector(state => state.token));
@@ -36,6 +36,7 @@ export default function App() {
         <MantineProvider theme={theme}>
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
+                    <ScrollToTop />
                     <LoginModal />
                     <Routes>
                         <Route path="/" element={<Root />}>
