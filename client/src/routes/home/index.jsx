@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { Loader } from "@mantine/core";
+import { useSelector } from "react-redux";
 import Post from "templates/Post";
 
 export default function Home() {
     const { ref, inView } = useInView();
-    const userId = "65b1848bfbb5fbbc9cda4acd"
+    const userId = useSelector(state => state.user?._id)
 
     const fetchPosts = async ({ pageParam }) => {
         const response = await fetch(`/api/post/?page=${pageParam}&userId=${userId}`);
@@ -17,10 +18,9 @@ export default function Home() {
         data,
         fetchNextPage,
         hasNextPage,
-        isFetchingNextPage,
         status,
     } = useInfiniteQuery({
-        queryKey: ["posts"],
+        queryKey: ["posts", userId],
         queryFn: fetchPosts,
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
