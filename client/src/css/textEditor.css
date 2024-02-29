@@ -9,7 +9,7 @@
     border-bottom: 1px solid var(--mantine-color-gray-3);
     border-top-left-radius: var(--mantine-radius-md);
     border-top-right-radius: var(--mantine-radius-md);
-    gap: 4px;
+    gap: 2px;
     z-index: 98;
     background-color: var(--mantine-color-white);
     position: sticky;

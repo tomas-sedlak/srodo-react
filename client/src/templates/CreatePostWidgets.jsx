@@ -81,58 +81,58 @@ const EditorMenu = () => {
         <Group className="text-editor-menu">
             <Tooltip label="Nadpis">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("heading", { level: 2 }) ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                 >
-                    <IconHeading stroke={1.25} />
+                    <IconHeading stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Tučné">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("bold") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleBold().run()}
                 >
-                    <IconBold stroke={1.25} />
+                    <IconBold stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Kurzíva">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("italic") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                 >
-                    <IconItalic stroke={1.25} />
+                    <IconItalic stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Preškrtnuté">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("strike") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
                 >
-                    <IconStrikethrough stroke={1.25} />
+                    <IconStrikethrough stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
 
             <Divider orientation="vertical" mx={4} />
 
             <Tooltip label="Link">
-                <ActionIcon variant="subtle" color="gray.4" c="black" >
-                    <IconLink stroke={1.25} />
+                <ActionIcon variant="subtle" color="gray" c="black" >
+                    <IconLink stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Odrážky">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("bulletList") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                 >
-                    <IconList stroke={1.25} />
+                    <IconList stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Očíslované">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("orderedList") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                 >
-                    <IconListNumbers stroke={1.25} />
+                    <IconListNumbers stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
 
@@ -140,32 +140,32 @@ const EditorMenu = () => {
 
             <Tooltip label="Kód">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("codeBlock") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                 >
-                    <IconCode stroke={1.25} />
+                    <IconCode stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Obrázok">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("image") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => {
                         const url = prompt("Image URL")
                         url && editor.commands.setImage({ src: url })
                     }}
                 >
-                    <IconPhoto stroke={1.25} />
+                    <IconPhoto stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="YouTube video">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("video") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => {
                         const url = prompt("YouTube video URL")
                         url && editor.commands.setYoutubeVideo({ src: url })
                     }}
                 >
-                    <IconVideo stroke={1.25} />
+                    <IconVideo stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
         </Group>
@@ -179,34 +179,34 @@ const EditorMenuSimple = () => {
         <Group className="text-editor-menu">
             <Tooltip label="Tučné">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("bold") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleBold().run()}
                 >
-                    <IconBold stroke={1.25} />
+                    <IconBold stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Kurzíva">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("italic") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleItalic().run()}
                 >
-                    <IconItalic stroke={1.25} />
+                    <IconItalic stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Preškrtnuté">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("strike") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleStrike().run()}
                 >
-                    <IconStrikethrough stroke={1.25} />
+                    <IconStrikethrough stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Kód">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("codeBlock") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                 >
-                    <IconCode stroke={1.25} />
+                    <IconCode stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
 
@@ -214,18 +214,18 @@ const EditorMenuSimple = () => {
 
             <Tooltip label="Odrážky">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("bulletList") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
                 >
-                    <IconList stroke={1.25} />
+                    <IconList stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
             <Tooltip label="Očíslované">
                 <ActionIcon
-                    variant="subtle" color="gray.4" c="black"
+                    variant={editor.isActive("orderedList") ? "light" : "subtle"} color="gray" c="black"
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
                 >
-                    <IconListNumbers stroke={1.25} />
+                    <IconListNumbers stroke={1.25} style={{ width: "80%", height: "80%" }} />
                 </ActionIcon>
             </Tooltip>
         </Group>
