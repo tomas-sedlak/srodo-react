@@ -21,6 +21,7 @@ export default function CreateArticle() {
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
     const [text, setText] = useState("");
+    const [isPublishing, setIsPublishing] = useState(false);
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -29,19 +30,21 @@ export default function CreateArticle() {
     }, []);
 
     const publish = async () => {
+        setIsPublishing(true)
+
         if (!title) {
             setError("Nadpis je povinný")
-            return
+            return setIsPublishing(false)
         }
 
         if (!selectedSubject) {
             setError("Predmet je povinný")
-            return
+            return setIsPublishing(false)
         }
 
         if (!text) {
             setError("Text je povinný")
-            return
+            return setIsPublishing(false)
         }
 
         const data = {
@@ -94,7 +97,7 @@ export default function CreateArticle() {
                 <Text c="red">{error}</Text>
 
                 <Group gap="sm" mt="sm" justify="flex-end">
-                    <Button onClick={publish}>
+                    <Button onClick={publish} disabled={isPublishing}>
                         Publikovať článok
                     </Button>
                 </Group>
