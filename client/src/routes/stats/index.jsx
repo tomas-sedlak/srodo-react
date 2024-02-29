@@ -23,15 +23,15 @@ export default function Stats() {
 
                 // Add day before publish with 0 views so chart will start from 0
                 if (i == -1) {
-                    newDate = m.format("DD-MM")
+                    newDate = m.format("DD. MMM")
                     newCount = 0
                     i = 0
                 } else if (moment(views[i].date).format("DD-MM") == m.format("DD-MM")) {
-                    newDate = moment(views[i].date).format("DD-MM")
+                    newDate = moment(views[i].date).format("DD. MMM")
                     newCount = views[i].count + newViews[newViews.length - 1].count
                     if (i < views.length - 1) i++
                 } else {
-                    newDate = m.format("DD-MM")
+                    newDate = m.format("DD. MMM")
                     newCount = newViews[newViews.length - 1].count
                 }
 
