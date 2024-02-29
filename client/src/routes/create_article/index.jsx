@@ -97,7 +97,7 @@ export default function CreateArticle() {
                 <Text c="red">{error}</Text>
 
                 <Group gap="sm" mt="sm" justify="flex-end">
-                    <Button onClick={publish} disabled={isPublishing}>
+                    <Button onClick={publish} loading={isPublishing}>
                         Publikovať článok
                     </Button>
                 </Group>

@@ -15,34 +15,33 @@ const PublishButton = ({ postId, refetch }) => {
     const dispatch = useDispatch();
     const [isPublishing, setIsPublishing] = useState(false);
 
+    const publish = async () => {
+        if (userId) {
+            // Check if empty
+            if (editor.getText().trim() === "") return
+
+            setIsPublishing(true)
+
+            await axios.post(`/api/post/${postId}/comment`, {
+                postId: postId,
+                author: userId,
+                content: editor.getHTML(),
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            editor.commands.clearContent()
+            refetch()
+
+            setIsPublishing(false)
+        } else {
+            dispatch(setLoginModal(true))
+        }
+    }
+
     return (
         <Group px="sm" pb={8} justify="flex-end">
-            <Button
-                disabled={isPublishing}
-                onClick={async () => {
-                    if (userId) {
-                        // Check if empty
-                        if (editor.getText() === "") return
-
-                        setIsPublishing(true)
-
-                        await axios.post(`/api/post/${postId}/comment`, {
-                            postId: postId,
-                            author: userId,
-                            content: editor.getHTML(),
-                        }, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        })
-                        
-                        editor.commands.clearContent()
-                        refetch()
-
-                        setIsPublishing(false)
-                    } else {
-                        dispatch(setLoginModal(true))
-                    }
-                }}
-            >
+            <Button onClick={publish} loading={isPublishing}>
                 Publikovať
             </Button>
         </Group>
