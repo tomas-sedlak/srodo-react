@@ -24,7 +24,7 @@ export default function Edit() {
     })
 
     return status === "pending" ? (
-        <div className="loader-center-x">
+        <div className="loader-center">
             <Loader />
         </div>
     ) : status === "error" ? (

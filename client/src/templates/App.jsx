@@ -1,4 +1,5 @@
 // Libraries import
+import { lazy } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
@@ -7,17 +8,17 @@ import { useSelector } from "react-redux";
 
 // Routes import
 import Root from "templates/Root";
-import Home from "routes/home";
-import News from "routes/news";
-import Saved from "routes/saved";
-import User from "routes/user";
-import Post from "routes/post";
-import CreateArticle from "routes/create_article";
-import CreateQuiz from "routes/create_quiz";
-import CreateDiscussion from "routes/create_discussion";
-import Stats from "routes/stats";
-import Settings from "routes/settings";
-import Edit from "routes/edit";
+const Home = lazy(() => import("routes/home"));
+const News = lazy(() => import("routes/news"));
+const Saved = lazy(() => import("routes/saved"));
+const User = lazy(() => import("routes/user"));
+const Post = lazy(() => import("routes/post"));
+const CreateArticle = lazy(() => import("routes/create_article"));
+const CreateQuiz = lazy(() => import("routes/create_quiz"));
+const CreateDiscussion = lazy(() => import("routes/create_discussion"));
+const Stats = lazy(() => import("routes/stats"));
+const Settings = lazy(() => import("routes/settings"));
+const Edit = lazy(() => import("routes/edit"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";

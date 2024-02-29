@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
+import { Loader } from "@mantine/core";
 import Header from "templates/Header";
 import Aside from "templates/Aside";
 import Navbar from "templates/Navbar";
@@ -13,7 +15,13 @@ export default function Root() {
             </nav>
 
             <div className="content">
-                <Outlet />
+                <Suspense fallback={
+                    <div className="loader-center">
+                        <Loader />
+                    </div>
+                }>
+                    <Outlet />
+                </Suspense>
             </div>
 
             <Aside />
