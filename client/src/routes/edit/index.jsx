@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Box, Group, Button, AspectRatio, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
 import { Loader } from "@mantine/core";
 import { SubjectSelect, TextEditor, TitleInput } from "templates/CreatePostWidgets";
 import { useSelector } from "react-redux";
+import ImagesModal from "templates/ImagesModal";
 import axios from "axios"
 
 export default function Edit() {
@@ -12,6 +14,7 @@ export default function Edit() {
     const navigate = useNavigate();
     const token = useSelector(state => state.token);
 
+    const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [coverImage, setCoverImage] = useState();
     const [title, setTitle] = useState();
     const [selectedSubject, setSelectedSubject] = useState();
@@ -78,39 +81,44 @@ export default function Edit() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <Box p="sm">
-            <Box pos="relative">
-                <AspectRatio ratio={2 / 1}>
-                    <Box
-                        className="lazy-image pointer"
-                        style={{ backgroundImage: `url(${coverImage})` }}
-                    ></Box>
-                </AspectRatio>
+        <>
+            <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
+
+            <Box p="sm">
+                <Box pos="relative">
+                    <AspectRatio ratio={2 / 1}>
+                        <Box
+                            className="lazy-image pointer"
+                            style={{ backgroundImage: `url(${coverImage})` }}
+                            onClick={coverImageModalHandlers.open}
+                        ></Box>
+                    </AspectRatio>
+                </Box>
+
+                <TitleInput
+                    title={title}
+                    setTitle={setTitle}
+                />
+
+                <SubjectSelect
+                    setSelectedSubject={setSelectedSubject}
+                    selectedSubject={selectedSubject}
+                />
+
+                <TextEditor
+                    setText={setText}
+                    content={data.content}
+                    placeholder="Tu začni písať svoj článok..."
+                />
+
+                <Text c="red">{error}</Text>
+
+                <Group gap="sm" mt="sm" justify="flex-end">
+                    <Button onClick={publish} loading={isPublishing}>
+                        Upraviť článok
+                    </Button>
+                </Group>
             </Box>
-
-            <TitleInput
-                title={title}
-                setTitle={setTitle}
-            />
-
-            <SubjectSelect
-                setSelectedSubject={setSelectedSubject}
-                selectedSubject={selectedSubject}
-            />
-
-            <TextEditor
-                setText={setText}
-                content={data.content}
-                placeholder="Tu začni písať svoj článok..."
-            />
-
-            <Text c="red">{error}</Text>
-
-            <Group gap="sm" mt="sm" justify="flex-end">
-                <Button onClick={publish} loading={isPublishing}>
-                    Upraviť článok
-                </Button>
-            </Group>
-        </Box>
+        </>
     )
 }
