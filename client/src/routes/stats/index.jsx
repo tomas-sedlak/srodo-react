@@ -70,7 +70,7 @@ export default function Stats() {
                 </div>
                 <div className="icon-wrapper">
                     <IconMessageCircle stroke={1.25} />
-                    <span>{data.comments.length}</span>
+                    <span>{data.comments}</span>
                 </div>
                 <div className="icon-wrapper">
                     <IconBookmark stroke={1.25} />

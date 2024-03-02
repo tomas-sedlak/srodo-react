@@ -55,10 +55,6 @@ export const createComment = async (req, res) => {
         });
         await comment.save();
 
-        const post = await Post.findById(postId);
-        post.comments.push(comment._id);
-        await post.save();
-
         res.status(201).json(comment);
     } catch (err) {
         res.status(409).json({ message: err.message })
@@ -77,6 +73,14 @@ export const getFeedPosts = async (req, res) => {
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
             .populate("subject")
+            .lean();
+
+        await Promise.all(
+            posts.map(async post => {
+                const comments = await Comment.find({ postId: post._id });
+                post.comments = comments.length;
+            })
+        );
 
         res.status(200).json(posts);
     } catch (err) {
@@ -90,6 +94,10 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .populate("subject")
+            .lean();
+
+        const comments = await Comment.find({ postId: post._id });
+        post.comments = comments.length;
 
         res.status(200).json(post);
     } catch (err) {
@@ -140,13 +148,13 @@ export const editPost = async (req, res) => {
                 responseType: "arraybuffer",
             })
             const buffer = Buffer.from(response.data, "base64")
-    
+
             const croppedImageBuffer = await sharp(buffer)
                 .resize(800, 400)
                 .toBuffer();
-    
+
             const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-            
+
             post.coverImage = imageUrl;
         }
 
