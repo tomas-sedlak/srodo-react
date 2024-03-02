@@ -4,6 +4,7 @@ import {
     getFeedPosts,
     getPost,
     getPostComments,
+    editPost,
     likePost,
     viewPost,
     deletePost,
@@ -21,6 +22,7 @@ router.get("/:postId", getPost);
 router.get("/:postId/comments", getPostComments);
 
 // UPDATE
+router.patch("/:postId/edit", verifyToken, editPost);
 router.patch("/:postId/like", verifyToken, likePost);
 router.patch("/:postId/view", viewPost);
 

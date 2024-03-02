@@ -22,7 +22,7 @@ export const createPost = async (req, res) => {
         const buffer = Buffer.from(response.data, "base64")
 
         const croppedImageBuffer = await sharp(buffer)
-            .resize(1200, 600)
+            .resize(800, 400)
             .toBuffer();
 
         const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
@@ -115,6 +115,49 @@ export const getPostComments = async (req, res) => {
 };
 
 // UPDATE
+export const editPost = async (req, res) => {
+    try {
+        const { postId } = req.params;
+        const post = await Post.findById(postId);
+
+        if (post.author != req.user.id) {
+            return res.status(403).send("Access Denied");
+        }
+
+        const {
+            subject,
+            coverImage,
+            title,
+            content,
+        } = req.body;
+
+        post.subject = subject;
+        post.title = title;
+        post.content = content;
+
+        if (post.coverImage != coverImage) {
+            const response = await axios.get(coverImage, {
+                responseType: "arraybuffer",
+            })
+            const buffer = Buffer.from(response.data, "base64")
+    
+            const croppedImageBuffer = await sharp(buffer)
+                .resize(800, 400)
+                .toBuffer();
+    
+            const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
+            
+            post.coverImage = imageUrl;
+        }
+
+        await post.save();
+
+        res.status(201).json(post);
+    } catch (err) {
+        res.status(409).json({ message: err.message });
+    }
+}
+
 export const likePost = async (req, res) => {
     try {
         const { postId } = req.params;

@@ -1,27 +1,73 @@
 import { useState } from "react";
-import { Box, Group, Button, AspectRatio } from "@mantine/core";
-import { useParams } from "react-router-dom";
+import { Box, Group, Button, AspectRatio, Text } from "@mantine/core";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
 import { Loader } from "@mantine/core";
 import { SubjectSelect, TextEditor, TitleInput } from "templates/CreatePostWidgets";
+import { useSelector } from "react-redux";
 import axios from "axios"
 
 export default function Edit() {
     const { postId } = useParams();
-    const [coverImage, setCoverImage] = useState("");
-    const [title, setTitle] = useState("");
-    const [selectedSubject, setSelectedSubject] = useState("");
-    const [text, setText] = useState("");
+    const navigate = useNavigate();
+    const token = useSelector(state => state.token);
+
+    const [coverImage, setCoverImage] = useState();
+    const [title, setTitle] = useState();
+    const [selectedSubject, setSelectedSubject] = useState();
+    const [text, setText] = useState();
+    const [error, setError] = useState();
+    const [isPublishing, setIsPublishing] = useState(false);
 
     const fetchPost = async () => {
         const result = await axios.get(`/api/post/${postId}`)
-        return result.data
+        const data = result.data;
+
+        setCoverImage(data.coverImage)
+        setSelectedSubject(data.subject._id)
+        setTitle(data.title)
+        setText(data.content)
+
+        return data
     }
 
     const { data, status } = useQuery({
         queryKey: ["editPost", postId],
         queryFn: fetchPost,
     })
+
+    const publish = async () => {
+        setIsPublishing(true)
+
+        if (!title) {
+            setError("Nadpis je povinný")
+            return setIsPublishing(false)
+        }
+
+        if (!selectedSubject) {
+            setError("Predmet je povinný")
+            return setIsPublishing(false)
+        }
+
+        if (!text) {
+            setError("Text je povinný")
+            return setIsPublishing(false)
+        }
+
+        const data = {
+            subject: selectedSubject,
+            coverImage: coverImage,
+            title: title,
+            content: text,
+        }
+
+        const headers = {
+            Authorization: `Bearer ${token}`,
+        }
+
+        await axios.patch(`/api/post/${postId}/edit`, data, { headers })
+        navigate("/")
+    }
 
     return status === "pending" ? (
         <div className="loader-center">
@@ -37,19 +83,19 @@ export default function Edit() {
                 <AspectRatio ratio={2 / 1}>
                     <Box
                         className="lazy-image pointer"
-                        style={{ backgroundImage: `url(${coverImage ? coverImage : data.coverImage})` }}
+                        style={{ backgroundImage: `url(${coverImage})` }}
                     ></Box>
                 </AspectRatio>
             </Box>
 
             <TitleInput
-                title={title ? title : data.title}
+                title={title}
                 setTitle={setTitle}
             />
 
             <SubjectSelect
                 setSelectedSubject={setSelectedSubject}
-                selectedSubject={selectedSubject ? selectedSubject : data.subject._id}
+                selectedSubject={selectedSubject}
             />
 
             <TextEditor
@@ -58,8 +104,10 @@ export default function Edit() {
                 placeholder="Tu začni písať svoj článok..."
             />
 
+            <Text c="red">{error}</Text>
+
             <Group gap="sm" mt="sm" justify="flex-end">
-                <Button>
+                <Button onClick={publish} loading={isPublishing}>
                     Upraviť článok
                 </Button>
             </Group>
