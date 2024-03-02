@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Loader, Text, Image, TextInput, Modal, CloseButton, Box, Group, rem } from '@mantine/core';
+import { useState, useRef } from 'react';
+import { Loader, Text, Image, TextInput, Modal, CloseButton, Box, Group, rem, Button, Center } from '@mantine/core';
 import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
@@ -13,6 +13,8 @@ import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
 export default function ImagesModal({ opened, close, setImage }) {
     const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
+
+
 
     const COLUMNS = 2;
     const LIMIT = 10;
@@ -52,6 +54,11 @@ export default function ImagesModal({ opened, close, setImage }) {
             return nextPage
         },
     })
+
+    const handleAddImage = () => {
+        // Trigger the file input
+        document.getElementById('imageInput').click();
+    }
 
     return (
         <Modal.Root
@@ -175,44 +182,60 @@ export default function ImagesModal({ opened, close, setImage }) {
                     ) : (
                         // Trying the dropzone
 
-                        <Dropzone
-                            onDrop={(files) => console.log('accepted files', files)}
-                            onReject={(files) => console.log('rejected files', files)}
-                            maxSize={5 * 1024 ** 2}
-                            accept={IMAGE_MIME_TYPE}
-                            
-                        >
-                            <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: 'none' }}>
-                                <Dropzone.Accept>
-                                    <IconUpload
-                                        style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-                                        stroke={1.5}
-                                    />
-                                    {setImage()}
-                                </Dropzone.Accept>
-                                <Dropzone.Reject>
-                                    <IconX
-                                        style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-                                        stroke={1.5}
-                                    />
-                                </Dropzone.Reject>
-                                <Dropzone.Idle>
-                                    <IconPhoto
-                                        style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
-                                        stroke={1.5}
-                                    />
-                                </Dropzone.Idle>
-
-                                <div>
+                        <>
+                            <input
+                                id="imageInput"
+                                type="file"
+                                accept={IMAGE_MIME_TYPE}
+                                style={{ display: 'none' }}
+                                onChange={(event) => {
+                                    const files = event.target.files;
+                                    console.log('selected files', files);
+                                    // You can handle the selected files here
+                                }}
+                            />
+                            <Dropzone
+                                mt="md"
+                                onDrop={(files) => console.log('accepted files', files)}
+                                onReject={(files) => console.log('rejected files', files)}
+                                maxSize={5 * 1024 ** 2}
+                                accept={IMAGE_MIME_TYPE}
+                            >
+                                <Center>
+                                    <Dropzone.Accept>
+                                        <>
+                                            {setImage()}
+                                            <IconUpload
+                                                style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
+                                                stroke={1.5}
+                                            />
+                                        </>
+                                    </Dropzone.Accept>
+                                    <Dropzone.Reject>
+                                        <IconX
+                                            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
+                                            stroke={1.5}
+                                        />
+                                    </Dropzone.Reject>
+                                    <Dropzone.Idle>
+                                        <IconPhoto
+                                            style={{ width: rem(104), height: rem(104), color: 'var(--mantine-color-dimmed)' }}
+                                            stroke={1.5}
+                                        />
+                                    </Dropzone.Idle>
+                                </Center>
+                                <Center mt="md" >
                                     <Text size="xl" inline>
                                         Drag images here or click to select files
                                     </Text>
-                                    <Text size="sm" c="dimmed" inline mt={7}>
-                                        Attach as many files as you like, each file should not exceed 5mb
-                                    </Text>
-                                </div>
-                            </Group>
-                        </Dropzone>
+                                </Center>
+                                <Center mt="md" >
+                                    <Button onClick={handleAddImage}>Add Images</Button>
+                                </Center>
+                            </Dropzone>
+                            
+                        </>
+
                     )}
                 </Modal.Body>
             </Modal.Content>
