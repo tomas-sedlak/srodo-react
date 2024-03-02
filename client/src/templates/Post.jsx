@@ -222,7 +222,7 @@ const Post = forwardRef(({ post }, ref) => {
                             {/* Comments button */}
                             <Link to={`${url}#komentare`} className="icon-wrapper">
                                 <IconMessageCircle stroke={1.25} />
-                                <span>{post.comments.length}</span>
+                                <span>{post.comments}</span>
                             </Link>
 
                             {/* Save button */}
