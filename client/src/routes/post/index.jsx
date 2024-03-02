@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { AspectRatio, Box, Image, Text, Group, Title, TypographyStylesProvider, Avatar, Button } from '@mantine/core';
+import { AspectRatio, Box, Text, Group, Title, TypographyStylesProvider, Avatar, Loader } from '@mantine/core';
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Comments from "templates/Comments";
@@ -8,11 +8,11 @@ import Comments from "templates/Comments";
 // Setup Moment.js for Slovak language
 import moment from "moment";
 import "moment/dist/locale/sk";
+import { useQuery } from '@tanstack/react-query';
 moment.locale("sk");
 
 export default function Post() {
     const { postId } = useParams();
-    const [post, setPost] = useState([]);
 
     const addView = async () => {
         await axios.patch(`/api/post/${postId}/view`)
@@ -20,12 +20,10 @@ export default function Post() {
 
     const fetchPost = async () => {
         const post = await axios.get(`/api/post/${postId}`)
-        setPost(post.data)
+        return post.data
     }
 
     useEffect(() => {
-        fetchPost()
-
         const timeoutId = setTimeout(() => {
             addView()
         }, 10000)
@@ -33,24 +31,40 @@ export default function Post() {
         return () => clearTimeout(timeoutId)
     }, [])
 
-    return (
+    const { data, status } = useQuery({
+        queryFn: fetchPost,
+        queryKey: ["post", postId],
+    })
+
+    return status === "pending" ? (
+        <div className="loader-center">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <>
             <Box p="sm" className="border-bottom">
                 <AspectRatio ratio={2 / 1}>
-                    <Box className="lazy-image" style={{ backgroundImage: `url(${post.coverImage})` }}></Box>
-                </AspectRatio>
+                    <Box
+                        className="lazy-image"
+                        style={{ backgroundImage: `url(${data.coverImage})` }}
+                    ></Box >
+                </AspectRatio >
 
                 <Group gap="sm" align="center" mt="sm" wrap="nowrap">
-                    <Avatar src={post.author?.profilePicture} />
+                    <Avatar src={data.author.profilePicture} />
 
                     <Group gap={4}>
                         <Link to="username">
                             <Text fw={600} c="gray" size="sm">
-                                {post.author?.displayName}
+                                {data.author.displayName}
                             </Text>
                         </Link>
                         <Text c="gray" size="sm">
-                            &middot; {post.subject?.label} &middot; {moment(post.createdAt).fromNow()}
+                            &middot; {data.subject.label} &middot; {moment(data.createdAt).fromNow()}
                         </Text>
                     </Group>
                 </Group>
@@ -61,15 +75,15 @@ export default function Post() {
                     mt="sm"
                     style={{ lineHeight: 1.2 }}
                 >
-                    {post.title}
+                    {data.title}
                 </Title>
 
                 <TypographyStylesProvider p={0} mt="sm">
-                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                    <div dangerouslySetInnerHTML={{ __html: data.content }} />
                 </TypographyStylesProvider>
-            </Box>
+            </Box >
 
-            <Comments comments={post.comments} postId={postId} />
+            <Comments comments={data.comments} postId={postId} />
         </>
     )
 }

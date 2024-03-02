@@ -16,22 +16,24 @@ export default function Aside() {
         queryKey: ["news"],
     })
 
-    return status === "pending" ? (
-        <div className="loader-center-x">
-            <Loader />
-        </div>
-    ) : status === "error" ? (
-        <div className="loader-center">
-            <p>Nastala chyba!</p>
-        </div>
-    ) : (
+    return (
         <aside className="aside">
-            <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
-                <Stack>
-                    <NewsCard data={data.science} title="Novinky vo vede" />
-                    <NewsCard data={data.technology} title="Novinky v technológiách" />
-                </Stack>
-            </ScrollArea>
+            {status === "pending" ? (
+                <div className="loader-center">
+                    <Loader />
+                </div>
+            ) : status === "error" ? (
+                <div className="loader-center">
+                    <p>Nastala chyba!</p>
+                </div>
+            ) : (
+                <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
+                    <Stack>
+                        <NewsCard data={data.science} title="Novinky vo vede" />
+                        <NewsCard data={data.technology} title="Novinky v technológiách" />
+                    </Stack>
+                </ScrollArea>
+            )}
         </aside>
     )
 }
