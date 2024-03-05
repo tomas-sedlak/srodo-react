@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
@@ -26,56 +26,34 @@ const Post = forwardRef(({ post }, ref) => {
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const isLiked = post.likes.includes(userId);
+    const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
+    const [isSaved, setIsSaved] = useState(false);
+
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const likePost = async () => {
         const response = await axios.patch(
-            `/api/post/${post._id}/like`,
-            { userId },
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        return response.data;
+            `/api/post/${post._id}/like`, { userId }, { headers },
+        )
+        setIsLiked(response.data.likes.includes(userId))
     }
 
-    const savePost = async (postId) => {
+    const savePost = async () => {
         const response = await axios.patch(
-            `/api/user/${userId}/save`,
-            { postId },
-            { headers: { Authorization: `Bearer ${token}` } }
+            `/api/user/${userId}/save`, { postId: post._id }, { headers },
         );
+        setIsSaved(!isSaved)
         return await response.data;
     }
 
     const deletePost = async () => {
         const response = await axios.delete(
-            `/api/post/${post._id}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            `/api/post/${post._id}`, { headers },
         );
         return await response.data;
     }
-
-    const likeMutation = useMutation({
-        mutationFn: likePost,
-        onSuccess: (updatePost) => {
-            queryClient.setQueryData(["posts"], data => {
-                return {
-                    ...data,
-                    pages: data.pages.map(page =>
-                        page.map(post =>
-                            post._id === updatePost._id ? updatePost : post
-                        )
-                    )
-                }
-            })
-        },
-    })
-
-    const saveMutation = useMutation({
-        mutationFn: savePost,
-        onSuccess: () => {
-            queryClient.invalidateQueries("posts")
-        },
-    })
 
     const deleteMutation = useMutation({
         mutationFn: deletePost,
@@ -211,7 +189,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                                 onClick={event => {
                                     event.preventDefault()
-                                    if (userId) likeMutation.mutate()
+                                    if (userId) likePost()
                                     else dispatch(setLoginModal(true))
                                 }}
                             >
@@ -230,7 +208,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
                                 onClick={event => {
                                     event.preventDefault()
-                                    if (userId) saveMutation.mutate(post._id)
+                                    if (userId) savePost()
                                     else dispatch(setLoginModal(true))
                                 }}
                             >
