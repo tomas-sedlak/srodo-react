@@ -108,39 +108,39 @@ const Post = forwardRef(({ post }, ref) => {
                         <Menu.Dropdown>
                             {post.author._id === userId ? (
                                 <>
-                                    <Menu.Item onClick={() => navigate(`${url}/upravit`)}>
-                                        <Group>
-                                            <IconPencil stroke={1.25} />
-                                            <Text>Upraviť</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate(`${url}/upravit`)}
+                                        leftSection={<IconPencil stroke={1.25} />}
+                                    >
+                                        <Text>Upraviť</Text>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => navigate(`/statistiky/${post._id}`)}>
-                                        <Group>
-                                            <IconChartBar stroke={1.25} />
-                                            <Text>Štatistiky</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate(`/statistiky/${post._id}`)}
+                                        leftSection={<IconChartBar stroke={1.25} />}
+                                    >
+                                        <Text>Štatistiky</Text>
                                     </Menu.Item>
+
                                     <Menu.Divider />
-                                    <Menu.Item color="red" onClick={() => modals.openConfirmModal({
-                                        title: "Zmazať príspevok",
-                                        children: <Text>Určite chceš zmazať tento príspevok?</Text>,
-                                        centered: true,
-                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
-                                        confirmProps: { color: "red" },
-                                        onConfirm: () => deleteMutation.mutate(),
-                                    })}>
-                                        <Group>
-                                            <IconTrash stroke={1.25} />
-                                            <Text>Odstrániť</Text>
-                                        </Group>
+
+                                    <Menu.Item
+                                        color="red"
+                                        onClick={() => modals.openConfirmModal({
+                                            title: "Zmazať príspevok",
+                                            children: <Text>Určite chceš zmazať tento príspevok?</Text>,
+                                            centered: true,
+                                            labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                            confirmProps: { color: "red" },
+                                            onConfirm: () => deleteMutation.mutate(),
+                                        })}
+                                        leftSection={<IconTrash stroke={1.25} />}
+                                    >
+                                        <Text>Odstrániť</Text>
                                     </Menu.Item>
                                 </>
                             ) : (
-                                <Menu.Item>
-                                    <Group>
-                                        <IconFlag stroke={1.25} />
-                                        <Text>Nahlásiť</Text>
-                                    </Group>
+                                <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
+                                    <Text>Nahlásiť</Text>
                                 </Menu.Item>
                             )}
                         </Menu.Dropdown>
