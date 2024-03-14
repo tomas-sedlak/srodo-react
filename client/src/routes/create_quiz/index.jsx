@@ -1,11 +1,11 @@
-import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea } from "@mantine/core";
+import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton } from "@mantine/core";
 import ImagesModal from "templates/ImagesModal";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
 import PostTitle from "templates/PostTitle";
 import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconX } from "@tabler/icons-react";
 import axios from "axios";
 
 
@@ -25,7 +25,9 @@ export default function CreateQuiz() {
     const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
     const [selectedSubject, setSelectedSubject] = useState();
     const [title, setTitle] = useState("");
-
+    const descriptionMaxCharacterLenght = 192;
+    const [text, setText] = useState("");
+    const [searchValue, setSearchValue] = useState("");
 
     const [questions, setQuestions] = useState([{ question: '', options: [] }]);
 
@@ -51,8 +53,12 @@ export default function CreateQuiz() {
         setQuestions([...questions, { question: '', options: [] }]);
     };
 
+    const handleRemoveOption = (questionIndex, optionIndex) => {
+                const newQuestions = [...questions];
+                newQuestions[questionIndex].options.splice(optionIndex, 1);
+                setQuestions(newQuestions);
+            };
 
-    const descriptionMaxCharacterLenght = 192;
 
     return (
         <>
@@ -60,7 +66,7 @@ export default function CreateQuiz() {
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
 
-            <Card>
+            <Box className="border-bottom" p="sm" >
                 <Box pos="relative" pb="sm">
                     <AspectRatio ratio={2 / 1}>
                         <Box
@@ -71,13 +77,14 @@ export default function CreateQuiz() {
                     </AspectRatio>
                 </Box>
                 <TitleInput
+                    placeholder="Názov quizu"
                     title={title}
                     setTitle={setTitle}
                 />
                 <SubjectSelect
                     setSelectedSubject={setSelectedSubject}
                 />
-                <Textarea
+                {/* <Textarea
                     mt="sm"
                     autosize
                     placeholder="Description"
@@ -86,13 +93,20 @@ export default function CreateQuiz() {
                         setCount(event.target.value.length)
                     }}
                     onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+                /> */}
+                <TextEditor
+                    setText={setText}
+                    placeholder="Description"
+
                 />
-            </Card>
+            </Box>
 
             {questions.map((question, questionIndex) => (
-                <Card key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} withBorder mb="md" radius={0} >
+                // <Card key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} withBorder mb="md" radius={0} >
+                <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm" >
 
                     <TextInput
+
                         fw="bold"
                         placeholder="Ask a question"
                         value={question.question}
@@ -108,7 +122,17 @@ export default function CreateQuiz() {
                                 onChange={(event) =>
                                     handleOptionChange(questionIndex, optionIndex, event.target.value)
                                 }
+                                rightSection={
+                                    // Close btn to remove answer, add the same thing to the question as well
+                                        <CloseButton
+                                            variant="subtle"
+                                            radius="lg"
+                                            c="gray"
+                                            onMouseDown={(event) => event.preventDefault()}
+                                            onClick={() => handleRemoveOption(questionIndex, optionIndex)} 
+                                        />}
                             />
+                            
                         </Flex>
                     ))}
                     <Flex> {/* theres gotta be a better way of centering this */}
@@ -137,17 +161,105 @@ export default function CreateQuiz() {
                             Add another question
                         </Button>
                         <Button
+                            variant="subtle"
+                            c="black"
+                            color="gray"
                             mt="sm"
+                            onClick={handleAddQuestion}
+                            leftSection={<IconX stroke={1.25} />}
                         >
-                            Publish this quiz
+                            Remove this question
                         </Button>
                     </Group>
-
-                </Card>
+                </Box>
+                // </Card>
             ))}
-
+            <Box p="sm" >
+                <Button fullWidth >
+                    Publish this quiz
+                </Button>
+            </Box>
 
         </>
     )
+
+//     // import { Button, Box, AspectRatio, TextInput, Flex, CloseButton } from "@mantine/core";
+// import { IconPlus, IconX } from "@tabler/icons-react";
+// import { useState } from "react";
+
+// export default function CreateQuiz() {
+//     const [questions, setQuestions] = useState([{ question: '', options: [''] }]);
+
+//     const handleQuestionChange = (index, value) => {
+//         const newQuestions = [...questions];
+//         newQuestions[index].question = value;
+//         setQuestions(newQuestions);
+//     };
+
+//     const handleOptionChange = (questionIndex, optionIndex, value) => {
+//         const newQuestions = [...questions];
+//         newQuestions[questionIndex].options[optionIndex] = value;
+//         setQuestions(newQuestions);
+//     };
+
+//     const handleAddOption = (index) => {
+//         const newQuestions = [...questions];
+//         newQuestions[index].options.push('');
+//         setQuestions(newQuestions);
+//     };
+
+//     const handleAddQuestion = () => {
+//         setQuestions([...questions, { question: '', options: [] }]);
+//     };
+
+//     const handleRemoveOption = (questionIndex, optionIndex) => {
+//         const newQuestions = [...questions];
+//         newQuestions[questionIndex].options.splice(optionIndex, 1);
+//         setQuestions(newQuestions);
+//     };
+
+//     return (
+//         <>
+//             {questions.map((question, questionIndex) => (
+//                 <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm" >
+//                     <TextInput
+//                         fw="bold"
+//                         placeholder="Ask a question"
+//                         value={question.question}
+//                         onChange={(event) => handleQuestionChange(questionIndex, event.target.value)}
+//                     />
+
+//                     {question.options.map((option, optionIndex) => (
+//                         <Flex key={optionIndex} align="center" gap="sm" p="sm">
+//                             <TextInput
+//                                 placeholder="Add answer"
+//                                 value={option}
+//                                 onChange={(event) => handleOptionChange(questionIndex, optionIndex, event.target.value)}
+//                                 rightSection={
+//                                     <CloseButton
+//                                         variant="subtle"
+//                                         radius="lg"
+//                                         c="gray"
+//                                         onMouseDown={(event) => event.preventDefault()}
+//                                         onClick={() => handleRemoveOption(questionIndex, optionIndex)} // Call handleRemoveOption
+//                                     />
+//                                 }
+//                             />
+//                         </Flex>
+//                     ))}
+
+//                     {/* Your JSX for adding/removing questions goes here */}
+//                 </Box>
+//             ))}
+
+//             <Box p="sm">
+//                 <Button fullWidth>
+//                     Publish this quiz
+//                 </Button>
+//             </Box>
+//         </>
+//     );
+// }
+
 
 }

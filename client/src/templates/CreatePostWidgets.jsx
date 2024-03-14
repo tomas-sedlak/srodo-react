@@ -10,7 +10,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 
-export function TitleInput({ title, setTitle }) {
+export function TitleInput({ title, setTitle, placeholder }) {
     const maxCharacterLenght = 64;
     const [count, setCount] = useState(0);
 
@@ -21,7 +21,7 @@ export function TitleInput({ title, setTitle }) {
                 mt="md"
                 w="100%"
                 variant="unstyled"
-                placeholder="Názov článku"
+                placeholder={placeholder}
                 styles={{
                     input: {
                         fontSize: "32px",

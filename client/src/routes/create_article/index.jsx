@@ -81,6 +81,7 @@ export default function CreateArticle() {
                 </Box>
 
                 <TitleInput
+                    placeholder="Názov článku"
                     title={title}
                     setTitle={setTitle}
                 />

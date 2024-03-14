@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, RingProgress, Center } from "@mantine/core";
 import { IconBrandDiscord, IconBrandYoutube } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
@@ -39,11 +39,23 @@ export default function User() {
 
             <Box px="sm" pb="sm" className="border-bottom">
                 <div style={{ position: "relative" }}>
-                    <Avatar
-                        className="profile-picture"
-                        size={100}
-                        src={data.user.profilePicture}
+                    <RingProgress
+                        size={128}
+                        label={
+                            <Center>
+                                <Avatar
+                                    className="profile-picture"
+                                    size="xl"
+                                    src={data.user.profilePicture}
+                                />
+                            </Center>
+
+                        }
+                        sections={[
+                            { value: 60, color: 'red' },
+                        ]}
                     />
+
                 </div>
 
                 <Group ml={108} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
