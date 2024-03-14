@@ -53,7 +53,7 @@ export default function App() {
                                 {/* PRIVATE ROUTES */}
                                 <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
                                 <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
-                                <Route path="novy" element={!isAuth && <Navigate to="/" />}>
+                                <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
                                     <Route path="clanok" element={<CreateArticle />} />
                                     <Route path="kviz" element={<CreateQuiz />} />
                                     <Route path="diskusia" element={<CreateDiscussion />} />

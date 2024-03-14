@@ -54,7 +54,7 @@ export default function Post() {
                     ></Box >
                 </AspectRatio >
 
-                <Group gap="sm" align="center" mt="sm" wrap="nowrap">
+                <Group gap="sm" mt="sm" wrap="nowrap">
                     <Avatar src={data.author.profilePicture} />
 
                     <Group gap={4}>

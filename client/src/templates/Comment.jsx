@@ -105,7 +105,7 @@ export default function Comment({ data }) {
                 </Menu.Dropdown>
             </Menu>
 
-            <Group gap={8}>
+            <Group gap="sm" wrap="nowrap">
                 <Avatar src={data.author.profilePicture} />
 
                 <Group gap={4}>
