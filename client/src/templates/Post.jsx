@@ -26,6 +26,8 @@ const Post = forwardRef(({ post }, ref) => {
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [likes, setLikes] = useState(post.likes.length);
     const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
     const [isSaved, setIsSaved] = useState(false);
 
@@ -34,10 +36,11 @@ const Post = forwardRef(({ post }, ref) => {
     }
 
     const likePost = async () => {
-        const response = await axios.patch(
+        isLiked ? setLikes(likes - 1) : setLikes(likes + 1)
+        setIsLiked(!isLiked)
+        await axios.patch(
             `/api/post/${post._id}/like`, { userId }, { headers },
         )
-        setIsLiked(response.data.likes.includes(userId))
     }
 
     const savePost = async () => {
@@ -194,7 +197,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 }}
                             >
                                 {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                <span>{post.likes.length}</span>
+                                <span>{likes}</span>
                             </div>
 
                             {/* Comments button */}
