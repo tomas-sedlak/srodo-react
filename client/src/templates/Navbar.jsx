@@ -8,23 +8,23 @@ import axios from 'axios';
 const menu = [
     {
         label: "Domov",
-        link: "/",
+        url: "/",
         emoji: <IconHome stroke={1.25} />
     },
     {
         label: "Šrodo AI",
-        link: "/ai",
+        url: "/ai",
         emoji: <IconRobot stroke={1.25} />,
         badge: "Nové!"
     },
     {
         label: "Novinky",
-        link: "/novinky",
+        url: "/novinky",
         emoji: <IconNews stroke={1.25} />
     },
     {
         label: "Uložené",
-        link: "/ulozene",
+        url: "/ulozene",
         emoji: <IconBookmark stroke={1.25} />
     },
 ]
@@ -97,13 +97,13 @@ function MenuItem({ item, close }) {
             rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
             variant="subtle"
             color="black"
-            bg={item.link === pathname ? "gray.1" : "white"}
-            mod={[item.link === pathname && "data-selected", "data-block"]}
+            bg={item.url === pathname ? "gray.1" : "white"}
+            mod={[item.url === pathname && "data-selected", "data-block"]}
             justify="flex-start"
             fullWidth
             onClick={() => {
                 close && close()
-                navigate(item.link)
+                navigate(item.url)
             }}
         >
             {item.label}

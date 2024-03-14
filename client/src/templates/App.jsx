@@ -19,6 +19,7 @@ const CreateDiscussion = lazy(() => import("routes/create_discussion"));
 const Stats = lazy(() => import("routes/stats"));
 const Settings = lazy(() => import("routes/settings"));
 const Edit = lazy(() => import("routes/edit"));
+const Subject = lazy(() => import("routes/subject"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
@@ -46,9 +47,10 @@ export default function App() {
                                 {/* PUBLIC ROUTES */}
                                 <Route index element={<Home />} />
                                 <Route path="novinky" element={<News />} />
+                                <Route path="stats" element={<Stats />} />
+                                <Route path="predmet/:subject" element={<Subject />} />
                                 <Route path=":username" element={<User />} />
                                 <Route path=":username/:postId" element={<Post />} />
-                                <Route path="stats" element={<Stats />} />
 
                                 {/* PRIVATE ROUTES */}
                                 <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
