@@ -33,7 +33,7 @@ export default function User() {
         </div>
     ) : (
         <>
-            <AspectRatio ratio={1000 / 280}>
+            <AspectRatio ratio={6 / 2}>
                 <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
             </AspectRatio>
 

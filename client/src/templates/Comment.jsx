@@ -1,6 +1,6 @@
 import { Box, Text, Group, Avatar, TypographyStylesProvider, Menu, ActionIcon } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil } from '@tabler/icons-react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogin, setLoginModal } from "state";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import axios from "axios";
 import moment from "moment";
 import "moment/dist/locale/sk";
 import { IconTrash } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
 moment.locale("sk");
 
 export default function Comment({ data }) {
@@ -16,6 +17,7 @@ export default function Comment({ data }) {
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const upvoteComment = async () => {
         await axios.patch(`/api/comment/${data._id}/upvote`,
@@ -78,34 +80,39 @@ export default function Comment({ data }) {
                 <Menu.Dropdown>
                     {data.author._id === userId ? (
                         <>
-                            <Menu.Item>
-                                <Link to={`/upravit`}>
-                                    <Group>
-                                        <IconPencil stroke={1.25} />
-                                        <Text>Upraviť</Text>
-                                    </Group>
-                                </Link>
+                            <Menu.Item
+                                onClick={() => navigate(`/upravit`)}
+                                leftSection={<IconPencil stroke={1.25} />}
+                            >
+                                <Text>Upraviť</Text>
                             </Menu.Item>
+
                             <Menu.Divider />
-                            <Menu.Item color="red">
-                                <Group onClick={deleteMutation.mutate}>
-                                    <IconTrash stroke={1.25} />
-                                    <Text>Odstrániť</Text>
-                                </Group>
+
+                            <Menu.Item
+                                color="red"
+                                onClick={() => modals.openConfirmModal({
+                                    title: "Zmazať komentár",
+                                    children: <Text>Určite chceš zmazať tento komentár?</Text>,
+                                    centered: true,
+                                    labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                    confirmProps: { color: "red" },
+                                    onConfirm: () => deleteMutation.mutate(),
+                                })}
+                                leftSection={<IconTrash stroke={1.25} />}
+                            >
+                                <Text>Odstrániť</Text>
                             </Menu.Item>
                         </>
                     ) : (
-                        <Menu.Item>
-                            <Group>
-                                <IconFlag stroke={1.25} />
-                                <Text>Nahlásiť</Text>
-                            </Group>
+                        <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
+                            <Text>Nahlásiť</Text>
                         </Menu.Item>
                     )}
                 </Menu.Dropdown>
-            </Menu>
+            </Menu >
 
-            <Group gap={8}>
+            <Group gap="sm" wrap="nowrap">
                 <Avatar src={data.author.profilePicture} />
 
                 <Group gap={4}>
@@ -137,6 +144,6 @@ export default function Comment({ data }) {
                     }
                 </div>
             </Group>
-        </Box>
+        </Box >
     )
 }

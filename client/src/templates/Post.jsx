@@ -26,6 +26,8 @@ const Post = forwardRef(({ post }, ref) => {
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const [likes, setLikes] = useState(post.likes.length);
     const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
     const [isSaved, setIsSaved] = useState(false);
 
@@ -34,10 +36,11 @@ const Post = forwardRef(({ post }, ref) => {
     }
 
     const likePost = async () => {
-        const response = await axios.patch(
+        isLiked ? setLikes(likes - 1) : setLikes(likes + 1)
+        setIsLiked(!isLiked)
+        await axios.patch(
             `/api/post/${post._id}/like`, { userId }, { headers },
         )
-        setIsLiked(response.data.likes.includes(userId))
     }
 
     const savePost = async () => {
@@ -105,39 +108,39 @@ const Post = forwardRef(({ post }, ref) => {
                         <Menu.Dropdown>
                             {post.author._id === userId ? (
                                 <>
-                                    <Menu.Item onClick={() => navigate(`${url}/upravit`)}>
-                                        <Group>
-                                            <IconPencil stroke={1.25} />
-                                            <Text>Upraviť</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate(`${url}/upravit`)}
+                                        leftSection={<IconPencil stroke={1.25} />}
+                                    >
+                                        <Text>Upraviť</Text>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => navigate(`/statistiky/${post._id}`)}>
-                                        <Group>
-                                            <IconChartBar stroke={1.25} />
-                                            <Text>Štatistiky</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate(`/statistiky/${post._id}`)}
+                                        leftSection={<IconChartBar stroke={1.25} />}
+                                    >
+                                        <Text>Štatistiky</Text>
                                     </Menu.Item>
+
                                     <Menu.Divider />
-                                    <Menu.Item color="red" onClick={() => modals.openConfirmModal({
-                                        title: "Zmazať príspevok",
-                                        children: <Text>Určite chceš zmazať tento príspevok?</Text>,
-                                        centered: true,
-                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
-                                        confirmProps: { color: "red" },
-                                        onConfirm: () => deleteMutation.mutate(),
-                                    })}>
-                                        <Group>
-                                            <IconTrash stroke={1.25} />
-                                            <Text>Odstrániť</Text>
-                                        </Group>
+
+                                    <Menu.Item
+                                        color="red"
+                                        onClick={() => modals.openConfirmModal({
+                                            title: "Zmazať príspevok",
+                                            children: <Text>Určite chceš zmazať tento príspevok?</Text>,
+                                            centered: true,
+                                            labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                            confirmProps: { color: "red" },
+                                            onConfirm: () => deleteMutation.mutate(),
+                                        })}
+                                        leftSection={<IconTrash stroke={1.25} />}
+                                    >
+                                        <Text>Odstrániť</Text>
                                     </Menu.Item>
                                 </>
                             ) : (
-                                <Menu.Item>
-                                    <Group>
-                                        <IconFlag stroke={1.25} />
-                                        <Text>Nahlásiť</Text>
-                                    </Group>
+                                <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
+                                    <Text>Nahlásiť</Text>
                                 </Menu.Item>
                             )}
                         </Menu.Dropdown>
@@ -194,7 +197,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 }}
                             >
                                 {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                <span>{post.likes.length}</span>
+                                <span>{likes}</span>
                             </div>
 
                             {/* Comments button */}

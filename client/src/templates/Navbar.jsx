@@ -1,86 +1,56 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Badge, Button, Collapse, Text, ScrollArea } from '@mantine/core';
+import { Badge, Button, Collapse, Text, ScrollArea, Loader } from '@mantine/core';
 import { IconHome, IconNews, IconBookmark, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 const menu = [
     {
         label: "Domov",
-        link: "/",
-        leftSection: <IconHome stroke={1.25} />
+        url: "/",
+        emoji: <IconHome stroke={1.25} />
     },
     {
         label: "Šrodo AI",
-        link: "/ai",
-        leftSection: <IconRobot stroke={1.25} />,
+        url: "/ai",
+        emoji: <IconRobot stroke={1.25} />,
         badge: "Nové!"
     },
     {
         label: "Novinky",
-        link: "/novinky",
-        leftSection: <IconNews stroke={1.25} />
+        url: "/novinky",
+        emoji: <IconNews stroke={1.25} />
     },
     {
         label: "Uložené",
-        link: "/ulozene",
-        leftSection: <IconBookmark stroke={1.25} />
+        url: "/ulozene",
+        emoji: <IconBookmark stroke={1.25} />
     },
 ]
-
-// Should be loaded from database!!!
-const categories = [
-    {
-        label: "Matematika",
-        link: "/matematika",
-        leftSection: "📈"
-    },
-    {
-        label: "Informatika",
-        link: "/informatika",
-        leftSection: "💻"
-    },
-    {
-        label: "Jazyky",
-        link: "/jazyky",
-        leftSection: "💬"
-    },
-    {
-        label: "Biológia",
-        link: "/biologia",
-        leftSection: "🧬"
-    },
-    {
-        label: "Chémia",
-        link: "/chemia",
-        leftSection: "🧪"
-    },
-    {
-        label: "Fyzika",
-        link: "/fyzika",
-        leftSection: "⚡"
-    },
-    {
-        label: "Geografia",
-        link: "/geografia",
-        leftSection: "🌍"
-    },
-    {
-        label: "Umenie",
-        link: "/umenie",
-        leftSection: "🎨"
-    },
-    {
-        label: "Šport",
-        link: "/sport",
-        leftSection: "💪"
-    },
-]
-// Should be loaded from database!!!
 
 export default function Navbar({ close }) {
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
-    return (
+    const fetchSubjects = async () => {
+        const response = await axios.get("/api/subjects")
+        return response.data
+    }
+
+    const { status, data } = useQuery({
+        queryKey: ["subjects"],
+        queryFn: fetchSubjects,
+    })
+
+    return status === "pending" ? (
+        <div className="loader-center-x">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
         <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
 
             {/* Navigation items */}
@@ -88,11 +58,10 @@ export default function Navbar({ close }) {
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
-
-            {categories.slice(0, 6).map((item) => <MenuItem item={item} close={close} />)}
+            {data.slice(0, 6).map((item) => <MenuItem item={item} close={close} />)}
 
             <Collapse in={subjectsOpened}>
-                {categories.slice(6).map((item) => <MenuItem item={item} close={close} />)}
+                {data.slice(6).map((item) => <MenuItem item={item} close={close} />)}
             </Collapse>
 
             <Button
@@ -124,17 +93,17 @@ function MenuItem({ item, close }) {
             fw={400}
             size="md"
             px="sm"
-            leftSection={item.leftSection}
+            leftSection={item.emoji}
             rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
             variant="subtle"
             color="black"
-            bg={item.link === pathname ? "gray.1" : "white"}
-            mod={[item.link === pathname && "data-selected", "data-block"]}
+            bg={item.url === pathname ? "gray.1" : "white"}
+            mod={[item.url === pathname && "data-selected", "data-block"]}
             justify="flex-start"
             fullWidth
             onClick={() => {
                 close && close()
-                navigate(item.link)
+                navigate(item.url)
             }}
         >
             {item.label}

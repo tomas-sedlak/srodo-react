@@ -1,7 +1,7 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button, Tooltip } from '@mantine/core';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout, setLoginModal } from "state";
@@ -65,19 +65,8 @@ export default function Header() {
 
                     {user ? (
                         <Group justify="flex-end" gap={4}>
-                            <ActionIcon
-                                variant="subtle"
-                                c="black"
-                                color="gray"
-                                w={40}
-                                h={40}
-                                radius="xl"
-                            >
-                                <IconBell stroke={1.25} />
-                            </ActionIcon>
-
-                            <Menu position="bottom-end" width={180}>
-                                <Menu.Target>
+                            {!isMobile && (
+                                <Tooltip label="Notifikácie">
                                     <ActionIcon
                                         variant="subtle"
                                         c="black"
@@ -86,27 +75,44 @@ export default function Header() {
                                         h={40}
                                         radius="xl"
                                     >
-                                        <IconPlus stroke={1.25} />
+                                        <IconBell stroke={1.25} />
                                     </ActionIcon>
+                                </Tooltip>
+                            )}
+
+                            <Menu position="bottom-end" width={180}>
+                                <Menu.Target>
+                                    <Tooltip label="Vytvoriť">
+                                        <ActionIcon
+                                            variant="subtle"
+                                            c="black"
+                                            color="gray"
+                                            w={40}
+                                            h={40}
+                                            radius="xl"
+                                        >
+                                            <IconPlus stroke={1.25} />
+                                        </ActionIcon>
+                                    </Tooltip>
                                 </Menu.Target>
                                 <Menu.Dropdown>
-                                    <Menu.Item onClick={() => navigate("/novy/clanok")}>
-                                        <Group>
-                                            <IconPencilPlus stroke={1.25} />
-                                            <Text>Článok</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate("/vytvorit/clanok")}
+                                        leftSection={<IconPencilPlus stroke={1.25} />}
+                                    >
+                                        <Text>Článok</Text>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => navigate("/novy/diskusia")}>
-                                        <Group>
-                                            <IconMessageCircleQuestion stroke={1.25} />
-                                            <Text>Diskusia</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate("/vytvorit/diskusia")}
+                                        leftSection={<IconMessageCircleQuestion stroke={1.25} />}
+                                    >
+                                        <Text>Diskusia</Text>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => navigate("/novy/kviz")}>
-                                        <Group>
-                                            <IconCopyCheck stroke={1.25} />
-                                            <Text>Kvíz</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate("/vytvorit/kviz")}
+                                        leftSection={<IconCopyCheck stroke={1.25} />}
+                                    >
+                                        <Text>Kvíz</Text>
                                     </Menu.Item>
                                 </Menu.Dropdown>
                             </Menu>
@@ -116,34 +122,47 @@ export default function Header() {
                                     <Avatar className="pointer" src={user.profilePicture} />
                                 </Menu.Target>
                                 <Menu.Dropdown>
-                                    <Menu.Item onClick={() => navigate(`/${user.username}`)}>
-                                        <Group>
-                                            <Avatar src={user.profilePicture} />
-                                            <Stack gap={4}>
-                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
-                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
-                                            </Stack>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate(`/${user.username}`)}
+                                        leftSection={<Avatar src={user.profilePicture} />}
+                                    >
+                                        <Stack gap={4}>
+                                            <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
+                                            <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                                        </Stack>
                                     </Menu.Item>
+
                                     <Menu.Divider />
-                                    <Menu.Item onClick={() => navigate("/nastavenia")}>
-                                        <Group>
-                                            <IconSettings stroke={1.25} />
-                                            <Text>Nastavenia</Text>
-                                        </Group>
+
+                                    {isMobile && (
+                                        <Menu.Item
+                                            onClick={() => navigate("/nastavenia")}
+                                            leftSection={<IconBell stroke={1.25} />}
+                                        >
+                                            <Text>Notifikácie</Text>
+                                        </Menu.Item>
+                                    )}
+                                    <Menu.Item
+                                        onClick={() => navigate("/nastavenia")}
+                                        leftSection={<IconSettings stroke={1.25} />}
+                                    >
+                                        <Text>Nastavenia</Text>
                                     </Menu.Item>
-                                    <Menu.Item onClick={() => navigate("/statistiky")}>
-                                        <Group>
-                                            <IconChartBar stroke={1.25} />
-                                            <Text>Štatistiky</Text>
-                                        </Group>
+                                    <Menu.Item
+                                        onClick={() => navigate("/statistiky")}
+                                        leftSection={<IconChartBar stroke={1.25} />}
+                                    >
+                                        <Text>Štatistiky</Text>
                                     </Menu.Item>
+
                                     <Menu.Divider />
-                                    <Menu.Item color="red" onClick={() => dispatch(setLogout())}>
-                                        <Group>
-                                            <IconLogout stroke={1.25} />
-                                            <Text>Odhlásiť sa</Text>
-                                        </Group>
+
+                                    <Menu.Item
+                                        color="red"
+                                        onClick={() => dispatch(setLogout())}
+                                        leftSection={<IconLogout stroke={1.25} />}
+                                    >
+                                        <Text>Odhlásiť sa</Text>
                                     </Menu.Item>
                                 </Menu.Dropdown>
                             </Menu>
@@ -158,7 +177,7 @@ export default function Header() {
                         </Button>
                     )}
                 </div>
-            </header>
+            </header >
 
             <Drawer
                 opened={drawerOpened}
