@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { Loader } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import { useSelector } from "react-redux";
 import Post from "templates/Post";
 
@@ -38,12 +38,11 @@ export default function Home() {
     return status === "pending" ? (
         <div className="loader-center">
             <Loader />
+            <Text>Už to bude 😉</Text>
         </div>
     ) : status === "error" ? (
         <div className="loader-center">
-            {/* TODO: make custom error messages ;) */}
             <p>Nastala chyba!</p>
-            {/* TODO: make custom error messages ;) */}
         </div>
     ) : (
         <>
