@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 // Routes import
 import Root from "templates/Root";
 const Home = lazy(() => import("routes/home"));
+const AI = lazy(() => import("routes/ai"));
 const News = lazy(() => import("routes/news"));
 const Favourites = lazy(() => import("routes/saved"));
 const User = lazy(() => import("routes/user"));
@@ -46,6 +47,7 @@ export default function App() {
                             <Route path="/" element={<Root />}>
                                 {/* PUBLIC ROUTES */}
                                 <Route index element={<Home />} />
+                                <Route path="ai" element={<AI />} />
                                 <Route path="novinky" element={<News />} />
                                 <Route path="stats" element={<Stats />} />
                                 <Route path="predmet/:subject" element={<Subject />} />
