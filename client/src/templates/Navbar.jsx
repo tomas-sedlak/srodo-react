@@ -1,6 +1,6 @@
 import { useDisclosure } from '@mantine/hooks';
 import { Badge, Button, Collapse, Text, ScrollArea, Loader } from '@mantine/core';
-import { IconHome, IconNews, IconBookmark, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { IconHome, IconNews, IconHeart, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -23,9 +23,9 @@ const menu = [
         emoji: <IconNews stroke={1.25} />
     },
     {
-        label: "Uložené",
-        url: "/ulozene",
-        emoji: <IconBookmark stroke={1.25} />
+        label: "Obľúbené",
+        url: "/oblubene",
+        emoji: <IconHeart stroke={1.25} />
     },
 ]
 

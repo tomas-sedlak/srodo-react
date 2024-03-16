@@ -1,5 +1,5 @@
-export default function Saved() {
+export default function Favourites() {
     return (
-        <></>
+        <>Favourites</>
     )
 }

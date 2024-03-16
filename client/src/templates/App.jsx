@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import Root from "templates/Root";
 const Home = lazy(() => import("routes/home"));
 const News = lazy(() => import("routes/news"));
-const Saved = lazy(() => import("routes/saved"));
+const Favourites = lazy(() => import("routes/saved"));
 const User = lazy(() => import("routes/user"));
 const Post = lazy(() => import("routes/post"));
 const CreateArticle = lazy(() => import("routes/create_article"));
@@ -53,7 +53,7 @@ export default function App() {
                                 <Route path=":username/:postId" element={<Post />} />
 
                                 {/* PRIVATE ROUTES */}
-                                <Route path="ulozene" element={isAuth ? <Saved /> : <Navigate to="/" />} />
+                                <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
                                 <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
                                 <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
                                     <Route path="clanok" element={<CreateArticle />} />

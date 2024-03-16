@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconBookmark, IconBookmarkFilled, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
+import { IconHeart, IconHeartFilled, IconMessageCircle, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -29,7 +29,6 @@ const Post = forwardRef(({ post }, ref) => {
 
     const [likes, setLikes] = useState(post.likes.length);
     const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
-    const [isSaved, setIsSaved] = useState(false);
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -41,14 +40,6 @@ const Post = forwardRef(({ post }, ref) => {
         await axios.patch(
             `/api/post/${post._id}/like`, { userId }, { headers },
         )
-    }
-
-    const savePost = async () => {
-        const response = await axios.patch(
-            `/api/user/${userId}/save`, { postId: post._id }, { headers },
-        );
-        setIsSaved(!isSaved)
-        return await response.data;
     }
 
     const deletePost = async () => {
@@ -205,19 +196,6 @@ const Post = forwardRef(({ post }, ref) => {
                                 <IconMessageCircle stroke={1.25} />
                                 <span>{post.comments}</span>
                             </Link>
-
-                            {/* Save button */}
-                            <div
-                                className={`icon-wrapper ${post.saved ? "save-selected" : "save"}`}
-                                onClick={event => {
-                                    event.preventDefault()
-                                    if (userId) savePost()
-                                    else dispatch(setLoginModal(true))
-                                }}
-                            >
-                                {post.saved ? <IconBookmarkFilled stroke={1.25} /> : <IconBookmark stroke={1.25} />}
-                                <span>{post.saved ? "Uložené" : "Uložiť"}</span>
-                            </div>
                         </Group>
                     </Group>
                 </Box>
