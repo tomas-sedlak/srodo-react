@@ -13,7 +13,7 @@ export default function Aside() {
 
     const { data, status } = useQuery({
         queryFn: fetchArticles,
-        queryKey: ["news"],
+        queryKey: ["news-aside"],
     })
 
     return (
