@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
+import mongoose from "mongoose";
 import sharp from "sharp";
 import axios from "axios";
 
@@ -21,13 +22,26 @@ export const getUserPosts = async (req, res) => {
         const post = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture")
-            .populate("subject")
+            .populate("subject");
 
         res.status(200).json(post);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
 };
+
+export const getUserFavourites = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const posts = await Post.find({ likes: userId })
+            .populate("author", "username displayName profilePicture")
+            .populate("subject");
+
+        res.status(200).json(posts);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+}
 
 // UPDATE
 export const addSaved = async (req, res) => {

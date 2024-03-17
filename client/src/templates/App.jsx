@@ -51,8 +51,8 @@ export default function App() {
                                 <Route path="novinky" element={<News />} />
                                 <Route path="stats" element={<Stats />} />
                                 <Route path="predmet/:subject" element={<Subject />} />
-                                <Route path=":username" element={<User />} />
-                                <Route path=":username/:postId" element={<Post />} />
+                                <Route exact path=":username" element={<User />} />
+                                <Route exact path=":username/:postId" element={<Post />} />
 
                                 {/* PRIVATE ROUTES */}
                                 <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
@@ -64,7 +64,7 @@ export default function App() {
                                 </Route>
 
                                 {/* SPECIFIC USER ROUTES */}
-                                <Route path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
+                                <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
                                 <Route path="statistiky/:postId" element={isAuth ? <Stats /> : <Navigate to="/" />} />
                             </Route>
                         </Routes>
