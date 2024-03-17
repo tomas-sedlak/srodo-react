@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, RingProgress, Center } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Paper, Container, Center } from "@mantine/core";
 import { IconBrandDiscord, IconBrandYoutube } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
@@ -39,23 +39,12 @@ export default function User() {
 
             <Box px="sm" pb="sm" className="border-bottom">
                 <div style={{ position: "relative" }}>
-                    <RingProgress
-                        size={128}
-                        label={
-                            <Center>
-                                <Avatar
-                                    className="profile-picture"
-                                    size="xl"
-                                    src={data.user.profilePicture}
-                                />
-                            </Center>
 
-                        }
-                        sections={[
-                            { value: 60, color: 'red' },
-                        ]}
+                    <Avatar
+                        className="profile-picture"
+                        size="xl"
+                        src={data.user.profilePicture}
                     />
-
                 </div>
 
                 <Group ml={108} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
@@ -85,17 +74,28 @@ export default function User() {
                 <Text style={{ lineHeight: 1.4 }}>
                     Kratky text o mne a mojich zaujmoch.
                 </Text>
+                {/* Code for xp bar */}
+                <Group>
+                    
+                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="red" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
+                        <Center>
+                            <Text >4</Text>
+                        </Center>
+                        
+                    </Box>
 
-                <Group mt={8}>
-                    <Group gap={4}>
-                        <Text fw={700} style={{ lineHeight: 1 }}>{data.posts.length}</Text>
-                        <Text c="gray" style={{ lineHeight: 1 }}>Príspevkov</Text>
-                    </Group>
-                    <Group gap={4}>
-                        <Text fw={700} style={{ lineHeight: 1 }}>0</Text>
-                        <Text c="gray" style={{ lineHeight: 1 }}>Sledovateľov</Text>
-                    </Group>
+                    <Progress size="lg" value={25} style={{ flex: 1 }} />
+                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="red" w={32} h={32} p={2}>
+                        <Center>
+                            <Text >5</Text>
+                        </Center>
+                        
+                    </Box>
                 </Group>
+
+
+
+
 
                 <Group mt="sm" gap={8}>
                     <div className="icon-wrapper">
