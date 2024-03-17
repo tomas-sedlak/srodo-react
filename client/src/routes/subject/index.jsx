@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Image, Loader, Text } from "@mantine/core";
+import { Box, Loader, Text } from "@mantine/core";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
@@ -13,12 +13,12 @@ export default function Subject() {
     }
 
     const { status, data } = useQuery({
-        queryKey: ["subject"],
+        queryKey: ["subject", subject],
         queryFn: fetchSubject,
     })
 
     return status === "pending" ? (
-        <div className="loader-center-x">
+        <div className="loader-center">
             <Loader />
         </div>
     ) : status === "error" ? (
@@ -27,14 +27,16 @@ export default function Subject() {
         </div>
     ) : (
         <>
-            <AspectRatio ratio={6 / 2}>
-                <Image src={data.image} />
-            </AspectRatio >
-
-            <Box px="sm" pb="sm" className="border-bottom">
-                <Text>{data.label}</Text>
-                <Text style={{ lineHeight: 1.4 }}>{data.text}</Text>
+            <Box p="sm" className="border-bottom">
+                <Text fw={600}>Predmet - {data.label} {data.emoji}</Text>
             </Box>
+
+            {data.posts.length === 0 && (
+                <Box  mx="auto" p="xl" maw={420}>
+                    <Text ta="center" fw={800} fz={24} style={{ lineHeight: 1.2 }}>Zatiaľ žiadne príspevky</Text>
+                    <Text ta="center" c="gray" mt={8}>Buď prvý kto tu pridá príspevok.</Text>
+                </Box>
+            )}
 
             {data.posts.map(post => <Post post={post} />)}
         </>
