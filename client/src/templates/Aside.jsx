@@ -14,6 +14,7 @@ export default function Aside() {
     const { data, status } = useQuery({
         queryFn: fetchArticles,
         queryKey: ["news-aside"],
+        staleTime: Infinity,
     })
 
     return (

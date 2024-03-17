@@ -40,6 +40,7 @@ export default function Navbar({ close }) {
     const { status, data } = useQuery({
         queryKey: ["subjects"],
         queryFn: fetchSubjects,
+        staleTime: Infinity,
     })
 
     return status === "pending" ? (
