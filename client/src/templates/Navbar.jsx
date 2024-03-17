@@ -9,23 +9,23 @@ const menu = [
     {
         label: "Domov",
         url: "/",
-        emoji: <IconHome stroke={1.25} />
+        leftSection: <IconHome stroke={1.25} />
     },
     {
         label: "Šrodo AI",
         url: "/ai",
-        emoji: <IconRobot stroke={1.25} />,
+        leftSection: <IconRobot stroke={1.25} />,
         badge: "Nové!"
     },
     {
         label: "Novinky",
         url: "/novinky",
-        emoji: <IconNews stroke={1.25} />
+        leftSection: <IconNews stroke={1.25} />
     },
     {
         label: "Obľúbené",
         url: "/oblubene",
-        emoji: <IconHeart stroke={1.25} />
+        leftSection: <IconHeart stroke={1.25} />
     },
 ]
 
@@ -55,14 +55,30 @@ export default function Navbar({ close }) {
         <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
 
             {/* Navigation items */}
-            {menu.map((item) => <MenuItem item={item} close={close} />)}
+            {menu.map(item => <MenuItem
+                label={item.label}
+                leftSection={item.leftSection}
+                url={item.url}
+                badge={item.badge}
+                close={close}
+            />)}
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
-            {data.slice(0, 6).map((item) => <MenuItem item={item} close={close} />)}
+            {data.slice(0, 6).map(item => <MenuItem
+                label={item.label}
+                leftSection={item.emoji}
+                url={`/predmety/${item.url}`}
+                close={close}
+            />)}
 
             <Collapse in={subjectsOpened}>
-                {data.slice(6).map((item) => <MenuItem item={item} close={close} />)}
+                {data.slice(6).map(item => <MenuItem
+                    label={item.label}
+                    leftSection={item.emoji}
+                    url={`/predmety/${item.url}`}
+                    close={close}
+                />)}
             </Collapse>
 
             <Button
@@ -83,31 +99,31 @@ export default function Navbar({ close }) {
     )
 }
 
-function MenuItem({ item, close }) {
+function MenuItem({ label, leftSection, url, badge, close }) {
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
     return (
         <Button
-            key={item.label}
+            key={label}
             className="light-hover"
             fw={400}
             size="md"
             px="sm"
-            leftSection={item.emoji}
-            rightSection={item.badge && <Badge variant="light">{item.badge}</Badge>}
+            leftSection={leftSection}
+            rightSection={badge && <Badge variant="light">{badge}</Badge>}
             variant="subtle"
             color="black"
-            bg={item.url === pathname ? "gray.1" : "white"}
-            mod={[item.url === pathname && "data-selected", "data-block"]}
+            bg={url === pathname ? "gray.1" : "white"}
+            mod={[url === pathname && "data-selected", "data-block"]}
             justify="flex-start"
             fullWidth
             onClick={() => {
                 close && close()
-                navigate(item.url)
+                navigate(url)
             }}
         >
-            {item.label}
+            {label}
         </Button>
     )
 }

@@ -146,7 +146,7 @@ const Post = forwardRef(({ post }, ref) => {
                         <Text c="gray" size="sm">
                             &middot;
                         </Text>
-                        <Link to={post.subject.url}>
+                        <Link to={`/predmety/${post.subject.url}`}>
                             <Text c="gray" size="sm">
                                 {post.subject.label}
                             </Text>

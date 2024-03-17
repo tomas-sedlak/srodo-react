@@ -50,7 +50,7 @@ export default function App() {
                                 <Route path="ai" element={<AI />} />
                                 <Route path="novinky" element={<News />} />
                                 <Route path="stats" element={<Stats />} />
-                                <Route path="predmet/:subject" element={<Subject />} />
+                                <Route path="predmety/:subject" element={<Subject />} />
                                 <Route exact path=":username" element={<User />} />
                                 <Route exact path=":username/:postId" element={<Post />} />
 

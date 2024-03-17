@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
-import { Loader, Text } from "@mantine/core"
+import { Box, Loader, Text } from "@mantine/core"
 import axios from "axios"
 import Post from "templates/post"
 
@@ -28,6 +28,17 @@ export default function Favourites() {
         </div>
     ) : (
         <>
+            <Box p="sm" className="border-bottom">
+                <Text fw={600}>Moje obľúbené príspevky</Text>
+            </Box>
+
+            {data.length === 0 && (
+                <Box mx="auto" p="xl" maw={420}>
+                    <Text ta="center" fw={800} fz={24} style={{ lineHeight: 1.2 }}>Zatiaľ žiadne príspevky</Text>
+                    <Text ta="center" c="gray" mt={8}>Klikni srdce na hocijakom príspevku. Keď tak urobíš, už tu nebude tak prázdno.</Text>
+                </Box>
+            )}
+
             {data.map(post => <Post post={post} />)}
         </>
     )
