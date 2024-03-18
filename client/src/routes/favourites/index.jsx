@@ -3,6 +3,7 @@ import { useSelector } from "react-redux"
 import { Box, Loader, Text } from "@mantine/core"
 import axios from "axios"
 import Post from "templates/post"
+import Message from "templates/Message"
 
 export default function Favourites() {
     const userId = useSelector((state) => state.user?._id)
@@ -32,12 +33,10 @@ export default function Favourites() {
                 <Text fw={600}>Moje obľúbené príspevky</Text>
             </Box>
 
-            {data.length === 0 && (
-                <Box mx="auto" p="xl" maw={420}>
-                    <Text ta="center" fw={800} fz={24} style={{ lineHeight: 1.2 }}>Zatiaľ žiadne príspevky</Text>
-                    <Text ta="center" c="gray" mt={8}>Klikni srdce na hocijakom príspevku. Keď tak urobíš, už tu nebude tak prázdno.</Text>
-                </Box>
-            )}
+            {data.length === 0 && <Message
+                title="Zatiaľ žiadne príspevky"
+                content="Klikni srdce na hocijakom príspevku. Keď tak urobíš, už tu nebude tak prázdno."
+            />}
 
             {data.map(post => <Post post={post} />)}
         </>
