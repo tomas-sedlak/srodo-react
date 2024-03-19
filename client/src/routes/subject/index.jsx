@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
+import Message from "templates/Message";
 
 export default function Subject() {
     const { subject } = useParams()
@@ -31,12 +32,10 @@ export default function Subject() {
                 <Text fw={600}>Predmet - {data.label} {data.emoji}</Text>
             </Box>
 
-            {data.posts.length === 0 && (
-                <Box  mx="auto" p="xl" maw={420}>
-                    <Text ta="center" fw={800} fz={24} style={{ lineHeight: 1.2 }}>Zatiaľ žiadne príspevky</Text>
-                    <Text ta="center" c="gray" mt={8}>Buď prvý kto tu pridá príspevok.</Text>
-                </Box>
-            )}
+            {data.posts.length === 0 && <Message
+                title="Zatiaľ žiadne príspevky"
+                content="Buď prvý kto tu pridá príspevok."
+            />}
 
             {data.posts.map(post => <Post post={post} />)}
         </>
