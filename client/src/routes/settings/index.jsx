@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, CloseButton } from "@mantine/core";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, CloseButton, Center, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
-import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube } from "@tabler/icons-react";
+import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconCamera, IconPhoto } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
 import { createClient } from 'pexels';
 import axios from "axios";
@@ -66,24 +66,61 @@ export default function Settings() {
                 </Group>
 
             </Modal>
-
-            <AspectRatio ratio={1000 / 280}>
-                <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" onClick={coverImageModalHandlers.open} />
-            </AspectRatio>
-
-            <div style={{ position: "relative" }}>
-                <Avatar
-                    className="profile-picture"
+            <Flex mt="sm" p="sm" gap="sm">
+                {/* <AspectRatio ratio={1000 / 280}> */}
+                {/* <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" onClick={coverImageModalHandlers.open} /> */}
+                {/* </AspectRatio> */}
+                {/* <Avatar
+                    m="sm"
                     size={100}
-                    src={user.profilePicture}
+                    src={
+                        <>
+                            <IconCamera />
+                            <Text>.......</Text>
+                        </>
+                    }
                     onClick={coverImageModalHandlers.open}
-                />
-            </div>
+                /> */}
+                <Box
+                    onClick={coverImageModalHandlers.open}
+                    bg="gray.3"
+                    p="md"
+                    style={{ borderRadius: 12, borderStyle: "dashed", borderColor: "gray", cursor: "pointer", aspectRatio: 3 / 2 }}
+                    w="30%">
+
+                    <Center mt="sm"> {/* This isn't exactly in the center but I think it looks ok */}
+                        <IconCamera stroke={1.25} />
+                    </Center>
+                    <Center>
+                        <Text>.......</Text>
+                    </Center>
+                </Box>
+                <Box
+                    onClick={coverImageModalHandlers.open}
+                    bg="gray.3"
+                    p="md"
+                    style={{ borderRadius: 12, borderStyle: "dashed", borderColor: "gray", cursor: "pointer" }}
+                    w="70%">
+
+                    <Center mt="sm">
+                        <IconPhoto stroke={1.25} />
+                    </Center>
+                    <Center>
+                        <Text>.......</Text>
+                    </Center>
+                </Box>
+            </Flex>
+
+
+
+
+
 
             <Box px="sm" pb="sm" className="border-bottom">
+
                 <TextInput mt="sm" label="Display name" value={user.displayName} />
                 <TextInput mt="sm" label="Použivateľské meno" value={user.username} />
-                <Textarea mt="sm" label="Bio" />
+                <Textarea mt="sm" label="Bio" autosize minRows={2} />
                 <Text fw={600} size="sm" mt="sm">
                     Tags
                 </Text>

@@ -76,20 +76,20 @@ export default function User() {
                 </Text>
                 {/* Code for xp bar */}
                 <Group>
-                    
-                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="red" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
+
+                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
                         <Center>
-                            <Text >4</Text>
+                            <Text c="white" >4</Text>
                         </Center>
-                        
+
                     </Box>
 
                     <Progress size="lg" value={25} style={{ flex: 1 }} />
-                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="red" w={32} h={32} p={2}>
+                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
                         <Center>
-                            <Text >5</Text>
+                            <Text c="white">5</Text>
                         </Center>
-                        
+
                     </Box>
                 </Group>
 
