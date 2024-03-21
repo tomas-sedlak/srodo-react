@@ -82,8 +82,8 @@ export default function CreateArticle() {
                 <Box pos="relative">
                     <ActionIcon
                         className="image-item-right"
+                        color="rgba(0, 0, 0, 0.4)"
                         c="white"
-                        color="rgba(0, 0, 0, 0.5)"
                         w={40}
                         h={40}
                         radius="xl"

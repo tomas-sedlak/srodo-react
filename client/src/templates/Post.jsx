@@ -61,9 +61,8 @@ const Post = forwardRef(({ post }, ref) => {
             <Box pos="relative">
                 <Badge
                     className="image-item-left"
-                    color="black"
+                    color="rgba(0, 0, 0, 0.4)"
                     c="white"
-                    variant="light"
                 >
                     {typeNames[post.postType]}
                 </Badge>
