@@ -30,7 +30,18 @@ export default function App() {
     const queryClient = new QueryClient();
     const theme = createTheme({
         colors: {
-            srobarka: ["#ffe5e8", "#ffb3bb", "#ff808e", "#ff4d61", "#ff1a34", "#e6001b", "#b30015", "#80000f", "#4d0009", "#1a0003"],
+            srobarka: [
+                "#ffeaf3",
+                "#fdd4e1",
+                "#f4a7bf",
+                "#ec779c",
+                "#e64f7e",
+                "#e3356b",
+                "#e22762",
+                "#c91a52",
+                "#b41149",
+                "#9f003e"
+            ],
         },
         primaryColor: "srobarka",
         defaultRadius: "md",
