@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, AspectRatio, Text } from '@mantine/core';
+import { Box, Group, Button, AspectRatio, ActionIcon, Image } from '@mantine/core';
+import { IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
@@ -79,6 +80,17 @@ export default function CreateArticle() {
 
             <Box p="sm">
                 <Box pos="relative">
+                    <ActionIcon
+                        className="image-item-right"
+                        c="white"
+                        color="rgba(0, 0, 0, 0.5)"
+                        w={40}
+                        h={40}
+                        radius="xl"
+                        onClick={coverImageModalHandlers.open}
+                    >
+                        <IconCameraPlus stroke={1.25} />
+                    </ActionIcon>
                     <AspectRatio ratio={2 / 1}>
                         <Box
                             className="lazy-image pointer"
