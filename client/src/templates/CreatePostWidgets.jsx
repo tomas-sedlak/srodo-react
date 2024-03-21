@@ -10,7 +10,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 
-export function TitleInput({ title, setTitle, placeholder }) {
+export function TitleInput({ placeholder, title, setTitle, error }) {
     const maxCharacterLenght = 64;
     const [count, setCount] = useState(0);
 
@@ -22,6 +22,7 @@ export function TitleInput({ title, setTitle, placeholder }) {
                 w="100%"
                 variant="unstyled"
                 placeholder={placeholder}
+                error={error}
                 styles={{
                     input: {
                         fontSize: "32px",
@@ -30,6 +31,7 @@ export function TitleInput({ title, setTitle, placeholder }) {
                         borderRadius: 0,
                         padding: 0,
                         paddingRight: 36,
+                        border: "none",
                     },
                 }}
                 value={title}
@@ -40,12 +42,12 @@ export function TitleInput({ title, setTitle, placeholder }) {
                 }}
                 onKeyDown={event => event.key === "Enter" && event.preventDefault()}
             />
-            <Text c="gray" size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
+            <Text c={error ? "red" : "gray"} size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
         </Box>
     )
 }
 
-export function SubjectSelect({ setSelectedSubject, selectedSubject }) {
+export function SubjectSelect({ setSelectedSubject, selectedSubject, error }) {
     const [subjects, setSubjects] = useState([])
 
     const fetchSubjects = async () => {
@@ -70,6 +72,7 @@ export function SubjectSelect({ setSelectedSubject, selectedSubject }) {
             data={selectData}
             value={selectedSubject}
             onChange={setSelectedSubject}
+            error={error}
         />
     )
 }

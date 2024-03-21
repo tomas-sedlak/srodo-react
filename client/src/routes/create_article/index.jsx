@@ -14,7 +14,7 @@ export default function CreateArticle() {
     const token = useSelector(state => state.token);
 
     const navigate = useNavigate();
-    const [error, setError] = useState("");
+    const [error, setError] = useState({});
     const [title, setTitle] = useState("");
     const [coverImage, setCoverImage] = useState("");
     const [selectedSubject, setSelectedSubject] = useState();
@@ -32,18 +32,26 @@ export default function CreateArticle() {
     const publish = async () => {
         setIsPublishing(true)
 
+        let errors = {}
+        let isError = false
+
         if (!title) {
-            setError("Nadpis je povinný")
-            return setIsPublishing(false)
+            isError = true
+            errors.title = "Názov článku je povinný"
         }
 
         if (!selectedSubject) {
-            setError("Predmet je povinný")
-            return setIsPublishing(false)
+            isError = true
+            errors.subject = "Predmet je povinný"
         }
 
         if (!text) {
-            setError("Text je povinný")
+            isError = true
+            errors.text = "Text je povinný"
+        }
+
+        if (isError) {
+            setError(errors)
             return setIsPublishing(false)
         }
 
@@ -81,21 +89,22 @@ export default function CreateArticle() {
                 </Box>
 
                 <TitleInput
-                    placeholder="Názov článku"
+                    placeholder="Názov článku..."
                     title={title}
                     setTitle={setTitle}
+                    error={error.title}
                 />
 
                 <SubjectSelect
                     setSelectedSubject={setSelectedSubject}
+                    error={error.subject}
                 />
 
                 <TextEditor
                     setText={setText}
                     placeholder="Tu začni písať svoj článok..."
+                    error={error.text}
                 />
-
-                <Text c="red">{error}</Text>
 
                 <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish} loading={isPublishing}>
