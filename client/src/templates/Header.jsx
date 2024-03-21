@@ -1,4 +1,4 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button, Tooltip } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
@@ -8,6 +8,8 @@ import { setLogout, setLoginModal } from "state";
 import Navbar from 'templates/Navbar';
 
 export default function Header() {
+    const { colorScheme } = useMantineColorScheme();
+    const light = colorScheme === "light";
     const isMobile = useMediaQuery("(max-width: 992px)");
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
@@ -24,8 +26,8 @@ export default function Header() {
                             variant="subtle"
                             style={!isMobile && { display: "none" }}
                             onClick={drawerHandlers.open}
-                            c="black"
                             color="gray"
+                            c="var(--mantine-color-text)"
                             w={40}
                             h={40}
                             radius="xl"
@@ -46,13 +48,13 @@ export default function Header() {
                                 <CloseButton
                                     variant="subtle"
                                     radius="lg"
-                                    c="gray"
                                     onMouseDown={(event) => event.preventDefault()}
                                     onClick={() => setSearchValue("")}
                                     aria-label="Clear value"
                                 />
                             )
                         }
+                        variant="filled"
                         className="search"
                         styles={{
                             section: {
@@ -69,8 +71,8 @@ export default function Header() {
                                 <Tooltip label="Notifikácie">
                                     <ActionIcon
                                         variant="subtle"
-                                        c="black"
                                         color="gray"
+                                        c="var(--mantine-color-text)"
                                         w={40}
                                         h={40}
                                         radius="xl"
@@ -85,8 +87,8 @@ export default function Header() {
                                     <Tooltip label="Vytvoriť">
                                         <ActionIcon
                                             variant="subtle"
-                                            c="black"
                                             color="gray"
+                                            c="var(--mantine-color-text)"
                                             w={40}
                                             h={40}
                                             radius="xl"

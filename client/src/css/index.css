@@ -13,7 +13,7 @@
 
 a {
   text-decoration: none;
-  color: var(--mantine-color-black);
+  color: var(--mantine-color-text);
 }
 
 .lazy-image {
@@ -41,8 +41,8 @@ header {
   left: 0;
   right: 0;
   height: var(--header-height);
-  background-color: var(--mantine-color-white);
-  border-bottom: 1px solid var(--mantine-color-gray-2);
+  background-color: var(--mantine-color-body);
+  border-bottom: 1px solid var(--mantine-color-gray-light-hover);
 }
 
 main {
@@ -65,7 +65,7 @@ main {
 .content {
   border-left: 1px solid;
   border-right: 1px solid;
-  border-color: var(--mantine-color-gray-2);
+  border-color: var(--mantine-color-gray-light-hover);
 }
 
 .navbar, .aside {
@@ -85,11 +85,6 @@ main {
   border: none;
   padding: 12px 46px;
   height: 40px;
-  background-color: var(--mantine-color-gray-1);
-}
-
-.search input:hover {
-  background-color: var(--mantine-color-gray-2);
 }
 
 .loader-center-x, .loader-center {
@@ -118,11 +113,11 @@ main {
 }
 
 .border-bottom {
-  border-bottom: 1px solid var(--mantine-color-gray-2);
+  border-bottom: 1px solid var(--mantine-color-gray-light-hover);
 }
 
 .light-hover:not([data-selected]):hover {
-  background-color: var(--mantine-color-gray-0)!important;
+  background-color: var(--mantine-color-gray-light)!important;
 }
 
 .dark-hover:not([data-selected]):hover {

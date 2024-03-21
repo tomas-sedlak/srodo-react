@@ -30,14 +30,14 @@ export default function App() {
     const queryClient = new QueryClient();
     const theme = createTheme({
         colors: {
-            srobarka: ["#ffe5e8", "#ffb3bb", "#ff808e", "#ff4d61", "#ff1a34", "#e6001b", "#b30015", "#80000f", "#4d0009", "#1a0003"]
+            srobarka: ["#ffe5e8", "#ffb3bb", "#ff808e", "#ff4d61", "#ff1a34", "#e6001b", "#b30015", "#80000f", "#4d0009", "#1a0003"],
         },
         primaryColor: "srobarka",
         defaultRadius: "md",
     })
 
     return (
-        <MantineProvider theme={theme}>
+        <MantineProvider theme={theme} defaultColorScheme="light">
             <ModalsProvider>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>

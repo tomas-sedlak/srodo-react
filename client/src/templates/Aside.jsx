@@ -1,4 +1,4 @@
-import { Text, Stack, ScrollArea, Collapse, Loader } from "@mantine/core";
+import { Text, Stack, ScrollArea, Collapse, Loader, Box } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -45,7 +45,7 @@ function NewsCard({ data, title }) {
     const maxNews = 10;
 
     return (
-        <div className="news-card">
+        <Box bg="var(--mantine-color-gray-light)" p="lg" style={{ borderRadius: "var(--mantine-radius-lg)" }}>
             <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
 
             <Stack>
@@ -71,7 +71,7 @@ function NewsCard({ data, title }) {
                     </Text>
                 </>
             }
-        </div>
+        </Box>
     )
 }
 

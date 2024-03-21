@@ -87,7 +87,7 @@ const Post = forwardRef(({ post }, ref) => {
                                 className="dots"
                                 variant="subtle"
                                 color="gray"
-                                c="black"
+                                c="text"
                                 radius="xl"
                                 w={32}
                                 h={32}
@@ -162,7 +162,6 @@ const Post = forwardRef(({ post }, ref) => {
                         <Text
                             fw={800}
                             fz={24}
-                            underline="never"
                             style={{ lineHeight: 1.2 }}
                             lineClamp={2}
                         >

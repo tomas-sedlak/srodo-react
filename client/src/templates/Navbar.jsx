@@ -1,5 +1,5 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Badge, Button, Collapse, Text, ScrollArea, Loader } from '@mantine/core';
+import { Badge, Button, Collapse, Text, ScrollArea, Loader, useMantineColorScheme } from '@mantine/core';
 import { IconHome, IconNews, IconHeart, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
@@ -30,6 +30,7 @@ const menu = [
 ]
 
 export default function Navbar({ close }) {
+    const { colorScheme } = useMantineColorScheme();
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     const fetchSubjects = async () => {
@@ -49,7 +50,7 @@ export default function Navbar({ close }) {
         </div>
     ) : status === "error" ? (
         <div className="loader-center">
-            <p>Nastala chyba!</p>
+            <Text>Nastala chyba!</Text>
         </div>
     ) : (
         <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
@@ -82,16 +83,14 @@ export default function Navbar({ close }) {
             </Collapse>
 
             <Button
-                onClick={toggle}
-                className="light-hover"
                 fw={400}
                 size="md"
-                px="sm"
                 leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
                 variant="subtle"
-                color="black"
+                color={colorScheme === "light" ? "black" : "gray"}
                 justify="flex-start"
                 fullWidth
+                onClick={toggle}
             >
                 {subjectsOpened ? "Zobraziť menej" : "Zobraziť viac"}
             </Button>
@@ -100,22 +99,21 @@ export default function Navbar({ close }) {
 }
 
 function MenuItem({ label, leftSection, url, badge, close }) {
+    const { colorScheme } = useMantineColorScheme();
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
     return (
         <Button
             key={label}
-            className="light-hover"
             fw={400}
             size="md"
-            px="sm"
             leftSection={leftSection}
             rightSection={badge && <Badge variant="light">{badge}</Badge>}
-            variant="subtle"
-            color="black"
-            bg={url === pathname ? "gray.1" : "white"}
-            mod={[url === pathname && "data-selected", "data-block"]}
+            variant={url === pathname ? "light" : "subtle"}
+            // color={colorScheme === "light" ? "black" : "gray"}
+            color="gray"
+            c="var(--mantine-color-text)"
             justify="flex-start"
             fullWidth
             onClick={() => {
