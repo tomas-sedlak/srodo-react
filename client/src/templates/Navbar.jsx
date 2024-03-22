@@ -1,7 +1,7 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Badge, Button, Collapse, Text, ScrollArea, Loader, useMantineColorScheme } from '@mantine/core';
-import { IconHome, IconNews, IconHeart, IconRobot, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { Badge, Collapse, Text, Loader } from '@mantine/core';
+import { IconHome, IconArticle, IconHeart, IconPuzzle, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
+import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -9,28 +9,28 @@ const menu = [
     {
         label: "Domov",
         url: "/",
-        leftSection: <IconHome stroke={1.25} />
+        leftSection: IconHome,
     },
     {
         label: "Šrodo AI",
         url: "/ai",
-        leftSection: <IconRobot stroke={1.25} />,
-        badge: "Nové!"
+        leftSection: IconPuzzle,
+        badge: "nové!",
     },
     {
         label: "Novinky",
         url: "/novinky",
-        leftSection: <IconNews stroke={1.25} />
+        leftSection: IconArticle,
     },
     {
         label: "Obľúbené",
         url: "/oblubene",
-        leftSection: <IconHeart stroke={1.25} />
+        leftSection: IconHeart,
     },
 ]
 
 export default function Navbar({ close }) {
-    const { colorScheme } = useMantineColorScheme();
+    const { pathname } = useLocation();
     const [subjectsOpened, { toggle }] = useDisclosure(false);
 
     const fetchSubjects = async () => {
@@ -53,75 +53,88 @@ export default function Navbar({ close }) {
             <Text>Nastala chyba!</Text>
         </div>
     ) : (
-        <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
-
+        <>
             {/* Navigation items */}
-            {menu.map(item => <MenuItem
-                label={item.label}
-                leftSection={item.leftSection}
-                url={item.url}
-                badge={item.badge}
-                close={close}
-            />)}
+            {menu.map(item => {
+                const active = item.url === pathname;
+
+                return (
+                    <Link
+                        key={item.label}
+                        to={item.url}
+                        onClick={close}
+                        className="menu-item"
+                        data-active={active || undefined}
+                    >
+                        <item.leftSection stroke={1.25} />
+                        <span>{item.label}</span>
+                        {item.badge && (
+                            <Badge variant="light">
+                                {item.badge}
+                            </Badge>
+                        )}
+                    </Link>
+                )
+            })}
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Predmety</Text>
-            {data.slice(0, 6).map(item => <MenuItem
-                label={item.label}
-                leftSection={item.emoji}
-                url={`/predmety/${item.url}`}
-                close={close}
-            />)}
+            {data.slice(0, 6).map(item => {
+                const url = `/predmety/${item.url}`;
+                const active = url === pathname;
+
+                return (
+                    <Link
+                        key={item.label}
+                        to={url}
+                        onClick={close}
+                        className="menu-item"
+                        data-active={active || undefined}
+                    >
+                        <span>{item.emoji}</span>
+                        <span>{item.label}</span>
+                        {item.badge && (
+                            <Badge variant="light">
+                                {item.badge}
+                            </Badge>
+                        )}
+                    </Link>
+                )
+            })}
 
             <Collapse in={subjectsOpened}>
-                {data.slice(6).map(item => <MenuItem
-                    label={item.label}
-                    leftSection={item.emoji}
-                    url={`/predmety/${item.url}`}
-                    close={close}
-                />)}
+                {data.slice(6).map(item => {
+                    const url = `/predmety/${item.url}`;
+                    const active = url === pathname;
+
+                    return (
+                        <Link
+                            key={item.label}
+                            to={url}
+                            onClick={close}
+                            className="menu-item"
+                            data-active={active || undefined}
+                        >
+                            <span>{item.emoji}</span>
+                            <span>{item.label}</span>
+                            {item.badge && (
+                                <Badge variant="light">
+                                    {item.badge}
+                                </Badge>
+                            )}
+                        </Link>
+                    )
+                })}
             </Collapse>
 
-            <Button
-                fw={400}
-                size="md"
-                leftSection={subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
-                variant="subtle"
-                color={colorScheme === "light" ? "black" : "gray"}
-                justify="flex-start"
-                fullWidth
+            <a
+                key="show-more"
                 onClick={toggle}
+                className="menu-item"
             >
-                {subjectsOpened ? "Zobraziť menej" : "Zobraziť viac"}
-            </Button>
-        </ScrollArea>
-    )
-}
-
-function MenuItem({ label, leftSection, url, badge, close }) {
-    const { colorScheme } = useMantineColorScheme();
-    const navigate = useNavigate();
-    const { pathname } = useLocation();
-
-    return (
-        <Button
-            key={label}
-            fw={400}
-            size="md"
-            leftSection={leftSection}
-            rightSection={badge && <Badge variant="light">{badge}</Badge>}
-            variant={url === pathname ? "light" : "subtle"}
-            // color={colorScheme === "light" ? "black" : "gray"}
-            color="gray"
-            c="var(--mantine-color-text)"
-            justify="flex-start"
-            fullWidth
-            onClick={() => {
-                close && close()
-                navigate(url)
-            }}
-        >
-            {label}
-        </Button>
+                {subjectsOpened ? <IconChevronUp stroke={1.25} /> : <IconChevronDown stroke={1.25} />}
+                <span>{subjectsOpened ? "Zobraziť menej" : "Zobraziť viac"}</span>
+            </a>
+        </>
     )
 }

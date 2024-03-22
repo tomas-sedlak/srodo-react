@@ -20,7 +20,6 @@ export default function News() {
 
     const fetchNews = async () => {
         const response = await axios.get(`/api/news?category=${activeTab}`);
-        console.log(response.data);
         return response.data;
     }
 

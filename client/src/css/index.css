@@ -43,7 +43,7 @@ header {
   right: 0;
   height: var(--header-height);
   background-color: var(--mantine-color-body);
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 .header-inner {
@@ -64,7 +64,7 @@ main {
   min-height: 100vh;
   border-left: 1px solid;
   border-right: 1px solid;
-  border-color: light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 .navbar,
@@ -73,6 +73,9 @@ main {
   top: var(--header-height);
   height: calc(100vh - var(--header-height));
   padding: var(--mantine-spacing-sm);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .header-inner .search {
@@ -102,6 +105,28 @@ main {
   height: 100%;
 }
 
+.menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-md);
+  gap: var(--mantine-spacing-xs);
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.menu-item[data-active] {
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.menu-item[data-active]:hover {
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
 .profile-picture {
   position: absolute;
   top: -50px;
@@ -114,7 +139,7 @@ main {
 }
 
 .border-bottom {
-  border-bottom: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 .light-hover:not([data-selected]):hover {
@@ -137,6 +162,10 @@ main {
   border-radius: var(--mantine-radius-lg);
   background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   padding: var(--mantine-spacing-lg);
+}
+
+.news-card:not(:last-of-type) {
+  margin-bottom: var(--mantine-spacing-sm);
 }
 
 /* All custom cards END */

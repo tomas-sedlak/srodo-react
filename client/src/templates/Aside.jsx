@@ -28,12 +28,10 @@ export default function Aside() {
                     <p>Nastala chyba!</p>
                 </div>
             ) : (
-                <ScrollArea scrollbarSize={8} scrollHideDelay={0} h="100%">
-                    <Stack>
-                        <NewsCard data={data.science} title="Novinky vo vede" />
-                        <NewsCard data={data.technology} title="Novinky v technológiách" />
-                    </Stack>
-                </ScrollArea>
+                <>
+                    <NewsCard data={data.science} title="Novinky vo vede" />
+                    <NewsCard data={data.technology} title="Novinky v technológiách" />
+                </>
             )}
         </aside>
     )
