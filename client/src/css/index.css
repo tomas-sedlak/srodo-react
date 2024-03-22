@@ -161,11 +161,28 @@ main {
 .news-card {
   border-radius: var(--mantine-radius-lg);
   background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
-  padding: var(--mantine-spacing-lg);
+  display: flex;
+  flex-direction: column;
 }
 
 .news-card:not(:last-of-type) {
   margin-bottom: var(--mantine-spacing-sm);
+}
+
+.news-card-item {
+  display: block;
+  padding: 8px var(--mantine-spacing-lg);
+  cursor: pointer;
+}
+
+.news-card > .news-card-item:last-of-type {
+  padding-bottom: var(--mantine-spacing-lg);
+  border-bottom-left-radius: var(--mantine-radius-lg);
+  border-bottom-right-radius: var(--mantine-radius-lg);
+}
+
+.news-card-item:hover {
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 /* All custom cards END */

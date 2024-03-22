@@ -1,5 +1,4 @@
-import { Text, Stack, ScrollArea, Collapse, Loader, Box } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Text, Loader } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -38,46 +37,18 @@ export default function Aside() {
 }
 
 function NewsCard({ data, title }) {
-    const [opened, { toggle }] = useDisclosure(false);
-    const visbleNews = 4;
-    const maxNews = 10;
+    const visbleNews = 5;
 
     return (
-        <div className="news-card">
-            <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
+        <div key={title} className="news-card">
+            <Text fw={700} px="lg" pt="lg" pb="sm" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
 
-            <Stack>
-                {data.slice(0, visbleNews).map((article) => <NewsContent article={article} />)}
-            </Stack>
-
-            {data.length > visbleNews &&
-                <>
-                    <Collapse in={opened} mt="sm">
-                        <Stack>
-                            {data.slice(visbleNews, maxNews).map((article) => <NewsContent article={article} />)}
-                        </Stack>
-                    </Collapse>
-
-                    <Text
-                        mt="sm"
-                        className="pointer"
-                        size="sm"
-                        fw={600}
-                        onClick={toggle}
-                    >
-                        {opened ? "Zobraziť menej" : "Zobraziť viac"}
-                    </Text>
-                </>
-            }
+            {data.slice(0, visbleNews).map(article =>
+                <Link key={article.title} to={article.url} target="_blank" className="news-card-item">
+                    <Text lineClamp={2} mb={4} style={{ lineHeight: 1.4 }}>{article.title}</Text>
+                    <Text c="dimmed" size="sm">{article.author}</Text>
+                </Link>
+            )}
         </div>
-    )
-}
-
-function NewsContent({ article }) {
-    return (
-        <Link to={article.url} target="_blank">
-            <Text className="link" lineClamp={2} mb={4} style={{ lineHeight: 1.4 }}>{article.title}</Text>
-            <Text c="dimmed" size="sm">{article.author}</Text>
-        </Link>
     )
 }
