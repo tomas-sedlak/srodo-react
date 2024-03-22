@@ -45,7 +45,7 @@ export default function Navbar({ close }) {
     })
 
     return status === "pending" ? (
-        <div className="loader-center-x">
+        <div className="loader-center">
             <Loader />
         </div>
     ) : status === "error" ? (

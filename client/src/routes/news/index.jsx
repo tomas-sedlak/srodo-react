@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Box, Loader, Tabs } from "@mantine/core";
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
