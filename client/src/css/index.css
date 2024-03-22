@@ -175,7 +175,7 @@ main {
   cursor: pointer;
 }
 
-.news-card > .news-card-item:last-of-type {
+.news-card>.news-card-item:last-of-type {
   padding-bottom: var(--mantine-spacing-lg);
   border-bottom-left-radius: var(--mantine-radius-lg);
   border-bottom-right-radius: var(--mantine-radius-lg);
@@ -230,6 +230,7 @@ main {
   z-index: 9;
   display: flex;
   position: absolute;
+  background-color: rgba(36, 36, 36, 0.6);
 }
 
 .image-item-left {
