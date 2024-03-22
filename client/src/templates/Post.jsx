@@ -71,19 +71,18 @@ const Post = forwardRef(({ post }, ref) => {
 
             {/* Post information */}
             <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
-                <Link to={"/" + post.author.username}>
+                <Link to={`/${post.author.username}`}>
                     <Avatar src={post.author.profilePicture} />
                 </Link>
 
                 <Box pos="relative" w="100%">
-
                     <Menu position="bottom-end" width={180}>
                         <Menu.Target>
                             <ActionIcon
                                 className="dots"
                                 variant="subtle"
                                 color="gray"
-                                c="text"
+                                c="var(--mantine-color-text)"
                                 radius="xl"
                                 w={32}
                                 h={32}
@@ -134,7 +133,7 @@ const Post = forwardRef(({ post }, ref) => {
 
                     <Group gap={4} align="center" pr={28} c="dimmed">
                         <Link to={"/" + post.author.username}>
-                            <Text fw={700} size="sm" c="dimmed">
+                            <Text fw={600} size="sm" c="dimmed">
                                 {post.author.displayName}
                             </Text>
                         </Link>
@@ -167,6 +166,7 @@ const Post = forwardRef(({ post }, ref) => {
 
                     <Group justify="space-between" mt="sm">
                         <Group gap={8}>
+                            {/* Views */}
                             <div className="icon-wrapper">
                                 <IconEye stroke={1.25} />
                                 <span>{post.views.reduce((acc, view) => acc + view.count, 0)}</span>
@@ -185,11 +185,11 @@ const Post = forwardRef(({ post }, ref) => {
                                 <span>{likes}</span>
                             </div>
 
-                            {/* Comments button */}
-                            <Link to={`${url}#komentare`} className="icon-wrapper">
+                            {/* Comments */}
+                            <div className="icon-wrapper">
                                 <IconMessageCircle stroke={1.25} />
                                 <span>{post.comments}</span>
-                            </Link>
+                            </div>
                         </Group>
                     </Group>
                 </Box>

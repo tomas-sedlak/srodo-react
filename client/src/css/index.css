@@ -17,7 +17,7 @@ a {
 }
 
 .lazy-image {
-  background-color: var(--mantine-color-gray-1);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   background-position: center;
   background-size: cover;
   border-radius: var(--mantine-radius-lg);
@@ -147,7 +147,7 @@ main {
 }
 
 .dark-hover:not([data-selected]):hover {
-  background-color: var(--mantine-color-gray-1) !important
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5)) !important
 }
 
 .dots {
@@ -254,25 +254,20 @@ main {
   align-items: center;
   gap: 4px;
   border-radius: 24px;
-  background-color: var(--mantine-color-gray-1);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
   padding: 4px 12px;
   font-size: var(--mantine-font-size-sm);
   cursor: pointer;
 }
 
 .icon-wrapper:hover {
-  background-color: var(--mantine-color-gray-2);
+  background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }
 
 /* Custom colors for icons on post */
 .icon-wrapper.like:hover,
 .icon-wrapper.like-selected {
   color: var(--mantine-color-pink-filled);
-}
-
-.icon-wrapper.save:hover,
-.icon-wrapper.save-selected {
-  color: var(--mantine-color-srobarka-filled);
 }
 
 .user-text p {
