@@ -1,5 +1,5 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme } from '@mantine/core';
-import { IconSearch, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
+import { IconSearch, IconSun, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2 } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -8,8 +8,7 @@ import { setLogout, setLoginModal } from "state";
 import Navbar from 'templates/Navbar';
 
 export default function Header() {
-    const { colorScheme } = useMantineColorScheme();
-    const light = colorScheme === "light";
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
     const isMobile = useMediaQuery("(max-width: 992px)");
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
@@ -65,26 +64,25 @@ export default function Header() {
                         onChange={setSearchValue}
                     />
 
-                    {user ? (
-                        <Group justify="flex-end" gap={4}>
-                            {!isMobile && (
-                                <Tooltip label="Notifikácie">
-                                    <ActionIcon
-                                        variant="subtle"
-                                        color="gray"
-                                        c="var(--mantine-color-text)"
-                                        w={40}
-                                        h={40}
-                                        radius="xl"
-                                    >
-                                        <IconBell stroke={1.25} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            )}
+                    <Group justify="flex-end" gap={4}>
+                        <Tooltip label={colorScheme === "light" ? "Tmavý režim" : "Svetlý režim"}>
+                            <ActionIcon
+                                variant="subtle"
+                                color="gray"
+                                c="var(--mantine-color-text)"
+                                w={40}
+                                h={40}
+                                radius="xl"
+                                onClick={toggleColorScheme}
+                            >
+                                {colorScheme === "light" ? <IconMoon stroke={1.25} /> : <IconSun stroke={1.25} />}
+                            </ActionIcon>
+                        </Tooltip>
 
-                            <Menu position="bottom-end" width={180}>
-                                <Menu.Target>
-                                    <Tooltip label="Vytvoriť">
+                        {user ? (
+                            <>
+                                {!isMobile && (
+                                    <Tooltip label="Notifikácie">
                                         <ActionIcon
                                             variant="subtle"
                                             color="gray"
@@ -93,91 +91,104 @@ export default function Header() {
                                             h={40}
                                             radius="xl"
                                         >
-                                            <IconPlus stroke={1.25} />
+                                            <IconBell stroke={1.25} />
                                         </ActionIcon>
                                     </Tooltip>
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    <Menu.Item
-                                        onClick={() => navigate("/vytvorit/clanok")}
-                                        leftSection={<IconPencilPlus stroke={1.25} />}
-                                    >
-                                        <Text>Článok</Text>
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => navigate("/vytvorit/diskusia")}
-                                        leftSection={<IconMessageCircleQuestion stroke={1.25} />}
-                                    >
-                                        <Text>Diskusia</Text>
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => navigate("/vytvorit/kviz")}
-                                        leftSection={<IconCopyCheck stroke={1.25} />}
-                                    >
-                                        <Text>Kvíz</Text>
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
+                                )}
 
-                            <Menu position="bottom-end" width={240}>
-                                <Menu.Target>
-                                    <Avatar className="pointer" src={user.profilePicture} />
-                                </Menu.Target>
-                                <Menu.Dropdown>
-                                    <Menu.Item
-                                        onClick={() => navigate(`/${user.username}`)}
-                                        leftSection={<Avatar src={user.profilePicture} />}
-                                    >
-                                        <Stack gap={4}>
-                                            <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
-                                            <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
-                                        </Stack>
-                                    </Menu.Item>
+                                <Menu position="bottom-end" width={180}>
+                                    <Menu.Target>
+                                        <Tooltip label="Vytvoriť">
+                                            <ActionIcon
+                                                variant="subtle"
+                                                color="gray"
+                                                c="var(--mantine-color-text)"
+                                                w={40}
+                                                h={40}
+                                                radius="xl"
+                                            >
+                                                <IconPlus stroke={1.25} />
+                                            </ActionIcon>
+                                        </Tooltip>
+                                    </Menu.Target>
+                                    <Menu.Dropdown>
+                                        <Menu.Item
+                                            onClick={() => navigate("/vytvorit/clanok")}
+                                            leftSection={<IconPencilPlus stroke={1.25} />}
+                                        >
+                                            <Text>Článok</Text>
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            onClick={() => navigate("/vytvorit/diskusia")}
+                                            leftSection={<IconMessageCircleQuestion stroke={1.25} />}
+                                        >
+                                            <Text>Diskusia</Text>
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            onClick={() => navigate("/vytvorit/kviz")}
+                                            leftSection={<IconCopyCheck stroke={1.25} />}
+                                        >
+                                            <Text>Kvíz</Text>
+                                        </Menu.Item>
+                                    </Menu.Dropdown>
+                                </Menu>
 
-                                    <Menu.Divider />
+                                <Menu position="bottom-end" width={240}>
+                                    <Menu.Target>
+                                        <Avatar className="pointer" src={user.profilePicture} />
+                                    </Menu.Target>
+                                    <Menu.Dropdown>
+                                        <Menu.Item
+                                            onClick={() => navigate(`/${user.username}`)}
+                                            leftSection={<Avatar src={user.profilePicture} />}
+                                        >
+                                            <Stack gap={4}>
+                                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>
+                                                <Text c="gray" size="sm" style={{ lineHeight: 1 }}>@{user.username}</Text>
+                                            </Stack>
+                                        </Menu.Item>
 
-                                    {isMobile && (
+                                        <Menu.Divider />
+
+                                        {isMobile && (
+                                            <Menu.Item
+                                                onClick={() => navigate("/nastavenia")}
+                                                leftSection={<IconBell stroke={1.25} />}
+                                            >
+                                                <Text>Notifikácie</Text>
+                                            </Menu.Item>
+                                        )}
                                         <Menu.Item
                                             onClick={() => navigate("/nastavenia")}
-                                            leftSection={<IconBell stroke={1.25} />}
+                                            leftSection={<IconSettings stroke={1.25} />}
                                         >
-                                            <Text>Notifikácie</Text>
+                                            <Text>Nastavenia</Text>
                                         </Menu.Item>
-                                    )}
-                                    <Menu.Item
-                                        onClick={() => navigate("/nastavenia")}
-                                        leftSection={<IconSettings stroke={1.25} />}
-                                    >
-                                        <Text>Nastavenia</Text>
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => navigate("/statistiky")}
-                                        leftSection={<IconChartBar stroke={1.25} />}
-                                    >
-                                        <Text>Štatistiky</Text>
-                                    </Menu.Item>
+                                        <Menu.Item
+                                            onClick={() => navigate("/statistiky")}
+                                            leftSection={<IconChartBar stroke={1.25} />}
+                                        >
+                                            <Text>Štatistiky</Text>
+                                        </Menu.Item>
 
-                                    <Menu.Divider />
+                                        <Menu.Divider />
 
-                                    <Menu.Item
-                                        color="red"
-                                        onClick={() => dispatch(setLogout())}
-                                        leftSection={<IconLogout stroke={1.25} />}
-                                    >
-                                        <Text>Odhlásiť sa</Text>
-                                    </Menu.Item>
-                                </Menu.Dropdown>
-                            </Menu>
-                        </Group>
-                    ) : (
-                        <Button
-                            my={10}
-                            ml="auto"
-                            onClick={() => dispatch(setLoginModal(true))}
-                        >
-                            Prihlásiť sa
-                        </Button>
-                    )}
+                                        <Menu.Item
+                                            color="red"
+                                            onClick={() => dispatch(setLogout())}
+                                            leftSection={<IconLogout stroke={1.25} />}
+                                        >
+                                            <Text>Odhlásiť sa</Text>
+                                        </Menu.Item>
+                                    </Menu.Dropdown>
+                                </Menu>
+                            </>
+                        ) : (
+                            <Button onClick={() => dispatch(setLoginModal(true))}>
+                                Prihlásiť sa
+                            </Button>
+                        )}
+                    </Group>
                 </div>
             </header >
 
