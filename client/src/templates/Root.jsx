@@ -7,14 +7,14 @@ import Navbar from "templates/Navbar";
 
 export default function Root() {
     return (
-        <main className="home-wrapper">
+        <div className="page-wrapper">
             <Header />
 
             <nav className="navbar">
                 <Navbar />
             </nav>
 
-            <div className="content">
+            <main>
                 <Suspense fallback={
                     <div className="loader-center">
                         <Loader />
@@ -23,9 +23,9 @@ export default function Root() {
                 }>
                     <Outlet />
                 </Suspense>
-            </div>
+            </main>
 
             <Aside />
-        </main>
+        </div>
     )
 }

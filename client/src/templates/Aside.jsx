@@ -45,7 +45,7 @@ function NewsCard({ data, title }) {
     const maxNews = 10;
 
     return (
-        <Box bg="var(--mantine-color-gray-light)" p="lg" style={{ borderRadius: "var(--mantine-radius-lg)" }}>
+        <div className="news-card">
             <Text fw={700} mb="md" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
 
             <Stack>
@@ -71,7 +71,7 @@ function NewsCard({ data, title }) {
                     </Text>
                 </>
             }
-        </Box>
+        </div>
     )
 }
 
@@ -79,7 +79,7 @@ function NewsContent({ article }) {
     return (
         <Link to={article.url} target="_blank">
             <Text className="link" lineClamp={2} mb={4} style={{ lineHeight: 1.4 }}>{article.title}</Text>
-            <Text c="gray" size="sm">{article.author}</Text>
+            <Text c="dimmed" size="sm">{article.author}</Text>
         </Link>
     )
 }
