@@ -48,7 +48,7 @@ export default function App() {
     })
 
     return (
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider theme={theme} defaultColorScheme="auto">
             <ModalsProvider>
                 <QueryClientProvider client={queryClient}>
                     <BrowserRouter>
