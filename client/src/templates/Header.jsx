@@ -1,4 +1,4 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, CloseButton, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { IconSearch, IconSun, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2, IconCircleXFilled, IconX, IconCircleX } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";

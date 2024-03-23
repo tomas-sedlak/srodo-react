@@ -1,16 +1,16 @@
-import { forwardRef, useState } from "react";
+import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconMessageCircle, IconEye, IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { setLoginModal } from "state";
+import { useSelector } from "react-redux";
 import { modals } from "@mantine/modals";
 import axios from "axios";
 
 // Setup Moment.js for Slovak language
 import moment from "moment";
 import "moment/dist/locale/sk";
+import { PostButtons } from "./PostWidgets";
 moment.locale("sk");
 
 const typeNames = {
@@ -24,22 +24,10 @@ const Post = forwardRef(({ post }, ref) => {
     const url = `/${post.author.username}/${post._id}`;
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const [likes, setLikes] = useState(post.likes.length);
-    const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
 
     const headers = {
         Authorization: `Bearer ${token}`,
-    }
-
-    const likePost = async () => {
-        isLiked ? setLikes(likes - 1) : setLikes(likes + 1)
-        setIsLiked(!isLiked)
-        await axios.patch(
-            `/api/post/${post._id}/like`, { userId }, { headers },
-        )
     }
 
     const deletePost = async () => {
@@ -164,34 +152,7 @@ const Post = forwardRef(({ post }, ref) => {
                         </Text>
                     </Link>
 
-                    <Group justify="space-between" mt="sm">
-                        <Group gap={8}>
-                            {/* Views */}
-                            <div className="icon-wrapper">
-                                <IconEye stroke={1.25} />
-                                <span>{post.views.reduce((acc, view) => acc + view.count, 0)}</span>
-                            </div>
-
-                            {/* Likes button */}
-                            <div
-                                className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
-                                onClick={event => {
-                                    event.preventDefault()
-                                    if (userId) likePost()
-                                    else dispatch(setLoginModal(true))
-                                }}
-                            >
-                                {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
-                                <span>{likes}</span>
-                            </div>
-
-                            {/* Comments */}
-                            <div className="icon-wrapper">
-                                <IconMessageCircle stroke={1.25} />
-                                <span>{post.comments}</span>
-                            </div>
-                        </Group>
-                    </Group>
+                    <PostButtons post={post} />
                 </Box>
             </Group>
         </Box>

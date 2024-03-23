@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { AspectRatio, Box, Text, Group, Title, TypographyStylesProvider, Avatar, Loader } from '@mantine/core';
 import { Link } from "react-router-dom";
+import { PostButtons } from 'templates/PostWidgets';
 import axios from "axios";
 import Comments from "templates/Comments";
 
@@ -57,14 +58,25 @@ export default function Post() {
                 <Group gap="sm" mt="sm" wrap="nowrap">
                     <Avatar src={data.author.profilePicture} />
 
-                    <Group gap={4}>
-                        <Link to="username">
-                            <Text fw={600} c="gray" size="sm">
+                    <Group gap={4} c="dimmed">
+                        <Link to={"/" + data.author.username}>
+                            <Text fw={600} size="sm" c="dimmed">
                                 {data.author.displayName}
                             </Text>
                         </Link>
-                        <Text c="gray" size="sm">
-                            &middot; {data.subject.label} &middot; {moment(data.createdAt).fromNow()}
+                        <Text size="sm">
+                            &middot;
+                        </Text>
+                        <Link to={`/predmety/${data.subject.url}`}>
+                            <Text size="sm" c="dimmed">
+                                {data.subject.label}
+                            </Text>
+                        </Link>
+                        <Text size="sm">
+                            &middot;
+                        </Text>
+                        <Text size="sm">
+                            {moment(data.createdAt).fromNow()}
                         </Text>
                     </Group>
                 </Group>
@@ -77,6 +89,8 @@ export default function Post() {
                 >
                     {data.title}
                 </Title>
+
+                <PostButtons post={data} />
 
                 <TypographyStylesProvider p={0} mt="sm">
                     <div dangerouslySetInnerHTML={{ __html: data.content }} />
