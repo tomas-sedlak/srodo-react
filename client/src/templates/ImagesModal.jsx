@@ -90,13 +90,10 @@ export default function ImagesModal({ opened, close, setImage }) {
                                 leftSection={<IconSearch stroke={1.25} />}
                                 rightSection={
                                     query !== "" && (
-                                        <CloseButton
-                                            variant="subtle"
-                                            radius="lg"
-                                            c="gray"
-                                            onMouseDown={(event) => event.preventDefault()}
+                                        <IconX
+                                            className="pointer"
                                             onClick={() => setQuery("")}
-                                            aria-label="Clear value"
+                                            stroke={1.25}
                                         />
                                     )
                                 }
@@ -233,7 +230,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                                     <Button onClick={handleAddImage}>Add Images</Button>
                                 </Center>
                             </Dropzone>
-                            
+
                         </>
 
                     )}
