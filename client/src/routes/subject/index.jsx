@@ -1,9 +1,10 @@
-import { Box, Loader, Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
 import Message from "templates/Message";
+import SmallHeader from "templates/SmallHeader";
 
 export default function Subject() {
     const { subject } = useParams()
@@ -24,13 +25,11 @@ export default function Subject() {
         </div>
     ) : status === "error" ? (
         <div className="loader-center">
-            <p>Nastala chyba!</p>
+            <Text>Nastala chyba!</Text>
         </div>
     ) : (
         <>
-            <Box p="sm" className="border-bottom">
-                <Text fw={600}>Predmet - {data.label} {data.emoji}</Text>
-            </Box>
+            <SmallHeader title={`Predmet - ${data.label} ${data.emoji}`} />
 
             {data.posts.length === 0 && <Message
                 title="Zatiaľ žiadne príspevky"

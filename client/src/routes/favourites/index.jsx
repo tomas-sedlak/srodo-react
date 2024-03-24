@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
-import { Box, Loader, Text } from "@mantine/core"
+import { Loader, Text } from "@mantine/core"
 import axios from "axios"
 import Post from "templates/post"
 import Message from "templates/Message"
+import SmallHeader from "templates/SmallHeader"
 
 export default function Favourites() {
     const userId = useSelector((state) => state.user?._id)
@@ -29,9 +30,7 @@ export default function Favourites() {
         </div>
     ) : (
         <>
-            <Box p="sm" className="border-bottom">
-                <Text fw={600}>Moje obľúbené príspevky</Text>
-            </Box>
+            <SmallHeader title="Moje obľúbené príspevky" />
 
             {data.length === 0 && <Message
                 title="Zatiaľ žiadne príspevky"
