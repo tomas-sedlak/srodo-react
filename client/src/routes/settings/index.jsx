@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, CloseButton, Center, Flex } from "@mantine/core";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, CloseButton, Center, Flex, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
@@ -19,6 +19,22 @@ export default function Settings() {
     const [socialModalOpened, setSocialModalOpened] = useState(false);
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
+    const [title, setTitle] = useState("");
+    const [error, setError] = useState({});
+    const [count, setCount] = useState(0);
+    const maxCharacterLenght = 160;
+    
+    let errors = {}
+    let isError = false
+
+    if (count == maxCharacterLenght) {
+        isError = true
+        errors.bio = `Bio môže mať maximálne ${maxCharacterLenght} znakov`
+    }
+
+    if (isError) {
+        setError(errors)
+    }
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -66,11 +82,18 @@ export default function Settings() {
                 </Group>
 
             </Modal>
-            <Flex mt="sm" p="sm" gap="sm">
-                {/* <AspectRatio ratio={1000 / 280}> */}
-                {/* <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" onClick={coverImageModalHandlers.open} /> */}
-                {/* </AspectRatio> */}
-                {/* <Avatar
+
+            <Box pos="relative"> {/* Make this later, the btn is not displaying properly */}
+                <div style={{ position: "absolute" }}>
+                    <Button onClick={coverImageModalHandlers.open}>Zmeniť</Button>
+                </div>
+                <AspectRatio ratio={1000 / 280}  >
+                    <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600"/> {/* add src variable later */}
+                </AspectRatio>
+            </Box>
+
+            <Flex align="center">
+                <Avatar
                     m="sm"
                     size={100}
                     src={
@@ -79,48 +102,28 @@ export default function Settings() {
                             <Text>.......</Text>
                         </>
                     }
-                    onClick={coverImageModalHandlers.open}
-                /> */}
-                <Box
-                    onClick={coverImageModalHandlers.open}
-                    bg="gray.3"
-                    p="md"
-                    style={{ borderRadius: 12, borderStyle: "dashed", borderColor: "gray", cursor: "pointer", aspectRatio: 3 / 2 }}
-                    w="30%">
-
-                    <Center mt="sm"> {/* This isn't exactly in the center but I think it looks ok */}
-                        <IconCamera stroke={1.25} />
-                    </Center>
-                    <Center>
-                        <Text>.......</Text>
-                    </Center>
-                </Box>
-                <Box
-                    onClick={coverImageModalHandlers.open}
-                    bg="gray.3"
-                    p="md"
-                    style={{ borderRadius: 12, borderStyle: "dashed", borderColor: "gray", cursor: "pointer" }}
-                    w="70%">
-
-                    <Center mt="sm">
-                        <IconPhoto stroke={1.25} />
-                    </Center>
-                    <Center>
-                        <Text>.......</Text>
-                    </Center>
-                </Box>
+                />
+                <Button onClick={coverImageModalHandlers.open}>Zmeniť</Button>
             </Flex>
-
-
-
-
-
 
             <Box px="sm" pb="sm" className="border-bottom">
 
                 <TextInput mt="sm" label="Display name" value={user.displayName} />
-                <TextInput mt="sm" label="Použivateľské meno" value={user.username} />
-                <Textarea mt="sm" label="Bio" autosize minRows={2} />
+                <TextInput mt="sm" label="Použivateľské meno" value={user.username} disabled />
+                <Textarea
+                    mt="sm"
+                    label="Bio"
+                    autosize
+                    minRows={2}
+                    value={title}
+                    maxLength={maxCharacterLenght}
+                    onChange={event => {
+                        setTitle(event.target.value)
+                        setCount(event.target.value.length)
+                    }} 
+                    // error={`Bio môže mať maximálne ${maxCharacterLenght} znakov`}
+                    error={() => error.bio}
+                    />
                 <Text fw={600} size="sm" mt="sm">
                     Tags
                 </Text>
