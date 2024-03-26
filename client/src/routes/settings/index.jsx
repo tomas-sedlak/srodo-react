@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, CloseButton, Center, Flex, Button } from "@mantine/core";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button , Flex} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
-import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconCamera, IconPhoto } from "@tabler/icons-react";
+import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconCamera, IconCameraPlus } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
 import { createClient } from 'pexels';
 import axios from "axios";
@@ -20,21 +20,8 @@ export default function Settings() {
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
     const [title, setTitle] = useState("");
-    const [error, setError] = useState({});
     const [count, setCount] = useState(0);
     const maxCharacterLenght = 160;
-    
-    let errors = {}
-    let isError = false
-
-    if (count == maxCharacterLenght) {
-        isError = true
-        errors.bio = `Bio môže mať maximálne ${maxCharacterLenght} znakov`
-    }
-
-    if (isError) {
-        setError(errors)
-    }
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -84,11 +71,22 @@ export default function Settings() {
             </Modal>
 
             <Box pos="relative"> {/* Make this later, the btn is not displaying properly */}
-                <div style={{ position: "absolute" }}>
-                    <Button onClick={coverImageModalHandlers.open}>Zmeniť</Button>
-                </div>
-                <AspectRatio ratio={1000 / 280}  >
-                    <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600"/> {/* add src variable later */}
+                <Tooltip label="Zmeniť obrázok" position="bottom">
+                    <ActionIcon
+                        className="image-item-right"
+                        color="rgba(0, 0, 0, 0.4)"
+                        c="white"
+                        w={40}
+                        h={40}
+                        radius="xl"
+                        onClick={coverImageModalHandlers.open}
+                    >
+                        <IconCameraPlus stroke={1.25} />
+                    </ActionIcon>
+                </Tooltip>
+
+                <AspectRatio ratio={600 / 200}  >
+                    <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" /> {/* add src variable later */}
                 </AspectRatio>
             </Box>
 
@@ -120,10 +118,10 @@ export default function Settings() {
                     onChange={event => {
                         setTitle(event.target.value)
                         setCount(event.target.value.length)
-                    }} 
-                    // error={`Bio môže mať maximálne ${maxCharacterLenght} znakov`}
-                    error={() => error.bio}
-                    />
+                    }}
+                    
+                />
+                
                 <Text fw={600} size="sm" mt="sm">
                     Tags
                 </Text>
