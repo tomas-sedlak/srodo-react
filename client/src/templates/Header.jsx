@@ -1,4 +1,4 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme, Image } from '@mantine/core';
 import { IconSearch, IconSun, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2, IconCircleXFilled, IconX, IconCircleX } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
@@ -20,22 +20,26 @@ export default function Header() {
         <>
             <header>
                 <div className="header-inner">
-                    <Group>
-                        <ActionIcon
-                            variant="subtle"
-                            style={!isMobile && { display: "none" }}
-                            onClick={drawerHandlers.open}
-                            color="gray"
-                            c="var(--mantine-color-text)"
-                            w={40}
-                            h={40}
-                            radius="xl"
-                        >
-                            <IconMenu2 stroke={1.25} />
-                        </ActionIcon>
-
-                        <Text fw={700} size="lg" style={isMobile && { display: "none" }}>Šrodo</Text>
-                    </Group>
+                    {isMobile ? (
+                        <Group>
+                            <ActionIcon
+                                variant="subtle"
+                                onClick={drawerHandlers.open}
+                                color="gray"
+                                c="var(--mantine-color-text)"
+                                w={40}
+                                h={40}
+                                radius="xl"
+                            >
+                                <IconMenu2 stroke={1.25} />
+                            </ActionIcon>
+                        </Group>
+                    ) : (
+                        <Group gap={8}>
+                            <img width={36} height={36} src="/logo.svg" />
+                            <Text fw={700} size="xl">Šrodo</Text>
+                        </Group>
+                    )}
 
                     <Autocomplete
                         data={["test", "admin"]}
@@ -192,9 +196,14 @@ export default function Header() {
             <Drawer
                 opened={drawerOpened}
                 onClose={drawerHandlers.close}
-                title="Šrodo"
-                size="xs"
+                size={280}
                 padding="sm"
+                title={
+                    <Group gap={8}>
+                        <img width={36} height={36} src="/logo.svg" />
+                        <Text fw={700} size="xl">Šrodo</Text>
+                    </Group>
+                }
             >
                 <Navbar close={drawerHandlers.close} />
             </Drawer>
