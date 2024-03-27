@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button , Flex} from "@mantine/core";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
 import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconCamera, IconCameraPlus } from "@tabler/icons-react";
 import { IconPlus } from "@tabler/icons-react";
 import { createClient } from 'pexels';
-import axios from "axios";
 import { IconBrandGithub } from "@tabler/icons-react";
+import axios from "axios";
 
 export default function Settings() {
     const user = useSelector(state => state.user);
+    const token = useSelector(state => state.token);
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
 
-    const [coverImage, setCoverImage] = useState("");
+    const [coverImage, setCoverImage] = useState(user.coverImage);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
-    const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
+    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+    const [profilePictureModalOpened, profilePictureModalHandlers] = useDisclosure(false);
+
+    const [displayName, setdisplayName] = useState(user.displayName);
+    const [bio, setBio] = useState(user.bio);
+
     const [socialModalOpened, setSocialModalOpened] = useState(false);
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
-    const [title, setTitle] = useState("");
     const [count, setCount] = useState(0);
     const maxCharacterLenght = 160;
+
+    const [isPublishing, setIsPublishing] = useState(false);
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -36,10 +43,26 @@ export default function Settings() {
         setUsernameModalOpened(true);
     };
 
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
+
+    const publish = async () => {
+        setIsPublishing(true)
+
+        await axios.patch(
+            `/api/user/${user._id}/update`,
+            { coverImage, profilePicture, displayName, bio },
+            { headers },
+        )
+
+        setIsPublishing(false)
+    }
+
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
-            <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
+            <ImagesModal opened={profilePictureModalOpened} close={profilePictureModalHandlers.close} setImage={setProfilePicture} />
 
             {/* Username modal */}
             <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť">
@@ -85,8 +108,8 @@ export default function Settings() {
                     </ActionIcon>
                 </Tooltip>
 
-                <AspectRatio ratio={600 / 200}  >
-                    <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" /> {/* add src variable later */}
+                <AspectRatio ratio={6 / 2}  >
+                    <Image src={coverImage} />
                 </AspectRatio>
             </Box>
 
@@ -94,34 +117,41 @@ export default function Settings() {
                 <Avatar
                     m="sm"
                     size={100}
-                    src={
-                        <>
-                            <IconCamera />
-                            <Text>.......</Text>
-                        </>
-                    }
+                    src={profilePicture}
                 />
-                <Button onClick={coverImageModalHandlers.open}>Zmeniť</Button>
+                <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
             </Flex>
 
             <Box px="sm" pb="sm" className="border-bottom">
 
-                <TextInput mt="sm" label="Display name" value={user.displayName} />
-                <TextInput mt="sm" label="Použivateľské meno" value={user.username} disabled />
+                <TextInput
+                    mt="sm"
+                    label="Display name"
+                    value={displayName}
+                    onChange={event => setdisplayName(event.currentTarget.value)}
+                />
+
+                <TextInput
+                    mt="sm"
+                    label="Použivateľské meno"
+                    value={user.username}
+                    disabled
+                />
+
                 <Textarea
                     mt="sm"
                     label="Bio"
                     autosize
                     minRows={2}
-                    value={title}
+                    value={bio}
                     maxLength={maxCharacterLenght}
                     onChange={event => {
-                        setTitle(event.target.value)
-                        setCount(event.target.value.length)
+                        setBio(event.currentTarget.value)
+                        setCount(event.currentTarget.value.length)
                     }}
-                    
+
                 />
-                
+
                 <Text fw={600} size="sm" mt="sm">
                     Tags
                 </Text>
@@ -140,6 +170,12 @@ export default function Settings() {
                         </ActionIcon>
                     </Group>
                 </Card>
+
+                <Group justify="flex-end" mt="sm">
+                    <Button onClick={publish} loading={isPublishing}>
+                        Uložiť zmeny
+                    </Button>
+                </Group>
             </Box>
 
         </>

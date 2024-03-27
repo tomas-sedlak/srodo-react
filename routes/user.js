@@ -3,7 +3,7 @@ import {
   getUser,
   getUserPosts,
   getUserFavourites,
-  addSaved,
+  updateUserSettings,
 } from "../controllers/user.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -15,6 +15,6 @@ router.get("/:userId/posts", getUserPosts);
 router.get("/:userId/favourites", getUserFavourites);
 
 /* UPDATE */
-router.patch("/:id/save", verifyToken, addSaved);
+router.patch("/:userId/update", verifyToken, updateUserSettings);
 
 export default router;

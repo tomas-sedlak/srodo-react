@@ -21,7 +21,6 @@ import newsRoutes from "./routes/news.js";
 // CONTROLLERS
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/post.js";
-import { uploadProfilePicture } from "./controllers/user.js";
 import { verifyToken } from "./middleware/auth.js";
 
 // CONFIGURATION
@@ -53,7 +52,6 @@ const upload = multer({ storage });
 // ROUTES WITH FILES
 app.post("/api/auth/register", upload.single("profilePicture"), register);
 app.post("/api/post", verifyToken, createPost);
-app.patch("/api/user/:userId/profilePicture", verifyToken, uploadProfilePicture);
 
 // ROUTES
 app.use("/api/auth", authRoutes);

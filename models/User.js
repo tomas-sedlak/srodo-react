@@ -26,8 +26,16 @@ const userSchema = new Schema({
     },
     profilePicture: {
         type: String,
-        default: "default.jpg",
+        default: "default_profile.jpg",
     },
+    coverImage: {
+        type: String,
+        default: "default_cover.jpg",
+    },
+    bio: {
+        type: String,
+        max: 160,
+    }
 }, {
     timestamps: true,
 })

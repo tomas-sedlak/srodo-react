@@ -34,7 +34,7 @@ export default function User() {
     ) : (
         <>
             <AspectRatio ratio={6 / 2}>
-                <Image src="https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg?w=600" />
+                <Image src={data.user.coverImage} />
             </AspectRatio>
 
             <Box px="sm" pb="sm" className="border-bottom">
@@ -42,12 +42,12 @@ export default function User() {
 
                     <Avatar
                         className="profile-picture"
-                        size="xl"
+                        size={92}
                         src={data.user.profilePicture}
                     />
                 </div>
 
-                <Group ml={108} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
+                <Group ml={100} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
                     {!isMobile &&
                         <Stack gap={4}>
                             <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
@@ -72,10 +72,10 @@ export default function User() {
                 }
 
                 <Text style={{ lineHeight: 1.4 }}>
-                    Kratky text o mne a mojich zaujmoch.
+                    {data.user.bio}
                 </Text>
                 {/* Code for xp bar */}
-                <Group>
+                <Group mt="sm">
 
                     <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
                         <Center>

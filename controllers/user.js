@@ -44,48 +44,51 @@ export const getUserFavourites = async (req, res) => {
 }
 
 // UPDATE
-export const addSaved = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { postId } = req.body;
-        const user = await User.findById(id);
-        const isSaved = user.saved.includes(postId);
-
-        if (isSaved) {
-            user.saved.pull(postId);
-        } else {
-            user.saved.push(postId);
-        }
-
-        await user.save();
-
-        res.status(200).json(user);
-    } catch (err) {
-        res.status(404).json({ message: err.message });
-    }
-};
-
-export const uploadProfilePicture = async (req, res) => {
+export const updateUserSettings = async (req, res) => {
     try {
         const { userId } = req.params;
-        const { url } = req.body;
-        const response = await axios.get(url, {
-            responseType: "arraybuffer",
-        })
-        const buffer = Buffer.from(response.data, "base64")
 
-        const croppedImageBuffer = await sharp(buffer)
-            .resize(92, 92)
-            .toBuffer();
+        if (userId != req.user.id) {
+            return res.status(403).send("Access Denied");
+        }
 
-        const user = await User.findById(userId);
-        const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-        user.profilePicture = imageUrl;
-        await user.save();
+        const {
+            coverImage,
+            profilePicture,
+            displayName,
+            bio
+        } = req.body;
 
-        res.status(200).send("Success");
+        const coverImageUrl = await uploadImage(coverImage, 600, 200);
+        const profilePictureUrl = await uploadImage(profilePicture, 92, 92);
+
+        await User.findOneAndUpdate({
+            _id: userId
+        }, {
+            coverImage: coverImageUrl,
+            profilePicture: profilePictureUrl,
+            displayName: displayName,
+            bio: bio
+        });
+
+        res.status(200).json("Success");
     } catch (err) {
-        console.log(err.message)
-        res.status(400).json({ message: err.message })
+        res.status(500).json({ message: err.message })
     }
+}
+
+const uploadImage = async (image, width, height) => {
+    if (!image.match("^(http|https)://")) return image;
+
+    const response = await axios.get(image, {
+        responseType: "arraybuffer",
+    })
+    const buffer = Buffer.from(response.data, "base64")
+
+    const croppedImageBuffer = await sharp(buffer)
+        .resize(width, height)
+        .toBuffer();
+
+    const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
+    return imageUrl;
 }
