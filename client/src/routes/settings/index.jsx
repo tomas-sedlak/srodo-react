@@ -1,18 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex } from "@mantine/core";
+import { IconPlus, IconBrandDiscord, IconBrandInstagram, IconBrandYoutube, IconBrandGithub, IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
-import { IconBrandDiscord, IconBrandInstagram, IconBrandTwitter, IconBrandYoutube, IconCamera, IconCameraPlus } from "@tabler/icons-react";
-import { IconPlus } from "@tabler/icons-react";
-import { createClient } from 'pexels';
-import { IconBrandGithub } from "@tabler/icons-react";
+import ImagesModal from "templates/ImagesModal";
 import axios from "axios";
 
 export default function Settings() {
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
-    const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
 
     const [coverImage, setCoverImage] = useState(user.coverImage);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -29,13 +25,6 @@ export default function Settings() {
     const maxCharacterLenght = 160;
 
     const [isPublishing, setIsPublishing] = useState(false);
-
-    useEffect(() => {
-        client.photos.curated({ per_page: 1, page: 1 }).then(
-            response => setCoverImage(response.photos[0].src.landscape)
-        )
-    }, []);
-
 
     const handleSocialTagClick = (platform) => {
         setSelectedSocialPlatform(platform);
@@ -152,24 +141,20 @@ export default function Settings() {
 
                 />
 
-                <Text fw={600} size="sm" mt="sm">
-                    Tags
-                </Text>
-                <Card withBorder mt={4}>
-                    <Group mt="sm" gap={8}>
-                        <div className="icon-wrapper" >
-                            <IconBrandDiscord stroke={1.25} />
-                            <span>username</span>
-                        </div>
-                        <div className="icon-wrapper">
-                            <IconBrandYoutube stroke={1.25} />
-                            <span>username</span>
-                        </div>
-                        <ActionIcon variant="subtle" c="gray" color="gray" size="md" radius="lg" onClick={() => setSocialModalOpened(true)}>
-                            <IconPlus />
-                        </ActionIcon>
-                    </Group>
-                </Card>
+                <Text size="sm" mt="sm">Tags</Text>
+                <Group mt={8} gap={8}>
+                    <div className="icon-wrapper" >
+                        <IconBrandDiscord stroke={1.25} />
+                        <span>username</span>
+                    </div>
+                    <div className="icon-wrapper">
+                        <IconBrandYoutube stroke={1.25} />
+                        <span>username</span>
+                    </div>
+                    <ActionIcon variant="subtle" c="gray" color="gray" size="md" radius="lg" onClick={() => setSocialModalOpened(true)}>
+                        <IconPlus />
+                    </ActionIcon>
+                </Group>
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>
