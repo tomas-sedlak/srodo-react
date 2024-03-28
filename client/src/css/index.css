@@ -53,11 +53,11 @@ header {
   background-color: var(--mantine-color-body);
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
   padding: var(--mantine-spacing-sm);
-  transition: top 0.2s linear;
+  transition: top 0.15s ease;
 }
 
 .small-header.hide {
-  top: calc(-1 * var(--header-height));
+  top: 0;
 }
 
 .header-inner {
