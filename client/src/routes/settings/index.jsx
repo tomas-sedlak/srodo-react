@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex } from "@mantine/core";
 import { IconPlus, IconBrandDiscord, IconBrandInstagram, IconBrandYoutube, IconBrandGithub, IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
 import axios from "axios";
 
 export default function Settings() {
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
@@ -39,10 +41,16 @@ export default function Settings() {
     const publish = async () => {
         setIsPublishing(true)
 
-        await axios.patch(
+        const response = await axios.patch(
             `/api/user/${user._id}/update`,
             { coverImage, profilePicture, displayName, bio },
             { headers },
+        )
+
+        dispatch(
+            setUser({
+                user: response.data,
+            })
         )
 
         setIsPublishing(false)

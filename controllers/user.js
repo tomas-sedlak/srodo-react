@@ -62,16 +62,18 @@ export const updateUserSettings = async (req, res) => {
         const coverImageUrl = await uploadImage(coverImage, 600, 200);
         const profilePictureUrl = await uploadImage(profilePicture, 92, 92);
 
-        await User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
             _id: userId
         }, {
             coverImage: coverImageUrl,
             profilePicture: profilePictureUrl,
             displayName: displayName,
             bio: bio
+        }, {
+            new: true,
         });
 
-        res.status(200).json("Success");
+        res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
