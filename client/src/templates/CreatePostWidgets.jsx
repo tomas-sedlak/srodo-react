@@ -42,7 +42,7 @@ export function TitleInput({ placeholder, title, setTitle, error }) {
                 }}
                 onKeyDown={event => event.key === "Enter" && event.preventDefault()}
             />
-            <Text c={error ? "red" : "gray"} size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
+            <Text c={error ? "red" : "dimmed"} size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
         </Box>
     )
 }
