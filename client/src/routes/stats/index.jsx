@@ -1,5 +1,5 @@
 import { Box, Group, Loader, Text } from "@mantine/core";
-import { IconHeart, IconMessageCircle, IconBookmark, } from '@tabler/icons-react';
+import { IconHeart, IconMessageCircle, IconEye } from '@tabler/icons-react';
 import { AreaChart } from "@mantine/charts";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -64,17 +64,22 @@ export default function Stats() {
             <Text fw={800} fz={24}>{data.title}</Text>
 
             <Group gap={8}>
+                {/* Views */}
+                <div className="icon-wrapper">
+                    <IconEye stroke={1.25} />
+                    <span>{data.views.reduce((acc, view) => acc + view.count, 0)}</span>
+                </div>
+
+                {/* Likes */}
                 <div className="icon-wrapper">
                     <IconHeart stroke={1.25} />
                     <span>{data.likes.length}</span>
                 </div>
+
+                {/* Comments */}
                 <div className="icon-wrapper">
                     <IconMessageCircle stroke={1.25} />
                     <span>{data.comments}</span>
-                </div>
-                <div className="icon-wrapper">
-                    <IconBookmark stroke={1.25} />
-                    <span>{0}</span>
                 </div>
             </Group>
 
