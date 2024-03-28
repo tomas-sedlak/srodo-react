@@ -30,7 +30,7 @@ export default function Favourites() {
         </div>
     ) : (
         <>
-            <SmallHeader title="Moje obľúbené príspevky" />
+            <SmallHeader title="❤️ Moje obľúbené príspevky" />
 
             {data.length === 0 && <Message
                 title="Zatiaľ žiadne príspevky"

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
 import axios from "axios";
+import SmallHeader from "templates/SmallHeader";
 
 export default function Settings() {
     const dispatch = useDispatch();
@@ -90,12 +91,12 @@ export default function Settings() {
 
             </Modal>
 
+            <SmallHeader title="⚙️ Nastavenia profilu" />
+
             <Box pos="relative"> {/* Make this later, the btn is not displaying properly */}
                 <Tooltip label="Zmeniť obrázok" position="bottom">
                     <ActionIcon
                         className="image-item-right"
-                        color="rgba(0, 0, 0, 0.4)"
-                        c="white"
                         w={40}
                         h={40}
                         radius="xl"
@@ -113,7 +114,7 @@ export default function Settings() {
             <Flex align="center">
                 <Avatar
                     m="sm"
-                    size={100}
+                    size="xl"
                     src={profilePicture}
                 />
                 <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
