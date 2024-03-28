@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { Box, Group, Button, AspectRatio, ActionIcon, Image, Tooltip } from '@mantine/core';
+import { Box, Group, Button, AspectRatio, ActionIcon, Tooltip, Badge } from '@mantine/core';
 import { IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
@@ -80,11 +80,13 @@ export default function CreateArticle() {
 
             <Box p="sm">
                 <Box pos="relative">
+                    <Badge fw={600} className="image-item-left">
+                        Článok
+                    </Badge>
+
                     <Tooltip label="Zmeniť obrázok" position="bottom">
                         <ActionIcon
                             className="image-item-right"
-                            color="rgba(0, 0, 0, 0.4)"
-                            c="white"
                             w={40}
                             h={40}
                             radius="xl"

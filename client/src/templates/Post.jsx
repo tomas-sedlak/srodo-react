@@ -50,6 +50,7 @@ const Post = forwardRef(({ post }, ref) => {
                 <Badge fw={600} className="image-item-left">
                     {typeNames[post.postType]}
                 </Badge>
+
                 <Link to={url}>
                     <AspectRatio ratio={2 / 1}>
                         <Box className="lazy-image" style={{ backgroundImage: `url(${post.coverImage})` }}></Box>

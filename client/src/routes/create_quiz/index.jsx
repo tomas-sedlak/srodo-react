@@ -1,16 +1,17 @@
-import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton } from "@mantine/core";
+import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton, Badge, Tooltip, ActionIcon } from "@mantine/core";
 import ImagesModal from "templates/ImagesModal";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
 import PostTitle from "templates/PostTitle";
 import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
-import { IconPlus, IconX } from "@tabler/icons-react";
+import { IconCameraPlus, IconPlus, IconX } from "@tabler/icons-react";
 import axios from "axios";
 
 
 
 export default function CreateQuiz() {
+    const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -18,7 +19,6 @@ export default function CreateQuiz() {
         )
     });
 
-    const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
 
     const [coverImage, setCoverImage] = useState("");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -54,20 +54,34 @@ export default function CreateQuiz() {
     };
 
     const handleRemoveOption = (questionIndex, optionIndex) => {
-                const newQuestions = [...questions];
-                newQuestions[questionIndex].options.splice(optionIndex, 1);
-                setQuestions(newQuestions);
-            };
-
+        const newQuestions = [...questions];
+        newQuestions[questionIndex].options.splice(optionIndex, 1);
+        setQuestions(newQuestions);
+    };
 
     return (
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
-
             <Box className="border-bottom" p="sm" >
-                <Box pos="relative" pb="sm">
+                <Box pos="relative">
+                    <Badge fw={600} className="image-item-left">
+                        Kvíz
+                    </Badge>
+
+                    <Tooltip label="Zmeniť obrázok" position="bottom">
+                        <ActionIcon
+                            className="image-item-right"
+                            w={40}
+                            h={40}
+                            radius="xl"
+                            onClick={coverImageModalHandlers.open}
+                        >
+                            <IconCameraPlus stroke={1.25} />
+                        </ActionIcon>
+                    </Tooltip>
+
                     <AspectRatio ratio={2 / 1}>
                         <Box
                             className="lazy-image pointer"
@@ -76,28 +90,20 @@ export default function CreateQuiz() {
                         ></Box>
                     </AspectRatio>
                 </Box>
+
                 <TitleInput
-                    placeholder="Názov quizu"
+                    placeholder="Názov kvízu..."
                     title={title}
                     setTitle={setTitle}
                 />
+
                 <SubjectSelect
                     setSelectedSubject={setSelectedSubject}
                 />
-                {/* <Textarea
-                    mt="sm"
-                    autosize
-                    placeholder="Description"
-                    maxLength={descriptionMaxCharacterLenght}
-                    onChange={event => {
-                        setCount(event.target.value.length)
-                    }}
-                    onKeyDown={event => event.key === "Enter" && event.preventDefault()}
-                /> */}
+
                 <TextEditor
                     setText={setText}
-                    placeholder="Description"
-
+                    placeholder="Krátky popis kvízu..."
                 />
             </Box>
 
@@ -124,15 +130,15 @@ export default function CreateQuiz() {
                                 }
                                 rightSection={
                                     // Close btn to remove answer, add the same thing to the question as well
-                                        <CloseButton
-                                            variant="subtle"
-                                            radius="lg"
-                                            c="gray"
-                                            onMouseDown={(event) => event.preventDefault()}
-                                            onClick={() => handleRemoveOption(questionIndex, optionIndex)} 
-                                        />}
+                                    <CloseButton
+                                        variant="subtle"
+                                        radius="lg"
+                                        c="gray"
+                                        onMouseDown={(event) => event.preventDefault()}
+                                        onClick={() => handleRemoveOption(questionIndex, optionIndex)}
+                                    />}
                             />
-                            
+
                         </Flex>
                     ))}
                     <Flex> {/* theres gotta be a better way of centering this */}
