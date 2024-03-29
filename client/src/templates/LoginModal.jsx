@@ -2,7 +2,6 @@ import { FloatingTextInput, FloatingPasswordInput } from "./FloatingInput";
 import { Button, Modal, Text } from "@mantine/core";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { setLoginModal } from "state";
 import { Formik } from "formik";
 import { setLogin } from "state";
@@ -12,9 +11,9 @@ import axios from "axios";
 
 
 const registerSchema = yup.object().shape({
-    username: yup.string().max(64).required(),
-    email: yup.string().email().required(),
-    password: yup.string().required(),
+    username: yup.string().max(64, "Používateľské meno presiahlo minimálnu dĺžku").required("Toto pole je povinné"),
+    email: yup.string().email("Neplatný email").required("Toto pole je povinné"),
+    password: yup.string().min(8, "Heslo musí mať aspoň 8 znakov").required("Toto pole je povinné"),
 })
 
 const initialValuesRegister = {
@@ -24,8 +23,8 @@ const initialValuesRegister = {
 }
 
 const loginSchema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
+    email: yup.string().email("Neplatný email").required("Toto pole je povinné"),
+    password: yup.string().required("Toto pole je povinné"),
 })
 
 const initialValuesLogin = {
@@ -41,7 +40,6 @@ export default function LoginModal() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const opened = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const register = async (values, onSubmitProps) => {
         const savedUserResponse = await axios.post(
@@ -84,12 +82,12 @@ export default function LoginModal() {
         <Modal
             opened={opened}
             onClose={() => dispatch(setLoginModal(false))}
-            padding="lg"
+            padding={isMobile ? "sm" : "lg"}
             size="sm"
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
-            title={<Text fw={600}>{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
+            title={<Text fw={700} fz="lg">{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
         >
             <Formik
                 onSubmit={handleFormSubmit}
@@ -97,13 +95,11 @@ export default function LoginModal() {
                 validationSchema={isLogin ? loginSchema : registerSchema}
             >
                 {({
-                    values,
                     errors,
                     touched,
                     handleBlur,
                     handleChange,
                     handleSubmit,
-                    setFieldValue,
                     resetForm,
                 }) => (
                     <form onSubmit={handleSubmit}>
@@ -112,10 +108,10 @@ export default function LoginModal() {
                                 <FloatingTextInput
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
-                                    label="Username"
+                                    label="Používateľské meno"
                                     name="username"
                                     error={touched.username && errors.username}
-                                    focus
+                                    initialFocus
                                 />
 
                                 <FloatingTextInput
@@ -129,7 +125,7 @@ export default function LoginModal() {
                                 <FloatingPasswordInput
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
-                                    label="Password"
+                                    label="Heslo"
                                     name="password"
                                     error={touched.password && errors.password}
                                 />
@@ -139,16 +135,16 @@ export default function LoginModal() {
                                 <FloatingTextInput
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
-                                    label="Email"
+                                    label="Email alebo používateľské meno"
                                     name="email"
                                     error={touched.email && errors.email}
-                                    focus
+                                    initialFocus
                                 />
 
                                 <FloatingPasswordInput
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
-                                    label="Password"
+                                    label="Heslo"
                                     name="password"
                                     error={touched.password && errors.password}
                                 />
@@ -157,7 +153,7 @@ export default function LoginModal() {
                                     mt={4}
                                     ta="right"
                                     size="sm"
-                                    c="gray"
+                                    c="dimmed"
                                     className="pointer"
                                 >
                                     Zabudnuté heslo?
@@ -168,15 +164,15 @@ export default function LoginModal() {
                         <Button
                             fullWidth
                             type="submit"
-                            mt="md"
+                            mt="lg"
                         >
                             {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
                         </Button>
 
                         <Text
-                            mt="sm"
+                            mt="lg"
                             ta="center"
-                            c="gray"
+                            c="dimmed"
                             size="sm"
                         >
                             {isLogin ? "Nemáte účet? " : "Už máte účet? "}

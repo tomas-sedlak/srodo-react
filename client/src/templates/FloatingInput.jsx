@@ -2,26 +2,25 @@ import { TextInput, PasswordInput } from "@mantine/core";
 import { useState } from "react";
 import "css/floatingLabel.css";
 
-export function FloatingTextInput({ handleChange, handleBlur, label, name, error, focus }) {
+export function FloatingTextInput({ handleChange, handleBlur, label, name, error, initialFocus }) {
     const [value, setValue] = useState("");
-    const [focused, setFocused] = useState(false);
+    const [focused, setFocused] = useState(initialFocus);
     const floating = focused || value.length > 0 || undefined;
 
     return (
         <TextInput
-            mt={focus ? 0 : "sm"}
+            mt={initialFocus ? 0 : "sm"}
             label={label}
-            labelProps={{ "data-floating": floating }}
             classNames={{
                 root: "root",
-                input: "input",
-                label: "label",
+                label: `label ${floating &&"floating"} ${focused && "focused"} ${error && "error"}`,
             }}
-            onFocus={() => setFocused(true)}
+            onFocus={() => {
+                setFocused(true)
+            }}
             onBlur={(event) => {
                 handleBlur(event)
-                if (event.currentTarget.value.length > 0) {setFocused(true)}
-                else {setFocused(false)}
+                setFocused(false)
             }}
             onChange={event => {
                 handleChange(event)
@@ -29,31 +28,30 @@ export function FloatingTextInput({ handleChange, handleBlur, label, name, error
             }}
             name={name}
             error={error}
-            data-autofocus={focus}
+            data-autofocus={initialFocus}
         />
     )
 }
 
-export function FloatingPasswordInput({ handleChange, handleBlur, label, name, error, focus }) {
+export function FloatingPasswordInput({ handleChange, handleBlur, label, name, error, initialFocus }) {
     const [value, setValue] = useState("");
-    const [focused, setFocused] = useState(false);
+    const [focused, setFocused] = useState(initialFocus);
     const floating = focused || value.length > 0 || undefined;
 
     return (
         <PasswordInput
-            mt={focus ? 0 : "sm"}
+            mt={initialFocus ? 0 : "sm"}
             label={label}
-            labelProps={{ "data-floating": floating }}
             classNames={{
                 root: "root",
-                input: "input",
-                label: "label",
+                label: `label ${floating &&"floating"} ${focused && "focused"} ${error && "error"}`,
             }}
-            onFocus={() => setFocused(true)}
+            onFocus={() => {
+                setFocused(true)
+            }}
             onBlur={(event) => {
                 handleBlur(event)
-                if (event.currentTarget.value.length > 0) {setFocused(true)}
-                else {setFocused(false)}
+                setFocused(false)
             }}
             onChange={event => {
                 handleChange(event)
@@ -61,7 +59,7 @@ export function FloatingPasswordInput({ handleChange, handleBlur, label, name, e
             }}
             name={name}
             error={error}
-            data-autofocus={focus}
+            data-autofocus={initialFocus}
         />
     )
 }
