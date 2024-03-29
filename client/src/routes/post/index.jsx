@@ -60,22 +60,22 @@ export default function Post() {
 
                     <Group gap={4} c="dimmed">
                         <Link to={"/" + data.author.username}>
-                            <Text fw={600} size="sm" c="dimmed">
+                            <Text fw={600} size="sm" c="dimmed" style={{ lineHeight: 1 }}>
                                 {data.author.displayName}
                             </Text>
                         </Link>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             &middot;
                         </Text>
                         <Link to={`/predmety/${data.subject.url}`}>
-                            <Text size="sm" c="dimmed">
+                            <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
                                 {data.subject.label}
                             </Text>
                         </Link>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             &middot;
                         </Text>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             {moment(data.createdAt).fromNow()}
                         </Text>
                     </Group>

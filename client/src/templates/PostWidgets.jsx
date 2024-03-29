@@ -26,7 +26,7 @@ export function PostButtons({ post }) {
     }
 
     return (
-        <Group justify="space-between" mt="sm">
+        <Group justify="space-between" mt={8}>
             <Group gap={8}>
                 {/* Views */}
                 <div className="icon-wrapper">

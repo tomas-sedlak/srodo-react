@@ -122,28 +122,29 @@ const Post = forwardRef(({ post }, ref) => {
 
                     <Group gap={4} align="center" pr={28} c="dimmed">
                         <Link to={"/" + post.author.username}>
-                            <Text fw={600} size="sm" c="dimmed">
+                            <Text fw={600} size="sm" c="dimmed" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
                             </Text>
                         </Link>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             &middot;
                         </Text>
                         <Link to={`/predmety/${post.subject.url}`}>
-                            <Text size="sm" c="dimmed">
+                            <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
                                 {post.subject.label}
                             </Text>
                         </Link>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             &middot;
                         </Text>
-                        <Text size="sm">
+                        <Text size="sm" style={{ lineHeight: 1 }}>
                             {moment(post.createdAt).fromNow()}
                         </Text>
                     </Group>
 
                     <Link to={url}>
                         <Text
+                            mt={8}
                             fw={800}
                             fz={24}
                             style={{ lineHeight: 1.2 }}
