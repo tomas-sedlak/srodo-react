@@ -68,7 +68,7 @@ export default function Comment({ data }) {
                         className="dots"
                         variant="subtle"
                         color="gray"
-                        c="black"
+                        c="var(--mantine-color-text)"
                         radius="xl"
                         w={32}
                         h={32}
@@ -116,11 +116,11 @@ export default function Comment({ data }) {
 
                 <Group gap={4}>
                     <Link to={"/" + data.author.username}>
-                        <Text fw={600} c="gray" size="sm">
+                        <Text fw={600} c="dimmed" size="sm">
                             {data.author.displayName}
                         </Text>
                     </Link>
-                    <Text c="gray" size="sm">
+                    <Text c="dimmed" size="sm">
                         &middot; {moment(data.createdAt).fromNow()}
                     </Text>
                 </Group>

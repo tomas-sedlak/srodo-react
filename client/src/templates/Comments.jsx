@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Group, Button, Loader } from '@mantine/core';
+import { Box, Group, Button, Loader, Text } from '@mantine/core';
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
 import { useQuery } from "@tanstack/react-query";
@@ -69,7 +69,7 @@ export default function Comments({ postId }) {
         </div>
     ) : (
         <>
-            <Box p="sm" className="border-bottom">
+            <Box px="sm">
                 <TextEditor
                     placeholder="Napíš komentár"
                     simple
@@ -80,6 +80,10 @@ export default function Comments({ postId }) {
             </Box>
 
             <Box p="sm">
+                {data.length === 0 && (
+                    <Text c="dimmed">Zatiaľ žiadne komentáre</Text>
+                )}
+
                 {data.map(comment => <Comment data={comment} />)}
             </Box>
         </>
