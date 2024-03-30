@@ -307,6 +307,10 @@ main {
   .page-wrapper {
     grid-template-columns: 1fr 340px;
   }
+
+  main {
+    border-left: none;
+  }
 }
 
 
@@ -316,8 +320,11 @@ main {
     display: none;
   }
 
-
   .page-wrapper {
     grid-template-columns: 1fr;
+  }
+
+  main {
+    border-right: none;
   }
 }
