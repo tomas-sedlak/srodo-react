@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center } from '@mantine/core';
+import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center, Group } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
@@ -15,6 +15,8 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
 
     const [query, setQuery] = useState("");
     const [itemCount, setItemCount] = useState(0);
+    const [url, setUrl] = useState("");
+    const [isUrlValid, setIsUrlValid] = useState(false);
     const [tab, setTab] = useState("pexels");
     const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -128,9 +130,7 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                                     <Text>Nastala chyba</Text>
                                 </div>
                             ) : itemCount == 0 ? (
-                                <div className="loader-center">
-                                    <Text>Neboli nájdené žiadne obrázky. Skontroluj či vyhľadávaš po anglicky.</Text>
-                                </div>
+                                <Text c="dimmed">Neboli nájdené žiadne obrázky. Skontroluj či vyhľadávaš po anglicky.</Text>
                             ) : (
                                 <Box h="calc(100% - 52px)">
                                     <AutoSizer>
@@ -190,7 +190,56 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                             )}
                         </>
                     ) : tab === "url" ? (
-                        <Text>Nahraj z URL</Text>
+                        <>
+                            <TextInput
+                                className="search images-modal-search"
+                                placeholder="URL obrázka"
+                                value={url}
+                                onChange={event => {
+                                    setUrl(event.currentTarget.value)
+                                    setIsUrlValid(true)
+                                }}
+                                leftSection={<IconSearch stroke={1.25} />}
+                                rightSection={
+                                    url !== "" && (
+                                        <IconX
+                                            className="pointer"
+                                            onClick={() => setUrl("")}
+                                            stroke={1.25}
+                                        />
+                                    )
+                                }
+                                styles={{
+                                    section: {
+                                        margin: "8px"
+                                    },
+                                }}
+                            />
+
+                            {isUrlValid ? (
+                                <>
+                                    <Image
+                                        src={url}
+                                        radius="lg"
+                                        style={{ aspectRatio }}
+                                        onError={() => setIsUrlValid(false)}
+                                    />
+                                    <Group mt="sm" justify="flex-end">
+                                        <Button
+                                            onClick={() => {
+                                                setImage(url)
+                                                close()
+                                            }}
+                                        >
+                                            Nastaviť obrázok
+                                        </Button>
+                                    </Group>
+                                </>
+                            ) : (
+                                <Text c="dimmed">Nesprávne URL</Text>
+                            )}
+
+                        </>
                     ) : (
                         // Trying the dropzone
                         <>
