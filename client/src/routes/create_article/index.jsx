@@ -20,7 +20,6 @@ export default function CreateArticle() {
     const [coverImage, setCoverImage] = useState("");
     const [selectedSubject, setSelectedSubject] = useState();
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
-    const [imageModalOpened, imageModalHandlers] = useDisclosure(false);
     const [text, setText] = useState("");
     const [isPublishing, setIsPublishing] = useState(false);
 
@@ -75,8 +74,13 @@ export default function CreateArticle() {
 
     return (
         <>
-            <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
-            <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
+            <ImagesModal
+                opened={coverImageModalOpened}
+                close={coverImageModalHandlers.close}
+                setImage={setCoverImage}
+                columns={2}
+                aspectRatio={2 / 1}
+            />
 
             <Box p="sm">
                 <Box pos="relative">

@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
-import { Loader, Text, Image, TextInput, Modal, CloseButton, Box, Group, rem, Button, Center } from '@mantine/core';
+import { useState } from 'react';
+import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center } from '@mantine/core';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
@@ -8,16 +9,9 @@ import { FixedSizeGrid } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
 
-
-import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-
-export default function ImagesModal({ opened, close, setImage }) {
-    const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
-
-
-
-    const COLUMNS = 2;
+export default function ImagesModal({ opened, close, setImage, columns, aspectRatio, qkey }) {
     const LIMIT = 10;
+    const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
 
     const [query, setQuery] = useState("");
     const [itemCount, setItemCount] = useState(0);
@@ -25,7 +19,8 @@ export default function ImagesModal({ opened, close, setImage }) {
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     async function search({ pageParam }) {
-        if (query === "") return await emptySearch(pageParam)
+        console.log("search")
+        if (!query || query === "") return await emptySearch(pageParam)
         else return await querySearch(pageParam)
     }
 
@@ -46,7 +41,7 @@ export default function ImagesModal({ opened, close, setImage }) {
         fetchNextPage,
         status,
     } = useInfiniteQuery({
-        queryKey: ["images", "modal", query],
+        queryKey: ["imagesModal", qkey, query],
         queryFn: search,
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
@@ -72,9 +67,29 @@ export default function ImagesModal({ opened, close, setImage }) {
 
             <Modal.Content radius={isMobile ? 0 : "lg"} h="100%">
                 <Modal.Header>
-                    <Text ml="sm" onClick={() => setTab("pexels")}>Pexels</Text>
-                    <Text ml="sm" onClick={() => setTab("url")}>URL</Text>
-                    <Text ml="sm" onClick={() => setTab("device")}>Zo zariadenia</Text>
+                    <Text
+                        className="pointer"
+                        onClick={() => setTab("pexels")}
+                        c={tab === "pexels" ? "var(--mantine-color-text)" : "dimmed"}
+                    >
+                        Pexels
+                    </Text>
+                    <Text
+                        ml="sm"
+                        className="pointer"
+                        onClick={() => setTab("url")}
+                        c={tab === "url" ? "var(--mantine-color-text)" : "dimmed"}
+                    >
+                        URL
+                    </Text>
+                    <Text
+                        ml="sm"
+                        className="pointer"
+                        onClick={() => setTab("device")}
+                        c={tab === "device" ? "var(--mantine-color-text)" : "dimmed"}
+                    >
+                        Zo zariadenia
+                    </Text>
 
                     <Modal.CloseButton />
                 </Modal.Header>
@@ -129,23 +144,23 @@ export default function ImagesModal({ opened, close, setImage }) {
                                                     <FixedSizeGrid
                                                         height={height}
                                                         width={width}
-                                                        columnCount={COLUMNS}
-                                                        columnWidth={width / COLUMNS}
-                                                        rowCount={data.pages.length * LIMIT / COLUMNS}
-                                                        rowHeight={width / COLUMNS * (1 / 2)} // ASPECT RATIO
+                                                        columnCount={columns}
+                                                        columnWidth={width / columns}
+                                                        rowCount={data.pages.length * LIMIT / columns}
+                                                        rowHeight={width / columns / aspectRatio}
                                                         ref={ref}
                                                         style={{ overflowX: "hidden", overflowY: "auto" }}
                                                         onItemsRendered={gridProps => {
                                                             onItemsRendered({
-                                                                overscanStartIndex: gridProps.overscanRowStartIndex * COLUMNS,
-                                                                overscanStopIndex: gridProps.overscanRowStopIndex * COLUMNS,
-                                                                visibleStartIndex: gridProps.visibleRowStartIndex * COLUMNS,
-                                                                visibleStopIndex: gridProps.visibleRowStopIndex * COLUMNS
+                                                                overscanStartIndex: gridProps.overscanRowStartIndex * columns,
+                                                                overscanStopIndex: gridProps.overscanRowStopIndex * columns,
+                                                                visibleStartIndex: gridProps.visibleRowStartIndex * columns,
+                                                                visibleStopIndex: gridProps.visibleRowStopIndex * columns
                                                             });
                                                         }}
                                                     >
                                                         {({ rowIndex, columnIndex, style }) => {
-                                                            const index = rowIndex * COLUMNS + columnIndex;
+                                                            const index = rowIndex * columns + columnIndex;
                                                             let image;
                                                             try {
                                                                 image = data.pages[Math.floor(index / LIMIT)][index % LIMIT].src.landscape;
@@ -178,7 +193,6 @@ export default function ImagesModal({ opened, close, setImage }) {
                         <Text>Nahraj z URL</Text>
                     ) : (
                         // Trying the dropzone
-
                         <>
                             <input
                                 id="imageInput"
@@ -230,9 +244,7 @@ export default function ImagesModal({ opened, close, setImage }) {
                                     <Button onClick={handleAddImage}>Add Images</Button>
                                 </Center>
                             </Dropzone>
-
                         </>
-
                     )}
                 </Modal.Body>
             </Modal.Content>

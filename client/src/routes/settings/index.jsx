@@ -59,8 +59,22 @@ export default function Settings() {
 
     return (
         <>
-            <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
-            <ImagesModal opened={profilePictureModalOpened} close={profilePictureModalHandlers.close} setImage={setProfilePicture} />
+            <ImagesModal
+                opened={coverImageModalOpened}
+                close={coverImageModalHandlers.close}
+                setImage={setCoverImage}
+                columns={2}
+                aspectRatio={6 / 2}
+                qkey="coverImage"
+            />
+            <ImagesModal
+                opened={profilePictureModalOpened}
+                close={profilePictureModalHandlers.close}
+                setImage={setProfilePicture}
+                columns={3}
+                aspectRatio={1 / 1}
+                qkey="profilePicture"
+            />
 
             {/* Username modal */}
             <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť">
@@ -93,7 +107,7 @@ export default function Settings() {
 
             <SmallHeader title="⚙️ Nastavenia profilu" />
 
-            <Box pos="relative"> {/* Make this later, the btn is not displaying properly */}
+            <Box pos="relative">
                 <Tooltip label="Zmeniť obrázok" position="bottom">
                     <ActionIcon
                         className="image-item-right"
@@ -120,8 +134,7 @@ export default function Settings() {
                 <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
             </Flex>
 
-            <Box px="sm" pb="sm" className="border-bottom">
-
+            <Box px="sm" pb="sm">
                 <TextInput
                     mt="sm"
                     label="Display name"
@@ -150,7 +163,7 @@ export default function Settings() {
 
                 />
 
-                <Text size="sm" mt="sm">Tags</Text>
+                <Text size="sm" mt="sm">Sociálne siete</Text>
                 <Group mt={8} gap={8}>
                     <div className="icon-wrapper" >
                         <IconBrandDiscord stroke={1.25} />
