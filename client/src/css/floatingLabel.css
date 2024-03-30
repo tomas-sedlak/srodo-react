@@ -1,8 +1,8 @@
-.root {
+.input-root {
   position: relative;
 }
 
-.label {
+.input-label {
   position: absolute;
   z-index: 1001;
   pointer-events: none;
@@ -17,15 +17,15 @@
   transition: color 100ms ease, transform 100ms ease, font-size 100ms ease;
 }
 
-.label.floating {
+.input-label.floating {
   transform: translateY(-16px);
   font-size: var(--mantine-font-size-xs);
 }
 
-.label.focused {
+.input-label.focused {
   color: var(--mantine-primary-color-filled);
 }
 
-.label.error {
+.input-label.error {
   color: var(--mantine-color-error);
 }

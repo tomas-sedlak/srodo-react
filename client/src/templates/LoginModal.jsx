@@ -111,10 +111,10 @@ export default function LoginModal() {
                                     label="Používateľské meno"
                                     name="username"
                                     error={touched.username && errors.username}
-                                    initialFocus
                                 />
 
                                 <FloatingTextInput
+                                    mt="sm"
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     label="Email"
@@ -123,6 +123,7 @@ export default function LoginModal() {
                                 />
 
                                 <FloatingPasswordInput
+                                    mt="sm"
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     label="Heslo"
@@ -138,10 +139,10 @@ export default function LoginModal() {
                                     label="Email alebo používateľské meno"
                                     name="email"
                                     error={touched.email && errors.email}
-                                    initialFocus
                                 />
 
                                 <FloatingPasswordInput
+                                    mt="sm"
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     label="Heslo"
