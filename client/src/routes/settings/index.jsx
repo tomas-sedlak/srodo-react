@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex } from "@mantine/core";
 import { IconPlus, IconBrandDiscord, IconBrandInstagram, IconBrandYoutube, IconBrandGithub, IconCameraPlus } from "@tabler/icons-react";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
@@ -12,7 +12,6 @@ export default function Settings() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
-    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const [coverImage, setCoverImage] = useState(user.coverImage);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -25,15 +24,18 @@ export default function Settings() {
     const [socialModalOpened, setSocialModalOpened] = useState(false);
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
-    const [count, setCount] = useState(0);
-    const maxCharacterLenght = 160;
+    const [bioCount, setBioCount] = useState(0);
+    const [displaynameCount, setDisplaynameCount] = useState(0);
+    const maxBioCharacterLenght = 160;
+    const maxDisplaynameCharacterLimit = 64;
+
 
     const [isPublishing, setIsPublishing] = useState(false);
 
     const handleSocialTagClick = (platform) => {
-        setSelectedSocialPlatform(platform);
-        setSocialModalOpened(false);
-        setUsernameModalOpened(true);
+        setSelectedSocialPlatform(platform)
+        setSocialModalOpened(false)
+        setUsernameModalOpened(true)
     };
 
     const headers = {
@@ -64,7 +66,7 @@ export default function Settings() {
                 opened={coverImageModalOpened}
                 close={coverImageModalHandlers.close}
                 setImage={setCoverImage}
-                columns={isMobile ? 1 : 2}
+                columns={2}
                 aspectRatio={6 / 2}
                 qkey="coverImage"
             />
@@ -72,7 +74,7 @@ export default function Settings() {
                 opened={profilePictureModalOpened}
                 close={profilePictureModalHandlers.close}
                 setImage={setProfilePicture}
-                columns={isMobile ? 2 : 3}
+                columns={3}
                 aspectRatio={1 / 1}
                 qkey="profilePicture"
             />
@@ -140,9 +142,13 @@ export default function Settings() {
                     mt="sm"
                     label="Display name"
                     value={displayName}
-                    onChange={event => setdisplayName(event.currentTarget.value)}
+                    maxLength={maxDisplaynameCharacterLimit}
+                    onChange={event => {
+                        setdisplayName(event.currentTarget.value)
+                        setDisplaynameCount(event.currentTarget.value.length)
+                    }}
                 />
-
+                <Text c="dimmed" size="sm">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
                 <TextInput
                     mt="sm"
                     label="Použivateľské meno"
@@ -156,13 +162,14 @@ export default function Settings() {
                     autosize
                     minRows={2}
                     value={bio}
-                    maxLength={maxCharacterLenght}
+                    maxLength={maxBioCharacterLenght}
                     onChange={event => {
                         setBio(event.currentTarget.value)
-                        setCount(event.currentTarget.value.length)
+                        setBioCount(event.currentTarget.value.length)
                     }}
 
                 />
+                <Text c="dimmed" size="sm">{bioCount}/{maxBioCharacterLenght}</Text>
 
                 <Text size="sm" mt="sm">Sociálne siete</Text>
                 <Group mt={8} gap={8}>

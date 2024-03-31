@@ -53,6 +53,14 @@ export default function CreateQuiz() {
         setQuestions([...questions, { question: '', options: [] }]);
     };
 
+
+    const handleRemoveQuestion = (questionIndex) => {
+        const newQuestions = [...questions];
+        if (newQuestions.length === 1) return;
+        newQuestions.splice(questionIndex, 1);
+        setQuestions(newQuestions);
+    };
+
     const handleRemoveOption = (questionIndex, optionIndex) => {
         const newQuestions = [...questions];
         newQuestions[questionIndex].options.splice(optionIndex, 1);
@@ -64,7 +72,7 @@ export default function CreateQuiz() {
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
-            <Box className="border-bottom" p="sm" >
+            <Box className="border-bottom" p="sm">
                 <Box pos="relative">
                     <Badge fw={600} className="image-item-left">
                         Kvíz
@@ -87,7 +95,7 @@ export default function CreateQuiz() {
                             className="lazy-image pointer"
                             style={{ backgroundImage: `url(${coverImage})` }}
                             onClick={coverImageModalHandlers.open}
-                        ></Box>
+                        />
                     </AspectRatio>
                 </Box>
 
@@ -108,13 +116,10 @@ export default function CreateQuiz() {
             </Box>
 
             {questions.map((question, questionIndex) => (
-                // <Card key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} withBorder mb="md" radius={0} >
-                <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm" >
-
+                <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm">
                     <TextInput
-
                         fw="bold"
-                        placeholder="Ask a question"
+                        placeholder="Pridať otázku"
                         value={question.question}
                         onChange={(event) => handleQuestionChange(questionIndex, event.target.value)}
                     />
@@ -123,71 +128,56 @@ export default function CreateQuiz() {
                         <Flex key={optionIndex} align="center" gap="sm" p="sm">
                             <Checkbox />
                             <TextInput
-                                placeholder="Add answer"
+                                style={{ width: '100%' }}
+                                placeholder="Pridať odpoveď"
                                 value={option}
                                 onChange={(event) =>
                                     handleOptionChange(questionIndex, optionIndex, event.target.value)
                                 }
                                 rightSection={
-                                    // Close btn to remove answer, add the same thing to the question as well
                                     <CloseButton
                                         variant="subtle"
                                         radius="lg"
                                         c="gray"
                                         onMouseDown={(event) => event.preventDefault()}
                                         onClick={() => handleRemoveOption(questionIndex, optionIndex)}
-                                    />}
+                                    />
+                                }
                             />
-
                         </Flex>
                     ))}
-                    <Flex> {/* theres gotta be a better way of centering this */}
+
+                    <Flex mt="sm" flexDirection="column" gap="sm"> {/* Changed to column */}
                         <Button
-                            pr={70}
                             variant="subtle"
-                            c="black"
-                            color="gray"
                             onClick={() => handleAddOption(questionIndex)}
                             leftSection={<IconPlus stroke={1.25} />}
-                            w="50%"
                         >
-                            Add an answer
+                            Pridať odpoveď
                         </Button>
+                        <Group>
+                            <Button
+                                variant="subtle"
+                                onClick={handleAddQuestion}
+                                leftSection={<IconPlus stroke={1.25} />}
+                            >
+                                Pridať otázku
+                            </Button>
+                            <Button
+                                variant="subtle"
+                                onClick={() => handleRemoveQuestion(questionIndex)}
+                                leftSection={<IconX stroke={1.25} />}
+                            >
+                                Odstrániť túto otázku
+                            </Button>
+                        </Group>
                     </Flex>
-
-                    <Group grow>
-                        <Button
-                            variant="subtle"
-                            c="black"
-                            color="gray"
-                            mt="sm"
-                            onClick={handleAddQuestion}
-                            leftSection={<IconPlus stroke={1.25} />}
-                        >
-                            Add another question
-                        </Button>
-                        <Button
-                            variant="subtle"
-                            c="black"
-                            color="gray"
-                            mt="sm"
-                            onClick={handleAddQuestion}
-                            leftSection={<IconX stroke={1.25} />}
-                        >
-                            Remove this question
-                        </Button>
-                    </Group>
                 </Box>
-                // </Card>
             ))}
-            <Box p="sm" >
-                <Button fullWidth >
-                    Publish this quiz
-                </Button>
-            </Box>
 
+            <Box p="sm">
+                <Button fullWidth>Publikovať</Button>
+            </Box>
         </>
     )
-
-
 }
