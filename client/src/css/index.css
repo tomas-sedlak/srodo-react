@@ -1,5 +1,5 @@
 /* ::selection {
-  background-color: var(--mantine-color-srobarka-filled);
+  background-color: var(--mantine-primary-color-filled);
   color: var(--mantine-color-white);
 } */
 
@@ -211,33 +211,29 @@ main {
   background-color: var(--mantine-color-body);
 }
 
-/* Dont know if we will use this if NOT, DONT FORGET TO DELETE! */
 .custom-tabs {
   position: relative;
-  gap: 5px;
+  gap: 4px;
 }
 
-.custom-tabs button {
-  height: 42px;
-  font-weight: 500;
-  font-size: var(--mantine-font-size-md);
-  border: 1px solid var(--mantine-color-gray-4);
-  background-color: var(--mantine-color-white);
+.custom-tabs>* {
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+  background-color: transparent;
   border-radius: var(--mantine-radius-md);
 }
 
-.custom-tabs button:hover {
-  background-color: var(--mantine-color-gray-0);
+.custom-tabs>*:hover {
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
 }
 
-.custom-tabs [data-active] {
-  border-color: var(--mantine-color-srobarka-filled);
-  background-color: var(--mantine-color-srobarka-filled);
+.custom-tabs>[data-active] {
+  border-color: var(--mantine-primary-color-filled);
+  background-color: var(--mantine-primary-color-filled);
   color: var(--mantine-color-white);
 }
 
-.custom-tabs [data-active]:hover {
-  background-color: var(--mantine-color-srobarka-filled-hover);
+.custom-tabs>[data-active]:hover {
+  background-color: var(--mantine-primary-color-filled-hover);
 }
 
 .image-item-left,
