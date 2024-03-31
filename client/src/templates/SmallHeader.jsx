@@ -20,7 +20,7 @@ export default function SmallHeader({ title }) {
 
     return (
         <div className={`small-header ${!show && "hide"}`}>
-            <Text fw={600}>{title}</Text>
+            {typeof title === "string" ? <Text fw={600}>{title} Text</Text> : title}
         </div>
     )
 }
