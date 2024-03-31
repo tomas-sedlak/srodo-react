@@ -1,11 +1,12 @@
 import { Box, Loader, Tabs } from "@mantine/core";
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import SmallHeader from "templates/SmallHeader";
 import axios from 'axios';
 
 const categories = [
     {
-        label: "Technológia",
+        label: "Technológie",
         category: "technology",
     },
     {
@@ -30,15 +31,17 @@ export default function News() {
 
     return (
         <>
-            <Tabs variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })} p="sm" className="border-bottom">
-                <Tabs.List className="custom-tabs">
-                    {categories.map(subject =>
-                        <Tabs.Tab value={subject.category}>
-                            {subject.label}
-                        </Tabs.Tab>
-                    )}
-                </Tabs.List>
-            </Tabs>
+            <SmallHeader title={
+                <Tabs variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })}>
+                    <Tabs.List className="custom-tabs">
+                        {categories.map(subject =>
+                            <Tabs.Tab value={subject.category}>
+                                {subject.label}
+                            </Tabs.Tab>
+                        )}
+                    </Tabs.List>
+                </Tabs>
+            } />
 
             {status === "pending" ? (
                 <div className="loader-center">

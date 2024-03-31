@@ -24,8 +24,8 @@ export default function Settings() {
     const [socialModalOpened, setSocialModalOpened] = useState(false);
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
-    const [bioCount, setBioCount] = useState(0);
-    const [displaynameCount, setDisplaynameCount] = useState(0);
+    const [displaynameCount, setDisplaynameCount] = useState(user.displayName.length);
+    const [bioCount, setBioCount] = useState(user.bio.length);
     const maxBioCharacterLenght = 160;
     const maxDisplaynameCharacterLimit = 64;
 
