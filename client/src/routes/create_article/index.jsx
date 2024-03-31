@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { Box, Group, Button, AspectRatio, ActionIcon, Tooltip, Badge } from '@mantine/core';
 import { IconCameraPlus } from "@tabler/icons-react";
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
 import { createClient } from 'pexels';
@@ -13,6 +13,7 @@ export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const navigate = useNavigate();
     const [error, setError] = useState({});
@@ -78,7 +79,7 @@ export default function CreateArticle() {
                 opened={coverImageModalOpened}
                 close={coverImageModalHandlers.close}
                 setImage={setCoverImage}
-                columns={2}
+                columns={isMobile ? 1 : 2}
                 aspectRatio={2 / 1}
             />
 

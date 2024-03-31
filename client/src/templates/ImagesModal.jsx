@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center, Group } from '@mantine/core';
+import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center, Group, Tabs } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
@@ -8,6 +8,21 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { FixedSizeGrid } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import AutoSizer from "react-virtualized-auto-sizer";
+
+const methods = [
+    {
+        value: "pexels",
+        label: "Pexels",
+    },
+    {
+        value: "url",
+        label: "URL",
+    }, 
+    {
+        value: "device",
+        label: "Zo zariadenia",
+    },
+]
 
 export default function ImagesModal({ opened, close, setImage, columns, aspectRatio, qkey }) {
     const LIMIT = 10;
@@ -69,34 +84,20 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
 
             <Modal.Content radius={isMobile ? 0 : "lg"} h="100%">
                 <Modal.Header>
-                    <Text
-                        className="pointer"
-                        onClick={() => setTab("pexels")}
-                        c={tab === "pexels" ? "var(--mantine-color-text)" : "dimmed"}
-                    >
-                        Pexels
-                    </Text>
-                    <Text
-                        ml="sm"
-                        className="pointer"
-                        onClick={() => setTab("url")}
-                        c={tab === "url" ? "var(--mantine-color-text)" : "dimmed"}
-                    >
-                        URL
-                    </Text>
-                    <Text
-                        ml="sm"
-                        className="pointer"
-                        onClick={() => setTab("device")}
-                        c={tab === "device" ? "var(--mantine-color-text)" : "dimmed"}
-                    >
-                        Zo zariadenia
-                    </Text>
+                    <Tabs variant="unstyled" value={tab} onChange={setTab}>
+                        <Tabs.List className="custom-tabs">
+                            {methods.map(method =>
+                                <Tabs.Tab value={method.value}>
+                                    {method.label}
+                                </Tabs.Tab>
+                            )}
+                        </Tabs.List>
+                    </Tabs>
 
                     <Modal.CloseButton />
                 </Modal.Header>
 
-                <Modal.Body h="calc(100% - 52px)">
+                <Modal.Body h="calc(100% - 60px)">
                     {tab === "pexels" ? (
                         <>
                             <TextInput
@@ -217,7 +218,7 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                             />
 
                             {isUrlValid ? (
-                                <>
+                                <Box h="calc(100% - 52px)" style={{ overflowY: "auto" }}>
                                     <Image
                                         src={url}
                                         radius="lg"
@@ -234,11 +235,10 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                                             Nastaviť obrázok
                                         </Button>
                                     </Group>
-                                </>
+                                </Box>
                             ) : (
                                 <Text c="dimmed">Nesprávne URL</Text>
                             )}
-
                         </>
                     ) : (
                         // Trying the dropzone

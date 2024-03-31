@@ -5,13 +5,13 @@ import axios from 'axios';
 
 const categories = [
     {
-        label: "veda",
-        category: "science",
+        label: "Technológia",
+        category: "technology",
     },
     {
-        label: "technologie",
-        category: "technology",
-    }
+        label: "Veda",
+        category: "science",
+    },
 ]
 
 export default function News() {
@@ -51,7 +51,7 @@ export default function News() {
             ) : (
                 <>
                     {data.map((article) => (
-                        <Box className="border-bottom" p="sm">
+                        <Box className="border-bottom light-hover" p="sm">
                             <Link to={article.url} target="_blank">{article.title}</Link>
                         </Box>
                     ))}
