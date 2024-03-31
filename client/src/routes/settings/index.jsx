@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex } from "@mantine/core";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex, Center } from "@mantine/core";
 import { IconPlus, IconBrandDiscord, IconBrandInstagram, IconBrandYoutube, IconBrandGithub, IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
@@ -80,9 +80,17 @@ export default function Settings() {
             />
 
             {/* Username modal */}
-            <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť">
-                <TextInput placeholder={`Enter your ${selectedSocialPlatform} username`} />
-            </Modal>
+            <Center>
+                <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť">
+
+                    <TextInput placeholder="Používateľské meno" />
+                    <Flex justify="flex-end">
+                        <Button mt="sm">Pridať</Button>
+                    </Flex>
+
+                </Modal>
+            </Center>
+
 
             {/* Social modal */}
             <Modal opened={socialModalOpened} onClose={() => setSocialModalOpened(false)} title="Pridať sociálnu sieť">
