@@ -36,7 +36,7 @@ export default function Header() {
                         </Group>
                     ) : (
                         <Group gap={8}>
-                            <img width={36} height={36} src="/logo.svg" />
+                            {colorScheme === "light" ? <img width={36} height={36} src="/logo_light.svg" /> : <img width={36} height={36} src="/logo_dark.svg" />}
                             <Text fw={700} size="xl">Šrodo</Text>
                         </Group>
                     )}
@@ -200,7 +200,7 @@ export default function Header() {
                 padding="sm"
                 title={
                     <Group gap={8}>
-                        <img width={36} height={36} src="/logo.svg" />
+                        {colorScheme === "light" ? <img width={36} height={36} src="/logo_light.svg" /> : <img width={36} height={36} src="/logo_dark.svg" />}
                         <Text fw={700} size="xl">Šrodo</Text>
                     </Group>
                 }
