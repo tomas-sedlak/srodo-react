@@ -1,4 +1,4 @@
-import { FloatingTextInput, FloatingPasswordInput } from "./FloatingInput";
+import { FloatingTextInput, FloatingPasswordInput, UniqueFloatingTextInput } from "./FloatingInput";
 import { Button, Modal, Text } from "@mantine/core";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
@@ -105,12 +105,19 @@ export default function LoginModal() {
                     <form onSubmit={handleSubmit}>
                         {isRegister ? (
                             <>
-                                <FloatingTextInput
+                                {/* <FloatingTextInput
                                     handleBlur={handleBlur}
                                     handleChange={handleChange}
                                     label="Používateľské meno"
                                     name="username"
                                     error={touched.username && errors.username}
+                                /> */}
+                                <UniqueFloatingTextInput
+                                    handleBlur={handleBlur}
+                                    handleChange={handleChange}
+                                    label="Používateľské meno"
+                                    name="username"
+                                    // error={touched.username && errors.username}
                                 />
 
                                 <FloatingTextInput

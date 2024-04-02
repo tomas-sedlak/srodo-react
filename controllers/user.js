@@ -43,6 +43,21 @@ export const getUserFavourites = async (req, res) => {
     }
 }
 
+export const getUnique= async (req, res) => {
+    try {
+        const query = req.query;
+        const result = await User.find(query)
+
+        if (result.length > 0) {
+            res.status(200).json({ unique: false });
+        } else {
+            res.status(200).json({ unique: true });
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 // UPDATE
 export const updateUserSettings = async (req, res) => {
     try {
