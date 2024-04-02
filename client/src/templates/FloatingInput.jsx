@@ -57,7 +57,7 @@ export function FloatingPasswordInput(props) {
     )
 }
 
-export function UniqueFloatingTextInput(props) {
+export function UsernameInput(props) {
     const [inputValue, setInputValue] = useState("");
     const [typingTimeout, setTypingTimeout] = useState(null);
     const [focused, setFocused] = useState(false);
@@ -109,6 +109,7 @@ export function UniqueFloatingTextInput(props) {
 
                 setInputValue(value)
                 handleErrors(value)
+
                 clearTimeout(typingTimeout)
                 setTypingTimeout(
                     setTimeout(() => {
@@ -118,6 +119,55 @@ export function UniqueFloatingTextInput(props) {
             }}
             value={inputValue}
             rightSection={loading && <Loader size={20} />}
+            error={error}
+            {...props}
+        />
+    )
+}
+
+export function EmailInput(props) {
+    const [inputValue, setInputValue] = useState("");
+    const [focused, setFocused] = useState(false);
+    const floating = focused || inputValue.length > 0 || undefined;
+    const [error, setError] = useState(null);
+
+    const handleErrors = async (value) => {
+        if (value.length === 0) {
+            setError("Toto pole je povinné")
+            return
+        }
+
+        if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/.test(value)) {
+            setError("Neplatný email")
+            return
+        }
+
+        const response = await axios.get(`/api/user/unique?email=${value}`)
+        if (!response.data.unique) {
+            setError("Tento email sa už používa")
+            return
+        }
+
+        setError(null)
+    }
+
+    return (
+        <TextInput
+            classNames={{
+                root: "input-root",
+                label: `input-label ${floating && "floating"} ${focused && "focused"} ${error && "error"}`,
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={async (event) => {
+                setFocused(false)
+                await handleErrors(event.target.value)
+            }}
+            onChange={event => {
+                const value = event.target.value
+                if (value.length > 30) return
+                setInputValue(value)
+            }}
+            value={inputValue}
             error={error}
             {...props}
         />

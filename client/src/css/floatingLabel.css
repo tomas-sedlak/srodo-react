@@ -14,7 +14,7 @@
   font-size: var(--mantine-font-size-sm);
   color: var(--mantine-color-placeholder);
   background-color: light-dark(var(--mantine-color-body), var(--mantine-color-dark-6));
-  transition: color 100ms ease, transform 100ms ease, font-size 100ms ease;
+  transition: color 0.15s ease, transform 0.15s ease, font-size 0.15s ease;
 }
 
 .input-label.floating {
