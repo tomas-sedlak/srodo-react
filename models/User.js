@@ -7,7 +7,7 @@ const userSchema = new Schema({
         trim: true,
         lowercase: true,
         min: [1, "Minimálna dĺžka je 1 znak"],
-        max: [32, "Maximálna dĺžka je 32 znakov"],
+        max: [16, "Maximálna dĺžka je 32 znakov"],
         required: [true, "Používateľské meno je povinné"],
         unique: true,
     },

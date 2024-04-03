@@ -1,39 +1,21 @@
-import { FloatingTextInput, FloatingPasswordInput, UsernameInput, EmailInput } from "./FloatingInput";
+import { FloatingTextInput, FloatingPasswordInput, RegisterUsernameInput, RegisterEmailInput, RegisterPasswordInput } from "./FloatingInput";
 import { Button, Modal, Text } from "@mantine/core";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
-import { Formik } from "formik";
 import { setLogin } from "state";
 import { useState } from "react";
-import * as yup from "yup";
 import axios from "axios";
 
-
-const registerSchema = yup.object().shape({
-    username: yup.string().max(64, "Používateľské meno presiahlo minimálnu dĺžku").required("Toto pole je povinné"),
-    email: yup.string().email("Neplatný email").required("Toto pole je povinné"),
-    password: yup.string().min(8, "Heslo musí mať aspoň 8 znakov").required("Toto pole je povinné"),
-})
-
-const initialValuesRegister = {
+const initialValues = {
     username: "",
-    email: "",
-    password: "",
-}
-
-const loginSchema = yup.object().shape({
-    email: yup.string().email("Neplatný email").required("Toto pole je povinné"),
-    password: yup.string().required("Toto pole je povinné"),
-})
-
-const initialValuesLogin = {
     email: "",
     password: "",
 }
 
 export default function LoginModal() {
     const [pageType, setPageType] = useState("login");
+    const [values, setValues] = useState(initialValues);
     const isLogin = pageType === "login";
     const isRegister = pageType === "register";
 
@@ -41,18 +23,22 @@ export default function LoginModal() {
     const opened = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
 
-    const register = async (values, onSubmitProps) => {
-        const savedUserResponse = await axios.post(
-            "/api/auth/register",
-            values,
-        )
+    const setValue = (event) => {
+        setValues({ ...values, [event.target.name]: event.target.value })
+    }
 
-        const savedUser = savedUserResponse.data;
-        onSubmitProps.resetForm();
+    const register = async () => {
+        // const response = await axios.post(
+        //     "/api/auth/register",
+        //     values,
+        // )
 
-        if (savedUser) {
-            setPageType("login");
-        }
+        console.log(values)
+        setValues(initialValues)
+
+        // if (response.data) {
+        //     setPageType("login");
+        // }
     };
 
     const login = async (values, onSubmitProps) => {
@@ -73,9 +59,9 @@ export default function LoginModal() {
         }
     };
 
-    const handleFormSubmit = async (values, onSubmitProps) => {
-        if (isLogin) await login(values, onSubmitProps);
-        if (isRegister) await register(values, onSubmitProps);
+    const handleFormSubmit = async () => {
+        if (isLogin) await login();
+        if (isRegister) await register();
     };
 
     return (
@@ -89,117 +75,92 @@ export default function LoginModal() {
             centered
             title={<Text fw={700} fz="lg">{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
         >
-            <Formik
-                onSubmit={handleFormSubmit}
-                initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-                validationSchema={isLogin ? loginSchema : registerSchema}
+            {isRegister ? (
+                <>
+                    <RegisterUsernameInput
+                        label="Používateľské meno"
+                        name="username"
+                        inputValue={values.username}
+                        setInputValue={setValue}
+                        required
+                    />
+
+                    <RegisterEmailInput
+                        mt="sm"
+                        label="Email"
+                        name="email"
+                        inputValue={values.email}
+                        setInputValue={setValue}
+                        required
+                    />
+
+                    <RegisterPasswordInput
+                        mt="sm"
+                        label="Heslo"
+                        name="password"
+                        inputValue={values.password}
+                        setInputValue={setValue}
+                        required
+                    />
+                </>
+            ) : (
+                <>
+                    <FloatingTextInput
+                        label="Email alebo používateľské meno"
+                        name="email"
+                        inputValue={values.email}
+                        setInputValue={setValue}
+                        required
+                    />
+
+                    <FloatingPasswordInput
+                        mt="sm"
+                        label="Heslo"
+                        name="password"
+                        inputValue={values.password}
+                        setInputValue={setValue}
+                        required
+                    />
+
+                    <Text
+                        mt={4}
+                        ta="right"
+                        size="sm"
+                        c="dimmed"
+                        className="pointer"
+                    >
+                        Zabudnuté heslo?
+                    </Text>
+                </>
+            )}
+
+            <Button
+                onClick={handleFormSubmit}
+                fullWidth
+                mt="lg"
             >
-                {({
-                    errors,
-                    touched,
-                    handleBlur,
-                    handleChange,
-                    handleSubmit,
-                    resetForm,
-                }) => (
-                    <form onSubmit={handleSubmit}>
-                        {isRegister ? (
-                            <>
-                                {/* <FloatingTextInput
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Používateľské meno"
-                                    name="username"
-                                    error={touched.username && errors.username}
-                                /> */}
-                                <UsernameInput
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Používateľské meno"
-                                    name="username"
-                                    // error={touched.username && errors.username}
-                                />
+                {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
+            </Button>
 
-                                <EmailInput
-                                    mt="sm"
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Email"
-                                    name="email"
-                                    // error={touched.email && errors.email}
-                                />
-
-                                <FloatingPasswordInput
-                                    mt="sm"
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Heslo"
-                                    name="password"
-                                    error={touched.password && errors.password}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <FloatingTextInput
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Email alebo používateľské meno"
-                                    name="email"
-                                    error={touched.email && errors.email}
-                                />
-
-                                <FloatingPasswordInput
-                                    mt="sm"
-                                    handleBlur={handleBlur}
-                                    handleChange={handleChange}
-                                    label="Heslo"
-                                    name="password"
-                                    error={touched.password && errors.password}
-                                />
-
-                                <Text
-                                    mt={4}
-                                    ta="right"
-                                    size="sm"
-                                    c="dimmed"
-                                    className="pointer"
-                                >
-                                    Zabudnuté heslo?
-                                </Text>
-                            </>
-                        )}
-
-                        <Button
-                            fullWidth
-                            type="submit"
-                            mt="lg"
-                        >
-                            {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
-                        </Button>
-
-                        <Text
-                            mt="lg"
-                            ta="center"
-                            c="dimmed"
-                            size="sm"
-                        >
-                            {isLogin ? "Nemáte účet? " : "Už máte účet? "}
-                            <Text
-                                span
-                                c="srobarka"
-                                fw={600}
-                                className="pointer"
-                                onClick={() => {
-                                    resetForm()
-                                    setPageType(isLogin ? "register" : "login")
-                                }}
-                            >
-                                {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
-                            </Text>
-                        </Text>
-                    </form>
-                )}
-            </Formik>
+            <Text
+                mt="lg"
+                ta="center"
+                c="dimmed"
+                size="sm"
+            >
+                {isLogin ? "Nemáte účet? " : "Už máte účet? "}
+                <Text
+                    span
+                    c="srobarka"
+                    fw={600}
+                    className="pointer"
+                    onClick={() => {
+                        setPageType(isLogin ? "register" : "login")
+                    }}
+                >
+                    {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                </Text>
+            </Text>
         </Modal>
     );
 }
