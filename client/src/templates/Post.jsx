@@ -1,6 +1,6 @@
 import { forwardRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu } from '@mantine/core';
+import { AspectRatio, Group, Text, Avatar, Box, Badge, ActionIcon, Menu, Stack } from '@mantine/core';
 import { IconDots, IconTrash, IconPencil, IconChartBar, IconFlag } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -59,104 +59,104 @@ const Post = forwardRef(({ post }, ref) => {
             </Box>
 
             {/* Post information */}
-            <Group align="flex-start" wrap="nowrap" mt="sm" gap="sm">
-                <Link to={`/${post.author.username}`}>
-                    <Avatar src={post.author.profilePicture} />
-                </Link>
+            <Box mt="sm" pos="relative">
+                <Group gap="xs">
+                    <Link to={`/${post.author.username}`}>
+                        <Avatar src={post.author.profilePicture} />
+                    </Link>
 
-                <Box pos="relative" w="100%">
-                    <Menu position="bottom-end" width={180}>
-                        <Menu.Target>
-                            <ActionIcon
-                                className="dots"
-                                variant="subtle"
-                                color="gray"
-                                c="var(--mantine-color-text)"
-                                radius="xl"
-                                w={32}
-                                h={32}
-                            >
-                                <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
-                            </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                            {post.author._id === userId ? (
-                                <>
-                                    <Menu.Item
-                                        onClick={() => navigate(`${url}/upravit`)}
-                                        leftSection={<IconPencil stroke={1.25} />}
-                                    >
-                                        <Text>Upraviť</Text>
-                                    </Menu.Item>
-                                    <Menu.Item
-                                        onClick={() => navigate(`/statistiky/${post._id}`)}
-                                        leftSection={<IconChartBar stroke={1.25} />}
-                                    >
-                                        <Text>Štatistiky</Text>
-                                    </Menu.Item>
-
-                                    <Menu.Divider />
-
-                                    <Menu.Item
-                                        color="red"
-                                        onClick={() => modals.openConfirmModal({
-                                            title: "Zmazať príspevok",
-                                            children: <Text>Určite chceš zmazať tento príspevok?</Text>,
-                                            centered: true,
-                                            labels: { confirm: "Zmazať", cancel: "Zrušiť" },
-                                            confirmProps: { color: "red" },
-                                            onConfirm: () => deleteMutation.mutate(),
-                                        })}
-                                        leftSection={<IconTrash stroke={1.25} />}
-                                    >
-                                        <Text>Odstrániť</Text>
-                                    </Menu.Item>
-                                </>
-                            ) : (
-                                <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
-                                    <Text>Nahlásiť</Text>
-                                </Menu.Item>
-                            )}
-                        </Menu.Dropdown>
-                    </Menu>
-
-                    <Group gap={4} align="center" pr={28} c="dimmed">
+                    <Stack gap={4} pr={32}>
                         <Link to={"/" + post.author.username}>
-                            <Text fw={600} size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                            <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
                             </Text>
                         </Link>
-                        <Text size="sm" style={{ lineHeight: 1 }}>
-                            &middot;
-                        </Text>
-                        <Link to={`/predmety/${post.subject.url}`}>
+
+                        <Group gap={4}>
+                            <Link to={`/predmety/${post.subject.url}`}>
+                                <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                                    {post.subject.label}
+                                </Text>
+                            </Link>
                             <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                {post.subject.label}
+                                &middot;
                             </Text>
-                        </Link>
-                        <Text size="sm" style={{ lineHeight: 1 }}>
-                            &middot;
-                        </Text>
-                        <Text size="sm" style={{ lineHeight: 1 }}>
-                            {moment(post.createdAt).fromNow()}
-                        </Text>
-                    </Group>
+                            <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                                {moment(post.createdAt).fromNow()}
+                            </Text>
+                        </Group>
+                    </Stack>
+                </Group>
 
-                    <Link to={url}>
-                        <Text
-                            mt={8}
-                            fw={800}
-                            fz={24}
-                            style={{ lineHeight: 1.2 }}
-                            lineClamp={2}
+                <Menu position="bottom-end" width={180}>
+                    <Menu.Target>
+                        <ActionIcon
+                            className="dots"
+                            variant="subtle"
+                            color="gray"
+                            c="var(--mantine-color-text)"
+                            radius="xl"
+                            w={32}
+                            h={32}
                         >
-                            {post.title}
-                        </Text>
-                    </Link>
+                            <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
+                        </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {post.author._id === userId ? (
+                            <>
+                                <Menu.Item
+                                    onClick={() => navigate(`${url}/upravit`)}
+                                    leftSection={<IconPencil stroke={1.25} />}
+                                >
+                                    <Text>Upraviť</Text>
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => navigate(`/statistiky/${post._id}`)}
+                                    leftSection={<IconChartBar stroke={1.25} />}
+                                >
+                                    <Text>Štatistiky</Text>
+                                </Menu.Item>
 
-                    <PostButtons post={post} />
-                </Box>
-            </Group>
+                                <Menu.Divider />
+
+                                <Menu.Item
+                                    color="red"
+                                    onClick={() => modals.openConfirmModal({
+                                        title: "Zmazať príspevok",
+                                        children: <Text>Určite chceš zmazať tento príspevok?</Text>,
+                                        centered: true,
+                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                        confirmProps: { color: "red" },
+                                        onConfirm: () => deleteMutation.mutate(),
+                                    })}
+                                    leftSection={<IconTrash stroke={1.25} />}
+                                >
+                                    <Text>Odstrániť</Text>
+                                </Menu.Item>
+                            </>
+                        ) : (
+                            <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
+                                <Text>Nahlásiť</Text>
+                            </Menu.Item>
+                        )}
+                    </Menu.Dropdown>
+                </Menu>
+
+                <Link to={url}>
+                    <Text
+                        mt={8}
+                        fw={800}
+                        fz={24}
+                        style={{ lineHeight: 1.2 }}
+                        lineClamp={2}
+                    >
+                        {post.title}
+                    </Text>
+                </Link>
+
+                <PostButtons post={post} />
+            </Box>
         </Box>
     )
 
