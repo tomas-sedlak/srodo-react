@@ -122,6 +122,15 @@ export default function CreateQuiz() {
                         placeholder="Pridať otázku"
                         value={question.question}
                         onChange={(event) => handleQuestionChange(questionIndex, event.target.value)}
+                        rightSection={
+                            <CloseButton
+                                variant="subtle"
+                                radius="lg"
+                                c="gray"
+                                onMouseDown={(event) => event.preventDefault()}
+                                onClick={() => handleRemoveQuestion(questionIndex)}
+                            />
+                        }
                     />
 
                     {question.options.map((option, optionIndex) => (
@@ -155,28 +164,30 @@ export default function CreateQuiz() {
                         >
                             Pridať odpoveď
                         </Button>
-                        <Group>
-                            <Button
-                                variant="subtle"
-                                onClick={handleAddQuestion}
-                                leftSection={<IconPlus stroke={1.25} />}
-                            >
-                                Pridať otázku
-                            </Button>
-                            <Button
-                                variant="subtle"
-                                onClick={() => handleRemoveQuestion(questionIndex)}
-                                leftSection={<IconX stroke={1.25} />}
-                            >
-                                Odstrániť túto otázku
-                            </Button>
-                        </Group>
+
+                        {/* <Button
+                            variant="subtle"
+                            onClick={() => handleRemoveQuestion(questionIndex)}
+                            leftSection={<IconX stroke={1.25} />}
+                        >
+                            Odstrániť túto otázku
+                        </Button> */}
+
                     </Flex>
                 </Box>
             ))}
 
             <Box p="sm">
-                <Button fullWidth>Publikovať</Button>
+                <Group grow>
+                    <Button
+                        variant="subtle"
+                        onClick={handleAddQuestion}
+                        leftSection={<IconPlus stroke={1.25} />}
+                    >
+                        Pridať otázku
+                    </Button>
+                    <Button >Publikovať</Button>
+                </Group>
             </Box>
         </>
     )
