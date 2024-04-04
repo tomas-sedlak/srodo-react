@@ -80,20 +80,17 @@ export default function Settings() {
             />
 
             {/* Username modal */}
-            <Center>
-                <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť">
+            <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť" centered>
 
-                    <TextInput placeholder="Používateľské meno" />
-                    <Flex justify="flex-end">
-                        <Button mt="sm">Pridať</Button>
-                    </Flex>
+                <TextInput placeholder="Používateľské meno" />
+                <Flex justify="flex-end">
+                    <Button mt="sm">Pridať</Button>
+                </Flex>
 
-                </Modal>
-            </Center>
-
+            </Modal>
 
             {/* Social modal */}
-            <Modal opened={socialModalOpened} onClose={() => setSocialModalOpened(false)} title="Pridať sociálnu sieť">
+            <Modal opened={socialModalOpened} onClose={() => setSocialModalOpened(false)} title="Pridať sociálnu sieť" centered>
                 <Group>
                     <div className="icon-wrapper" onClick={() => handleSocialTagClick("Discord")}>
                         <IconBrandDiscord stroke={1.25} />
@@ -113,7 +110,6 @@ export default function Settings() {
                     </div>
                     {/* More socials here */}
                 </Group>
-
             </Modal>
 
             <SmallHeader title="⚙️ Nastavenia profilu" />
