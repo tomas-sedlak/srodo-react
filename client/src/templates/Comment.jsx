@@ -61,88 +61,93 @@ export default function Comment({ data }) {
     })
 
     return (
-        <Box mt={8} pos="relative">
-            <Menu position="bottom-end" width={180}>
-                <Menu.Target>
-                    <ActionIcon
-                        className="dots"
-                        variant="subtle"
-                        color="gray"
-                        c="var(--mantine-color-text)"
-                        radius="xl"
-                        w={32}
-                        h={32}
-                    >
-                        <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
-                    </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                    {data.author._id === userId ? (
-                        <>
-                            <Menu.Item
-                                onClick={() => navigate(`/upravit`)}
-                                leftSection={<IconPencil stroke={1.25} />}
-                            >
-                                <Text>Upraviť</Text>
-                            </Menu.Item>
-
-                            <Menu.Divider />
-
-                            <Menu.Item
-                                color="red"
-                                onClick={() => modals.openConfirmModal({
-                                    title: "Zmazať komentár",
-                                    children: <Text>Určite chceš zmazať tento komentár?</Text>,
-                                    centered: true,
-                                    labels: { confirm: "Zmazať", cancel: "Zrušiť" },
-                                    confirmProps: { color: "red" },
-                                    onConfirm: () => deleteMutation.mutate(),
-                                })}
-                                leftSection={<IconTrash stroke={1.25} />}
-                            >
-                                <Text>Odstrániť</Text>
-                            </Menu.Item>
-                        </>
-                    ) : (
-                        <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
-                            <Text>Nahlásiť</Text>
-                        </Menu.Item>
-                    )}
-                </Menu.Dropdown>
-            </Menu >
-
-            <Group gap="sm" wrap="nowrap">
+        <Group p="sm" gap="xs" align="flex-start" className="border-bottom">
+            <Link to={`/${data.author.username}`}>
                 <Avatar src={data.author.profilePicture} />
+            </Link>
 
+            <Box pos="relative" style={{ flex: 1 }}>
                 <Group gap={4}>
                     <Link to={"/" + data.author.username}>
-                        <Text fw={600} c="dimmed" size="sm">
+                        <Text fw={700} size="sm">
                             {data.author.displayName}
                         </Text>
                     </Link>
                     <Text c="dimmed" size="sm">
-                        &middot; {moment(data.createdAt).fromNow()}
+                        &middot;
+                    </Text>
+                    <Text c="dimmed" size="sm">
+                        {moment(data.createdAt).fromNow()}
                     </Text>
                 </Group>
-            </Group>
 
-            <TypographyStylesProvider p={0} ml={46} mb={8}>
-                <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
-            </TypographyStylesProvider>
+                <Menu position="bottom-end" width={180}>
+                    <Menu.Target>
+                        <ActionIcon
+                            className="dots"
+                            variant="subtle"
+                            color="gray"
+                            c="var(--mantine-color-text)"
+                            radius="xl"
+                            w={32}
+                            h={32}
+                        >
+                            <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
+                        </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {data.author._id === userId ? (
+                            <>
+                                <Menu.Item
+                                    onClick={() => navigate(`/upravit`)}
+                                    leftSection={<IconPencil stroke={1.25} />}
+                                >
+                                    <Text>Upraviť</Text>
+                                </Menu.Item>
 
-            <Group ml={46} gap={8}>
-                <div className="icon-wrapper">
-                    {!upvote ?
-                        <IconArrowBigUp stroke={1.25} onClick={() => userId ? upvoteComment() : dispatch(setLoginModal(true))} />
-                        : <IconArrowBigUpFilled stroke={1.25} onClick={() => userId ? upvoteComment() : dispatch(setLoginModal(true))} />
-                    }
-                    <span>{votes}</span>
-                    {!downvote ?
-                        <IconArrowBigDown stroke={1.25} onClick={() => userId ? downvoteComment() : dispatch(setLoginModal(true))} />
-                        : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteComment() : dispatch(setLoginModal(true))} />
-                    }
-                </div>
-            </Group>
-        </Box >
+                                <Menu.Divider />
+
+                                <Menu.Item
+                                    color="red"
+                                    onClick={() => modals.openConfirmModal({
+                                        title: "Zmazať komentár",
+                                        children: <Text>Určite chceš zmazať tento komentár?</Text>,
+                                        centered: true,
+                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                        confirmProps: { color: "red" },
+                                        onConfirm: () => deleteMutation.mutate(),
+                                    })}
+                                    leftSection={<IconTrash stroke={1.25} />}
+                                >
+                                    <Text>Odstrániť</Text>
+                                </Menu.Item>
+                            </>
+                        ) : (
+                            <Menu.Item leftSection={<IconFlag stroke={1.25} />}>
+                                <Text>Nahlásiť</Text>
+                            </Menu.Item>
+                        )}
+                    </Menu.Dropdown>
+                </Menu >
+
+                <TypographyStylesProvider p={2} mb={4}>
+                    <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
+                </TypographyStylesProvider>
+
+                <Group gap={8}>
+                    <div className="icon-wrapper">
+                        {!upvote ?
+                            <IconArrowBigUp stroke={1.25} onClick={() => userId ? upvoteComment() : dispatch(setLoginModal(true))} />
+                            : <IconArrowBigUpFilled stroke={1.25} onClick={() => userId ? upvoteComment() : dispatch(setLoginModal(true))} />
+                        }
+                        <span>{votes}</span>
+                        {!downvote ?
+                            <IconArrowBigDown stroke={1.25} onClick={() => userId ? downvoteComment() : dispatch(setLoginModal(true))} />
+                            : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteComment() : dispatch(setLoginModal(true))} />
+                        }
+                    </div>
+                </Group>
+            </Box>
+        </Group>
     )
 }
