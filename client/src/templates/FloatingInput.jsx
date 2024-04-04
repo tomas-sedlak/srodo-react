@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextInput, PasswordInput } from "@mantine/core";
+import { TextInput, PasswordInput, Loader } from "@mantine/core";
 import "css/floatingLabel.css";
 import axios from "axios";
 
@@ -70,48 +70,46 @@ export function FloatingPasswordInput(props) {
 }
 
 export function RegisterUsernameInput(props) {
-    const [error, setError] = useState(null);
     const [focused, setFocused] = useState(false);
     const floating = focused || props.inputValue.length > 0 || undefined;
 
-    const handleErrors = async (value) => {
-        if (value.length === 0) {
-            setError("Toto pole je povinné")
+    const handleErrors = async (event) => {
+        if (event.target.value.length === 0) {
+            props.setError(event.target.name, "Toto pole je povinné")
             return
         }
 
-        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-            setError('Môže obsahovať iba písmená, čísla a "_"')
+        if (!/^[a-zA-Z0-9_]+$/.test(event.target.value)) {
+            props.setError(event.target.name, 'Môže obsahovať iba písmená, čísla a "_"')
             return
         }
 
-        const response = await axios.get(`/api/user/unique?username=${value}`)
+        const response = await axios.get(`/api/user/unique?username=${event.target.value}`)
         if (!response.data.unique) {
-            setError("Toto používateľské meno už existuje")
+            props.setError(event.target.name, "Toto používateľské meno už existuje")
             return
         }
 
-        setError(null)
+        props.setError(event.target.name, null)
     }
 
     return (
         <TextInput
             classNames={{
                 root: "input-root",
-                label: `input-label ${floating && "floating"} ${focused && "focused"} ${error && "error"}`,
+                label: `input-label ${floating && "floating"} ${focused && "focused"} ${props.error && "error"}`,
             }}
             onFocus={() => setFocused(true)}
             onBlur={async (event) => {
                 setFocused(false)
-                await handleErrors(event.target.value)
+                await handleErrors(event)
             }}
             onChange={event => {
                 const value = event.target.value
                 if (value.length > 16) return
-                props.setInputValue(event)
+                props.setInputValue(event.target.name, event.target.value)
             }}
             value={props.inputValue}
-            error={error}
             {...props}
         />
     )
@@ -201,6 +199,30 @@ export function RegisterPasswordInput(props) {
             }}
             value={props.inputValue}
             error={error}
+            {...props}
+        />
+    )
+}
+
+
+export function RegisterInput(props) {
+    const { validate, setValue, error, status } = props;
+    const [focused, setFocused] = useState(false);
+    const floating = focused || props.value.length > 0 || undefined;
+
+    return (
+        <TextInput
+            classNames={{
+                root: "input-root",
+                label: `input-label ${floating && "floating"} ${focused && "focused"} ${error && "error"}`,
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={async (event) => {
+                setFocused(false)
+                await validate(event)
+            }}
+            onChange={setValue}
+            rightSection={status === "loading" && <Loader size={20} />}
             {...props}
         />
     )
