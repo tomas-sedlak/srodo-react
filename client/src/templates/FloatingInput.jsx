@@ -2,6 +2,7 @@ import { useState } from "react";
 import { TextInput, PasswordInput, Loader } from "@mantine/core";
 import "css/floatingLabel.css";
 import axios from "axios";
+import { IconEye } from "@tabler/icons-react";
 
 export function FloatingTextInput(props) {
     const [error, setError] = useState(null);
@@ -206,7 +207,7 @@ export function RegisterPasswordInput(props) {
 
 
 export function RegisterInput(props) {
-    const { validate, setValue, error, status } = props;
+    const { type, validate, setValue, error, status } = props;
     const [focused, setFocused] = useState(false);
     const floating = focused || props.value.length > 0 || undefined;
 
@@ -222,7 +223,9 @@ export function RegisterInput(props) {
                 await validate(event)
             }}
             onChange={setValue}
-            rightSection={status === "loading" && <Loader size={20} />}
+            rightSection={type === "password" ?
+                <IconEye />
+            : status === "loading" && <Loader size={20} />}
             {...props}
         />
     )

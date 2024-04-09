@@ -1,27 +1,38 @@
-.text-editor {
-    margin-top: var(--mantine-spacing-sm);
-    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
-    border-radius: var(--mantine-radius-md);
-}
-
 .text-editor-menu {
     padding: 8px var(--mantine-spacing-sm);
-    border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
     border-top-left-radius: var(--mantine-radius-md);
     border-top-right-radius: var(--mantine-radius-md);
     gap: 2px;
     z-index: 98;
-    background-color: var(--mantine-color-body);
+    background-color: light-dark(var(--mantine-color-body), var(--mantine-color-dark-6));
     position: sticky;
     top: var(--header-height);
 }
 
+.text-editor .tiptap {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+}
+
 .tiptap {
-    margin: var(--mantine-spacing-sm);
+    padding: 8px var(--mantine-spacing-sm);
+    border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+    border-radius: var(--mantine-radius-md);
+    background-color: light-dark(var(--mantine-color-body), var(--mantine-color-dark-6));
     outline: none;
 
+    >:first-child {
+        margin-top: 0;
+    }
+    
+    >:last-child {
+        margin-bottom: 0;
+    }
+
     p {
-      margin: 0.5em 0;  
+        margin: 0.5em 0;
     }
 
     >*+* {
@@ -71,6 +82,7 @@
     p.is-editor-empty:first-child::before {
         color: var(--mantine-color-placeholder);
         content: attr(data-placeholder);
+        font-size: var(--mantine-font-size-sm);
         float: left;
         height: 0;
         pointer-events: none;

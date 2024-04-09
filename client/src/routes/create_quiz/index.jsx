@@ -1,14 +1,16 @@
-import { Button, Box, AspectRatio, Image as MantineImage, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton, Badge, Tooltip, ActionIcon } from "@mantine/core";
+import { Button, Box, AspectRatio, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton, Badge, Tooltip, ActionIcon } from "@mantine/core";
 import ImagesModal from "templates/ImagesModal";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
-import PostTitle from "templates/PostTitle";
-import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
-import { IconCameraPlus, IconPlus, IconX } from "@tabler/icons-react";
-import axios from "axios";
+import { TitleInput, SubjectSelect, EditorMenu } from "templates/CreatePostWidgets";
+import { IconCameraPlus, IconPlus } from "@tabler/icons-react";
 
-
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
+import Placeholder from "@tiptap/extension-placeholder";
 
 export default function CreateQuiz() {
     const client = createClient("prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1");
@@ -18,7 +20,6 @@ export default function CreateQuiz() {
             response => setCoverImage(response.photos[0].src.landscape)
         )
     });
-
 
     const [coverImage, setCoverImage] = useState("");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -30,6 +31,15 @@ export default function CreateQuiz() {
     const [searchValue, setSearchValue] = useState("");
 
     const [questions, setQuestions] = useState([{ question: '', options: [] }]);
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Image,
+            Youtube,
+            Placeholder.configure({ placeholder: "Krátky popis kvízu..." })],
+        content: "",
+    })
 
     const handleQuestionChange = (index, value) => {
         const newQuestions = [...questions];
@@ -109,10 +119,10 @@ export default function CreateQuiz() {
                     setSelectedSubject={setSelectedSubject}
                 />
 
-                <TextEditor
-                    setText={setText}
-                    placeholder="Krátky popis kvízu..."
-                />
+                <Box className="text-editor" mt="sm">
+                    <EditorMenu editor={editor} />
+                    <EditorContent editor={editor} />
+                </Box>
             </Box>
 
             {questions.map((question, questionIndex) => (

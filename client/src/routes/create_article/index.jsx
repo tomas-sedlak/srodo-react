@@ -6,8 +6,14 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
 import { useSelector } from "react-redux";
 import { createClient } from 'pexels';
-import { TitleInput, SubjectSelect, TextEditor } from "templates/CreatePostWidgets";
+import { TitleInput, SubjectSelect, EditorMenu } from "templates/CreatePostWidgets";
 import axios from "axios";
+
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
+import Placeholder from "@tiptap/extension-placeholder";
 
 export default function CreateArticle() {
     const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
@@ -21,8 +27,16 @@ export default function CreateArticle() {
     const [coverImage, setCoverImage] = useState("");
     const [selectedSubject, setSelectedSubject] = useState();
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
-    const [text, setText] = useState("");
     const [isPublishing, setIsPublishing] = useState(false);
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Image,
+            Youtube,
+            Placeholder.configure({ placeholder: "Tu začni písať svoj článok..." })],
+        content: "",
+    })
 
     useEffect(() => {
         client.photos.curated({ per_page: 1, page: 1 }).then(
@@ -30,28 +44,30 @@ export default function CreateArticle() {
         )
     }, []);
 
-    const publish = async () => {
-        setIsPublishing(true)
-
+    const validate = () => {
         let errors = {}
-        let isError = false
 
         if (!title) {
-            isError = true
             errors.title = "Názov článku je povinný"
         }
 
         if (!selectedSubject) {
-            isError = true
             errors.subject = "Predmet je povinný"
         }
 
-        if (!text) {
-            isError = true
+        if (editor.getText().trim().length === 0) {
             errors.text = "Text je povinný"
         }
 
-        if (isError) {
+        return errors ? errors : null
+    }
+
+    const publish = async () => {
+        setIsPublishing(true)
+
+        const errors = validate()
+
+        if (Object.keys(errors).length !== 0) {
             setError(errors)
             return setIsPublishing(false)
         }
@@ -61,7 +77,7 @@ export default function CreateArticle() {
             subject: selectedSubject,
             coverImage: coverImage,
             title: title,
-            content: text.trim(),
+            content: editor.getHTML(),
             author: user._id,
         }
 
@@ -122,11 +138,10 @@ export default function CreateArticle() {
                     error={error.subject}
                 />
 
-                <TextEditor
-                    setText={setText}
-                    placeholder="Tu začni písať svoj článok..."
-                    error={error.text}
-                />
+                <Box className="text-editor" mt="sm">
+                    <EditorMenu editor={editor} />
+                    <EditorContent editor={editor} />
+                </Box>
 
                 <Group gap="sm" mt="sm" justify="flex-end">
                     <Button onClick={publish} loading={isPublishing}>

@@ -77,8 +77,8 @@ export function SubjectSelect({ setSelectedSubject, selectedSubject, error }) {
     )
 }
 
-const EditorMenu = () => {
-    const { editor } = useCurrentEditor()
+export function EditorMenu({ editor }) {
+    if (!editor) return null
 
     return (
         <Group className="text-editor-menu">
@@ -175,8 +175,8 @@ const EditorMenu = () => {
     )
 }
 
-const EditorMenuSimple = () => {
-    const { editor } = useCurrentEditor()
+export function EditorMenuSimple({ editor }) {
+    if (!editor) return null
 
     return (
         <Group className="text-editor-menu">
@@ -232,26 +232,5 @@ const EditorMenuSimple = () => {
                 </ActionIcon>
             </Tooltip>
         </Group>
-    )
-}
-
-export function TextEditor({ setText, placeholder = "", content = "", slotAfter, simple }) {
-    const extensions = [
-        StarterKit,
-        Image,
-        Youtube,
-        Placeholder.configure({ placeholder }),
-    ]
-
-    return (
-        <div className="text-editor">
-            <EditorProvider
-                slotBefore={simple ? <EditorMenuSimple /> : <EditorMenu />}
-                slotAfter={slotAfter}
-                extensions={extensions}
-                content={content}
-                onUpdate={({ editor }) => setText(editor.getHTML())}
-            />
-        </div>
     )
 }
