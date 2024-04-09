@@ -11,8 +11,8 @@ const initialValues = {
     username: "",
     email: "",
     password: "",
-    usernameoremail: "",
-    loginpassword: "",
+    usernameOrEmail: "",
+    loginPassword: "",
 }
 
 export default function LoginModal() {
@@ -126,7 +126,7 @@ export default function LoginModal() {
     const loginInputs = [
         {
             type: "email",
-            name: "email",
+            name: "usernameOrEmail",
             label: "Používateľské meno alebo email",
             validate: async (event) => {
                 const name = event.target.name
@@ -142,7 +142,7 @@ export default function LoginModal() {
         },
         {
             type: "password",
-            name: "password",
+            name: "loginPassword",
             label: "Heslo",
             mt: "sm",
             validate: async (event) => {
@@ -193,7 +193,6 @@ export default function LoginModal() {
 
     const handleFormSubmit = async () => {
         const isValid = Object.values(errors).every(error => error === null || error === "")
-        console.log(isValid)
         if (!isValid) return
 
         if (isLogin) await login();
