@@ -36,7 +36,6 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     async function search({ pageParam }) {
-        console.log("search")
         if (!query || query === "") return await emptySearch(pageParam)
         else return await querySearch(pageParam)
     }
