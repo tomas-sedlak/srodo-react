@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextInput, PasswordInput, Loader, ActionIcon } from "@mantine/core";
-import { IconEye, IconEyeClosed, IconEyeOff } from "@tabler/icons-react";
+import { IconEye, IconEyeOff } from "@tabler/icons-react";
 import "css/floatingLabel.css";
 
 export function FloatingTextInput(props) {
@@ -97,7 +97,7 @@ export function RegisterInput(props) {
                     </ActionIcon>
                 : status === "loading" && <Loader size={20} />}
             {...props}
-            type={type === "password" && visible ? "text" : "password"}
+            type={type === "password" ? visible ? "text" : "password" : type}
         />
     )
 }
