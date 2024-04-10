@@ -20,6 +20,7 @@ export default function LoginModal() {
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState(initialValues);
     const [statuses, setStatuses] = useState(initialValues);
+    const [loading, setLoading] = useState(false);
     const isLogin = pageType === "login";
     const isRegister = pageType === "register";
 
@@ -161,26 +162,31 @@ export default function LoginModal() {
 
 
     const register = async () => {
-        // const response = await axios.post(
-        //     "/api/auth/register",
-        //     values,
-        // )
+        setLoading(true)
 
-        console.log(values)
-        setValues(initialValues)
+        try {
+            await axios.post(
+                "/api/auth/register",
+                values,
+            )
 
-        // if (response.data) {
-        //     setPageType("login");
-        // }
+            setPageType("login");
+        } catch (err) {
+            console.log("Nastala chyba")
+        }
+
+        setLoading(false)
     };
 
     const login = async () => {
-        const response = await axios.post(
-            "/api/auth/login",
-            values,
-        )
+        setLoading(true)
 
-        if (response.data) {
+        try {
+            const response = await axios.post(
+                "/api/auth/login",
+                values,
+            )
+
             dispatch(
                 setLogin({
                     user: response.data.user,
@@ -188,7 +194,11 @@ export default function LoginModal() {
                 })
             );
             dispatch(setLoginModal(false));
+        } catch (err) {
+            console.log("Nesprávne prihlasovacie údaje")
         }
+
+        setLoading(false)
     };
 
     const handleFormSubmit = async () => {
@@ -250,6 +260,7 @@ export default function LoginModal() {
                 fullWidth
                 mt="lg"
                 onClick={handleFormSubmit}
+                loading={loading}
             >
                 {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
             </Button>
