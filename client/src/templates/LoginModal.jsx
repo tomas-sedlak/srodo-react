@@ -1,5 +1,6 @@
-import { FloatingTextInput, FloatingPasswordInput, RegisterInput } from "./FloatingInput";
-import { Button, Modal, Text } from "@mantine/core";
+import { RegisterInput } from "./FloatingInput";
+import { Button, Group, Modal, Text } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -19,6 +20,7 @@ export default function LoginModal() {
     const [pageType, setPageType] = useState("login");
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState(initialValues);
+    const [globalError, setGlobalError] = useState(null);
     const [statuses, setStatuses] = useState(initialValues);
     const [loading, setLoading] = useState(false);
     const isLogin = pageType === "login";
@@ -27,6 +29,12 @@ export default function LoginModal() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const opened = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
+
+    const resetInputs = () => {
+        setValues(initialValues)
+        setErrors(initialValues)
+        setGlobalError(null)
+    }
 
     const setValue = (event) => {
         setValues({ ...values, [event.target.name]: event.target.value })
@@ -172,7 +180,7 @@ export default function LoginModal() {
 
             setPageType("login");
         } catch (err) {
-            console.log("Nastala chyba")
+            setGlobalError("Nastala chyba. Skontroluj svoje údaje")
         }
 
         setLoading(false)
@@ -195,7 +203,7 @@ export default function LoginModal() {
             );
             dispatch(setLoginModal(false));
         } catch (err) {
-            console.log("Nesprávne prihlasovacie údaje")
+            setGlobalError("Nesprávne prihlasovacie údaje")
         }
 
         setLoading(false)
@@ -212,7 +220,12 @@ export default function LoginModal() {
     return (
         <Modal
             opened={opened}
-            onClose={() => dispatch(setLoginModal(false))}
+            onClose={() => {
+                dispatch(setLoginModal(false))
+                resetInputs()
+                setPageType("login")
+
+            }}
             padding={isMobile ? "sm" : "lg"}
             size="sm"
             radius={isMobile ? 0 : "lg"}
@@ -220,8 +233,23 @@ export default function LoginModal() {
             centered
             title={<Text fw={700} fz="lg">{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
         >
+            {globalError &&
+                <Group
+                    bg="var(--mantine-color-red-light)"
+                    p="sm"
+                    mb="md"
+                    gap={8}
+                    style={{ borderRadius: 8 }}
+                    align="flex-start"
+                >
+                    <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
+                    <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
+                </Group>
+            }
+
             {isRegister ? (
                 <>
+
                     {registerInputs.map((input) =>
                         <RegisterInput
                             value={values[input.name]}
@@ -279,6 +307,7 @@ export default function LoginModal() {
                     className="pointer"
                     onClick={() => {
                         setPageType(isLogin ? "register" : "login")
+                        resetInputs()
                     }}
                 >
                     {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
