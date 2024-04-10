@@ -110,6 +110,10 @@ export default function User() {
                 </Group>
             </Box>
 
+            {data.posts.length === 0 && (
+                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne príspevky</Text>
+            )}
+
             {data.posts.map((post) => <Post post={post} />)}
         </>
     );
