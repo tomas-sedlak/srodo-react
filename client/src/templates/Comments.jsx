@@ -87,7 +87,7 @@ export default function Comments({ postId }) {
                         <Button variant="subtle" color="gray" onClick={cancel}>
                             Zrušiť
                         </Button>
-                        <Button onClick={publish} loading={isPublishing} disabled={editor.getText().trim() === ""}>
+                        <Button onClick={publish} loading={isPublishing} disabled={editor?.getText().trim() === ""}>
                             Komentovať
                         </Button>
                     </Group>
