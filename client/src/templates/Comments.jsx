@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Group, Button, Loader, Text } from '@mantine/core';
+import { Box, Group, Button, Loader, Text, Avatar } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
@@ -13,7 +13,7 @@ export default function Comments({ postId }) {
     const [isInputOpened, setIsInputOpened] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const userId = useSelector(state => state.user?._id);
+    const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
     const editor = useEditor({
@@ -34,7 +34,7 @@ export default function Comments({ postId }) {
 
         await axios.post(`/api/post/${postId}/comment`, {
             postId: postId,
-            author: userId,
+            author: user._id,
             content: editor.getHTML(),
         }, {
             headers: { Authorization: `Bearer ${token}` }
@@ -67,12 +67,17 @@ export default function Comments({ postId }) {
         </div>
     ) : (
         <>
-            {userId &&
+            {user &&
                 <Box p="sm" className="border-bottom">
-                    <EditorContent
-                        editor={editor}
-                        onClick={() => setIsInputOpened(true)}
-                    />
+                    <Group gap="xs" align="flex-start">
+                        <Avatar src={user.profilePicture} />
+
+                        <EditorContent
+                            editor={editor}
+                            onClick={() => setIsInputOpened(true)}
+                            style={{ flex: 1 }}
+                        />
+                    </Group>
 
                     <Group
                         mt={8}
