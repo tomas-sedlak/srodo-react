@@ -73,9 +73,11 @@ export default function Post() {
 
                 <Box mt="sm" pos="relative">
                     <Group gap="xs">
-                        <Avatar src={data.author.profilePicture} />
+                        <Link to={`/${data.author.username}`}>
+                            <Avatar src={data.author.profilePicture} />
+                        </Link>
 
-                        <Stack gap={4}>
+                        <Stack gap={4} pr={32} style={{ flex: 1 }}>
                             <Link to={"/" + data.author.username}>
                                 <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                     {data.author.displayName}

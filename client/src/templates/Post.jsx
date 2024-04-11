@@ -65,7 +65,7 @@ const Post = forwardRef(({ post }, ref) => {
                         <Avatar src={post.author.profilePicture} />
                     </Link>
 
-                    <Stack gap={4} pr={32}>
+                    <Stack gap={4} pr={32} style={{ flex: 1 }}>
                         <Link to={"/" + post.author.username}>
                             <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
