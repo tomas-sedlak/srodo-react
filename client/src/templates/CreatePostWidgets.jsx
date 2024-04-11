@@ -3,13 +3,6 @@ import { Group, Select, Tooltip, Box, ActionIcon, Divider, Textarea, Text } from
 import { IconList, IconPhoto, IconHeading, IconBold, IconItalic, IconCode, IconStrikethrough, IconLink, IconListNumbers, IconVideo } from '@tabler/icons-react';
 import axios from "axios";
 
-// Tiptap imports
-import { EditorProvider, useCurrentEditor } from "@tiptap/react";
-import Placeholder from "@tiptap/extension-placeholder";
-import StarterKit from "@tiptap/starter-kit";
-import Image from "@tiptap/extension-image";
-import Youtube from "@tiptap/extension-youtube";
-
 export function TitleInput({ placeholder, title, setTitle, error }) {
     const maxCharacterLenght = 64;
     const [count, setCount] = useState(0);
@@ -42,7 +35,7 @@ export function TitleInput({ placeholder, title, setTitle, error }) {
                 }}
                 onKeyDown={event => event.key === "Enter" && event.preventDefault()}
             />
-            <Text c={error ? "red" : "dimmed"} size="sm" className="input-counter">{count}/{maxCharacterLenght}</Text>
+            <Text c={error ? "red" : "dimmed"} size="xs" className="input-counter">{count}/{maxCharacterLenght}</Text>
         </Box>
     )
 }

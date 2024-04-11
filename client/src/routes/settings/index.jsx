@@ -1,12 +1,45 @@
 import { useState } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Card, Modal, Tooltip, Button, Flex, Center } from "@mantine/core";
-import { IconPlus, IconBrandDiscord, IconBrandInstagram, IconBrandYoutube, IconBrandGithub, IconCameraPlus } from "@tabler/icons-react";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
+import { IconPlus, IconCameraPlus } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
-import axios from "axios";
 import SmallHeader from "templates/SmallHeader";
+import axios from "axios";
+
+const socials = [
+    {
+        name: "YouTube",
+        icon: "socials/youtube.svg",
+        url: "https://youtube.com/"
+    },
+    {
+        name: "Instagram",
+        icon: "socials/instagram.svg",
+        url: "https://youtube.com/"
+    },
+    {
+        name: "Facebook",
+        icon: "socials/facebook.svg",
+        url: "https://youtube.com/"
+    },
+    {
+        name: "LinkedIn",
+        icon: "socials/linkedin.svg",
+        url: "https://youtube.com/"
+    },
+    {
+        name: "Discord",
+        icon: "socials/discord.svg",
+        url: "https://youtube.com/"
+    },
+    {
+        name: "Github",
+        icon: "socials/github.svg",
+        url: "https://youtube.com/"
+    }
+]
 
 export default function Settings() {
     const dispatch = useDispatch();
@@ -80,35 +113,33 @@ export default function Settings() {
             />
 
             {/* Username modal */}
-            <Modal opened={usernameModalOpened} onClose={() => setUsernameModalOpened(false)} title="Pridať sociálnu sieť" centered>
-
+            <Modal
+                opened={usernameModalOpened}
+                onClose={() => setUsernameModalOpened(false)}
+                title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
+                centered
+            >
                 <TextInput placeholder="Používateľské meno" />
-                <Flex justify="flex-end">
-                    <Button mt="sm">Pridať</Button>
-                </Flex>
 
+                <Group justify="flex-end">
+                    <Button mt="sm">Pridať</Button>
+                </Group>
             </Modal>
 
             {/* Social modal */}
-            <Modal opened={socialModalOpened} onClose={() => setSocialModalOpened(false)} title="Pridať sociálnu sieť" centered>
-                <Group>
-                    <div className="icon-wrapper" onClick={() => handleSocialTagClick("Discord")}>
-                        <IconBrandDiscord stroke={1.25} />
-                        <span>Discord</span>
-                    </div>
-                    <div className="icon-wrapper" onClick={() => handleSocialTagClick("Youtube")}>
-                        <IconBrandYoutube stroke={1.25} />
-                        <span>Youtube</span>
-                    </div>
-                    <div className="icon-wrapper" onClick={() => handleSocialTagClick("Github")}>
-                        <IconBrandGithub stroke={1.25} />
-                        <span>Github</span>
-                    </div>
-                    <div className="icon-wrapper" onClick={() => handleSocialTagClick("Instagram")}>
-                        <IconBrandInstagram stroke={1.25} />
-                        <span>Instagram</span>
-                    </div>
-                    {/* More socials here */}
+            <Modal
+                opened={socialModalOpened}
+                onClose={() => setSocialModalOpened(false)}
+                title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
+                centered
+            >
+                <Group gap={4}>
+                    {socials.map(social =>
+                        <div className="icon-wrapper" onClick={() => handleSocialTagClick(social)}>
+                            <img width={24} height={24} src={social.icon} />
+                            <span>{social.name}</span>
+                        </div>
+                    )}
                 </Group>
             </Modal>
 
@@ -132,16 +163,16 @@ export default function Settings() {
                 </AspectRatio>
             </Box>
 
-            <Flex align="center">
-                <Avatar
-                    m="sm"
-                    size="xl"
-                    src={profilePicture}
-                />
-                <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
-            </Flex>
+            <Box p="sm">
+                <Group align="center" gap="xs">
+                    <Avatar
+                        size="xl"
+                        src={profilePicture}
+                    />
 
-            <Box px="sm" pb="sm">
+                    <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
+                </Group>
+
                 <TextInput
                     mt="sm"
                     label="Display name"
@@ -152,13 +183,18 @@ export default function Settings() {
                         setDisplaynameCount(event.currentTarget.value.length)
                     }}
                 />
-                <Text c="dimmed" size="sm">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
+                <Group>
+                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš použiť aj smajlíkov 🥳🤪</Text>
+                    <Text c="dimmed" size="xs">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
+                </Group>
+
                 <TextInput
                     mt="sm"
                     label="Použivateľské meno"
                     value={user.username}
                     disabled
                 />
+                <Text c="dimmed" size="xs">Použivateľské meno sa zatiaľ nedá zmeniť</Text>
 
                 <Textarea
                     mt="sm"
@@ -171,23 +207,26 @@ export default function Settings() {
                         setBio(event.currentTarget.value)
                         setBioCount(event.currentTarget.value.length)
                     }}
-
                 />
-                <Text c="dimmed" size="sm">{bioCount}/{maxBioCharacterLenght}</Text>
+                <Group>
+                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>V skratke opíš svoje záľuby</Text>
+                    <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
+                </Group>
 
                 <Text size="sm" mt="sm">Sociálne siete</Text>
-                <Group mt={8} gap={8}>
+                <Group mt={2} gap={4}>
                     <div className="icon-wrapper" >
-                        <IconBrandDiscord stroke={1.25} />
+                        <img width={24} height={24} src="socials/youtube.svg" />
                         <span>username</span>
                     </div>
                     <div className="icon-wrapper">
-                        <IconBrandYoutube stroke={1.25} />
+                        <img width={24} height={24} src="socials/discord.svg" />
                         <span>username</span>
                     </div>
-                    <ActionIcon variant="subtle" c="gray" color="gray" size="md" radius="lg" onClick={() => setSocialModalOpened(true)}>
-                        <IconPlus />
-                    </ActionIcon>
+                    <div className="icon-wrapper" onClick={() => setSocialModalOpened(true)}>
+                        <IconPlus stroke={1.25} />
+                        <span>Pridať sociálnu sieť</span>
+                    </div>
                 </Group>
 
                 <Group justify="flex-end" mt="sm">

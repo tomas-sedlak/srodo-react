@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Paper, Container, Center } from "@mantine/core";
-import { IconBrandDiscord, IconBrandYoutube } from "@tabler/icons-react";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
@@ -39,7 +38,6 @@ export default function User() {
 
             <Box px="sm" pb="sm" className="border-bottom">
                 <div style={{ position: "relative" }}>
-
                     <Avatar
                         className="profile-picture"
                         size={92}
@@ -74,14 +72,13 @@ export default function User() {
                 <Text style={{ lineHeight: 1.4 }}>
                     {data.user.bio}
                 </Text>
+
                 {/* Code for xp bar */}
                 <Group mt="sm">
-
                     <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
                         <Center>
                             <Text c="white" >4</Text>
                         </Center>
-
                     </Box>
 
                     <Progress size="lg" value={25} style={{ flex: 1 }} />
@@ -89,22 +86,17 @@ export default function User() {
                         <Center>
                             <Text c="white">5</Text>
                         </Center>
-
                     </Box>
                 </Group>
 
-
-
-
-
-                <Group mt="sm" gap={8}>
+                <Group mt="sm" gap={4}>
                     <div className="icon-wrapper">
-                        <IconBrandDiscord stroke={1.25} />
+                        <img width={24} height={24} src="socials/youtube.svg" />
                         <span>username</span>
                     </div>
 
                     <div className="icon-wrapper">
-                        <IconBrandYoutube stroke={1.25} />
+                        <img width={24} height={24} src="socials/instagram.svg" />
                         <span>username</span>
                     </div>
                 </Group>
