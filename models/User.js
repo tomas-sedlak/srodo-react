@@ -35,6 +35,15 @@ const userSchema = new Schema({
     bio: {
         type: String,
         max: 160,
+        trim: true,
+    },
+    socials: [{
+        type: Schema.Types.ObjectId,
+        maxLength: 5,
+    }],
+    verified: {
+        type: Boolean,
+        default: false,
     }
 }, {
     timestamps: true,
