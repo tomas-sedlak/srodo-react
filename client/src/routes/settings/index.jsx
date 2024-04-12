@@ -184,7 +184,7 @@ export default function Settings() {
                     }}
                 />
                 <Group>
-                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš použiť aj smajlíkov 🥳🤪</Text>
+                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Použi aj smajlíkov 🥳🤪</Text>
                     <Text c="dimmed" size="xs">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
                 </Group>
 
@@ -194,7 +194,7 @@ export default function Settings() {
                     value={user.username}
                     disabled
                 />
-                <Text c="dimmed" size="xs">Použivateľské meno sa zatiaľ nedá zmeniť</Text>
+                <Text c="dimmed" size="xs">Použivateľské meno sa momentálne nedá zmeniť</Text>
 
                 <Textarea
                     mt="sm"
@@ -209,7 +209,7 @@ export default function Settings() {
                     }}
                 />
                 <Group>
-                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>V skratke opíš svoje záľuby</Text>
+                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Tvoja krátka charakteristika</Text>
                     <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
                 </Group>
 
@@ -228,6 +228,7 @@ export default function Settings() {
                         <span>Pridať sociálnu sieť</span>
                     </div>
                 </Group>
+                <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>
