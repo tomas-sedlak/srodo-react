@@ -52,7 +52,6 @@ header {
   top: var(--header-height);
   background-color: var(--mantine-color-body);
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
-  padding: var(--mantine-spacing-sm);
   transition: top 0.15s ease;
 }
 
@@ -144,8 +143,8 @@ main {
 
 .profile-picture {
   position: absolute;
-  top: -50px;
-  left: 0;
+  left: var(--mantine-spacing-sm);
+  transform: translateY(-50%);
   border: 4px solid var(--mantine-color-body);
 }
 
@@ -211,29 +210,42 @@ main {
   background-color: var(--mantine-color-body);
 }
 
-.custom-tabs {
-  position: relative;
-  gap: 4px;
-}
-
 .custom-tabs>* {
-  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
-  background-color: transparent;
-  border-radius: var(--mantine-radius-md);
+  padding: 0;
+  margin-right: var(--mantine-spacing-lg);
 }
 
-.custom-tabs>*:hover {
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+.custom-tabs span {
+  position: relative;
+  font-size: var(--mantine-font-size-md);
+  color: var(--mantine-color-dimmed);
+  height: 48px;
+  display: flex;
+  align-items: center;
 }
 
-.custom-tabs>[data-active] {
-  border-color: var(--mantine-primary-color-filled);
+.custom-tabs>*:hover span::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--mantine-color-dimmed);
+}
+
+.custom-tabs>[data-active] span {
+  color: var(--mantine-color-text);
+}
+
+.custom-tabs>[data-active] span::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
   background-color: var(--mantine-primary-color-filled);
-  color: var(--mantine-color-white);
-}
-
-.custom-tabs>[data-active]:hover {
-  background-color: var(--mantine-primary-color-filled-hover);
 }
 
 .image-item-left,

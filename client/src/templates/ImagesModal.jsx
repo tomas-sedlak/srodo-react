@@ -96,7 +96,7 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                     <Modal.CloseButton />
                 </Modal.Header>
 
-                <Modal.Body h="calc(100% - 60px)">
+                <Modal.Body h="calc(100% - 72px)">
                     {tab === "pexels" ? (
                         <>
                             <TextInput

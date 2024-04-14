@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
 
+// Setup Moment.js for Slovak language
+import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
+
 export default function User() {
     const { username } = useParams();
-    const [following, setFollowing] = useState(false);
+    const [tab, setTab] = useState("posts");
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const profilePictureSize = isMobile ? 96 : 128;
 
     const getData = async () => {
         const user = await axios.get(`/api/user/${username}`);
@@ -36,36 +42,32 @@ export default function User() {
                 <Image src={data.user.coverImage} />
             </AspectRatio>
 
-            <Box px="sm" pb="sm" className="border-bottom">
-                <div style={{ position: "relative" }}>
-                    <Avatar
-                        className="profile-picture"
-                        size={92}
-                        src={data.user.profilePicture}
-                    />
-                </div>
+            <div style={{ position: "relative" }}>
+                <Avatar
+                    className="profile-picture"
+                    size={profilePictureSize}
+                    src={data.user.profilePicture}
+                />
+            </div>
 
-                <Group ml={100} mt={8} mb="sm" justify={isMobile ? "flex-end" : "space-between"}>
-                    {!isMobile &&
-                        <Stack gap={4}>
-                            <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
-                                {data.user.displayName}
-                            </Text>
-                            <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
-                        </Stack>
-                    }
-
-                    <Button variant={following ? "light" : "filled"} onClick={() => setFollowing(!following)}>
-                        {following ? "Sledované" : "Sledovať"}
-                    </Button>
-                </Group>
-
-                {isMobile &&
-                    <Stack mb="sm" gap={4}>
-                        <Text fw={700} size="lg" style={{ lineHeight: 1 }}>
+            {!isMobile &&
+                <Group ml={profilePictureSize + 8} h={profilePictureSize / 2} px="sm">
+                    <Stack gap={4}>
+                        <Text fw={700} size="xl" style={{ lineHeight: 1 }}>
                             {data.user.displayName}
                         </Text>
-                        <Text size="sm" c="gray" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
+                        <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
+                    </Stack>
+                </Group>
+            }
+
+            <Box p="sm">
+                {isMobile &&
+                    <Stack mb="sm" mt={profilePictureSize / 2} gap={4}>
+                        <Text fw={700} size="xl" style={{ lineHeight: 1 }}>
+                            {data.user.displayName}
+                        </Text>
+                        <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
                     </Stack>
                 }
 
@@ -74,8 +76,8 @@ export default function User() {
                 </Text>
 
                 {/* Code for xp bar */}
-                <Group mt="sm">
-                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}> {/* Change the color later adn fix padding in the circle */}
+                {/* <Group mt="sm">
+                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
                         <Center>
                             <Text c="white" >4</Text>
                         </Center>
@@ -87,9 +89,11 @@ export default function User() {
                             <Text c="white">5</Text>
                         </Center>
                     </Box>
-                </Group>
+                </Group> */}
 
-                <Group mt="sm" gap={4}>
+                <Text mt={4} c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
+
+                <Group mt={8} gap={4}>
                     <div className="icon-wrapper">
                         <img width={24} height={24} src="socials/youtube.svg" />
                         <span>username</span>
@@ -101,6 +105,20 @@ export default function User() {
                     </div>
                 </Group>
             </Box>
+
+            <Tabs px="sm" className="border-bottom" variant="unstyled" value={tab} onChange={setTab}>
+                <Tabs.List className="custom-tabs">
+                    <Tabs.Tab value="posts">
+                        Príspevky
+                    </Tabs.Tab>
+                    <Tabs.Tab value="groups">
+                        Skupiny
+                    </Tabs.Tab>
+                    <Tabs.Tab value="badges">
+                        Odznaky
+                    </Tabs.Tab>
+                </Tabs.List>
+            </Tabs>
 
             {data.posts.length === 0 && (
                 <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne príspevky</Text>

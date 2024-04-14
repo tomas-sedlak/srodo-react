@@ -32,7 +32,7 @@ export default function News() {
     return (
         <>
             <SmallHeader title={
-                <Tabs variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })}>
+                <Tabs px="sm" variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })}>
                     <Tabs.List className="custom-tabs">
                         {categories.map(subject =>
                             <Tabs.Tab value={subject.category}>
