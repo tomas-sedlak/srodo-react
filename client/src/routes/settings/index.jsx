@@ -163,7 +163,7 @@ export default function Settings() {
                 </AspectRatio>
             </Box>
 
-            <Box p="sm">
+            <Box py="sm" px="md">
                 <Group align="center" gap="xs">
                     <Avatar
                         size="xl"
@@ -183,7 +183,7 @@ export default function Settings() {
                         setDisplaynameCount(event.currentTarget.value.length)
                     }}
                 />
-                <Group>
+                <Group mt={4}>
                     <Text c="dimmed" size="xs" style={{ flex: 1 }}>Použi aj smajlíkov 🥳🤪</Text>
                     <Text c="dimmed" size="xs">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
                 </Group>
@@ -194,7 +194,7 @@ export default function Settings() {
                     value={user.username}
                     disabled
                 />
-                <Text c="dimmed" size="xs">Použivateľské meno sa momentálne nedá zmeniť</Text>
+                <Text mt={4} c="dimmed" size="xs">Použivateľské meno sa momentálne nedá zmeniť</Text>
 
                 <Textarea
                     mt="sm"
@@ -208,13 +208,13 @@ export default function Settings() {
                         setBioCount(event.currentTarget.value.length)
                     }}
                 />
-                <Group>
+                <Group mt={4}>
                     <Text c="dimmed" size="xs" style={{ flex: 1 }}>Tvoja krátka charakteristika</Text>
                     <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
                 </Group>
 
-                <Text size="sm" mt="sm">Sociálne siete</Text>
-                <Group mt={2} gap={4}>
+                <Text mt="sm" mb={4} size="sm" fw={600}>Sociálne siete</Text>
+                <Group gap={4}>
                     <div className="icon-wrapper" >
                         <img width={24} height={24} src="socials/youtube.svg" />
                         <span>username</span>
@@ -228,7 +228,7 @@ export default function Settings() {
                         <span>Pridať sociálnu sieť</span>
                     </div>
                 </Group>
-                <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
+                <Text mt={4} c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>

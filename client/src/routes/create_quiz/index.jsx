@@ -82,7 +82,7 @@ export default function CreateQuiz() {
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
             <ImagesModal opened={imageModalOpened} close={imageModalHandlers.close} />
 
-            <Box className="border-bottom" p="sm">
+            <Box px="md" py="sm" className="border-bottom">
                 <Box pos="relative">
                     <Badge fw={600} className="image-item-left">
                         Kvíz

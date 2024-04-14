@@ -41,7 +41,7 @@ function NewsCard({ data, title }) {
 
     return (
         <div key={title} className="news-card">
-            <Text fw={700} px="lg" pt="lg" pb="sm" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
+            <Text fw={700} px="lg" py="md" size="lg" style={{ lineHeight: 1 }}>{title}</Text>
 
             {data.slice(0, visbleNews).map(article =>
                 <Link key={article.title} to={article.url} target="_blank" className="news-card-item">

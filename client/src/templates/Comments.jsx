@@ -68,7 +68,7 @@ export default function Comments({ postId }) {
     ) : (
         <>
             {user &&
-                <Box p="sm" className="border-bottom">
+                <Box px="md" py="sm" className="border-bottom">
                     <Group gap="xs" align="flex-start">
                         <Avatar src={user.profilePicture} />
 

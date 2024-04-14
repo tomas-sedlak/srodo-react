@@ -32,7 +32,7 @@ export default function News() {
     return (
         <>
             <SmallHeader title={
-                <Tabs px="sm" variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })}>
+                <Tabs px="md" variant="unstyled" value={active} onChange={category => setSearchParams({ c: category })}>
                     <Tabs.List className="custom-tabs">
                         {categories.map(subject =>
                             <Tabs.Tab value={subject.category}>
@@ -54,7 +54,7 @@ export default function News() {
             ) : (
                 <>
                     {data.map((article) => (
-                        <Box className="border-bottom light-hover" p="sm">
+                        <Box className="border-bottom light-hover" px="md" py="sm">
                             <Link to={article.url} target="_blank">{article.title}</Link>
                         </Box>
                     ))}

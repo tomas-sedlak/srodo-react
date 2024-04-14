@@ -99,7 +99,7 @@ export default function CreateArticle() {
                 aspectRatio={2 / 1}
             />
 
-            <Box p="sm">
+            <Box px="md" py="sm">
                 <Box pos="relative">
                     <Badge fw={600} className="image-item-left">
                         Článok

@@ -45,7 +45,7 @@ const Post = forwardRef(({ post }, ref) => {
     })
 
     const postContent = (
-        <Box key={post._id} className="border-bottom light-hover" p="sm">
+        <Box key={post._id} className="border-bottom light-hover" py="sm" px="md">
             <Box pos="relative">
                 <Badge fw={600} className="image-item-left">
                     {typeNames[post.postType]}

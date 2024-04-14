@@ -84,7 +84,7 @@ export default function Edit() {
         <>
             <ImagesModal opened={coverImageModalOpened} close={coverImageModalHandlers.close} setImage={setCoverImage} />
 
-            <Box p="sm">
+            <Box px="md" py="sm">
                 <Box pos="relative">
                     <AspectRatio ratio={2 / 1}>
                         <Box

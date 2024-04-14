@@ -60,7 +60,7 @@ export default function Post() {
         </div>
     ) : (
         <>
-            <Box p="sm" className="border-bottom">
+            <Box py="sm" px="md" className="border-bottom">
                 <Box pos="relative">
                     <Badge fw={600} className="image-item-left">
                         {typeNames[data.postType]}

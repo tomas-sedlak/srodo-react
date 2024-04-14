@@ -61,7 +61,7 @@ export default function Comment({ data }) {
     })
 
     return (
-        <Group p="sm" gap="xs" align="flex-start" className="border-bottom">
+        <Group px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
             <Link to={`/${data.author.username}`}>
                 <Avatar src={data.author.profilePicture} />
             </Link>

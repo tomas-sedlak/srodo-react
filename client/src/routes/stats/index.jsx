@@ -60,7 +60,7 @@ export default function Stats() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <Box p="sm">
+        <Box px="md" py="sm">
             <Text fw={800} fz={24}>{data.title}</Text>
 
             <Group gap={8}>
