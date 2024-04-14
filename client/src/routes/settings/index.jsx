@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
-import { IconPlus, IconCameraPlus } from "@tabler/icons-react";
+import { IconPlus, IconCameraPlus, IconCircleX } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
@@ -8,7 +8,7 @@ import ImagesModal from "templates/ImagesModal";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
-const socials = [
+const allSocials = [
     {
         name: "YouTube",
         icon: "socials/youtube.svg",
@@ -17,27 +17,27 @@ const socials = [
     {
         name: "Instagram",
         icon: "socials/instagram.svg",
-        url: "https://youtube.com/"
+        url: "https://instagram.com/"
     },
     {
         name: "Facebook",
         icon: "socials/facebook.svg",
-        url: "https://youtube.com/"
+        url: "https://facebook.com/"
     },
     {
         name: "LinkedIn",
         icon: "socials/linkedin.svg",
-        url: "https://youtube.com/"
+        url: "https://linkedin.com/"
     },
     {
         name: "Discord",
         icon: "socials/discord.svg",
-        url: "https://youtube.com/"
+        url: "https://discord.com/"
     },
     {
         name: "Github",
         icon: "socials/github.svg",
-        url: "https://youtube.com/"
+        url: "https://github.com/"
     }
 ]
 
@@ -53,10 +53,12 @@ export default function Settings() {
 
     const [displayName, setdisplayName] = useState(user.displayName);
     const [bio, setBio] = useState(user.bio);
+    const [socials, setSocials] = useState(user.socials);
 
     const [socialModalOpened, setSocialModalOpened] = useState(false);
     const [usernameModalOpened, setUsernameModalOpened] = useState(false);
     const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
+    const [socialUsername, setSocialUsername] = useState("");
     const [displaynameCount, setDisplaynameCount] = useState(user.displayName.length);
     const [bioCount, setBioCount] = useState(user.bio.length);
     const maxBioCharacterLenght = 160;
@@ -80,7 +82,7 @@ export default function Settings() {
 
         const response = await axios.patch(
             `/api/user/${user._id}/update`,
-            { coverImage, profilePicture, displayName, bio },
+            { coverImage, profilePicture, displayName, bio, socials },
             { headers },
         )
 
@@ -119,10 +121,28 @@ export default function Settings() {
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
                 centered
             >
-                <TextInput placeholder="Používateľské meno" />
+                <TextInput
+                    onChange={event => setSocialUsername(event.target.value)}
+                    value={socialUsername}
+                    placeholder="Používateľské meno"
+                />
 
                 <Group justify="flex-end">
-                    <Button mt="sm">Pridať</Button>
+                    <Button
+                        mt="sm"
+                        onClick={() => {
+                            setSocials([...socials, {
+                                icon: selectedSocialPlatform.icon,
+                                name: socialUsername,
+                                url: selectedSocialPlatform.url + socialUsername
+                            }])
+                            socialUsername("")
+                            setUsernameModalOpened(false)
+                        }}
+                        disabled={socialUsername === ""}
+                    >
+                        Pridať
+                    </Button>
                 </Group>
             </Modal>
 
@@ -134,7 +154,7 @@ export default function Settings() {
                 centered
             >
                 <Group gap={4}>
-                    {socials.map(social =>
+                    {allSocials.map(social =>
                         <div className="icon-wrapper" onClick={() => handleSocialTagClick(social)}>
                             <img width={24} height={24} src={social.icon} />
                             <span>{social.name}</span>
@@ -215,14 +235,13 @@ export default function Settings() {
 
                 <Text mt="sm" mb={4} size="sm" fw={600}>Sociálne siete</Text>
                 <Group gap={4}>
-                    <div className="icon-wrapper" >
-                        <img width={24} height={24} src="socials/youtube.svg" />
-                        <span>username</span>
-                    </div>
-                    <div className="icon-wrapper">
-                        <img width={24} height={24} src="socials/discord.svg" />
-                        <span>username</span>
-                    </div>
+                    {socials.map(social =>
+                        <div className="icon-wrapper">
+                            <img width={24} height={24} src={social.icon} />
+                            <span>{social.name}</span>
+                            <IconCircleX stroke={1.25} onClick={() => setSocials(socials.filter(a => a !== social))} />
+                        </div>
+                    )}
                     <div className="icon-wrapper" onClick={() => setSocialModalOpened(true)}>
                         <IconPlus stroke={1.25} />
                         <span>Pridať sociálnu sieť</span>

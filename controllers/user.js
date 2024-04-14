@@ -71,7 +71,8 @@ export const updateUserSettings = async (req, res) => {
             coverImage,
             profilePicture,
             displayName,
-            bio
+            bio,
+            socials,
         } = req.body;
 
         const coverImageUrl = await uploadImage(coverImage, 600, 200);
@@ -83,7 +84,8 @@ export const updateUserSettings = async (req, res) => {
             coverImage: coverImageUrl,
             profilePicture: profilePictureUrl,
             displayName: displayName,
-            bio: bio
+            bio: bio,
+            socials: socials,
         }, {
             new: true,
         });

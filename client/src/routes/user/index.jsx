@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
@@ -93,17 +93,16 @@ export default function User() {
 
                 <Text mt={4} c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
 
-                <Group mt={8} gap={4}>
-                    <div className="icon-wrapper">
-                        <img width={24} height={24} src="socials/youtube.svg" />
-                        <span>username</span>
-                    </div>
-
-                    <div className="icon-wrapper">
-                        <img width={24} height={24} src="socials/instagram.svg" />
-                        <span>username</span>
-                    </div>
-                </Group>
+                {data.user.socials.length !== 0 &&
+                    <Group mt={8} gap={4}>
+                        {data.user.socials.map(social =>
+                            <Link className="icon-wrapper" to={social.url} target="_blank">
+                                <img width={24} height={24} src={social.icon} />
+                                <span>{social.name}</span>
+                            </Link>
+                        )}
+                    </Group>
+                }
             </Box>
 
             <Tabs px="sm" className="border-bottom" variant="unstyled" value={tab} onChange={setTab}>

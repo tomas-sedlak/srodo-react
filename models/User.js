@@ -38,7 +38,11 @@ const userSchema = new Schema({
         trim: true,
     },
     socials: [{
-        type: Schema.Types.ObjectId,
+        type: {
+            name: String,
+            icon: String,
+            url: String,
+        },
         maxLength: 5,
     }],
     verified: {
