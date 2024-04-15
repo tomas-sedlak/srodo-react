@@ -63,7 +63,8 @@ export default function App() {
                                 <Route path="stats" element={<Stats />} />
                                 <Route path="predmety/:subject" element={<Subject />} />
                                 <Route exact path=":username" element={<User />} />
-                                <Route exact path=":username/:postId" element={<Post />} />
+                                <Route exact path=":username/:tab" element={<User />} />
+                                <Route exact path=":username/prispevok/:postId" element={<Post />} />
 
                                 {/* PRIVATE ROUTES */}
                                 <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />

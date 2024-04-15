@@ -21,7 +21,7 @@ const typeNames = {
 
 const Post = forwardRef(({ post }, ref) => {
     const queryClient = useQueryClient();
-    const url = `/${post.author.username}/${post._id}`;
+    const url = `/${post.author.username}/prispevok/${post._id}`;
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const navigate = useNavigate();

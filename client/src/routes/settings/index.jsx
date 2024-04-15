@@ -11,32 +11,32 @@ import axios from "axios";
 const allSocials = [
     {
         name: "YouTube",
-        icon: "socials/youtube.svg",
+        icon: "/socials/youtube.svg",
         url: "https://youtube.com/"
     },
     {
         name: "Instagram",
-        icon: "socials/instagram.svg",
+        icon: "/socials/instagram.svg",
         url: "https://instagram.com/"
     },
     {
         name: "Facebook",
-        icon: "socials/facebook.svg",
+        icon: "/socials/facebook.svg",
         url: "https://facebook.com/"
     },
     {
         name: "LinkedIn",
-        icon: "socials/linkedin.svg",
+        icon: "/socials/linkedin.svg",
         url: "https://linkedin.com/"
     },
     {
         name: "Discord",
-        icon: "socials/discord.svg",
+        icon: "/socials/discord.svg",
         url: "https://discord.com/"
     },
     {
         name: "Github",
-        icon: "socials/github.svg",
+        icon: "/socials/github.svg",
         url: "https://github.com/"
     }
 ]
@@ -136,7 +136,7 @@ export default function Settings() {
                                 name: socialUsername,
                                 url: selectedSocialPlatform.url + socialUsername
                             }])
-                            socialUsername("")
+                            setSocialUsername("")
                             setUsernameModalOpened(false)
                         }}
                         disabled={socialUsername === ""}

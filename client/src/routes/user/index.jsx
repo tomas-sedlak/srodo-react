@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
@@ -12,10 +11,10 @@ import "moment/dist/locale/sk";
 moment.locale("sk");
 
 export default function User() {
-    const { username } = useParams();
-    const [tab, setTab] = useState("posts");
+    const { username, tab = "prispevky" } = useParams();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
+    const navigate = useNavigate();
 
     const getData = async () => {
         const user = await axios.get(`/api/user/${username}`);
@@ -105,25 +104,41 @@ export default function User() {
                 }
             </Box>
 
-            <Tabs px="sm" className="border-bottom" variant="unstyled" value={tab} onChange={setTab}>
+            <Tabs
+                px="sm"
+                className="border-bottom"
+                variant="unstyled"
+                value={tab}
+                onChange={newTab => {
+                    navigate(`/${data.user.username}/${newTab}`)
+                }}
+            >
                 <Tabs.List className="custom-tabs">
-                    <Tabs.Tab value="posts">
+                    <Tabs.Tab value="prispevky">
                         Príspevky
                     </Tabs.Tab>
-                    <Tabs.Tab value="groups">
+                    <Tabs.Tab value="skupiny">
                         Skupiny
                     </Tabs.Tab>
-                    <Tabs.Tab value="badges">
-                        Odznaky
+                    <Tabs.Tab value="ocenenia">
+                        Ocenenia
                     </Tabs.Tab>
                 </Tabs.List>
             </Tabs>
 
-            {data.posts.length === 0 && (
-                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne príspevky</Text>
-            )}
+            {tab === "prispevky" &&
+                // data.posts.length === 0 ?
+                // <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne príspevky</Text>
+                data.posts.map((post) => <Post post={post} />)
+            }
 
-            {data.posts.map((post) => <Post post={post} />)}
+            {tab === "skupiny" &&
+                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne skupiny</Text>
+            }
+
+            {tab === "ocenenia" &&
+                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne ocenenia</Text>
+            }
         </>
     );
 }
