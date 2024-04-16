@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
 import { IconPlus, IconCameraPlus, IconCircleX } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
@@ -45,6 +45,7 @@ export default function Settings() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const [coverImage, setCoverImage] = useState(user.coverImage);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -119,6 +120,8 @@ export default function Settings() {
                 opened={usernameModalOpened}
                 onClose={() => setUsernameModalOpened(false)}
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
+                radius={isMobile ? 0 : "lg"}
+                fullScreen={isMobile}
                 centered
             >
                 <TextInput
@@ -149,8 +152,10 @@ export default function Settings() {
             {/* Social modal */}
             <Modal
                 opened={socialModalOpened}
-                onClose={() => setSocialModalOpened(false)}
+                onClose={setSocialModalOpened}
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
+                radius={isMobile ? 0 : "lg"}
+                fullScreen={isMobile}
                 centered
             >
                 <Group gap={4}>
