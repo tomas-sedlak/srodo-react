@@ -66,7 +66,7 @@ export default function Comments({ postId }) {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <>
+        <div id="komentare">
             {user &&
                 <Box px="md" py="sm" className="border-bottom">
                     <Group gap="xs" align="flex-start">
@@ -104,6 +104,6 @@ export default function Comments({ postId }) {
             )}
 
             {data.map(comment => <Comment data={comment} />)}
-        </>
+        </div>
     )
 }
