@@ -100,7 +100,7 @@ export default function Comments({ postId }) {
             }
 
             {data.length === 0 && (
-                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne komentáre</Text>
+                <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne komentáre</Text>
             )}
 
             {data.map(comment => <Comment data={comment} />)}

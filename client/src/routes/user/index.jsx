@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Button, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
@@ -60,7 +60,7 @@ export default function User() {
                 </Group>
             }
 
-            <Box p="sm">
+            <Box px="md" py="sm">
                 {isMobile &&
                     <Stack mb="sm" mt={profilePictureSize / 2} gap={4}>
                         <Text fw={700} size="xl" style={{ lineHeight: 1 }}>
@@ -73,22 +73,6 @@ export default function User() {
                 <Text style={{ lineHeight: 1.4 }}>
                     {data.user.bio}
                 </Text>
-
-                {/* Code for xp bar */}
-                {/* <Group mt="sm">
-                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
-                        <Center>
-                            <Text c="white" >4</Text>
-                        </Center>
-                    </Box>
-
-                    <Progress size="lg" value={25} style={{ flex: 1 }} />
-                    <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
-                        <Center>
-                            <Text c="white">5</Text>
-                        </Center>
-                    </Box>
-                </Group> */}
 
                 <Text mt={4} c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
 
@@ -105,7 +89,7 @@ export default function User() {
             </Box>
 
             <Tabs
-                px="sm"
+                px="md"
                 className="border-bottom"
                 variant="unstyled"
                 value={tab}
@@ -127,17 +111,36 @@ export default function User() {
             </Tabs>
 
             {tab === "prispevky" &&
-                // data.posts.length === 0 ?
-                // <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne príspevky</Text>
-                data.posts.map((post) => <Post post={post} />)
+                <>
+                    {data.posts.length === 0 &&
+                        <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
+                    }
+
+                    {data.posts.map((post) => <Post post={post} />)}
+                </>
             }
 
             {tab === "skupiny" &&
-                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne skupiny</Text>
+                <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne skupiny</Text>
             }
 
             {tab === "ocenenia" &&
-                <Text px="sm" py="lg" c="dimmed">Zatiaľ žiadne ocenenia</Text>
+                <Box px="md" py="sm">
+                    <Group>
+                        <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
+                            <Center>
+                                <Text c="white" >4</Text>
+                            </Center>
+                        </Box>
+
+                        <Progress size="lg" value={25} style={{ flex: 1 }} />
+                        <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
+                            <Center>
+                                <Text c="white">5</Text>
+                            </Center>
+                        </Box>
+                    </Group>
+                </Box>
             }
         </>
     );
