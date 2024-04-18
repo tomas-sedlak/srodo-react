@@ -8,41 +8,34 @@ import ImagesModal from "templates/ImagesModal";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
-const allSocials = [
+const socialsData = [
     {
-        name: "YouTube",
+        platform: "YouTube",
         icon: "/socials/youtube.svg",
-        url: "https://youtube.com/"
     },
     {
-        name: "Instagram",
+        platform: "Instagram",
         icon: "/socials/instagram.svg",
-        url: "https://instagram.com/"
     },
     {
-        name: "Facebook",
+        platform: "Facebook",
         icon: "/socials/facebook.svg",
-        url: "https://facebook.com/"
     },
     {
-        name: "LinkedIn",
+        platform: "LinkedIn",
         icon: "/socials/linkedin.svg",
-        url: "https://linkedin.com/"
     },
     {
-        name: "Discord",
+        platform: "Discord",
         icon: "/socials/discord.svg",
-        url: "https://discord.com/"
     },
     {
-        name: "Github",
+        platform: "Github",
         icon: "/socials/github.svg",
-        url: "https://github.com/"
     },
     {
-        name: "Twitter",
+        platform: "Twitter",
         icon: "/socials/twitter.svg",
-        url: "https://twitter.com/"
     },
 ]
 
@@ -69,14 +62,32 @@ export default function Settings() {
 
     const [modalType, setModalType] = useState(null);
     const [selectedSocial, setSelectedSocial] = useState(null);
-    const [socialDisplayText, setSocialDisplayText] = useState("");
-    const [socialUrl, setSocialUrl] = useState("");
-    const isSocialEmpty = socialDisplayText === "" && socialUrl === "";
+    const [selectedSocialIndex, setSelectedSocialIndex] = useState(null);
 
     const validate = () => {
-        if (socialDisplayText === "") return false
-        if (socialUrl === "") return false
+        if (selectedSocial.displayText.length === 0) return false
+        if (selectedSocial.url.length === 0) return false
+        if (!/^(?:(https):\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*$/i.test(selectedSocial.url)) return false
         return true
+    }
+
+    const closeModal = () => {
+        setModalType(null)
+        setSelectedSocial({})
+    }
+
+    const handleDisplayTextChange = event => {
+        setSelectedSocial({
+            ...selectedSocial,
+            displayText: event.target.value
+        })
+    }
+
+    const handleUrlChange = event => {
+        setSelectedSocial({
+            ...selectedSocial,
+            url: event.target.value
+        })
     }
 
     const headers = {
@@ -111,6 +122,7 @@ export default function Settings() {
                 aspectRatio={6 / 2}
                 qkey="coverImage"
             />
+
             <ImagesModal
                 opened={profilePictureModalOpened}
                 close={profilePictureModalHandlers.close}
@@ -122,53 +134,53 @@ export default function Settings() {
 
             <Modal
                 opened={modalType}
-                onClose={() => {
-                    setModalType(null)
-                    setSocialDisplayText("")
-                    setSocialUrl("")
-                }}
+                onClose={closeModal}
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
                 radius={isMobile ? 0 : "lg"}
                 fullScreen={isMobile}
                 centered
             >
-                {modalType === "select-platform" &&
+                {modalType === "select" &&
                     <Group gap={4}>
-                        {allSocials.map(social =>
+                        {socialsData.map(social =>
                             <div
                                 className="icon-wrapper"
                                 onClick={() => {
-                                    setSelectedSocial(social)
-                                    setModalType("set-url")
+                                    setSelectedSocial({
+                                        ...social,
+                                        displayText: "",
+                                        url: "",
+                                    })
+                                    setModalType("set")
                                 }}
                             >
                                 <img width={24} height={24} src={social.icon} />
-                                <span>{social.name}</span>
+                                <span>{social.platform}</span>
                             </div>
                         )}
                     </Group>
                 }
 
-                {modalType === "set-url" &&
+                {modalType === "set" &&
                     <>
                         <Group>
-                            <div className="icon-wrapper" onClick={() => setModalType("select-platform")}>
+                            <div className="icon-wrapper">
                                 <img width={24} height={24} src={selectedSocial.icon} />
-                                <span>{selectedSocial.name}</span>
+                                <span>{selectedSocial.platform}</span>
                             </div>
                         </Group>
 
                         <TextInput
                             mt="sm"
-                            onChange={event => setSocialDisplayText(event.target.value)}
-                            value={socialDisplayText}
+                            onChange={handleDisplayTextChange}
+                            value={selectedSocial.displayText}
                             placeholder="Používateľské meno"
                         />
 
                         <TextInput
                             mt="sm"
-                            onChange={event => setSocialUrl(event.target.value)}
-                            value={socialUrl}
+                            onChange={handleUrlChange}
+                            value={selectedSocial.url}
                             placeholder="URL"
                         />
 
@@ -176,18 +188,52 @@ export default function Settings() {
                             <Button
                                 mt="md"
                                 onClick={() => {
-                                    setModalType(null)
-                                    setSocials([...socials, {
-                                        icon: selectedSocial.icon,
-                                        name: socialDisplayText,
-                                        url: socialUrl,
-                                    }])
-                                    setSocialDisplayText("")
-                                    setSocialUrl("")
+                                    closeModal()
+                                    setSocials([...socials, selectedSocial])
                                 }}
                                 disabled={!validate()}
                             >
                                 Pridať
+                            </Button>
+                        </Group>
+                    </>
+                }
+
+                {modalType === "update" &&
+                    <>
+                        <Group>
+                            <div className="icon-wrapper">
+                                <img width={24} height={24} src={selectedSocial.icon} />
+                                <span>{selectedSocial.platform}</span>
+                            </div>
+                        </Group>
+
+                        <TextInput
+                            mt="sm"
+                            onChange={handleDisplayTextChange}
+                            value={selectedSocial.displayText}
+                            placeholder="Používateľské meno"
+                        />
+
+                        <TextInput
+                            mt="sm"
+                            onChange={handleUrlChange}
+                            value={selectedSocial.url}
+                            placeholder="URL"
+                        />
+
+                        <Group justify="flex-end">
+                            <Button
+                                mt="md"
+                                onClick={() => {
+                                    closeModal()
+                                    const newSocials = [...socials]
+                                    newSocials[selectedSocialIndex] = selectedSocial
+                                    setSocials(newSocials)
+                                }}
+                                disabled={!validate()}
+                            >
+                                Uložiť
                             </Button>
                         </Group>
                     </>
@@ -266,17 +312,24 @@ export default function Settings() {
 
                 <Text mt="sm" mb={4} size="sm" fw={600}>Sociálne siete</Text>
                 <Group gap={4}>
-                    {socials.map(social =>
+                    {socials.map((social, index) =>
                         <div
                             className="icon-wrapper"
                             onClick={() => {
                                 setSelectedSocial(social)
-                                setModalType("set-url")
+                                setSelectedSocialIndex(index)
+                                setModalType("update")
                             }}
                         >
                             <img width={24} height={24} src={social.icon} />
-                            <span>{social.name}</span>
-                            <IconCircleX stroke={1.25} onClick={() => setSocials(socials.filter(a => a !== social))} />
+                            <span>{social.displayText}</span>
+                            <IconCircleX
+                                stroke={1.25}
+                                onClick={event => {
+                                    event.stopPropagation() // So the update onClick function won't get triggered
+                                    setSocials(socials.filter(a => a !== social))
+                                }}
+                            />
                         </div>
                     )}
 
@@ -284,7 +337,7 @@ export default function Settings() {
                         className="icon-wrapper"
                         onClick={() => {
                             if (socials.length >= 5) return
-                            setModalType("select-platform")
+                            setModalType("select")
                         }}
                     >
                         <IconPlus stroke={1.25} />

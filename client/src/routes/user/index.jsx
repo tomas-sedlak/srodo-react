@@ -97,7 +97,7 @@ export default function User() {
                         {data.user.socials.map(social =>
                             <Link className="icon-wrapper" to={social.url} target="_blank">
                                 <img width={24} height={24} src={social.icon} />
-                                <span>{social.name}</span>
+                                <span>{social.displayText}</span>
                             </Link>
                         )}
                     </Group>

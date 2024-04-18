@@ -39,8 +39,9 @@ const userSchema = new Schema({
     },
     socials: [{
         type: {
-            name: String,
+            platform: String,
             icon: String,
+            displayText: String,
             url: String,
         },
         maxLength: 5,
