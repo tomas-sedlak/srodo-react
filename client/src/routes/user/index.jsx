@@ -74,7 +74,7 @@ export default function User() {
                     {data.user.bio}
                 </Text>
 
-                <Text mt={4} c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
+                <Text c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
 
                 {data.user.socials.length !== 0 &&
                     <Group mt={8} gap={4}>

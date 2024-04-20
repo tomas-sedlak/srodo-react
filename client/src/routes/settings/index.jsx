@@ -11,31 +11,31 @@ import axios from "axios";
 const socialsData = [
     {
         platform: "YouTube",
-        icon: "/socials/youtube.svg",
+        icon: "/images/socials/youtube.svg",
     },
     {
         platform: "Instagram",
-        icon: "/socials/instagram.svg",
+        icon: "/images/socials/instagram.svg",
     },
     {
         platform: "Facebook",
-        icon: "/socials/facebook.svg",
+        icon: "/images/socials/facebook.svg",
     },
     {
         platform: "LinkedIn",
-        icon: "/socials/linkedin.svg",
+        icon: "/images/socials/linkedin.svg",
     },
     {
         platform: "Discord",
-        icon: "/socials/discord.svg",
+        icon: "/images/socials/discord.svg",
     },
     {
         platform: "Github",
-        icon: "/socials/github.svg",
+        icon: "/images/socials/github.svg",
     },
     {
         platform: "Twitter",
-        icon: "/socials/twitter.svg",
+        icon: "/images/socials/twitter.svg",
     },
 ]
 
@@ -310,7 +310,7 @@ export default function Settings() {
                     <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
                 </Group>
 
-                <Text mt="sm" mb={4} size="sm" fw={600}>Sociálne siete</Text>
+                <Text mt="sm" mb={4} size="sm" fw={500}>Sociálne siete</Text>
                 <Group gap={4}>
                     {socials.map((social, index) =>
                         <div
