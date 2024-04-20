@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea, Avatar } from '@mantine/core';
-import { IconLock, IconPencil, IconWorld } from "@tabler/icons-react";
+import { useState } from 'react';
+import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea } from '@mantine/core';
+import { IconCamera, IconLock, IconTrash, IconWorld } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import ImagesModal from "templates/ImagesModal";
-import { useSelector } from "react-redux";
-import { createClient } from 'pexels';
 
 const titleMaxLength = 64;
 const descriptionMaxLength = 160;
@@ -16,20 +14,12 @@ const initialData = {
 };
 
 export default function CreateGroup() {
-    const client = createClient('prpnbgyqErzVNroSovGlQyX5Z1Ybl8z3hAEhaingf99gTztS33sMZwg1');
-    const user = useSelector(state => state.user);
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     const [tab, setTab] = useState("settings");
     const [data, setData] = useState(initialData);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
     const [isPublishing, setIsPublishing] = useState(false);
-
-    useEffect(() => {
-        client.photos.curated({ per_page: 1, page: 1 }).then(
-            response => setCoverImage(response.photos[0].src.landscape)
-        )
-    }, []);
 
     const setCoverImage = image => {
         setData({
@@ -61,6 +51,8 @@ export default function CreateGroup() {
         })
     }
 
+    const validate = () => data.title.length !== 0
+
     return (
         <>
             <ImagesModal
@@ -91,15 +83,27 @@ export default function CreateGroup() {
                 {tab === "settings" &&
                     <>
                         <Box pos="relative">
-                            <Button
-                                className="bottom-right"
-                                variant="default"
-                                leftSection={<IconPencil stroke={1.25} />}
-                                styles={{ section: { marginRight: 4 } }}
-                                onClick={coverImageModalHandlers.open}
-                            >
-                                Upraviť
-                            </Button>
+                            <Group gap={8} className="bottom-right">
+                                {data.coverImage &&
+                                    <Button
+                                        variant="default"
+                                        leftSection={<IconTrash stroke={1.25} />}
+                                        styles={{ section: { marginRight: 4 } }}
+                                        onClick={() => setCoverImage("")}
+                                    >
+                                        Zmazať
+                                    </Button>
+                                }
+
+                                <Button
+                                    variant="default"
+                                    leftSection={<IconCamera stroke={1.25} />}
+                                    styles={{ section: { marginRight: 4 } }}
+                                    onClick={coverImageModalHandlers.open}
+                                >
+                                    Pridať
+                                </Button>
+                            </Group>
 
                             <AspectRatio ratio={2 / 1}>
                                 <Box
@@ -133,7 +137,7 @@ export default function CreateGroup() {
                                 autosize
                                 minRows={2}
                                 styles={{ input: { paddingRight: 46 } }}
-                                placeholder="Popis skupiny"
+                                placeholder="Popis skupiny (nepovinné)"
                                 value={data.description}
                                 onChange={setDescription}
                             />
@@ -156,7 +160,11 @@ export default function CreateGroup() {
                         <Text mt={4} size="xs" c="dimmed">Ak je skupina súkromna, príspevky budú vidieť iba pozvaný používatelia</Text>
 
                         <Group mt="md">
-                            <Button ml="auto" loading={isPublishing}>
+                            <Button
+                                ml="auto"
+                                loading={isPublishing}
+                                disabled={!validate()}
+                            >
                                 Vytvoriť skupinu
                             </Button>
                         </Group>
