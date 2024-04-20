@@ -17,6 +17,7 @@ const Post = lazy(() => import("routes/post"));
 const CreateArticle = lazy(() => import("routes/create_article"));
 const CreateQuiz = lazy(() => import("routes/create_quiz"));
 const CreateDiscussion = lazy(() => import("routes/create_discussion"));
+const CreateGroup = lazy(() => import("routes/create_group"));
 const Stats = lazy(() => import("routes/stats"));
 const Settings = lazy(() => import("routes/settings"));
 const Edit = lazy(() => import("routes/edit"));
@@ -73,6 +74,7 @@ export default function App() {
                                     <Route path="clanok" element={<CreateArticle />} />
                                     <Route path="kviz" element={<CreateQuiz />} />
                                     <Route path="diskusia" element={<CreateDiscussion />} />
+                                    <Route path="skupina" element={<CreateGroup />} />
                                 </Route>
 
                                 {/* SPECIFIC USER ROUTES */}
