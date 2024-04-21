@@ -2,19 +2,27 @@ import { useState } from 'react';
 import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea } from '@mantine/core';
 import { IconCamera, IconLock, IconTrash, IconWorld } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import ImagesModal from "templates/ImagesModal";
+import axios from 'axios';
 
-const titleMaxLength = 64;
+const nameMaxLength = 64;
 const descriptionMaxLength = 160;
 const initialData = {
     coverImage: "",
-    title: "",
+    name: "",
     description: "",
-    private: false,
+    isPrivate: false,
 };
 
 export default function CreateGroup() {
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const navigate = useNavigate();
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const [tab, setTab] = useState("settings");
     const [data, setData] = useState(initialData);
@@ -28,11 +36,11 @@ export default function CreateGroup() {
         })
     }
 
-    const setTitle = event => {
-        if (event.target.value.length > titleMaxLength) return
+    const setName = event => {
+        if (event.target.value.length > nameMaxLength) return
         setData({
             ...data,
-            title: event.target.value
+            name: event.target.value
         })
     }
 
@@ -47,11 +55,19 @@ export default function CreateGroup() {
     const setPrivate = event => {
         setData({
             ...data,
-            private: event.target.checked
+            isPrivate: event.target.checked
         })
     }
 
-    const validate = () => data.title.length !== 0
+    const isValid = () => data.name.length !== 0
+
+    const publish = async () => {
+        setIsPublishing(true)
+
+        await axios.post("/api/group/", data, { headers });
+
+        navigate("/")
+    }
 
     return (
         <>
@@ -119,15 +135,15 @@ export default function CreateGroup() {
                                 mt="md"
                                 styles={{ input: { paddingRight: 46 } }}
                                 placeholder="Názov skupiny"
-                                value={data.title}
-                                onChange={setTitle}
+                                value={data.name}
+                                onChange={setName}
                             />
                             <Text
                                 size="xs"
                                 c="dimmed"
                                 className="input-counter"
                             >
-                                {data.title.length}/{titleMaxLength}
+                                {data.name.length}/{nameMaxLength}
                             </Text>
                         </Box>
 
@@ -163,7 +179,8 @@ export default function CreateGroup() {
                             <Button
                                 ml="auto"
                                 loading={isPublishing}
-                                disabled={!validate()}
+                                disabled={!isValid()}
+                                onClick={publish}
                             >
                                 Vytvoriť skupinu
                             </Button>
@@ -180,16 +197,16 @@ export default function CreateGroup() {
                             ></Box>
                         </AspectRatio>
 
-                        <Text mt="sm" fw={700} size="xl" c={!data.title ? "dimmed" : "text"}>{data.title ? data.title : "Názov skupiny"}</Text>
+                        <Text mt="sm" fw={700} size="xl" c={data.name ? "var(--mantine-color-text)" : "dimmed"}>{data.name ? data.name : "Názov skupiny"}</Text>
 
                         <Text style={{ lineHeight: 1.4 }}>{data.description}</Text>
 
                         <Group gap={4}>
-                            {data.private ?
+                            {data.isPrivate ?
                                 <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
                                 : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
                             }
-                            <Text c="dimmed">{data.private ? "Súkromná" : "Verejná"} skupina</Text>
+                            <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
                         </Group>
                     </>
                 }
