@@ -14,6 +14,7 @@ const News = lazy(() => import("routes/news"));
 const Favourites = lazy(() => import("routes/favourites"));
 const User = lazy(() => import("routes/user"));
 const Post = lazy(() => import("routes/post"));
+const Group = lazy(() => import("routes/group"));
 const CreateArticle = lazy(() => import("routes/create_article"));
 const CreateQuiz = lazy(() => import("routes/create_quiz"));
 const CreateDiscussion = lazy(() => import("routes/create_discussion"));
@@ -63,6 +64,8 @@ export default function App() {
                                 <Route path="novinky" element={<News />} />
                                 <Route path="stats" element={<Stats />} />
                                 <Route path="predmety/:subject" element={<Subject />} />
+                                <Route path="skupiny/:groupId" element={<Group />} />
+                                <Route path="skupiny/:groupId/:tab" element={<Group />} />
                                 <Route exact path=":username" element={<User />} />
                                 <Route exact path=":username/:tab" element={<User />} />
                                 <Route exact path=":username/prispevok/:postId" element={<Post />} />

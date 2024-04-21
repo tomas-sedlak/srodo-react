@@ -41,16 +41,12 @@ export const createGroup = async (req, res) => {
 // READ
 export const getGroup = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const post = await Post.findById(postId)
-            .populate("author", "username displayName profilePicture")
-            .populate("subject")
-            .lean();
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId)
+            .populate("owner", "username displayName profilePicture")
+            .populate("members", "username displayName profilePicture");
 
-        const comments = await Comment.find({ postId: post._id });
-        post.comments = comments.length;
-
-        res.status(200).json(post);
+        res.status(200).json(group);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
