@@ -1,11 +1,14 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge } from '@mantine/core';
-import { IconLock, IconWorld } from '@tabler/icons-react';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button } from '@mantine/core';
+import { IconLock, IconPlus, IconWorld } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
+    const userId = useSelector(state => state.user?._id);
+    console.log(userId)
     const navigate = useNavigate();
 
     const fetchGroup = async () => {
@@ -36,9 +39,16 @@ export default function Group() {
                     />
                 </AspectRatio>
 
-                <Text my="sm" fw={700} size={24} style={{ lineHeight: 1 }}>
-                    {data.name}
-                </Text>
+                <Flex my="sm" justify="space-between" align="center">
+                    <Text fw={700} size={24} style={{ lineHeight: 1 }}>
+                        {data.name}
+                    </Text>
+
+                    {data.members.includes(userId) || data.owner._id == userId ?
+                        <Button>Vytvoriť</Button>
+                        : <Button>Pripojiť sa</Button>
+                    }
+                </Flex>
 
                 <Text style={{ lineHeight: 1.4 }}>
                     {data.description}
@@ -100,11 +110,11 @@ export default function Group() {
 function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`}>
-            <Flex gap="xs">
+            <Flex gap="xs" align="center">
                 <Avatar src={user.profilePicture} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
-                    <Flex gap={4}>
+                    <Flex gap={4} align="center">
                         <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                             {user.displayName}
                         </Text>

@@ -1,5 +1,5 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch } from '@mantine/core';
-import { IconSearch, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX } from '@tabler/icons-react';
+import { IconSearch, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconUsers } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -74,6 +74,12 @@ export default function Header() {
                                     </Menu.Target>
                                     <Menu.Dropdown>
                                         <Menu.Item
+                                            onClick={() => navigate("/vytvorit/skupina")}
+                                            leftSection={<IconUsers stroke={1.25} />}
+                                        >
+                                            <Text>Skupina</Text>
+                                        </Menu.Item>
+                                        <Menu.Item
                                             onClick={() => navigate("/vytvorit/clanok")}
                                             leftSection={<IconPencilPlus stroke={1.25} />}
                                         >
@@ -135,8 +141,8 @@ export default function Header() {
                                             <Group justify="space-between">
                                                 <Text>Tmavý režim</Text>
                                                 <Switch
-                                                checked={colorScheme === "dark"}
-                                                onClick={toggleColorScheme}
+                                                    checked={colorScheme === "dark"}
+                                                    onClick={toggleColorScheme}
                                                 />
                                             </Group>
                                         </Menu.Item>
