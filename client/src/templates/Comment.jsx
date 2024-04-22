@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, Group, Avatar, TypographyStylesProvider, Menu, ActionIcon, Spoiler, Stack } from '@mantine/core';
+import { Text, Group, Avatar, Menu, ActionIcon, Spoiler, Stack } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil, IconTrash } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -138,9 +138,9 @@ export default function Comment({ data }) {
                         control: { color: "var(--mantine-color-dimmed)" },
                     }}
                 >
-                    <TypographyStylesProvider p={0} m={0}>
-                        <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
-                    </TypographyStylesProvider>
+                    <div style={{ whiteSpace: "pre-line" }}>
+                        {data.content}
+                    </div>
                 </Spoiler>
 
                 <Group gap={8}>

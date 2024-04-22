@@ -1,47 +1,41 @@
 import { useState } from "react";
-import { Box, Group, Button, Loader, Text, Avatar } from '@mantine/core';
+import { Box, Group, Button, Loader, Text, Avatar, Textarea } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
 import Comment from "templates/Comment";
 import axios from "axios";
 
 export default function Comments({ postId }) {
     const [isInputOpened, setIsInputOpened] = useState(false);
+    const [content, setContent] = useState("");
     const [isPublishing, setIsPublishing] = useState(false);
 
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
 
-    const editor = useEditor({
-        extensions: [StarterKit, Placeholder.configure({ placeholder: "Napíš komentár" })],
-        content: "",
-    })
-
     const cancel = () => {
         setIsInputOpened(false)
-        editor.commands.clearContent()
+        setContent("")
+    }
+
+    const isValid = () => {
+        return content.trim() !== ""
     }
 
     const publish = async () => {
-        // Check if empty
-        if (editor.getText().trim() === "") return
+        if (!isValid()) return
 
         setIsPublishing(true)
 
         await axios.post(`/api/post/${postId}/comment`, {
             postId: postId,
             author: user._id,
-            content: editor.getHTML(),
+            content: content.trim(),
         }, {
             headers: { Authorization: `Bearer ${token}` }
         })
 
-        editor.commands.clearContent()
-        setIsInputOpened(false)
+        cancel()
         refetch()
 
         setIsPublishing(false)
@@ -72,10 +66,15 @@ export default function Comments({ postId }) {
                     <Group gap="xs" align="flex-start">
                         <Avatar src={user.profilePicture} />
 
-                        <EditorContent
-                            editor={editor}
-                            onClick={() => setIsInputOpened(true)}
+                        <Textarea
+                            minRows={1}
+                            autosize
+                            size="md"
+                            placeholder="Napíš komentár"
                             style={{ flex: 1 }}
+                            onClick={() => setIsInputOpened(true)}
+                            value={content}
+                            onChange={event => setContent(event.target.value)}
                         />
                     </Group>
 
@@ -92,7 +91,7 @@ export default function Comments({ postId }) {
                         <Button variant="subtle" color="gray" onClick={cancel}>
                             Zrušiť
                         </Button>
-                        <Button onClick={publish} loading={isPublishing} disabled={editor?.getText().trim() === ""}>
+                        <Button onClick={publish} loading={isPublishing} disabled={!isValid()}>
                             Komentovať
                         </Button>
                     </Group>
