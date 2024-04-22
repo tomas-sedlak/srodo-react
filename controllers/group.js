@@ -63,7 +63,23 @@ export const joinGroup = async (req, res) => {
         }
 
         await group.save();
-        res.status(200).json(group);
+        res.sendStatus(200);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export const leaveGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+
+        if (group.members.includes(req.user.id)) {
+            group.members.pull(req.user.id);
+        }
+
+        await group.save();
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

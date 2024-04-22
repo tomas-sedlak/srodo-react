@@ -2,14 +2,17 @@ import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button } from '@mantine/core';
 import { IconLock, IconWorld } from '@tabler/icons-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
     const [isLoading, setIsLoading] = useState(false);
+    
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
+    
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const headers = {
@@ -25,6 +28,14 @@ export default function Group() {
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
         setIsLoading(false)
+        queryClient.invalidateQueries("group")
+    }
+
+    const leaveGroup = async () => {
+        setIsLoading(true)
+        await axios.patch(`/api/group/${groupId}/leave`, {}, { headers })
+        setIsLoading(false)
+        queryClient.invalidateQueries("group")
     }
 
     const { data, status } = useQuery({
@@ -55,8 +66,8 @@ export default function Group() {
                         {data.name}
                     </Text>
 
-                    {data.members.includes(userId) || data.owner._id == userId ?
-                        <Button>Vytvoriť</Button>
+                    {data.members.find(user => user._id == userId) || data.owner._id == userId ?
+                        <Button onClick={leaveGroup} loading={isLoading}>Odísť</Button>
                         : <Button onClick={joinGroup} loading={isLoading}>Pripojiť sa</Button>
                     }
                 </Flex>

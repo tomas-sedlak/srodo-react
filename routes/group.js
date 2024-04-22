@@ -3,6 +3,7 @@ import {
     createGroup,
     getGroup,
     joinGroup,
+    leaveGroup,
     editGroup,
     deleteGroup,
 } from "../controllers/group.js";
@@ -18,6 +19,7 @@ router.get("/:groupId", getGroup);
 
 // UPDATE
 router.patch("/:groupId/join", verifyToken, joinGroup);
+router.patch("/:groupId/leave", verifyToken, leaveGroup);
 router.patch("/:groupId/edit", verifyToken, editGroup);
 
 // DELETE
