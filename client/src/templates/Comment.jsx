@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Text, Group, Avatar, TypographyStylesProvider, Menu, ActionIcon } from '@mantine/core';
+import { Text, Group, Avatar, TypographyStylesProvider, Menu, ActionIcon, Spoiler, Stack } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil, IconTrash } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -66,7 +66,7 @@ export default function Comment({ data }) {
                 <Avatar src={data.author.profilePicture} />
             </Link>
 
-            <Box pos="relative" style={{ flex: 1 }}>
+            <Stack gap={4} pos="relative" style={{ flex: 1 }}>
                 <Group gap={4}>
                     <Link to={"/" + data.author.username}>
                         <Text fw={700} size="sm">
@@ -130,9 +130,18 @@ export default function Comment({ data }) {
                     </Menu.Dropdown>
                 </Menu >
 
-                <TypographyStylesProvider p={2} mb={4}>
-                    <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
-                </TypographyStylesProvider>
+                <Spoiler
+                    maxHeight={100}
+                    hideLabel="Zobraziť menej"
+                    showLabel="Zobraziť viac"
+                    styles={{
+                        control: { color: "var(--mantine-color-dimmed)" },
+                    }}
+                >
+                    <TypographyStylesProvider p={0} m={0}>
+                        <div className="user-text" dangerouslySetInnerHTML={{ __html: data.content }} />
+                    </TypographyStylesProvider>
+                </Spoiler>
 
                 <Group gap={8}>
                     <div className="icon-wrapper">
@@ -147,7 +156,7 @@ export default function Comment({ data }) {
                         }
                     </div>
                 </Group>
-            </Box>
+            </Stack>
         </Group>
     )
 }
