@@ -4,7 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query"
 import { Loader } from "@mantine/core";
-import { SubjectSelect, TextEditor, TitleInput } from "templates/CreatePostWidgets";
+import { SubjectSelect, EditorMenuSimple, TitleInput } from "templates/CreatePostWidgets";
 import { useSelector } from "react-redux";
 import ImagesModal from "templates/ImagesModal";
 import axios from "axios"

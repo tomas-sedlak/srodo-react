@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
 import { TitleInput, SubjectSelect, EditorMenu } from "templates/CreatePostWidgets";
-import { IconCameraPlus, IconPlus, IconX } from "@tabler/icons-react";
+import { IconCameraPlus, IconPlus, IconTrash, IconX } from "@tabler/icons-react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -30,7 +30,7 @@ export default function CreateQuiz() {
     const [text, setText] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
-    const [questions, setQuestions] = useState([{ question: '', options: [] }]);
+    const [questions, setQuestions] = useState([{ question: '', options: ["", ""] }]);
 
     const editor = useEditor({
         extensions: [
@@ -60,8 +60,10 @@ export default function CreateQuiz() {
     };
 
     const handleAddQuestion = () => {
-        setQuestions([...questions, { question: '', options: [] }]);
+        setQuestions([...questions, { question: '', options: ["", ""] }]);
+        
     };
+   
 
 
     const handleRemoveQuestion = (questionIndex) => {
@@ -71,10 +73,21 @@ export default function CreateQuiz() {
         setQuestions(newQuestions);
     };
 
+    // const handleRemoveOption = (questionIndex, optionIndex) => {
+    //     const newQuestions = [...questions];
+    //     newQuestions[questionIndex].options.splice(optionIndex, 1);
+    //     setQuestions(newQuestions);
+    // };
+
     const handleRemoveOption = (questionIndex, optionIndex) => {
         const newQuestions = [...questions];
-        newQuestions[questionIndex].options.splice(optionIndex, 1);
-        setQuestions(newQuestions);
+        const question = newQuestions[questionIndex];
+    
+        // Check if there are more than two options before removing
+        if (question.options.length > 2) {
+            question.options.splice(optionIndex, 1);
+            setQuestions(newQuestions);
+        }
     };
 
     return (
@@ -96,7 +109,7 @@ export default function CreateQuiz() {
                             radius="xl"
                             onClick={coverImageModalHandlers.open}
                         >
-                            <IconCameraPlus stroke={1.25} />
+                            <IconTrash stroke={1.25} />
                         </ActionIcon>
                     </Tooltip>
 
@@ -127,7 +140,7 @@ export default function CreateQuiz() {
 
             {questions.map((question, questionIndex) => (
                 <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm">
-                    <Group gap={8}>
+                    <Group gap={8} mb="sm">
                         <TextInput
                             style={{ flex: 1 }}
                             placeholder="Pridať otázku"
@@ -150,13 +163,13 @@ export default function CreateQuiz() {
                             color="gray"
                             // onMouseDown={preventDefault()}
                             onClick={() => handleRemoveQuestion(questionIndex)}>
-                            <IconX stroke={1.25} />
+                            <IconTrash stroke={1.25} />
                         </ActionIcon>
                     </Group>
                     <Radio.Group>
                         {question.options.map((option, optionIndex) => (
                             // <Flex key={optionIndex} align="center" mt="sm">  Maybe use this later
-                            <Group mt="sm" gap={8}>
+                            <Group gap={8} mb={8}>
                                 <Radio />
                                 <TextInput
                                     style={{ flex: 1 }}
@@ -173,12 +186,12 @@ export default function CreateQuiz() {
                                     color="gray"
                                     // onMouseDown={preventDefault()}
                                     onClick={() => handleRemoveOption(questionIndex, optionIndex)}>
-                                    <IconX stroke={1.25} />
+                                    <IconTrash stroke={1.25} />
                                 </ActionIcon>
                             </Group>
                         ))}
                     </Radio.Group>
-                    <Flex mt="sm" flexDirection="column" gap="sm"> {/* Changed to column */}
+                    <Flex flexDirection="column" gap="sm"> {/* Changed to column */}
                         <Button
                             variant="subtle"
                             onClick={() => handleAddOption(questionIndex)}
