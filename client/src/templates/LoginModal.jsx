@@ -30,24 +30,6 @@ export default function LoginModal() {
     const opened = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
 
-    const resetInputs = () => {
-        setValues(initialValues)
-        setErrors(initialValues)
-        setGlobalError(null)
-    }
-
-    const setValue = (event) => {
-        setValues({ ...values, [event.target.name]: event.target.value })
-    }
-
-    const setError = (name, error) => {
-        setErrors(({ ...errors, [name]: error }))
-    }
-
-    const setStatus = (name, status) => {
-        setStatuses(({ ...statuses, [name]: status }))
-    }
-
     const registerInputs = [
         {
             type: "text",
@@ -134,7 +116,7 @@ export default function LoginModal() {
 
     const loginInputs = [
         {
-            type: "email",
+            type: "text",
             name: "usernameOrEmail",
             label: "Používateľské meno alebo email",
             validate: async (event) => {
@@ -168,6 +150,27 @@ export default function LoginModal() {
         }
     ];
 
+    const resetInputs = () => {
+        setValues(initialValues)
+        setErrors(initialValues)
+        setGlobalError(null)
+    }
+
+    const isValid = () => {
+        return Object.values(errors).every(error => error === null || error === "")
+    }
+
+    const setValue = (event) => {
+        setValues({ ...values, [event.target.name]: event.target.value })
+    }
+
+    const setError = (name, error) => {
+        setErrors(({ ...errors, [name]: error }))
+    }
+
+    const setStatus = (name, status) => {
+        setStatuses(({ ...statuses, [name]: status }))
+    }
 
     const register = async () => {
         setLoading(true)
@@ -179,6 +182,7 @@ export default function LoginModal() {
             )
 
             setPageType("login");
+            resetInputs()
         } catch (err) {
             setGlobalError("Nastala chyba. Skontroluj svoje údaje")
         }
@@ -201,7 +205,9 @@ export default function LoginModal() {
                     token: response.data.token,
                 })
             );
+
             dispatch(setLoginModal(false));
+            resetInputs()
         } catch (err) {
             setGlobalError("Nesprávne prihlasovacie údaje")
         }
@@ -209,9 +215,10 @@ export default function LoginModal() {
         setLoading(false)
     };
 
-    const handleFormSubmit = async () => {
-        const isValid = Object.values(errors).every(error => error === null || error === "")
-        if (!isValid) return
+    const handleFormSubmit = async event => {
+        event.preventDefault()
+
+        if (!isValid()) return
 
         if (isLogin) await login();
         if (isRegister) await register();
@@ -233,86 +240,87 @@ export default function LoginModal() {
             centered
             title={<Text fw={700} fz="lg">{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
         >
-            {globalError &&
-                <Group
-                    bg="var(--mantine-color-red-light)"
-                    p="sm"
-                    mb="md"
-                    gap={8}
-                    style={{ borderRadius: 8 }}
-                    align="flex-start"
-                >
-                    <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
-                    <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
-                </Group>
-            }
-
-            {isRegister ? (
-                <>
-
-                    {registerInputs.map((input) =>
-                        <RegisterInput
-                            value={values[input.name]}
-                            setValue={setValue}
-                            error={errors[input.name]}
-                            status={statuses[input.name]}
-                            {...input}
-                        />
-                    )}
-                </>
-            ) : (
-                <>
-                    {loginInputs.map((input) =>
-                        <RegisterInput
-                            value={values[input.name]}
-                            setValue={setValue}
-                            error={errors[input.name]}
-                            status={statuses[input.name]}
-                            {...input}
-                        />
-                    )}
-
-                    <Text
-                        mt={4}
-                        ta="right"
-                        size="sm"
-                        c="dimmed"
-                        className="pointer"
+            <form onSubmit={handleFormSubmit}>
+                {globalError &&
+                    <Group
+                        bg="var(--mantine-color-red-light)"
+                        p="sm"
+                        mb="md"
+                        gap={8}
+                        style={{ borderRadius: 8 }}
+                        align="flex-start"
                     >
-                        Zabudnuté heslo?
-                    </Text>
-                </>
-            )}
+                        <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
+                        <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
+                    </Group>
+                }
 
-            <Button
-                fullWidth
-                mt="lg"
-                onClick={handleFormSubmit}
-                loading={loading}
-            >
-                {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
-            </Button>
+                {isRegister ? (
+                    <>
+                        {registerInputs.map((input) =>
+                            <RegisterInput
+                                value={values[input.name]}
+                                setValue={setValue}
+                                error={errors[input.name]}
+                                status={statuses[input.name]}
+                                {...input}
+                            />
+                        )}
+                    </>
+                ) : (
+                    <>
+                        {loginInputs.map((input) =>
+                            <RegisterInput
+                                value={values[input.name]}
+                                setValue={setValue}
+                                error={errors[input.name]}
+                                status={statuses[input.name]}
+                                {...input}
+                            />
+                        )}
 
-            <Text
-                mt="lg"
-                ta="center"
-                c="dimmed"
-                size="sm"
-            >
-                {isLogin ? "Nemáte účet? " : "Už máte účet? "}
-                <Text
-                    span
-                    c="srobarka"
-                    fw={600}
-                    className="pointer"
-                    onClick={() => {
-                        setPageType(isLogin ? "register" : "login")
-                        resetInputs()
-                    }}
+                        <Text
+                            mt={4}
+                            ta="right"
+                            size="sm"
+                            c="dimmed"
+                            className="pointer"
+                        >
+                            Zabudnuté heslo?
+                        </Text>
+                    </>
+                )}
+
+                <Button
+                    fullWidth
+                    mt="lg"
+                    type="submit"
+                    loading={loading}
                 >
-                    {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
+                </Button>
+
+                <Text
+                    mt="lg"
+                    ta="center"
+                    c="dimmed"
+                    size="sm"
+                >
+                    {isLogin ? "Nemáte účet? " : "Už máte účet? "}
+                    <Text
+                        span
+                        c="srobarka"
+                        fw={600}
+                        className="pointer"
+                        onClick={() => {
+                            setPageType(isLogin ? "register" : "login")
+                            resetInputs()
+                        }}
+                    >
+                        {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                    </Text>
                 </Text>
-            </Text>
+            </form>
         </Modal>
     );
 }
