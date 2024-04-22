@@ -266,9 +266,17 @@ main {
   right: var(--mantine-spacing-sm);
 }
 
+.bottom-right {
+  z-index: 9;
+  display: flex;
+  position: absolute;
+  bottom: var(--mantine-spacing-sm);
+  right: var(--mantine-spacing-sm);
+}
+
 .input-counter {
   position: absolute;
-  right: 0;
+  right: 8px;
   bottom: 4px;
 }
 

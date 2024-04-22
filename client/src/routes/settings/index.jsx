@@ -1,50 +1,53 @@
 import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
 import { IconPlus, IconCameraPlus, IconCircleX } from "@tabler/icons-react";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
-const allSocials = [
+const socialsData = [
     {
-        name: "YouTube",
-        icon: "/socials/youtube.svg",
-        url: "https://youtube.com/"
+        platform: "YouTube",
+        icon: "/images/socials/youtube.svg",
     },
     {
-        name: "Instagram",
-        icon: "/socials/instagram.svg",
-        url: "https://instagram.com/"
+        platform: "Instagram",
+        icon: "/images/socials/instagram.svg",
     },
     {
-        name: "Facebook",
-        icon: "/socials/facebook.svg",
-        url: "https://facebook.com/"
+        platform: "Facebook",
+        icon: "/images/socials/facebook.svg",
     },
     {
-        name: "LinkedIn",
-        icon: "/socials/linkedin.svg",
-        url: "https://linkedin.com/"
+        platform: "LinkedIn",
+        icon: "/images/socials/linkedin.svg",
     },
     {
-        name: "Discord",
-        icon: "/socials/discord.svg",
-        url: "https://discord.com/"
+        platform: "Discord",
+        icon: "/images/socials/discord.svg",
     },
     {
-        name: "Github",
-        icon: "/socials/github.svg",
-        url: "https://github.com/"
-    }
+        platform: "Github",
+        icon: "/images/socials/github.svg",
+    },
+    {
+        platform: "Twitter",
+        icon: "/images/socials/twitter.svg",
+    },
 ]
 
 export default function Settings() {
+    const maxDisplaynameCharacterLimit = 64;
+    const maxBioCharacterLenght = 160;
+
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
+    const isMobile = useMediaQuery("(max-width: 768px)");
+    const [isPublishing, setIsPublishing] = useState(false);
 
     const [coverImage, setCoverImage] = useState(user.coverImage);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -52,26 +55,40 @@ export default function Settings() {
     const [profilePictureModalOpened, profilePictureModalHandlers] = useDisclosure(false);
 
     const [displayName, setdisplayName] = useState(user.displayName);
+    const [displaynameCount, setDisplaynameCount] = useState(user.displayName.length);
     const [bio, setBio] = useState(user.bio);
+    const [bioCount, setBioCount] = useState(user.bio.length);
     const [socials, setSocials] = useState(user.socials);
 
-    const [socialModalOpened, setSocialModalOpened] = useState(false);
-    const [usernameModalOpened, setUsernameModalOpened] = useState(false);
-    const [selectedSocialPlatform, setSelectedSocialPlatform] = useState(null);
-    const [socialUsername, setSocialUsername] = useState("");
-    const [displaynameCount, setDisplaynameCount] = useState(user.displayName.length);
-    const [bioCount, setBioCount] = useState(user.bio.length);
-    const maxBioCharacterLenght = 160;
-    const maxDisplaynameCharacterLimit = 64;
+    const [modalType, setModalType] = useState(null);
+    const [selectedSocial, setSelectedSocial] = useState(null);
+    const [selectedSocialIndex, setSelectedSocialIndex] = useState(null);
 
+    const validate = () => {
+        if (selectedSocial.displayText.length === 0) return false
+        if (selectedSocial.url.length === 0) return false
+        if (!/^(?:(https):\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s]*$/i.test(selectedSocial.url)) return false
+        return true
+    }
 
-    const [isPublishing, setIsPublishing] = useState(false);
+    const closeModal = () => {
+        setModalType(null)
+        setSelectedSocial({})
+    }
 
-    const handleSocialTagClick = (platform) => {
-        setSelectedSocialPlatform(platform)
-        setSocialModalOpened(false)
-        setUsernameModalOpened(true)
-    };
+    const handleDisplayTextChange = event => {
+        setSelectedSocial({
+            ...selectedSocial,
+            displayText: event.target.value
+        })
+    }
+
+    const handleUrlChange = event => {
+        setSelectedSocial({
+            ...selectedSocial,
+            url: event.target.value
+        })
+    }
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -105,6 +122,7 @@ export default function Settings() {
                 aspectRatio={6 / 2}
                 qkey="coverImage"
             />
+
             <ImagesModal
                 opened={profilePictureModalOpened}
                 close={profilePictureModalHandlers.close}
@@ -114,53 +132,112 @@ export default function Settings() {
                 qkey="profilePicture"
             />
 
-            {/* Username modal */}
             <Modal
-                opened={usernameModalOpened}
-                onClose={() => setUsernameModalOpened(false)}
+                opened={modalType}
+                onClose={closeModal}
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
+                radius={isMobile ? 0 : "lg"}
+                fullScreen={isMobile}
                 centered
             >
-                <TextInput
-                    onChange={event => setSocialUsername(event.target.value)}
-                    value={socialUsername}
-                    placeholder="Používateľské meno"
-                />
+                {modalType === "select" &&
+                    <Group gap={4}>
+                        {socialsData.map(social =>
+                            <div
+                                className="icon-wrapper"
+                                onClick={() => {
+                                    setSelectedSocial({
+                                        ...social,
+                                        displayText: "",
+                                        url: "",
+                                    })
+                                    setModalType("set")
+                                }}
+                            >
+                                <img width={24} height={24} src={social.icon} />
+                                <span>{social.platform}</span>
+                            </div>
+                        )}
+                    </Group>
+                }
 
-                <Group justify="flex-end">
-                    <Button
-                        mt="sm"
-                        onClick={() => {
-                            setSocials([...socials, {
-                                icon: selectedSocialPlatform.icon,
-                                name: socialUsername,
-                                url: selectedSocialPlatform.url + socialUsername
-                            }])
-                            setSocialUsername("")
-                            setUsernameModalOpened(false)
-                        }}
-                        disabled={socialUsername === ""}
-                    >
-                        Pridať
-                    </Button>
-                </Group>
-            </Modal>
+                {modalType === "set" &&
+                    <>
+                        <Group>
+                            <div className="icon-wrapper">
+                                <img width={24} height={24} src={selectedSocial.icon} />
+                                <span>{selectedSocial.platform}</span>
+                            </div>
+                        </Group>
 
-            {/* Social modal */}
-            <Modal
-                opened={socialModalOpened}
-                onClose={() => setSocialModalOpened(false)}
-                title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
-                centered
-            >
-                <Group gap={4}>
-                    {allSocials.map(social =>
-                        <div className="icon-wrapper" onClick={() => handleSocialTagClick(social)}>
-                            <img width={24} height={24} src={social.icon} />
-                            <span>{social.name}</span>
-                        </div>
-                    )}
-                </Group>
+                        <TextInput
+                            mt="sm"
+                            onChange={handleDisplayTextChange}
+                            value={selectedSocial.displayText}
+                            placeholder="Používateľské meno"
+                        />
+
+                        <TextInput
+                            mt="sm"
+                            onChange={handleUrlChange}
+                            value={selectedSocial.url}
+                            placeholder="URL"
+                        />
+
+                        <Group justify="flex-end">
+                            <Button
+                                mt="md"
+                                onClick={() => {
+                                    closeModal()
+                                    setSocials([...socials, selectedSocial])
+                                }}
+                                disabled={!validate()}
+                            >
+                                Pridať
+                            </Button>
+                        </Group>
+                    </>
+                }
+
+                {modalType === "update" &&
+                    <>
+                        <Group>
+                            <div className="icon-wrapper">
+                                <img width={24} height={24} src={selectedSocial.icon} />
+                                <span>{selectedSocial.platform}</span>
+                            </div>
+                        </Group>
+
+                        <TextInput
+                            mt="sm"
+                            onChange={handleDisplayTextChange}
+                            value={selectedSocial.displayText}
+                            placeholder="Používateľské meno"
+                        />
+
+                        <TextInput
+                            mt="sm"
+                            onChange={handleUrlChange}
+                            value={selectedSocial.url}
+                            placeholder="URL"
+                        />
+
+                        <Group justify="flex-end">
+                            <Button
+                                mt="md"
+                                onClick={() => {
+                                    closeModal()
+                                    const newSocials = [...socials]
+                                    newSocials[selectedSocialIndex] = selectedSocial
+                                    setSocials(newSocials)
+                                }}
+                                disabled={!validate()}
+                            >
+                                Uložiť
+                            </Button>
+                        </Group>
+                    </>
+                }
             </Modal>
 
             <SmallHeader title="⚙️ Nastavenia profilu" />
@@ -233,16 +310,36 @@ export default function Settings() {
                     <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
                 </Group>
 
-                <Text mt="sm" mb={4} size="sm" fw={600}>Sociálne siete</Text>
+                <Text mt="sm" mb={4} size="sm" fw={500}>Sociálne siete</Text>
                 <Group gap={4}>
-                    {socials.map(social =>
-                        <div className="icon-wrapper">
+                    {socials.map((social, index) =>
+                        <div
+                            className="icon-wrapper"
+                            onClick={() => {
+                                setSelectedSocial(social)
+                                setSelectedSocialIndex(index)
+                                setModalType("update")
+                            }}
+                        >
                             <img width={24} height={24} src={social.icon} />
-                            <span>{social.name}</span>
-                            <IconCircleX stroke={1.25} onClick={() => setSocials(socials.filter(a => a !== social))} />
+                            <span>{social.displayText}</span>
+                            <IconCircleX
+                                stroke={1.25}
+                                onClick={event => {
+                                    event.stopPropagation() // So the update onClick function won't get triggered
+                                    setSocials(socials.filter(a => a !== social))
+                                }}
+                            />
                         </div>
                     )}
-                    <div className="icon-wrapper" onClick={() => setSocialModalOpened(true)}>
+
+                    <div
+                        className="icon-wrapper"
+                        onClick={() => {
+                            if (socials.length >= 5) return
+                            setModalType("select")
+                        }}
+                    >
                         <IconPlus stroke={1.25} />
                         <span>Pridať sociálnu sieť</span>
                     </div>

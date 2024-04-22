@@ -1,5 +1,5 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, Tooltip, useMantineColorScheme, Image } from '@mantine/core';
-import { IconSearch, IconSun, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconPlus, IconBell, IconSettings, IconChartBar, IconLogout, IconMenu2, IconCircleXFilled, IconX, IconCircleX } from '@tabler/icons-react';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch } from '@mantine/core';
+import { IconSearch, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconUsers } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export default function Header() {
                         </Group>
                     ) : (
                         <Group gap={8}>
-                            {colorScheme === "light" ? <img width={36} height={36} src="/logo_light.svg" /> : <img width={36} height={36} src="/logo_dark.svg" />}
+                            {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                             <Text fw={700} size="xl">Šrodo</Text>
                         </Group>
                     )}
@@ -65,54 +65,20 @@ export default function Header() {
                         onChange={setSearchValue}
                     />
 
-                    <Group justify="flex-end" gap={4}>
-                        <Tooltip label={colorScheme === "light" ? "Tmavý režim" : "Svetlý režim"}>
-                            <ActionIcon
-                                variant="subtle"
-                                color="gray"
-                                c="var(--mantine-color-text)"
-                                w={40}
-                                h={40}
-                                radius="xl"
-                                onClick={toggleColorScheme}
-                            >
-                                {colorScheme === "light" ? <IconMoon stroke={1.25} /> : <IconSun stroke={1.25} />}
-                            </ActionIcon>
-                        </Tooltip>
-
+                    <Group ml="auto" gap={8}>
                         {user ? (
                             <>
-                                {!isMobile && (
-                                    <Tooltip label="Notifikácie">
-                                        <ActionIcon
-                                            variant="subtle"
-                                            color="gray"
-                                            c="var(--mantine-color-text)"
-                                            w={40}
-                                            h={40}
-                                            radius="xl"
-                                        >
-                                            <IconBell stroke={1.25} />
-                                        </ActionIcon>
-                                    </Tooltip>
-                                )}
-
                                 <Menu position="bottom-end" width={180}>
                                     <Menu.Target>
-                                        <Tooltip label="Vytvoriť">
-                                            <ActionIcon
-                                                variant="subtle"
-                                                color="gray"
-                                                c="var(--mantine-color-text)"
-                                                w={40}
-                                                h={40}
-                                                radius="xl"
-                                            >
-                                                <IconPlus stroke={1.25} />
-                                            </ActionIcon>
-                                        </Tooltip>
+                                        <Button>Vytvoriť</Button>
                                     </Menu.Target>
                                     <Menu.Dropdown>
+                                        <Menu.Item
+                                            onClick={() => navigate("/vytvorit/skupina")}
+                                            leftSection={<IconUsers stroke={1.25} />}
+                                        >
+                                            <Text>Skupina</Text>
+                                        </Menu.Item>
                                         <Menu.Item
                                             onClick={() => navigate("/vytvorit/clanok")}
                                             leftSection={<IconPencilPlus stroke={1.25} />}
@@ -151,14 +117,12 @@ export default function Header() {
 
                                         <Menu.Divider />
 
-                                        {isMobile && (
-                                            <Menu.Item
-                                                onClick={() => navigate("/nastavenia")}
-                                                leftSection={<IconBell stroke={1.25} />}
-                                            >
-                                                <Text>Notifikácie</Text>
-                                            </Menu.Item>
-                                        )}
+                                        {/* <Menu.Item
+                                            onClick={() => navigate("/nastavenia")}
+                                            leftSection={<IconBell stroke={1.25} />}
+                                        >
+                                            <Text>Notifikácie</Text>
+                                        </Menu.Item> */}
                                         <Menu.Item
                                             onClick={() => navigate("/nastavenia")}
                                             leftSection={<IconSettings stroke={1.25} />}
@@ -170,6 +134,17 @@ export default function Header() {
                                             leftSection={<IconChartBar stroke={1.25} />}
                                         >
                                             <Text>Štatistiky</Text>
+                                        </Menu.Item>
+                                        <Menu.Item
+                                            leftSection={<IconMoon stroke={1.25} />}
+                                        >
+                                            <Group justify="space-between">
+                                                <Text>Tmavý režim</Text>
+                                                <Switch
+                                                    checked={colorScheme === "dark"}
+                                                    onClick={toggleColorScheme}
+                                                />
+                                            </Group>
                                         </Menu.Item>
 
                                         <Menu.Divider />
@@ -200,7 +175,7 @@ export default function Header() {
                 padding="sm"
                 title={
                     <Group gap={8}>
-                        {colorScheme === "light" ? <img width={36} height={36} src="/logo_light.svg" /> : <img width={36} height={36} src="/logo_dark.svg" />}
+                        {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                         <Text fw={700} size="xl">Šrodo</Text>
                     </Group>
                 }

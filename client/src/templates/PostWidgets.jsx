@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Group } from "@mantine/core"
 import { IconEye, IconHeart, IconHeartFilled, IconMessageCircle } from "@tabler/icons-react"
+import { HashLink } from "react-router-hash-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import axios from "axios";
@@ -48,10 +49,10 @@ export function PostButtons({ post }) {
                 </div>
 
                 {/* Comments */}
-                <div className="icon-wrapper">
+                <HashLink to={`/${post.author.username}/prispevok/${post._id}#komentare`} className="icon-wrapper">
                     <IconMessageCircle stroke={1.25} />
                     <span>{post.comments}</span>
-                </div>
+                </HashLink>
             </Group>
         </Group>
     )

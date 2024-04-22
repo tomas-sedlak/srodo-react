@@ -26,21 +26,23 @@ const userSchema = new Schema({
     },
     profilePicture: {
         type: String,
-        default: "default_profile.jpg",
+        default: "/images/default_profile.jpg",
     },
     coverImage: {
         type: String,
-        default: "default_cover.jpg",
+        default: "/images/default_cover.jpg",
     },
     bio: {
         type: String,
         max: 160,
         trim: true,
+        default: "",
     },
     socials: [{
         type: {
-            name: String,
+            platform: String,
             icon: String,
+            displayText: String,
             url: String,
         },
         maxLength: 5,
