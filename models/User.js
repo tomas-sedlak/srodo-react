@@ -36,6 +36,7 @@ const userSchema = new Schema({
         type: String,
         max: 160,
         trim: true,
+        default: "",
     },
     socials: [{
         type: {
