@@ -53,6 +53,22 @@ export const getGroup = async (req, res) => {
 };
 
 // UPDATE
+export const joinGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+
+        if (!group.members.includes(req.user.id)) {
+            group.members.push(req.user.id);
+        }
+
+        await group.save();
+        res.status(200).json(group);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 export const editGroup = async (req, res) => {
     try {
         const { postId } = req.params;

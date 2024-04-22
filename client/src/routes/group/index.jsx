@@ -1,19 +1,30 @@
+import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button } from '@mantine/core';
-import { IconLock, IconPlus, IconWorld } from '@tabler/icons-react';
+import { IconLock, IconWorld } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from "react-redux";
 import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
-    const userId = useSelector(state => state.user?._id);
-    console.log(userId)
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchGroup = async () => {
         const group = await axios.get(`/api/group/${groupId}`)
         return group.data
+    }
+
+    const joinGroup = async () => {
+        setIsLoading(true)
+        await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
+        setIsLoading(false)
     }
 
     const { data, status } = useQuery({
@@ -46,7 +57,7 @@ export default function Group() {
 
                     {data.members.includes(userId) || data.owner._id == userId ?
                         <Button>Vytvoriť</Button>
-                        : <Button>Pripojiť sa</Button>
+                        : <Button onClick={joinGroup} loading={isLoading}>Pripojiť sa</Button>
                     }
                 </Flex>
 

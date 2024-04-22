@@ -2,6 +2,7 @@ import express from "express";
 import {
     createGroup,
     getGroup,
+    joinGroup,
     editGroup,
     deleteGroup,
 } from "../controllers/group.js";
@@ -16,6 +17,7 @@ router.post("/", verifyToken, createGroup);
 router.get("/:groupId", getGroup);
 
 // UPDATE
+router.patch("/:groupId/join", verifyToken, joinGroup);
 router.patch("/:groupId/edit", verifyToken, editGroup);
 
 // DELETE
