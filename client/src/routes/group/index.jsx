@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button } from '@mantine/core';
-import { IconLock, IconWorld } from '@tabler/icons-react';
+import { IconLock, IconPencil, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoginModal } from "state";
 import Post from "templates/post";
 import axios from "axios";
 
@@ -13,6 +14,7 @@ export default function Group() {
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
@@ -26,6 +28,11 @@ export default function Group() {
     }
 
     const joinGroup = async () => {
+        if (!userId) {
+            dispatch(setLoginModal(true))
+            return
+        }
+
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
         setIsLoading(false)
@@ -67,9 +74,26 @@ export default function Group() {
                         {data.name}
                     </Text>
 
-                    {data.members.find(user => user._id == userId) || data.owner._id == userId ?
-                        <Button onClick={leaveGroup} loading={isLoading}>Odísť</Button>
-                        : <Button onClick={joinGroup} loading={isLoading}>Pripojiť sa</Button>
+                    {data.owner._id == userId ?
+                        <Button
+                            leftSection={<IconPencil stroke={1.25} />}
+                            styles={{ section: { marginRight: 4 } }}
+                        >
+                            Upraviť
+                        </Button>
+                        : data.members.find(user => user._id == userId) ?
+                            <Button
+                                onClick={leaveGroup}
+                                loading={isLoading}
+                            >
+                                Odísť
+                            </Button>
+                            : <Button
+                                onClick={joinGroup}
+                                loading={isLoading}
+                            >
+                                Pripojiť sa
+                            </Button>
                     }
                 </Flex>
 
