@@ -4,15 +4,16 @@ import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Butto
 import { IconLock, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSelector } from "react-redux";
+import Post from "templates/post";
 import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
     const [isLoading, setIsLoading] = useState(false);
-    
+
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    
+
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const headers = {
@@ -104,27 +105,51 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            {tab === "prispevky" &&
-                <>
-                    {!data.posts &&
-                        <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
-                    }
-                </>
+            {tab === "prispevky" && <Posts groupId={groupId} />}
+
+            {tab === "clenovia" && <Members owner={data.owner} members={data.members} />}
+        </>
+    )
+}
+
+function Posts({ groupId }) {
+    const fetchPosts = async () => {
+        const posts = await axios.get("/api/post/")
+        return posts.data
+    }
+
+    const { data, status } = useQuery({
+        queryFn: fetchPosts,
+        queryKey: ["group-posts", groupId],
+    })
+
+    return status === "pending" ? (
+        <div className="loader-center">
+            <Loader />
+        </div>
+    ) : status === "error" ? (
+        <div className="loader-center">
+            <p>Nastala chyba!</p>
+        </div>
+    ) : (
+        <>
+            {data.length === 0 &&
+                <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
             }
 
-            {tab === "clenovia" &&
-                <>
-                    <Box px="md" py="sm" className="border-bottom light-hover">
-                        <UserProfile user={data.owner} badge="Majiteľ" />
-                    </Box>
+            {data.map(post => <Post post={post} />)}
+        </>
+    )
+}
 
-                    {data.members.map(member =>
-                        <Box px="md" py="sm" className="border-bottom light-hover">
-                            <UserProfile user={member} />
-                        </Box>
-                    )}
-                </>
-            }
+function Members({ owner, members }) {
+    return (
+        <>
+            <UserProfile user={owner} badge="Majiteľ" />
+
+            {members.map(member =>
+                <UserProfile user={member} />
+            )}
         </>
     )
 }
@@ -132,7 +157,7 @@ export default function Group() {
 function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`}>
-            <Flex gap="xs" align="center">
+            <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
                 <Avatar src={user.profilePicture} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
