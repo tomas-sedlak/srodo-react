@@ -1,10 +1,10 @@
-import { Button, Box, AspectRatio, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton, Badge, Tooltip, ActionIcon } from "@mantine/core";
+import { Button, Box, AspectRatio, Flex, Card, Checkbox, TextInput, Group, Textarea, CloseButton, Badge, Tooltip, ActionIcon, Radio } from "@mantine/core";
 import ImagesModal from "templates/ImagesModal";
 import { useEffect, useState } from "react";
 import { createClient } from 'pexels';
 import { useDisclosure } from "@mantine/hooks";
 import { TitleInput, SubjectSelect, EditorMenu } from "templates/CreatePostWidgets";
-import { IconCameraPlus, IconPlus } from "@tabler/icons-react";
+import { IconCameraPlus, IconPlus, IconX } from "@tabler/icons-react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -127,45 +127,57 @@ export default function CreateQuiz() {
 
             {questions.map((question, questionIndex) => (
                 <Box key={questionIndex} mt={questionIndex > 0 ? 'sm' : 0} className="border-bottom" p="sm">
-                    <TextInput
-                        fw="bold"
-                        placeholder="Pridať otázku"
-                        value={question.question}
-                        onChange={(event) => handleQuestionChange(questionIndex, event.target.value)}
-                        rightSection={
-                            <CloseButton
-                                variant="subtle"
-                                radius="lg"
-                                c="gray"
-                                onMouseDown={(event) => event.preventDefault()}
-                                onClick={() => handleRemoveQuestion(questionIndex)}
-                            />
-                        }
-                    />
-
-                    {question.options.map((option, optionIndex) => (
-                        <Flex key={optionIndex} align="center" gap="sm" p="sm">
-                            <Checkbox />
-                            <TextInput
-                                style={{ width: '100%' }}
-                                placeholder="Pridať odpoveď"
-                                value={option}
-                                onChange={(event) =>
-                                    handleOptionChange(questionIndex, optionIndex, event.target.value)
-                                }
-                                rightSection={
-                                    <CloseButton
-                                        variant="subtle"
-                                        radius="lg"
-                                        c="gray"
-                                        onMouseDown={(event) => event.preventDefault()}
-                                        onClick={() => handleRemoveOption(questionIndex, optionIndex)}
-                                    />
-                                }
-                            />
-                        </Flex>
-                    ))}
-
+                    <Group gap={8}>
+                        <TextInput
+                            style={{ flex: 1 }}
+                            placeholder="Pridať otázku"
+                            value={question.question}
+                            onChange={(event) => handleQuestionChange(questionIndex, event.target.value)}
+                        // rightSection={
+                        //     <CloseButton
+                        //         variant="subtle"
+                        //         radius="lg"
+                        //         c="gray"
+                        //         onMouseDown={(event) => event.preventDefault()}
+                        //         onClick={() => handleRemoveQuestion(questionIndex)}
+                        //     />
+                        // }
+                        />
+                        <ActionIcon
+                            variant="subtle"
+                            radius="lg"
+                            c="gray"
+                            color="gray"
+                            // onMouseDown={preventDefault()}
+                            onClick={() => handleRemoveQuestion(questionIndex)}>
+                            <IconX stroke={1.25} />
+                        </ActionIcon>
+                    </Group>
+                    <Radio.Group>
+                        {question.options.map((option, optionIndex) => (
+                            // <Flex key={optionIndex} align="center" mt="sm">  Maybe use this later
+                            <Group mt="sm" gap={8}>
+                                <Radio />
+                                <TextInput
+                                    style={{ flex: 1 }}
+                                    placeholder="Pridať odpoveď"
+                                    value={option}
+                                    onChange={(event) =>
+                                        handleOptionChange(questionIndex, optionIndex, event.target.value)
+                                    }
+                                />
+                                <ActionIcon
+                                    variant="subtle"
+                                    radius="lg"
+                                    c="gray"
+                                    color="gray"
+                                    // onMouseDown={preventDefault()}
+                                    onClick={() => handleRemoveOption(questionIndex, optionIndex)}>
+                                    <IconX stroke={1.25} />
+                                </ActionIcon>
+                            </Group>
+                        ))}
+                    </Radio.Group>
                     <Flex mt="sm" flexDirection="column" gap="sm"> {/* Changed to column */}
                         <Button
                             variant="subtle"
@@ -184,8 +196,10 @@ export default function CreateQuiz() {
                         </Button> */}
 
                     </Flex>
-                </Box>
-            ))}
+
+                </Box >
+            ))
+            }
 
             <Box p="sm">
                 <Group grow>
