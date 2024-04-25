@@ -27,7 +27,7 @@ import { verifyToken } from "./middleware/auth.js";
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config();
+dotenv.config({ path: "../.env" });
 const app = express();
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
