@@ -7,6 +7,8 @@ import multer from "multer";
 // import helmet from "helmet";
 import morgan from "morgan";
 import path from "path";
+import session from "express-session";
+import passport from "passport";
 import { fileURLToPath } from "url";
 import { rateLimit } from "express-rate-limit";
 
@@ -27,7 +29,7 @@ import { verifyToken } from "./middleware/auth.js";
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: "../.env" });
+dotenv.config();
 const app = express();
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -45,6 +47,9 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/images", express.static(path.join(__dirname, "public/images")));
+app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // FILE STORAGE
 const storage = multer.memoryStorage();
