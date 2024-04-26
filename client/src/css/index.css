@@ -11,6 +11,10 @@
   box-sizing: border-box;
 }
 
+#root {
+  height: 100%;
+}
+
 a {
   text-decoration: none;
   color: var(--mantine-color-text);
@@ -117,6 +121,21 @@ main {
 .loader-center {
   width: 100%;
   height: 100%;
+}
+
+.form-center-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  max-width: 360px;
+  height: 100%;
+}
+
+.form-center-inner {
+  width: 100%;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
 }
 
 .menu-item {

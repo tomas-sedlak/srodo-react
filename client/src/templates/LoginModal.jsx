@@ -241,23 +241,11 @@ export default function LoginModal() {
             title={<Text fw={700} fz="lg">{isLogin ? "Prihlásiť sa na Šrodo" : "Registrovať sa na Šrodo"}</Text>}
         >
             <form onSubmit={handleFormSubmit}>
-                {/* <Button
-                    variant="default"
-                    component="a"
-                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
-                    href="/api/auth/google"
-                    fullWidth
-                >
-                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google
-                </Button>
-
-                <Divider label="alebo" my="sm" /> */}
-
                 {globalError &&
                     <Group
                         bg="var(--mantine-color-red-light)"
                         p="sm"
-                        mb="md"
+                        mb="lg"
                         gap={8}
                         style={{ borderRadius: 8 }}
                         align="flex-start"
@@ -331,9 +319,10 @@ export default function LoginModal() {
                     c="dimmed"
                     size="sm"
                 >
-                    {isLogin ? "Nemáte účet? " : "Už máte účet? "}
+                    {isLogin ? "Nemáte účet?" : "Už máte účet?"}
                     <Text
                         span
+                        ml={4}
                         c="srobarka"
                         fw={600}
                         className="pointer"

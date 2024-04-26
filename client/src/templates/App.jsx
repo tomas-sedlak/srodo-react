@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 // Routes import
 import Root from "templates/Root";
+import Login from "routes/login";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
 const News = lazy(() => import("routes/news"));
@@ -84,6 +85,8 @@ export default function App() {
                                 <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
                                 <Route path="statistiky/:postId" element={isAuth ? <Stats /> : <Navigate to="/" />} />
                             </Route>
+
+                            <Route path="prihlasenie" element={<Login />} />
                         </Routes>
                     </BrowserRouter>
                 </QueryClientProvider>
