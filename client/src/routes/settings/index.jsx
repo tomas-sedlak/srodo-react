@@ -11,31 +11,31 @@ import axios from "axios";
 const socialsData = [
     {
         platform: "YouTube",
-        icon: "/images/socials/youtube.svg",
+        icon: "/images/logos/youtube.svg",
     },
     {
         platform: "Instagram",
-        icon: "/images/socials/instagram.svg",
+        icon: "/images/logos/instagram.svg",
     },
     {
         platform: "Facebook",
-        icon: "/images/socials/facebook.svg",
+        icon: "/images/logos/facebook.svg",
     },
     {
         platform: "LinkedIn",
-        icon: "/images/socials/linkedin.svg",
+        icon: "/images/logos/linkedin.svg",
     },
     {
         platform: "Discord",
-        icon: "/images/socials/discord.svg",
+        icon: "/images/logos/discord.svg",
     },
     {
         platform: "Github",
-        icon: "/images/socials/github.svg",
+        icon: "/images/logos/github.svg",
     },
     {
         platform: "Twitter",
-        icon: "/images/socials/twitter.svg",
+        icon: "/images/logos/twitter.svg",
     },
 ]
 

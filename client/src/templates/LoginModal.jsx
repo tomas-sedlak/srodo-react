@@ -1,5 +1,5 @@
 import { RegisterInput } from "./FloatingInput";
-import { Button, Group, Modal, Text } from "@mantine/core";
+import { Button, Divider, Group, Modal, Text } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
@@ -238,9 +238,21 @@ export default function LoginModal() {
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
-            title={<Text fw={700} fz="lg">{isLogin ? "Prihlásenie" : "Registrácia"}</Text>}
+            title={<Text fw={700} fz="lg">{isLogin ? "Prihlásiť sa na Šrodo" : "Registrovať sa na Šrodo"}</Text>}
         >
             <form onSubmit={handleFormSubmit}>
+                {/* <Button
+                    variant="default"
+                    component="a"
+                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
+                    href="/api/auth/google"
+                    fullWidth
+                >
+                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google
+                </Button>
+
+                <Divider label="alebo" my="sm" /> */}
+
                 {globalError &&
                     <Group
                         bg="var(--mantine-color-red-light)"
@@ -299,9 +311,22 @@ export default function LoginModal() {
                 >
                     {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
                 </Button>
+                
+                <Divider label="alebo" my="md" />
+
+                <Button
+                    variant="default"
+                    component="a"
+                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
+                    href="/api/auth/google"
+                    fullWidth
+                >
+                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google
+                </Button>
+
 
                 <Text
-                    mt="lg"
+                    mt="xl"
                     ta="center"
                     c="dimmed"
                     size="sm"

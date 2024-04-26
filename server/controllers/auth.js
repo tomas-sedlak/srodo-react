@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -53,10 +53,11 @@ export const login = async (req, res) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/redirect/google',
+    callbackURL: "/api/auth/google/callback",
     scope: ["profile"]
 },
     (request, accessToken, refreshToken, profile, done) => {
+        console.log(profile)
         return done(err, profile)
     }
 ));

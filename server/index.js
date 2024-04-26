@@ -33,9 +33,9 @@ dotenv.config();
 const app = express();
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-	limit: 60, // Limit each IP to 60 requests per `window` (here, per 1 minute).
-	standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  limit: 60, // Limit each IP to 60 requests per `window` (here, per 1 minute).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 });
 
 app.use(limiter)
@@ -45,7 +45,7 @@ app.use(express.json());
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+// app.use(cors());
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(session({ secret: process.env.JWT_SECRET, resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
