@@ -5,7 +5,7 @@ import { IconLock, IconPencil, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
-import Post from "templates/post";
+import Post from "templates/Post";
 import axios from "axios";
 
 export default function Group() {

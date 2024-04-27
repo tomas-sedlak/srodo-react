@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 import { Loader, Text } from "@mantine/core"
 import axios from "axios"
-import Post from "templates/post"
+import Post from "templates/Post"
 import Message from "templates/Message"
 import SmallHeader from "templates/SmallHeader"
 
