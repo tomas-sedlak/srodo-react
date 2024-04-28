@@ -162,7 +162,10 @@ export default function Settings() {
                 }
 
                 {modalType === "set" &&
-                    <>
+                    <form onSubmit={() => {
+                        closeModal()
+                        setSocials([...socials, selectedSocial])
+                    }}>
                         <Group>
                             <div className="icon-wrapper">
                                 <img width={24} height={24} src={selectedSocial.icon} />
@@ -187,20 +190,22 @@ export default function Settings() {
                         <Group justify="flex-end">
                             <Button
                                 mt="md"
-                                onClick={() => {
-                                    closeModal()
-                                    setSocials([...socials, selectedSocial])
-                                }}
+                                type="submit"
                                 disabled={!validate()}
                             >
                                 Pridať
                             </Button>
                         </Group>
-                    </>
+                    </form>
                 }
 
                 {modalType === "update" &&
-                    <>
+                    <form onSubmit={() => {
+                        closeModal()
+                        const newSocials = [...socials]
+                        newSocials[selectedSocialIndex] = selectedSocial
+                        setSocials(newSocials)
+                    }}>
                         <Group>
                             <div className="icon-wrapper">
                                 <img width={24} height={24} src={selectedSocial.icon} />
@@ -225,18 +230,13 @@ export default function Settings() {
                         <Group justify="flex-end">
                             <Button
                                 mt="md"
-                                onClick={() => {
-                                    closeModal()
-                                    const newSocials = [...socials]
-                                    newSocials[selectedSocialIndex] = selectedSocial
-                                    setSocials(newSocials)
-                                }}
+                                type="submit"
                                 disabled={!validate()}
                             >
                                 Uložiť
                             </Button>
                         </Group>
-                    </>
+                    </form>
                 }
             </Modal>
 
