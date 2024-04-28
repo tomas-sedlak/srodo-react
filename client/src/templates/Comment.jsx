@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, Group, Avatar, Menu, ActionIcon, Spoiler, Stack, Tooltip } from '@mantine/core';
+import { Text, Group, Avatar, Menu, ActionIcon, Spoiler, Stack } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil, IconTrash } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,17 +10,7 @@ import axios from "axios";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
-moment.locale("sk")
-// moment.locale("sk", {
-//     relativeTime: {
-//         ss: "%ss",
-//         mm: "%dm",
-//         hh: "%dh",
-//         dd: "%dd",
-//         MM: "%dM",
-//         yy: "%dY",
-//     }
-// });
+moment.locale("sk");
 
 export default function Comment({ data }) {
     const queryClient = useQueryClient();
