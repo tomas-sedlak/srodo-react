@@ -1,8 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -50,22 +49,33 @@ export const login = async (req, res) => {
     }
 };
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/api/auth/google/callback",
-    scope: ["profile"]
-},
-    (request, accessToken, refreshToken, profile, done) => {
-        console.log(profile)
-        return done(err, profile)
+// GOOGLE LOG IN / REIGUSTER USER
+export const google = async (req, res) => {
+    try {
+        const { accessToken } = req.body;
+
+        const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        });
+
+        const email = response.data.email;
+        const displayName = response.data.name;
+        const profilePicture = response.data.picture;
+
+        let user = await User.findOne({ email });
+
+        if (!user){
+            const username = new Date().valueOf();
+            user = await User.create({
+                username, email, displayName, profilePicture
+            })
+        }
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        res.status(200).json({ token, user });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
-));
-
-passport.serializeUser((user, done) => {
-    done(null, user);
-})
-
-passport.deserializeUser((user, done) => {
-    done(null, user);
-})
+}

@@ -7,6 +7,7 @@ import { setLoginModal } from "state";
 import { setLogin } from "state";
 import { useState } from "react";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const initialValues = {
     username: "",
@@ -29,6 +30,30 @@ export default function LoginModal() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const opened = useSelector(state => state.loginModal);
     const dispatch = useDispatch();
+
+    const handleGoogleLogin = async (tokenResponse) => {
+        setLoading(true)
+
+        try {
+            const accessToken = tokenResponse.access_token
+            const response = await axios.post("/api/auth/google", { accessToken })
+
+            dispatch(
+                setLogin({
+                    user: response.data.user,
+                    token: response.data.token,
+                })
+            );
+
+            dispatch(setLoginModal(false));
+        } catch (err) {
+            setGlobalError("Nastala chyba. Skúste to znova")
+        }
+
+        setLoading(false)
+    }
+
+    const googleLogin = useGoogleLogin({ onSuccess: handleGoogleLogin });
 
     const registerInputs = [
         {
@@ -299,14 +324,15 @@ export default function LoginModal() {
                 >
                     {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
                 </Button>
-                
+
                 <Divider label="alebo" my="md" />
 
                 <Button
                     variant="default"
-                    component="a"
+                    // component="a"
                     leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
-                    href="/api/auth/google"
+                    // href="/api/auth/google"
+                    onClick={googleLogin}
                     fullWidth
                 >
                     {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google

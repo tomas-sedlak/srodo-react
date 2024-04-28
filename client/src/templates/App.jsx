@@ -4,7 +4,8 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // Routes import
 import Root from "templates/Root";
@@ -54,41 +55,43 @@ export default function App() {
         <MantineProvider theme={theme} defaultColorScheme="auto">
             <ModalsProvider>
                 <QueryClientProvider client={queryClient}>
-                    <BrowserRouter>
-                        <ScrollToTop />
-                        <LoginModal />
-                        <Routes>
-                            <Route path="/" element={<Root />}>
-                                {/* PUBLIC ROUTES */}
-                                <Route index element={<Home />} />
-                                <Route path="ai" element={<AI />} />
-                                <Route path="novinky" element={<News />} />
-                                <Route path="stats" element={<Stats />} />
-                                <Route path="predmety/:subject" element={<Subject />} />
-                                <Route path="skupiny/:groupId" element={<Group />} />
-                                <Route path="skupiny/:groupId/:tab" element={<Group />} />
-                                <Route exact path=":username" element={<User />} />
-                                <Route exact path=":username/:tab" element={<User />} />
-                                <Route exact path=":username/prispevok/:postId" element={<Post />} />
+                    <GoogleOAuthProvider clientId="1025882831817-q56up75r66liinfsm368qdbolepva3fr.apps.googleusercontent.com">
+                        <BrowserRouter>
+                            <ScrollToTop />
+                            <LoginModal />
+                            <Routes>
+                                <Route path="/" element={<Root />}>
+                                    {/* PUBLIC ROUTES */}
+                                    <Route index element={<Home />} />
+                                    <Route path="ai" element={<AI />} />
+                                    <Route path="novinky" element={<News />} />
+                                    <Route path="stats" element={<Stats />} />
+                                    <Route path="predmety/:subject" element={<Subject />} />
+                                    <Route path="skupiny/:groupId" element={<Group />} />
+                                    <Route path="skupiny/:groupId/:tab" element={<Group />} />
+                                    <Route exact path=":username" element={<User />} />
+                                    <Route exact path=":username/:tab" element={<User />} />
+                                    <Route exact path=":username/prispevok/:postId" element={<Post />} />
 
-                                {/* PRIVATE ROUTES */}
-                                <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
-                                <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
-                                <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
-                                    <Route path="clanok" element={<CreateArticle />} />
-                                    <Route path="kviz" element={<CreateQuiz />} />
-                                    <Route path="diskusia" element={<CreateDiscussion />} />
-                                    <Route path="skupina" element={<CreateGroup />} />
+                                    {/* PRIVATE ROUTES */}
+                                    <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
+                                    <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
+                                    <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
+                                        <Route path="clanok" element={<CreateArticle />} />
+                                        <Route path="kviz" element={<CreateQuiz />} />
+                                        <Route path="diskusia" element={<CreateDiscussion />} />
+                                        <Route path="skupina" element={<CreateGroup />} />
+                                    </Route>
+
+                                    {/* SPECIFIC USER ROUTES */}
+                                    <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
+                                    <Route path="statistiky/:postId" element={isAuth ? <Stats /> : <Navigate to="/" />} />
                                 </Route>
 
-                                {/* SPECIFIC USER ROUTES */}
-                                <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
-                                <Route path="statistiky/:postId" element={isAuth ? <Stats /> : <Navigate to="/" />} />
-                            </Route>
-
-                            <Route path="prihlasenie" element={<Login />} />
-                        </Routes>
-                    </BrowserRouter>
+                                <Route path="prihlasenie" element={<Login />} />
+                            </Routes>
+                        </BrowserRouter>
+                    </GoogleOAuthProvider>
                 </QueryClientProvider>
             </ModalsProvider>
         </MantineProvider>
