@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, Divider, Spoiler } from '@mantine/core';
-import { IconCopyCheck, IconCrown, IconGif, IconLock, IconMessageCircle, IconPaperclip, IconPencil, IconPhoto, IconShare, IconWorld } from '@tabler/icons-react';
+import { HashLink } from "react-router-hash-link";
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, Spoiler } from '@mantine/core';
+import { IconCopyCheck, IconGif, IconLock, IconMessageCircle, IconPaperclip, IconPencil, IconPhoto, IconShare, IconWorld, IconHeart } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
-import Post from "templates/Post";
-import axios from "axios";
 import moment from "moment";
-import { IconHeart } from "@tabler/icons-react";
-import { HashLink } from "react-router-hash-link";
+import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
