@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
 import dotenv from "dotenv";
+import { generateUsername } from "unique-username-generator";
 dotenv.config();
 
 // REGISTER USER
@@ -67,7 +68,7 @@ export const google = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user){
-            const username = new Date().valueOf();
+            const username = generateUsername();
             user = await User.create({
                 username, email, displayName, profilePicture
             })
