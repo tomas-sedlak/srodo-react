@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button } from '@mantine/core';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip } from '@mantine/core';
 import { IconLock, IconPencil, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
@@ -108,6 +108,19 @@ export default function Group() {
                     }
                     <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
                 </Flex>
+
+                <Box mt="sm" className="members-preview">
+                    {data.members.slice(-12).map(member =>
+                        <Tooltip label={`@${member.username}`} withArrow>
+                            <Link to={`/${member.username}`} key={member._id}>
+                                <Avatar
+                                    src={member.profilePicture}
+                                    style={{ outline: "var(--mantine-color-body) solid 2px" }}
+                                />
+                            </Link>
+                        </Tooltip>
+                    )}
+                </Box>
             </Box>
 
             <Tabs
@@ -180,7 +193,7 @@ function Members({ owner, members }) {
 
 function UserProfile({ user, badge }) {
     return (
-        <Link to={`/${user.username}`}>
+        <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
                 <Avatar src={user.profilePicture} />
 
