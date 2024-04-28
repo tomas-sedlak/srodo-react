@@ -64,7 +64,7 @@ export default function Comments({ postId }) {
             {user &&
                 <Box px="md" py="sm" className="border-bottom">
                     <Group gap="xs" align="flex-start">
-                        <Avatar src={user.profilePicture} />
+                        <Avatar mt={3} src={user.profilePicture} />
 
                         <Textarea
                             minRows={1}
@@ -79,9 +79,9 @@ export default function Comments({ postId }) {
                     </Group>
 
                     <Group
-                        mt={8}
                         justify="flex-end"
                         gap={4}
+                        mt={isInputOpened && 8}
                         mah={isInputOpened ? 36 : 0}
                         style={{
                             transition: "max-height 0.15s ease",

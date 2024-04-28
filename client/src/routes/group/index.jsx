@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip } from '@mantine/core';
-import { IconLock, IconPencil, IconWorld } from '@tabler/icons-react';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, Divider, Spoiler } from '@mantine/core';
+import { IconCopyCheck, IconCrown, IconGif, IconLock, IconMessageCircle, IconPaperclip, IconPencil, IconPhoto, IconShare, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import Post from "templates/Post";
 import axios from "axios";
+import moment from "moment";
+import { IconHeart } from "@tabler/icons-react";
+import { HashLink } from "react-router-hash-link";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -142,14 +145,16 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            {tab === "prispevky" && <Posts groupId={groupId} />}
+            {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
 
             {tab === "clenovia" && <Members owner={data.owner} members={data.members} />}
         </>
     )
 }
 
-function Posts({ groupId }) {
+function Posts({ groupId, owner }) {
+    const user = useSelector(state => state.user);
+
     const fetchPosts = async () => {
         const posts = await axios.get("/api/post/")
         return posts.data
@@ -170,11 +175,137 @@ function Posts({ groupId }) {
         </div>
     ) : (
         <>
+            {user &&
+                <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
+                    <Avatar mt={3} src={user.profilePicture} />
+
+                    <Stack gap={8} style={{ flex: 1 }}>
+                        <Textarea
+                            // variant="unstyled"
+                            minRows={1}
+                            autosize
+                            size="md"
+                            placeholder="Napíš niečo..."
+                        />
+
+                        <Flex justify="space-between" align="center">
+                            <Flex gap={8}>
+                                <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        radius="xl"
+                                    >
+                                        <IconPhoto stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
+
+                                <Tooltip label="GIF" position="bottom" openDelay={500} withArrow>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        radius="xl"
+                                    >
+                                        <IconGif stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
+
+                                <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        radius="xl"
+                                    >
+                                        <IconPaperclip stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
+
+                                <Tooltip label="Kvíz" position="bottom" openDelay={500} withArrow>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        radius="xl"
+                                    >
+                                        <IconCopyCheck stroke={1.25} />
+                                    </ActionIcon>
+                                </Tooltip>
+                            </Flex>
+
+                            <Button>
+                                Publikovať
+                            </Button>
+                        </Flex>
+                    </Stack>
+                </Flex>
+            }
+
             {data.length === 0 &&
                 <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
             }
 
-            {data.map(post => <Post post={post} />)}
+            {data.map(post =>
+                <Link to={`/${post.author.username}/prispevok/${post._id}`}>
+                    <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
+                        <Link to={`/${post.author.username}`}>
+                            <Avatar src={post.author.profilePicture} />
+                        </Link>
+
+                        <Stack gap={4} pos="relative" style={{ flex: 1 }}>
+                            <Flex gap={4} align="center" wrap="wrap">
+                                <Link to={"/" + post.author.username}>
+                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                        {post.author.displayName}
+                                    </Text>
+                                </Link>
+                                {post.author._id === owner._id &&
+                                    <Badge variant="light" size="xs">Admin</Badge>
+                                }
+                                <Link to={"/" + post.author.username}>
+                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                        @{post.author.username}
+                                    </Text>
+                                </Link>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    &middot;
+                                </Text>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    {moment(post.createdAt).fromNow()}
+                                </Text>
+                            </Flex>
+
+                            <Spoiler
+                                maxHeight={100}
+                                hideLabel="Zobraziť menej"
+                                showLabel="Zobraziť viac"
+                                styles={{
+                                    control: { color: "var(--mantine-color-dimmed)" },
+                                }}
+                            >
+                                <div style={{ whiteSpace: "pre-line" }}>
+                                    {post.content}
+                                </div>
+                            </Spoiler>
+
+                            <Flex gap={8}>
+                                <div className={`icon-wrapper like`}>
+                                    <IconHeart stroke={1.25} />
+                                    <span>{post.likes.length}</span>
+                                </div>
+
+                                <HashLink to={`/${post.author.username}/prispevok/${post._id}#komentare`} className="icon-wrapper">
+                                    <IconMessageCircle stroke={1.25} />
+                                    <span>{post.comments}</span>
+                                </HashLink>
+
+                                <div className="icon-wrapper">
+                                    <IconShare stroke={1.25} />
+                                    <span>Zdieľať</span>
+                                </div>
+                            </Flex>
+                        </Stack>
+                    </Flex>
+                </Link>
+            )}
         </>
     )
 }
@@ -182,7 +313,7 @@ function Posts({ groupId }) {
 function Members({ owner, members }) {
     return (
         <>
-            <UserProfile user={owner} badge="Majiteľ" />
+            <UserProfile user={owner} badge="Admin" />
 
             {members.map(member =>
                 <UserProfile user={member} />
