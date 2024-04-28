@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, Group, Avatar, Menu, ActionIcon, Spoiler, Stack } from '@mantine/core';
+import { Text, Group, Avatar, Menu, ActionIcon, Spoiler, Stack, Tooltip } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconDots, IconFlag, IconPencil, IconTrash } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -10,7 +10,17 @@ import axios from "axios";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
-moment.locale("sk");
+moment.locale("sk")
+// moment.locale("sk", {
+//     relativeTime: {
+//         ss: "%ss",
+//         mm: "%dm",
+//         hh: "%dh",
+//         dd: "%dd",
+//         MM: "%dM",
+//         yy: "%dY",
+//     }
+// });
 
 export default function Comment({ data }) {
     const queryClient = useQueryClient();
@@ -69,14 +79,19 @@ export default function Comment({ data }) {
             <Stack gap={4} pos="relative" style={{ flex: 1 }}>
                 <Group gap={4}>
                     <Link to={"/" + data.author.username}>
-                        <Text fw={700} size="sm">
+                        <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                             {data.author.displayName}
                         </Text>
                     </Link>
-                    <Text c="dimmed" size="sm">
+                    <Link to={"/" + data.author.username}>
+                        <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                            @{data.author.username}
+                        </Text>
+                    </Link>
+                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                         &middot;
                     </Text>
-                    <Text c="dimmed" size="sm">
+                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                         {moment(data.createdAt).fromNow()}
                     </Text>
                 </Group>
