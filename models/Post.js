@@ -2,25 +2,17 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const postSchema = new Schema({
-    postType: String,
-    coverImage: String,
-    title: {
-        type: String,
-        max: 64,
+    groupId: Schema.Types.ObjectId,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
+    coverImage: String,
     content: String,
     quiz: [{
         type: Schema.Types.ObjectId,
         ref: "Quiz",
     }],
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-    },
-    subject: {
-        type: Schema.Types.ObjectId,
-        ref: "Subject",
-    },
     views: [{
         date: Date,
         count: Number,
