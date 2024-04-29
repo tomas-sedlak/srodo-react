@@ -251,9 +251,13 @@ function Members({ owner, members }) {
     return (
         <>
             <TextInput
-                p="sm"
-                width="100%"
+                px="md"
+                py="sm"
+                size="md"
+                className="border-bottom"
                 placeholder="Hľadať členov"
+                value={searchValue}
+                onChange={event => setSearchValue(event.target.value)}
                 leftSection={<IconSearch stroke={1.25} />}
                 rightSection={
                     searchValue !== "" && (
@@ -264,14 +268,6 @@ function Members({ owner, members }) {
                         />
                     )
                 }
-                className="search border-bottom"
-                styles={{
-                    section: {
-                        margin: "8px"
-                    },
-                }}
-                value={searchValue}
-                onChange={event => setSearchValue(event.target.value)}
             />
 
             <UserProfile user={owner} badge="Admin" />
