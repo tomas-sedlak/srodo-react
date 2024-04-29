@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, Spoiler, Autocomplete } from '@mantine/core';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, TextInput } from '@mantine/core';
 import { IconCopyCheck, IconGif, IconLock, IconPaperclip, IconPencil, IconPhoto, IconWorld, IconSearch, IconX } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,6 @@ import Post from "templates/Post";
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
     const [isLoading, setIsLoading] = useState(false);
-    
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -247,17 +246,12 @@ function Posts({ groupId, owner }) {
 }
 
 function Members({ owner, members }) {
-
     const [searchValue, setSearchValue] = useState("");
-    const groupMembers = members
-        .map((_, index) => `Option ${index}`);
 
     return (
         <>
-
-            <Autocomplete
-                p="sm"                
-                data={['member 1', 'member 2']} //not working yet
+            <TextInput
+                p="sm"
                 width="100%"
                 placeholder="Hľadať členov"
                 leftSection={<IconSearch stroke={1.25} />}
@@ -270,14 +264,14 @@ function Members({ owner, members }) {
                         />
                     )
                 }
-                className="search border-bottom" // I don't know if I should put border-bottom here
+                className="search border-bottom"
                 styles={{
                     section: {
                         margin: "8px"
                     },
                 }}
                 value={searchValue}
-                onChange={setSearchValue}
+                onChange={event => setSearchValue(event.target.value)}
             />
 
             <UserProfile user={owner} badge="Admin" />

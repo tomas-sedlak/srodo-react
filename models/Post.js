@@ -2,28 +2,21 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const postSchema = new Schema({
-    postType: String,
-    coverImage: String,
-    title: {
-        type: String,
-        max: 64,
-    },
-    content: String,
-    quiz: [{
-        type: Schema.Types.ObjectId,
-        ref: "Quiz",
-    }],
+    groupId: Schema.Types.ObjectId,
     author: {
         type: Schema.Types.ObjectId,
         ref: "User",
     },
-    subject: {
-        type: Schema.Types.ObjectId,
-        ref: "Subject",
+    content: {
+        type: String,
+        trim: true,
     },
-    views: [{
-        date: Date,
-        count: Number,
+    image: String,
+    gif: String,
+    attachment: String,
+    quiz: [{
+        type: Schema.Types.ObjectId,
+        ref: "Quiz",
     }],
     likes: [Schema.Types.ObjectId],
 }, {

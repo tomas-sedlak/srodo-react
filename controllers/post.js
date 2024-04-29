@@ -8,15 +8,15 @@ import axios from "axios";
 export const createPost = async (req, res) => {
     try {
         const {
-            author,
-            postType,
-            subject,
-            coverImage,
-            title,
+            groupId,
             content,
+            image,
+            gif,
+            attachemnt,
+            quiz,
         } = req.body;
 
-        const response = await axios.get(coverImage, {
+        const response = await axios.get(image, {
             responseType: "arraybuffer",
         })
         const buffer = Buffer.from(response.data, "base64")
@@ -28,12 +28,13 @@ export const createPost = async (req, res) => {
         const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
 
         const newPost = new Post({
-            author,
-            postType,
-            subject,
-            coverImage: imageUrl,
-            title,
+            groupId,
+            author: req.user.id,
             content,
+            image: imageUrl,
+            gif,
+            attachemnt,
+            quiz,
         });
         await newPost.save();
 
@@ -72,7 +73,6 @@ export const getFeedPosts = async (req, res) => {
             .limit(limit)
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
-            .populate("subject")
             .lean();
 
         await Promise.all(
@@ -93,7 +93,6 @@ export const getPost = async (req, res) => {
         const { postId } = req.params;
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
-            .populate("subject")
             .lean();
 
         const comments = await Comment.find({ postId: post._id });
@@ -172,7 +171,6 @@ export const likePost = async (req, res) => {
         const { userId } = req.body;
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
-            .populate("subject")
         const isLiked = post.likes.includes(userId);
 
         if (isLiked) {
