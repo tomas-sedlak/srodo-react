@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, Spoiler } from '@mantine/core';
-import { IconCopyCheck, IconGif, IconLock, IconMessageCircle, IconPaperclip, IconPencil, IconPhoto, IconShare, IconWorld, IconHeart } from '@tabler/icons-react';
+import { IconCopyCheck, IconGif, IconLock, IconPaperclip, IconPencil, IconPhoto, IconWorld } from '@tabler/icons-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
-import moment from "moment";
 import axios from "axios";
+import Post from "templates/post";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -49,7 +48,7 @@ export default function Group() {
 
     const { data, status } = useQuery({
         queryFn: fetchGroup,
-        queryKey: ["group", groupId],
+        queryKey: ["group", "posts", groupId],
     })
 
     return status === "pending" ? (
@@ -241,69 +240,7 @@ function Posts({ groupId, owner }) {
                 <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
             }
 
-            {data.map(post =>
-                <Link to={`/${post.author.username}/prispevok/${post._id}`}>
-                    <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
-                        <Link to={`/${post.author.username}`}>
-                            <Avatar src={post.author.profilePicture} />
-                        </Link>
-
-                        <Stack gap={4} pos="relative" style={{ flex: 1 }}>
-                            <Flex gap={4} align="center" wrap="wrap">
-                                <Link to={"/" + post.author.username}>
-                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                        {post.author.displayName}
-                                    </Text>
-                                </Link>
-                                {post.author._id === owner._id &&
-                                    <Badge variant="light" size="xs">Admin</Badge>
-                                }
-                                <Link to={"/" + post.author.username}>
-                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                        @{post.author.username}
-                                    </Text>
-                                </Link>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    &middot;
-                                </Text>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    {moment(post.createdAt).fromNow()}
-                                </Text>
-                            </Flex>
-
-                            <Spoiler
-                                maxHeight={100}
-                                hideLabel="Zobraziť menej"
-                                showLabel="Zobraziť viac"
-                                styles={{
-                                    control: { color: "var(--mantine-color-dimmed)" },
-                                }}
-                            >
-                                <div style={{ whiteSpace: "pre-line" }}>
-                                    {post.content}
-                                </div>
-                            </Spoiler>
-
-                            <Flex gap={8}>
-                                <div className={`icon-wrapper like`}>
-                                    <IconHeart stroke={1.25} />
-                                    <span>{post.likes.length}</span>
-                                </div>
-
-                                <HashLink to={`/${post.author.username}/prispevok/${post._id}#komentare`} className="icon-wrapper">
-                                    <IconMessageCircle stroke={1.25} />
-                                    <span>{post.comments}</span>
-                                </HashLink>
-
-                                <div className="icon-wrapper">
-                                    <IconShare stroke={1.25} />
-                                    <span>Zdieľať</span>
-                                </div>
-                            </Flex>
-                        </Stack>
-                    </Flex>
-                </Link>
-            )}
+            {data.map(post => <Post post={post} />)}
         </>
     )
 }
