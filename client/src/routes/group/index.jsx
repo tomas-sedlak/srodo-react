@@ -6,7 +6,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import axios from "axios";
-import Post from "templates/post";
+import Post from "templates/Post";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
