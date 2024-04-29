@@ -21,8 +21,7 @@ export const getUserPosts = async (req, res) => {
         const { userId } = req.params;
         const post = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture")
-            .populate("subject");
+            .populate("author", "username displayName profilePicture");
 
         res.status(200).json(post);
     } catch (err) {
@@ -34,8 +33,7 @@ export const getUserFavourites = async (req, res) => {
     try {
         const { userId } = req.params;
         const posts = await Post.find({ likes: userId })
-            .populate("author", "username displayName profilePicture")
-            .populate("subject");
+            .populate("author", "username displayName profilePicture");
 
         res.status(200).json(posts);
     } catch (err) {

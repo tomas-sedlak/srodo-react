@@ -3,6 +3,7 @@ import Comment from "../models/Comment.js";
 import Subject from "../models/Subject.js" // NECCESSARY FOR POPULATING
 import sharp from "sharp";
 import axios from "axios";
+import mongoose from "mongoose";
 
 // CREATE
 export const createPost = async (req, res) => {
@@ -65,8 +66,7 @@ export const createComment = async (req, res) => {
 // READ
 export const getFeedPosts = async (req, res) => {
     try {
-        const page = req.query.page || 1;
-        const limit = req.query.limit || 3;
+        const { page = 1, limit = 3 } = req.query;
 
         const posts = await Post.find()
             .sort({ createdAt: -1 })
@@ -168,20 +168,18 @@ export const editPost = async (req, res) => {
 export const likePost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const { userId } = req.body;
-        const post = await Post.findById(postId)
-            .populate("author", "username displayName profilePicture")
-        const isLiked = post.likes.includes(userId);
+        const post = await Post.findById(postId);
 
+        const isLiked = post.likes.includes(req.user.id);
         if (isLiked) {
-            post.likes.pull(userId);
+            post.likes.pull(req.user.id);
         } else {
-            post.likes.push(userId);
+            post.likes.push(req.user.id);
         }
 
         await post.save();
 
-        res.status(200).json(post);
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

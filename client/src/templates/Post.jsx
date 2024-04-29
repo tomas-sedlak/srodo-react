@@ -1,17 +1,36 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Group, Text, Avatar, ActionIcon, Menu, Stack, Spoiler } from '@mantine/core';
-import { IconDots, IconTrash, IconPencil, IconChartBar, IconFlag, IconMessageCircle, IconHeart, IconShare } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconPencil, IconChartBar, IconFlag, IconMessageCircle, IconHeart, IconShare, IconHeartFilled } from '@tabler/icons-react';
 import { Link, useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { modals } from "@mantine/modals";
+import { setLoginModal } from "state";
 import axios from "axios";
 import moment from "moment";
 
 const Post = forwardRef(({ post }, ref) => {
     const authorUrl = `/${post.author.username}`;
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
+    const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
+    const dispatch = useDispatch();
+
+    const [likes, setLikes] = useState(post.likes.length);
+    const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
+
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
+
+    const likePost = async () => {
+        isLiked ? setLikes(likes - 1) : setLikes(likes + 1)
+        setIsLiked(!isLiked)
+        await axios.patch(
+            `/api/post/${post._id}/like`, {}, { headers },
+        )
+    }
 
     const postContent = (
         <Link to={postUrl}>
@@ -59,9 +78,16 @@ const Post = forwardRef(({ post }, ref) => {
                     </Spoiler>
 
                     <Group gap={8}>
-                        <div className={`icon-wrapper like`}>
-                            <IconHeart stroke={1.25} />
-                            <span>{post.likes.length}</span>
+                        <div
+                            className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
+                            onClick={event => {
+                                event.preventDefault()
+                                if (userId) likePost()
+                                else dispatch(setLoginModal(true))
+                            }}
+                        >
+                            {isLiked ? <IconHeartFilled stroke={1.25} /> : <IconHeart stroke={1.25} />}
+                            <span>{likes}</span>
                         </div>
 
                         <HashLink to={`${postUrl}#komentare`} className="icon-wrapper">
