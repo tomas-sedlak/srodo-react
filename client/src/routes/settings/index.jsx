@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
-import { IconPlus, IconCameraPlus, IconCircleX } from "@tabler/icons-react";
+import { IconPlus, IconCameraPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
@@ -141,7 +141,7 @@ export default function Settings() {
                 centered
             >
                 {modalType === "select" &&
-                    <Group gap={4}>
+                    <Group style={{ rowGap: 8, columnGap: 4 }}>
                         {socialsData.map(social =>
                             <div
                                 className="icon-wrapper"
@@ -267,51 +267,86 @@ export default function Settings() {
                         src={profilePicture}
                     />
 
-                    <Button onClick={profilePictureModalHandlers.open}>Zmeniť</Button>
+                    {profilePicture &&
+                        <Button
+                            variant="default"
+                            leftSection={<IconTrash stroke={1.25} />}
+                            styles={{ section: { marginRight: 4 } }}
+                            onClick={() => setProfilePicture("")}
+                            c="red"
+                        >
+                            Zmazať
+                        </Button>
+                    }
+
+                    <Button
+                        variant="default"
+                        leftSection={<IconCamera stroke={1.25} />}
+                        styles={{ section: { marginRight: 4 } }}
+                        onClick={profilePictureModalHandlers.open}
+                    >
+                        Zmeniť
+                    </Button>
                 </Group>
 
-                <TextInput
-                    mt="sm"
-                    label="Display name"
-                    value={displayName}
-                    maxLength={maxDisplaynameCharacterLimit}
-                    onChange={event => {
-                        setdisplayName(event.currentTarget.value)
-                        setDisplaynameCount(event.currentTarget.value.length)
-                    }}
-                />
-                <Group mt={4}>
-                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Použi aj smajlíkov 🥳🤪</Text>
-                    <Text c="dimmed" size="xs">{displaynameCount}/{maxDisplaynameCharacterLimit}</Text>
-                </Group>
+                <Box pos="relative">
+                    <TextInput
+                        mt="sm"
+                        label="Display name"
+                        description="Použi aj smajlíkov 🥳🤪"
+                        styles={{ input: { paddingRight: 46 } }}
+                        value={displayName}
+                        maxLength={maxDisplaynameCharacterLimit}
+                        onChange={event => {
+                            setdisplayName(event.currentTarget.value)
+                            setDisplaynameCount(event.currentTarget.value.length)
+                        }}
+                    />
+                    <Text
+                        size="xs"
+                        c="dimmed"
+                        className="input-counter"
+                    >
+                        {displaynameCount}/{maxDisplaynameCharacterLimit}
+                    </Text>
+                </Box>
 
                 <TextInput
                     mt="sm"
                     label="Použivateľské meno"
+                    description="Použivateľské meno sa momentálne nedá zmeniť"
+                    styles={{ input: { paddingRight: 46 } }}
                     value={user.username}
                     disabled
                 />
-                <Text mt={4} c="dimmed" size="xs">Použivateľské meno sa momentálne nedá zmeniť</Text>
 
-                <Textarea
-                    mt="sm"
-                    label="Bio"
-                    autosize
-                    minRows={2}
-                    value={bio}
-                    maxLength={maxBioCharacterLenght}
-                    onChange={event => {
-                        setBio(event.currentTarget.value)
-                        setBioCount(event.currentTarget.value.length)
-                    }}
-                />
-                <Group mt={4}>
-                    <Text c="dimmed" size="xs" style={{ flex: 1 }}>Tvoja krátka charakteristika</Text>
-                    <Text c="dimmed" size="xs">{bioCount}/{maxBioCharacterLenght}</Text>
-                </Group>
+                <Box pos="relative">
+                    <Textarea
+                        mt="sm"
+                        label="Bio"
+                        description="Tvoja krátka charakteristika"
+                        styles={{ input: { paddingRight: 46 } }}
+                        autosize
+                        minRows={2}
+                        value={bio}
+                        maxLength={maxBioCharacterLenght}
+                        onChange={event => {
+                            setBio(event.currentTarget.value)
+                            setBioCount(event.currentTarget.value.length)
+                        }}
+                    />
+                    <Text
+                        size="xs"
+                        c="dimmed"
+                        className="input-counter"
+                    >
+                        {bioCount}/{maxBioCharacterLenght}
+                    </Text>
+                </Box>
 
-                <Text mt="sm" mb={4} size="sm" fw={500}>Sociálne siete</Text>
-                <Group gap={4}>
+                <Text mt="sm" size="sm" fw={500} style={{ lineHeight: 1.55 }}>Sociálne siete</Text>
+                <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
+                <Group mt={5} style={{ rowGap: 8, columnGap: 4 }}>
                     {socials.map((social, index) =>
                         <div
                             className="icon-wrapper"
@@ -344,14 +379,13 @@ export default function Settings() {
                         <span>Pridať sociálnu sieť</span>
                     </div>
                 </Group>
-                <Text mt={4} c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>
                         Uložiť zmeny
                     </Button>
                 </Group>
-            </Box>
+            </Box >
 
         </>
     );

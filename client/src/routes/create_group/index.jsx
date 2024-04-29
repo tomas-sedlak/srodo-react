@@ -106,6 +106,7 @@ export default function CreateGroup() {
                                         leftSection={<IconTrash stroke={1.25} />}
                                         styles={{ section: { marginRight: 4 } }}
                                         onClick={() => setCoverImage("")}
+                                        c="red"
                                     >
                                         Zmazať
                                     </Button>
@@ -134,7 +135,7 @@ export default function CreateGroup() {
                             <TextInput
                                 mt="md"
                                 styles={{ input: { paddingRight: 46 } }}
-                                placeholder="Názov skupiny"
+                                label="Názov skupiny"
                                 value={data.name}
                                 onChange={setName}
                             />
@@ -153,7 +154,7 @@ export default function CreateGroup() {
                                 autosize
                                 minRows={2}
                                 styles={{ input: { paddingRight: 46 } }}
-                                placeholder="Popis skupiny (nepovinné)"
+                                label="Popis skupiny (nepovinné)"
                                 value={data.description}
                                 onChange={setDescription}
                             />
