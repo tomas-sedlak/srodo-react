@@ -270,10 +270,8 @@ function Members({ owner, members }) {
                 }
             />
 
-            <UserProfile user={owner} badge="Admin" />
-
             {members.map(member =>
-                <UserProfile user={member} />
+                <UserProfile user={member} badge={member._id === owner._id && "Admin"} />
             )}
         </>
     )

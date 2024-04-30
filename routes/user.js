@@ -1,10 +1,11 @@
 import express from "express";
 import {
   getUser,
+  getUnique,
   getUserPosts,
+  getUserGroups,
   getUserFavourites,
   updateUserSettings,
-  getUnique,
 } from "../controllers/user.js";
 import { verifyToken } from "../middleware/auth.js";
 
@@ -14,6 +15,7 @@ const router = express.Router();
 router.get("/", getUser);
 router.get("/unique", getUnique);
 router.get("/:userId/posts", getUserPosts);
+router.get("/:userId/groups", getUserGroups);
 router.get("/:userId/favourites", getUserFavourites);
 
 /* UPDATE */

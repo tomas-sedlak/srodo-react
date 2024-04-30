@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
-import mongoose from "mongoose";
+import Group from "../models/Group.js";
 import sharp from "sharp";
 import axios from "axios";
 
@@ -28,6 +28,17 @@ export const getUserPosts = async (req, res) => {
             .populate("author", "username displayName profilePicture");
 
         res.status(200).json(post);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
+export const getUserGroups = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const group = await Group.find({ members: userId })
+
+        res.status(200).json(group);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }

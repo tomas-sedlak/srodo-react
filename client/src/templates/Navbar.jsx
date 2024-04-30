@@ -1,7 +1,8 @@
-import { Badge, Text, Loader } from '@mantine/core';
+import { Badge, Text, Loader, Avatar } from '@mantine/core';
 import { IconHome, IconArticle, IconHeart, IconPuzzle } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 const menu = [
@@ -30,18 +31,17 @@ const menu = [
 
 export default function Navbar({ close }) {
     const { pathname } = useLocation();
-    const groups = [];
+    const userId = useSelector(state => state.user?._id)
 
-    // const fetchGroups = async () => {
-    //     const response = await axios.get("/api/groups")
-    //     return response.data
-    // }
+    const fetchGroups = async () => {
+        const response = await axios.get(`/api/user/${userId}/groups`)
+        return response.data
+    }
 
-    // const { status, data } = useQuery({
-    //     queryKey: ["subjects"],
-    //     queryFn: fetchSubjects,
-    //     staleTime: Infinity,
-    // })
+    const { status, data } = useQuery({
+        queryKey: ["groups"],
+        queryFn: fetchGroups,
+    })
 
     return status === "pending" ? (
         <div className="loader-center">
@@ -78,26 +78,27 @@ export default function Navbar({ close }) {
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
-            {groups.length === 0 &&
+            {data.length === 0 &&
                 <Text px="sm" c="dimmed">Zatiaľ žiadne skupiny.</Text>
             }
 
-            {groups.map(group => {
-                const url = `/skupiny/${group.url}`;
+            {data.map(group => {
+                const url = `/skupiny/${group._id}`;
                 const active = url === pathname;
 
                 return (
                     <Link
-                        key={item.name}
+                        key={group.name}
                         to={url}
                         onClick={close}
                         className="menu-item"
                         data-active={active || undefined}
                     >
-                        <span>{item.name}</span>
-                        {item.badge && (
+                        <Avatar size="sm" src={group.coverImage} />
+                        <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
+                        {group.badge && (
                             <Badge variant="light">
-                                {item.badge}
+                                {group.badge}
                             </Badge>
                         )}
                     </Link>

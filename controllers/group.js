@@ -29,6 +29,7 @@ export const createGroup = async (req, res) => {
             description,
             isPrivate,
             owner: req.user.id,
+            members: [req.user.id],
         });
         await newGroup.save();
 
