@@ -4,11 +4,7 @@ import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, 
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
-
-// Setup Moment.js for Slovak language
 import moment from "moment";
-import "moment/dist/locale/sk";
-moment.locale("sk");
 
 export default function User() {
     const { username, tab = "prispevky" } = useParams();
@@ -17,7 +13,7 @@ export default function User() {
     const navigate = useNavigate();
 
     const getData = async () => {
-        const user = await axios.get(`/api/user/${username}`);
+        const user = await axios.get(`/api/user?username=${username}`);
         const posts = await axios.get(`/api/user/${user.data._id}/posts`);
         return { user: user.data, posts: posts.data }
     }

@@ -7,8 +7,12 @@ import axios from "axios";
 // READ
 export const getUser = async (req, res) => {
     try {
-        const { id } = req.params;
-        const user = await User.findOne({ $or: [{ "id_": id }, { "username": id }] });
+        let user;
+        if (req.query.userId) {
+            user = await User.findOne({ _id: req.query.userId });
+        } else if (req.query.username) {
+            user = await User.findOne({ username: req.query.username });
+        }
 
         res.status(200).json(user);
     } catch (err) {

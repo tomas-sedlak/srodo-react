@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, ActionIcon, Text, Modal, Tooltip, Button } from "@mantine/core";
-import { IconPlus, IconCameraPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, Text, Modal, Button } from "@mantine/core";
+import { IconPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
@@ -37,28 +37,27 @@ const socialsData = [
         platform: "Twitter",
         icon: "/images/logos/twitter.svg",
     },
-]
+];
+
+const maxDisplaynameCharacterLimit = 64;
+const maxBioCharacterLenght = 160;
 
 export default function Settings() {
-    const maxDisplaynameCharacterLimit = 64;
-    const maxBioCharacterLenght = 160;
-
     const dispatch = useDispatch();
-    const user = useSelector(state => state.user);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const isMobile = useMediaQuery("(max-width: 768px)");
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const [coverImage, setCoverImage] = useState(user.coverImage);
+    const [coverImage, setCoverImage] = useState("");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
-    const [profilePicture, setProfilePicture] = useState(user.profilePicture);
+    const [profilePicture, setProfilePicture] = useState("");
     const [profilePictureModalOpened, profilePictureModalHandlers] = useDisclosure(false);
 
-    const [displayName, setdisplayName] = useState(user.displayName);
-    const [displaynameCount, setDisplaynameCount] = useState(user.displayName.length);
-    const [bio, setBio] = useState(user.bio);
-    const [bioCount, setBioCount] = useState(user.bio.length);
-    const [socials, setSocials] = useState(user.socials);
+    const [displayName, setdisplayName] = useState("");
+    const [username, setUsername] = useState("");
+    const [bio, setBio] = useState("");
+    const [socials, setSocials] = useState([]);
 
     const [modalType, setModalType] = useState(null);
     const [selectedSocial, setSelectedSocial] = useState(null);
@@ -98,7 +97,7 @@ export default function Settings() {
         setIsPublishing(true)
 
         const response = await axios.patch(
-            `/api/user/${user._id}/update`,
+            `/api/user/${userId}/update`,
             { coverImage, profilePicture, displayName, bio, socials },
             { headers },
         )
@@ -111,6 +110,20 @@ export default function Settings() {
 
         setIsPublishing(false)
     }
+
+    const fetchUser = async () => {
+        const response = await axios.get(`/api/user?userId=${userId}`)
+        setCoverImage(response.data.coverImage)
+        setProfilePicture(response.data.profilePicture)
+        setUsername(response.data.username)
+        setdisplayName(response.data.displayName)
+        setBio(response.data.bio)
+        setSocials(response.data.socials)
+    }
+
+    useEffect(() => {
+        fetchUser();
+    }, []);
 
     return (
         <>
@@ -313,7 +326,6 @@ export default function Settings() {
                         maxLength={maxDisplaynameCharacterLimit}
                         onChange={event => {
                             setdisplayName(event.currentTarget.value)
-                            setDisplaynameCount(event.currentTarget.value.length)
                         }}
                     />
                     <Text
@@ -321,7 +333,7 @@ export default function Settings() {
                         c="dimmed"
                         className="input-counter"
                     >
-                        {displaynameCount}/{maxDisplaynameCharacterLimit}
+                        {displayName.length}/{maxDisplaynameCharacterLimit}
                     </Text>
                 </Box>
 
@@ -330,7 +342,7 @@ export default function Settings() {
                     label="Použivateľské meno"
                     description="Použivateľské meno sa momentálne nedá zmeniť"
                     styles={{ input: { paddingRight: 46 } }}
-                    value={user.username}
+                    value={username}
                     disabled
                 />
 
@@ -346,7 +358,6 @@ export default function Settings() {
                         maxLength={maxBioCharacterLenght}
                         onChange={event => {
                             setBio(event.currentTarget.value)
-                            setBioCount(event.currentTarget.value.length)
                         }}
                     />
                     <Text
@@ -354,7 +365,7 @@ export default function Settings() {
                         c="dimmed"
                         className="input-counter"
                     >
-                        {bioCount}/{maxBioCharacterLenght}
+                        {bio.length}/{maxBioCharacterLenght}
                     </Text>
                 </Box>
 
