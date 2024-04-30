@@ -120,18 +120,20 @@ export default function Group() {
                     <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
                 </Flex>
 
-                <Box mt="sm" className="members-preview">
-                    {data.members.slice(-12).map(member =>
-                        <Tooltip label={`@${member.username}`} withArrow>
-                            <Link to={`/${member.username}`} key={member._id}>
-                                <Avatar
-                                    src={member.profilePicture}
-                                    style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                />
-                            </Link>
-                        </Tooltip>
-                    )}
-                </Box>
+                {data.members.length > 1 &&
+                    <Box mt="sm" className="members-preview">
+                        {data.members.slice(-12).map(member =>
+                            <Tooltip label={`@${member.username}`} withArrow>
+                                <Link to={`/${member.username}`} key={member._id}>
+                                    <Avatar
+                                        src={member.profilePicture}
+                                        style={{ outline: "var(--mantine-color-body) solid 2px" }}
+                                    />
+                                </Link>
+                            </Tooltip>
+                        )}
+                    </Box>
+                }
             </Box>
 
             <Tabs
