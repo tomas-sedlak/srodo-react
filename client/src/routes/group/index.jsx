@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, TextInput } from '@mantine/core';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, TextInput, Image } from '@mantine/core';
 import { IconCopyCheck, IconGif, IconLock, IconPaperclip, IconPencil, IconPhoto, IconWorld, IconSearch, IconX } from '@tabler/icons-react';
+import { useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
@@ -10,6 +11,8 @@ import Post from "templates/Post";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
+    const isMobile = useMediaQuery("(max-width: 768px)");
+    const profilePictureSize = isMobile ? 96 : 128;
     const [isLoading, setIsLoading] = useState(false);
 
     const queryClient = useQueryClient();
@@ -61,43 +64,51 @@ export default function Group() {
         </div>
     ) : (
         <>
-            <Box px="md" py="sm">
-                <AspectRatio ratio={6 / 2}>
-                    <Box
-                        className="lazy-image pointer"
-                        style={{ backgroundImage: `url(${data.coverImage})` }}
-                    />
-                </AspectRatio>
+            <AspectRatio ratio={6 / 2}>
+                {data.coverImage ?
+                    <Image src={data.coverImage} />
+                    : <Box className="no-image"></Box>
+                }
+            </AspectRatio>
 
-                <Flex my="sm" justify="space-between" align="center">
-                    <Text fw={700} size={24} style={{ lineHeight: 1 }}>
-                        {data.name}
-                    </Text>
+            <div style={{ position: "relative" }}>
+                <Avatar
+                    className="profile-picture"
+                    size={profilePictureSize}
+                    src={data.profilePicture}
+                />
+            </div>
 
-                    {data.owner._id == userId ?
+            <Flex px="md" h={profilePictureSize / 2} justify="flex-end" align="center">
+                {data.owner._id == userId ?
+                    <Button
+                        leftSection={<IconPencil stroke={1.25} />}
+                        styles={{ section: { marginRight: 4 } }}
+                    >
+                        Upraviť
+                    </Button>
+                    : data.members.find(user => user._id == userId) ?
                         <Button
-                            leftSection={<IconPencil stroke={1.25} />}
-                            styles={{ section: { marginRight: 4 } }}
+                            onClick={leaveGroup}
+                            loading={isLoading}
                         >
-                            Upraviť
+                            Odísť
                         </Button>
-                        : data.members.find(user => user._id == userId) ?
-                            <Button
-                                onClick={leaveGroup}
-                                loading={isLoading}
-                            >
-                                Odísť
-                            </Button>
-                            : <Button
-                                onClick={joinGroup}
-                                loading={isLoading}
-                            >
-                                Pripojiť sa
-                            </Button>
-                    }
-                </Flex>
+                        : <Button
+                            onClick={joinGroup}
+                            loading={isLoading}
+                        >
+                            Pripojiť sa
+                        </Button>
+                }
+            </Flex>
 
-                <Text style={{ lineHeight: 1.4 }}>
+            <Box px="md" py="sm">
+                <Text fw={700} size="xl" style={{ lineHeight: 1.2 }}>
+                    {data.name}
+                </Text>
+
+                <Text mt="sm">
                     {data.description}
                 </Text>
 

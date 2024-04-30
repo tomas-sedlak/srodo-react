@@ -6,6 +6,10 @@ const groupSchema = new Schema({
         type: String,
         default: "",
     },
+    profilePicture: {
+        type: String,
+        default: "",
+    },
     name: {
         type: String,
         max: 64,

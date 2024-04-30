@@ -48,35 +48,22 @@ export default function User() {
                 />
             </div>
 
-            {!isMobile &&
-                <Group ml={profilePictureSize + 8} h={profilePictureSize / 2} px="sm">
-                    <Stack gap={4}>
-                        <Text fw={700} size="xl" style={{ lineHeight: 1 }}>
-                            {data.user.displayName}
-                        </Text>
-                        <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
-                    </Stack>
-                </Group>
-            }
+            <Box px="md" py="sm" mt={profilePictureSize / 2}>
+                <Stack gap={4}>
+                    <Text fw={700} size="xl" style={{ lineHeight: 1.2 }}>
+                        {data.user.displayName}
+                    </Text>
+                    <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
+                </Stack>
 
-            <Box px="md" py="sm">
-                {isMobile &&
-                    <Stack mb="sm" mt={profilePictureSize / 2} gap={4}>
-                        <Text fw={700} size="xl" style={{ lineHeight: 1 }}>
-                            {data.user.displayName}
-                        </Text>
-                        <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
-                    </Stack>
-                }
-
-                <Text style={{ lineHeight: 1.4 }}>
+                <Text mt="sm">
                     {data.user.bio}
                 </Text>
 
                 <Text c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
 
                 {data.user.socials.length !== 0 &&
-                    <Group mt={8} gap={4}>
+                    <Group mt="sm" gap={4}>
                         {data.user.socials.map(social =>
                             <Link className="icon-wrapper" to={social.url} target="_blank">
                                 <img width={24} height={24} src={social.icon} />
