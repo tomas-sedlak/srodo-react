@@ -37,25 +37,22 @@ export default function Post() {
                         </Link>
 
                         <Stack gap={4} pr={32} style={{ flex: 1 }}>
-                            <Link to={`/${data.author.username}`}>
-                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                    {data.author.displayName}
-                                </Text>
-                            </Link>
-
                             <Group gap={4}>
+                                <Link to={`/${data.author.username}`}>
+                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                        {data.author.displayName}
+                                    </Text>
+                                </Link>
                                 <Link to={`/${data.author.username}`}>
                                     <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
                                         @{data.author.username}
                                     </Text>
                                 </Link>
-                                <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                    &middot;
-                                </Text>
-                                <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                    {moment(data.createdAt).fromNow()}
-                                </Text>
                             </Group>
+
+                            <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                                {moment(data.createdAt).fromNow()}
+                            </Text>
                         </Stack>
                     </Group>
 
