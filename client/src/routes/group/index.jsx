@@ -126,6 +126,7 @@ export default function Group() {
                             <Tooltip label={`@${member.username}`} withArrow>
                                 <Link to={`/${member.username}`} key={member._id}>
                                     <Avatar
+                                        className="no-image"
                                         src={member.profilePicture}
                                         style={{ outline: "var(--mantine-color-body) solid 2px" }}
                                     />
@@ -187,7 +188,7 @@ function Posts({ groupId, owner }) {
         <>
             {user &&
                 <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
-                    <Avatar mt={3} src={user.profilePicture} />
+                    <Avatar mt={3} className="no-image" src={user.profilePicture} />
 
                     <Stack gap={8} style={{ flex: 1 }}>
                         <Textarea
@@ -294,7 +295,7 @@ function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
-                <Avatar src={user.profilePicture} />
+                <Avatar className="no-image" src={user.profilePicture} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
                     <Flex gap={4} align="center">

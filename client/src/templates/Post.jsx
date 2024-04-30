@@ -12,7 +12,7 @@ const Post = forwardRef(({ post }, ref) => {
         <Link to={postUrl}>
             <Group px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
                 <Link to={authorUrl}>
-                    <Avatar src={post.author.profilePicture} />
+                    <Avatar className="no-image" src={post.author.profilePicture} />
                 </Link>
 
                 <PostMenu post={post} />

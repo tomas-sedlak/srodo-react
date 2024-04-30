@@ -291,6 +291,7 @@ export default function Settings() {
                 <Group align="center" gap="xs">
                     <Avatar
                         size="xl"
+                        className="no-image"
                         src={profilePicture}
                     />
 
