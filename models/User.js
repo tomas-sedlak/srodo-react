@@ -26,11 +26,11 @@ const userSchema = new Schema({
     },
     profilePicture: {
         type: String,
-        default: "/images/default_profile.jpg",
+        // default: "/images/default_profile.jpg",
     },
     coverImage: {
         type: String,
-        default: "/images/default_cover.jpg",
+        // default: "/images/default_cover.jpg",
     },
     bio: {
         type: String,

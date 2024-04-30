@@ -38,7 +38,10 @@ export default function User() {
     ) : (
         <>
             <AspectRatio ratio={6 / 2}>
-                <Image src={data.user.coverImage} />
+                {data.user.coverImage ?
+                    <Image src={data.user.coverImage} />
+                    : <Box className="no-image"></Box>
+                }
             </AspectRatio>
 
             <div style={{ position: "relative" }}>

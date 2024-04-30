@@ -243,20 +243,34 @@ export default function Settings() {
             <SmallHeader title="⚙️ Nastavenia profilu" />
 
             <Box pos="relative">
-                <Tooltip label="Zmeniť obrázok" position="bottom">
-                    <ActionIcon
-                        className="image-item-right"
-                        w={40}
-                        h={40}
-                        radius="xl"
+                <Group gap={8} className="bottom-right">
+                    {coverImage &&
+                        <Button
+                            variant="default"
+                            leftSection={<IconTrash stroke={1.25} />}
+                            styles={{ section: { marginRight: 4 } }}
+                            onClick={() => setCoverImage("")}
+                            c="red"
+                        >
+                            Zmazať
+                        </Button>
+                    }
+
+                    <Button
+                        variant="default"
+                        leftSection={<IconCamera stroke={1.25} />}
+                        styles={{ section: { marginRight: 4 } }}
                         onClick={coverImageModalHandlers.open}
                     >
-                        <IconCameraPlus stroke={1.25} />
-                    </ActionIcon>
-                </Tooltip>
+                        Pridať
+                    </Button>
+                </Group>
 
                 <AspectRatio ratio={6 / 2}  >
-                    <Image src={coverImage} />
+                    {coverImage ?
+                        <Image src={coverImage} />
+                        : <Box className="no-image"></Box>
+                    }
                 </AspectRatio>
             </Box>
 
@@ -266,6 +280,15 @@ export default function Settings() {
                         size="xl"
                         src={profilePicture}
                     />
+
+                    <Button
+                        variant="default"
+                        leftSection={<IconCamera stroke={1.25} />}
+                        styles={{ section: { marginRight: 4 } }}
+                        onClick={profilePictureModalHandlers.open}
+                    >
+                        Zmeniť
+                    </Button>
 
                     {profilePicture &&
                         <Button
@@ -278,15 +301,6 @@ export default function Settings() {
                             Zmazať
                         </Button>
                     }
-
-                    <Button
-                        variant="default"
-                        leftSection={<IconCamera stroke={1.25} />}
-                        styles={{ section: { marginRight: 4 } }}
-                        onClick={profilePictureModalHandlers.open}
-                    >
-                        Zmeniť
-                    </Button>
                 </Group>
 
                 <Box pos="relative">
