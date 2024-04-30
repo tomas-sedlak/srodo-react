@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
+import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
@@ -15,7 +16,8 @@ export default function User() {
     const getData = async () => {
         const user = await axios.get(`/api/user?username=${username}`);
         const posts = await axios.get(`/api/user/${user.data._id}/posts`);
-        return { user: user.data, posts: posts.data }
+        const groups = await axios.get(`/api/user/${user.data._id}/groups`);
+        return { user: user.data, posts: posts.data, groups: groups.data }
     }
 
     const { data, status } = useQuery({
@@ -102,12 +104,37 @@ export default function User() {
                         <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
                     }
 
-                    {data.posts.map((post) => <Post post={post} />)}
+                    {data.posts.map(post => <Post post={post} />)}
                 </>
             }
 
             {tab === "skupiny" &&
-                <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne skupiny</Text>
+                <>
+                    {data.groups.length === 0 &&
+                        <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne skupiny</Text>
+                    }
+
+                    {data.groups.map(group =>
+                        <Link to={`/skupiny/${group._id}`} key={group._id}>
+                            <Group gap="xs" px="md" py="sm" className="border-bottom light-hover">
+                                <Avatar src={group.profilePicture} />
+
+                                <Stack gap={4} style={{ flex: 1 }}>
+                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                        {group.name}
+                                    </Text>
+                                    <Group gap={2}>
+                                        {group.isPrivate ?
+                                            <IconLock color="var(--mantine-color-dimmed)" width={16} height={16} stroke={1.25} />
+                                            : <IconWorld color="var(--mantine-color-dimmed)" width={16} height={16} stroke={1.25} />
+                                        }
+                                        <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>{group.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
+                                    </Group>
+                                </Stack>
+                            </Group>
+                        </Link>
+                    )}
+                </>
             }
 
             {tab === "ocenenia" &&
