@@ -7,6 +7,7 @@ export const createGroup = async (req, res) => {
     try {
         const {
             coverImage,
+            profilePicture,
             name,
             description,
             isPrivate,
@@ -25,6 +26,7 @@ export const createGroup = async (req, res) => {
 
         const newGroup = new Group({
             coverImage: imageUrl,
+            profilePicture,
             name,
             description,
             isPrivate,
@@ -33,9 +35,9 @@ export const createGroup = async (req, res) => {
         });
         await newGroup.save();
 
-        res.status(201).json(newGroup);
+        res.status(201).json({ id: newGroup._id });
     } catch (err) {
-        res.status(409).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
 

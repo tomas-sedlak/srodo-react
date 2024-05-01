@@ -38,15 +38,15 @@ export default function Group() {
 
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
-        setIsLoading(false)
         queryClient.invalidateQueries("group")
+        setIsLoading(false)
     }
 
     const leaveGroup = async () => {
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/leave`, {}, { headers })
-        setIsLoading(false)
         queryClient.invalidateQueries("group")
+        setIsLoading(false)
     }
 
     const { data, status } = useQuery({

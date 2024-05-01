@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, Text, Modal, Button } from "@mantine/core";
 import { IconPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -44,6 +45,7 @@ const maxBioCharacterLenght = 160;
 
 export default function Settings() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const isMobile = useMediaQuery("(max-width: 768px)");
@@ -96,17 +98,23 @@ export default function Settings() {
     const publish = async () => {
         setIsPublishing(true)
 
-        const response = await axios.patch(
-            `/api/user/${userId}/update`,
-            { coverImage, profilePicture, displayName, bio, socials },
-            { headers },
-        )
+        try {
+            const response = await axios.patch(
+                `/api/user/${userId}/update`,
+                { coverImage, profilePicture, username, displayName, bio, socials },
+                { headers },
+            )
+    
+            dispatch(
+                setUser({
+                    user: response.data,
+                })
+            )
 
-        dispatch(
-            setUser({
-                user: response.data,
-            })
-        )
+            navigate(`/${username}`)
+        } catch (err) {
+            console.log(err)
+        }
 
         setIsPublishing(false)
     }

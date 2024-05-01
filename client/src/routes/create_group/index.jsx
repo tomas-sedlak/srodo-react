@@ -6,17 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ImagesModal from "templates/ImagesModal";
 import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 
 const nameMaxLength = 64;
 const descriptionMaxLength = 160;
 const initialData = {
     coverImage: "",
+    profilePicture: "",
     name: "",
     description: "",
     isPrivate: false,
 };
 
 export default function CreateGroup() {
+    const queryClient = useQueryClient();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
@@ -73,9 +76,15 @@ export default function CreateGroup() {
     const publish = async () => {
         setIsPublishing(true)
 
-        await axios.post("/api/group/", data, { headers });
+        try {
+            const response = await axios.post("/api/group/", data, { headers });
+            queryClient.invalidateQueries("groups");
+            navigate(`/skupiny/${response.data.id}`)
+        } catch (err) {
+            console.log(err)
+        }
 
-        navigate("/")
+        setIsPublishing(false)
     }
 
     return (
