@@ -1,5 +1,5 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch } from '@mantine/core';
-import { IconSearch, IconMoon, IconPencilPlus, IconCopyCheck, IconMessageCircleQuestion, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconUsers } from '@tabler/icons-react';
+import { IconSearch, IconMoon, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconPlus } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -68,37 +68,13 @@ export default function Header() {
                     <Group ml="auto" gap={8}>
                         {user ? (
                             <>
-                                <Menu position="bottom-end" width={180}>
-                                    <Menu.Target>
-                                        <Button>Vytvoriť</Button>
-                                    </Menu.Target>
-                                    <Menu.Dropdown>
-                                        <Menu.Item
-                                            onClick={() => navigate("/vytvorit/skupina")}
-                                            leftSection={<IconUsers stroke={1.25} />}
-                                        >
-                                            <Text>Skupina</Text>
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            onClick={() => navigate("/vytvorit/clanok")}
-                                            leftSection={<IconPencilPlus stroke={1.25} />}
-                                        >
-                                            <Text>Článok</Text>
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            onClick={() => navigate("/vytvorit/diskusia")}
-                                            leftSection={<IconMessageCircleQuestion stroke={1.25} />}
-                                        >
-                                            <Text>Diskusia</Text>
-                                        </Menu.Item>
-                                        <Menu.Item
-                                            onClick={() => navigate("/vytvorit/kviz")}
-                                            leftSection={<IconCopyCheck stroke={1.25} />}
-                                        >
-                                            <Text>Kvíz</Text>
-                                        </Menu.Item>
-                                    </Menu.Dropdown>
-                                </Menu>
+                                <Button
+                                    onClick={() => navigate("/vytvorit/skupina")}
+                                    leftSection={<IconPlus stroke={1.25} />}
+                                    styles={{ section: { marginRight: 4 } }}
+                                >
+                                    Skupina
+                                </Button>
 
                                 <Menu position="bottom-end" width={240}>
                                     <Menu.Target>
