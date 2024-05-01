@@ -34,6 +34,8 @@ export default function Navbar({ close }) {
     const userId = useSelector(state => state.user?._id)
 
     const fetchGroups = async () => {
+        if (!userId) return []
+
         const response = await axios.get(`/api/user/${userId}/groups`)
         return response.data
     }
@@ -78,11 +80,16 @@ export default function Navbar({ close }) {
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
-            {data.length === 0 &&
+
+            {!userId &&
+                <Text px="sm" c="dimmed" style={{ lineHeight: 1.4 }}>Tu sa zobrazia tvoje skupiny po prihlásení.</Text>
+            }
+
+            {userId && data.length === 0 &&
                 <Text px="sm" c="dimmed">Zatiaľ žiadne skupiny.</Text>
             }
 
-            {data.map(group => {
+            {userId && data.map(group => {
                 const url = `/skupiny/${group._id}`;
                 const active = url === pathname;
 
