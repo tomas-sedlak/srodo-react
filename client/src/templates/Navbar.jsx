@@ -18,11 +18,6 @@ const menu = [
         badge: "nové!",
     },
     {
-        label: "Novinky",
-        url: "/novinky",
-        leftSection: IconArticle,
-    },
-    {
         label: "Obľúbené",
         url: "/oblubene",
         leftSection: IconHeart,

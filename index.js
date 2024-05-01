@@ -17,7 +17,6 @@ import groupRoutes from "./routes/group.js";
 import postRoutes from "./routes/post.js";
 import commentRoutes from "./routes/comment.js";
 import subjectsRoutes from "./routes/subjects.js";
-import newsRoutes from "./routes/news.js";
 
 // CONTROLLERS
 import { register } from "./controllers/auth.js";
@@ -61,7 +60,6 @@ app.use("/api/group", groupRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/subjects", subjectsRoutes);
-app.use("/api/news", newsRoutes);
 
 // PRODUCTION REACT ROUTES
 if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
