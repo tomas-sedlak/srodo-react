@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea } from '@mantine/core';
+import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea, Avatar, Image } from '@mantine/core';
 import { IconCamera, IconLock, IconTrash, IconWorld } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,7 @@ const initialData = {
 
 export default function CreateGroup() {
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
     const token = useSelector(state => state.token);
     const headers = {
@@ -27,12 +28,20 @@ export default function CreateGroup() {
     const [tab, setTab] = useState("settings");
     const [data, setData] = useState(initialData);
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
+    const [profilePictureModalOpened, profilePictureModalHandlers] = useDisclosure(false);
     const [isPublishing, setIsPublishing] = useState(false);
 
     const setCoverImage = image => {
         setData({
             ...data,
             coverImage: image
+        })
+    }
+
+    const setProfilePicture = image => {
+        setData({
+            ...data,
+            profilePicture: image
         })
     }
 
@@ -76,7 +85,15 @@ export default function CreateGroup() {
                 close={coverImageModalHandlers.close}
                 setImage={setCoverImage}
                 columns={isMobile ? 1 : 2}
-                aspectRatio={2 / 1}
+                aspectRatio={6 / 2}
+            />
+
+            <ImagesModal
+                opened={profilePictureModalOpened}
+                close={profilePictureModalHandlers.close}
+                setImage={setProfilePicture}
+                columns={isMobile ? 2 : 3}
+                aspectRatio={1 / 1}
             />
 
             <Tabs
@@ -95,45 +112,73 @@ export default function CreateGroup() {
                 </Tabs.List>
             </Tabs>
 
-            <Box px="md" py="sm">
-                {tab === "settings" &&
-                    <>
-                        <Box pos="relative">
-                            <Group gap={8} className="bottom-right">
-                                {data.coverImage &&
-                                    <Button
-                                        variant="default"
-                                        leftSection={<IconTrash stroke={1.25} />}
-                                        styles={{ section: { marginRight: 4 } }}
-                                        onClick={() => setCoverImage("")}
-                                        c="red"
-                                    >
-                                        Zmazať
-                                    </Button>
-                                }
-
+            {tab === "settings" &&
+                <>
+                    <Box pos="relative">
+                        <Group gap={8} className="bottom-right">
+                            {data.coverImage &&
                                 <Button
                                     variant="default"
-                                    leftSection={<IconCamera stroke={1.25} />}
+                                    leftSection={<IconTrash stroke={1.25} />}
                                     styles={{ section: { marginRight: 4 } }}
-                                    onClick={coverImageModalHandlers.open}
+                                    onClick={() => setCoverImage("")}
+                                    c="red"
                                 >
-                                    Pridať
+                                    Zmazať
                                 </Button>
-                            </Group>
+                            }
 
-                            <AspectRatio ratio={2 / 1}>
-                                <Box
-                                    className="lazy-image pointer"
-                                    style={{ backgroundImage: `url(${data.coverImage})` }}
-                                    onClick={coverImageModalHandlers.open}
-                                ></Box>
-                            </AspectRatio>
-                        </Box>
+                            <Button
+                                variant="default"
+                                leftSection={<IconCamera stroke={1.25} />}
+                                styles={{ section: { marginRight: 4 } }}
+                                onClick={coverImageModalHandlers.open}
+                            >
+                                Pridať
+                            </Button>
+                        </Group>
+
+                        <AspectRatio ratio={6 / 2}>
+                            {data.coverImage ?
+                                <Image src={data.coverImage} />
+                                : <Box className="no-image"></Box>
+                            }
+                        </AspectRatio>
+                    </Box>
+
+                    <Box px="md" py="sm">
+                        <Group align="center" gap="xs">
+                            <Avatar
+                                size="xl"
+                                className="no-image"
+                                src={data.profilePicture}
+                            />
+
+                            <Button
+                                variant="default"
+                                leftSection={<IconCamera stroke={1.25} />}
+                                styles={{ section: { marginRight: 4 } }}
+                                onClick={profilePictureModalHandlers.open}
+                            >
+                                Zmeniť
+                            </Button>
+
+                            {data.profilePicture &&
+                                <Button
+                                    variant="default"
+                                    leftSection={<IconTrash stroke={1.25} />}
+                                    styles={{ section: { marginRight: 4 } }}
+                                    onClick={() => setProfilePicture("")}
+                                    c="red"
+                                >
+                                    Zmazať
+                                </Button>
+                            }
+                        </Group>
 
                         <Box pos="relative">
                             <TextInput
-                                mt="md"
+                                mt="sm"
                                 styles={{ input: { paddingRight: 46 } }}
                                 label="Názov skupiny"
                                 value={data.name}
@@ -186,21 +231,46 @@ export default function CreateGroup() {
                                 Vytvoriť skupinu
                             </Button>
                         </Group>
-                    </>
-                }
+                    </Box>
+                </>
+            }
 
-                {tab === "preview" &&
-                    <>
-                        <AspectRatio ratio={2 / 1}>
-                            <Box
-                                className="lazy-image pointer"
-                                style={{ backgroundImage: `url(${data.coverImage})` }}
-                            ></Box>
-                        </AspectRatio>
+            {tab === "preview" &&
+                <>
+                    <AspectRatio ratio={6 / 2}>
+                        {data.coverImage ?
+                            <Image src={data.coverImage} />
+                            : <Box className="no-image"></Box>
+                        }
+                    </AspectRatio>
 
-                        <Text mt="sm" fw={700} size="xl" c={data.name ? "var(--mantine-color-text)" : "dimmed"}>{data.name ? data.name : "Názov skupiny"}</Text>
+                    <div style={{ position: "relative" }}>
+                        <Avatar
+                            className="profile-picture"
+                            size={profilePictureSize}
+                            src={data.profilePicture}
+                        />
+                    </div>
 
-                        <Text style={{ lineHeight: 1.4 }}>{data.description}</Text>
+                    <Group px="md" h={profilePictureSize / 2} justify="flex-end">
+                        <Button disabled>
+                            Pripojiť sa
+                        </Button>
+                    </Group>
+
+                    <Box px="md" py="sm">
+                        <Text
+                            fw={700}
+                            size="xl"
+                            style={{ lineHeight: 1.2 }}
+                            c={data.name ? "var(--mantine-color-text)" : "dimmed"}
+                        >
+                            {data.name ? data.name : "Názov skupiny"}
+                        </Text>
+
+                        <Text mt="sm">
+                            {data.description}
+                        </Text>
 
                         <Group gap={4}>
                             {data.isPrivate ?
@@ -209,9 +279,25 @@ export default function CreateGroup() {
                             }
                             <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
                         </Group>
-                    </>
-                }
-            </Box>
+                    </Box>
+
+                    <Tabs
+                        px="md"
+                        className="border-bottom"
+                        variant="unstyled"
+                        value="prispevky"
+                    >
+                        <Tabs.List className="custom-tabs">
+                            <Tabs.Tab disabled value="prispevky">
+                                Príspevky
+                            </Tabs.Tab>
+                            <Tabs.Tab disabled value="clenovia">
+                                Členovia
+                            </Tabs.Tab>
+                        </Tabs.List>
+                    </Tabs>
+                </>
+            }
         </>
     );
 }
