@@ -1,5 +1,5 @@
 import { Badge, Text, Loader, Avatar } from '@mantine/core';
-import { IconHome, IconArticle, IconHeart, IconPuzzle } from '@tabler/icons-react';
+import { IconHome, IconHeart, IconPuzzle, IconSearch } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
@@ -10,6 +10,11 @@ const menu = [
         label: "Domov",
         url: "/",
         leftSection: IconHome,
+    },
+    {
+        label: "Preskúmať",
+        url: "/preskumat",
+        leftSection: IconSearch,
     },
     {
         label: "Šrodo AI",

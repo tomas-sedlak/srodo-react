@@ -12,6 +12,7 @@ import Root from "templates/Root";
 import Login from "routes/login";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
+const Explore = lazy(() => import("routes/explore"));
 const Favourites = lazy(() => import("routes/favourites"));
 const User = lazy(() => import("routes/user"));
 const Post = lazy(() => import("routes/post"));
@@ -63,6 +64,7 @@ export default function App() {
                                     {/* PUBLIC ROUTES */}
                                     <Route index element={<Home />} />
                                     <Route path="ai" element={<AI />} />
+                                    <Route path="preskumat" element={<Explore />} />
                                     <Route path="stats" element={<Stats />} />
                                     <Route path="predmety/:subject" element={<Subject />} />
                                     <Route path="skupiny/:groupId" element={<Group />} />
