@@ -82,6 +82,7 @@ export default function Group() {
             <Flex px="md" h={profilePictureSize / 2} justify="flex-end" align="center">
                 {data.owner._id == userId ?
                     <Button
+                        variant="default"
                         leftSection={<IconPencil stroke={1.25} />}
                         styles={{ section: { marginRight: 4 } }}
                     >
@@ -89,6 +90,7 @@ export default function Group() {
                     </Button>
                     : data.members.find(user => user._id == userId) ?
                         <Button
+                            variant="default"
                             onClick={leaveGroup}
                             loading={isLoading}
                         >
