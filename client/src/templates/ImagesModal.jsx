@@ -17,7 +17,7 @@ const methods = [
     {
         value: "url",
         label: "URL",
-    }, 
+    },
     {
         value: "device",
         label: "Zo zariadenia",
@@ -242,33 +242,20 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                     ) : (
                         // Trying the dropzone
                         <>
-                            <input
-                                id="imageInput"
-                                type="file"
-                                accept={IMAGE_MIME_TYPE}
-                                style={{ display: 'none' }}
-                                onChange={(event) => {
-                                    const files = event.target.files;
-                                    console.log('selected files', files);
-                                    // You can handle the selected files here
-                                }}
-                            />
+                           
                             <Dropzone
                                 mt="md"
-                                onDrop={(files) => console.log('accepted files', files)}
+                                onDrop={(files) => {setImage(files[0])}}
                                 onReject={(files) => console.log('rejected files', files)}
                                 maxSize={5 * 1024 ** 2}
                                 accept={IMAGE_MIME_TYPE}
                             >
                                 <Center>
                                     <Dropzone.Accept>
-                                        <>
-                                            {setImage()}
-                                            <IconUpload
-                                                style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-                                                stroke={1.5}
-                                            />
-                                        </>
+                                        <IconUpload
+                                            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
+                                            stroke={1.5}
+                                        />
                                     </Dropzone.Accept>
                                     <Dropzone.Reject>
                                         <IconX

@@ -99,12 +99,18 @@ export default function Settings() {
         setIsPublishing(true)
 
         try {
+            const formData = new FormData();
+            formData.append("coverImage", coverImage);
+            formData.append("profilePicture", profilePicture);
+            formData.append("username", username);
+            formData.append("displayName", displayName);
+            formData.append("bio", bio);
+            formData.append("socials", socials);
+
             const response = await axios.patch(
-                `/api/user/${userId}/update`,
-                { coverImage, profilePicture, username, displayName, bio, socials },
-                { headers },
+                `/api/user/${userId}/update`, formData, { headers },
             )
-    
+
             dispatch(
                 setUser({
                     user: response.data,
@@ -289,7 +295,7 @@ export default function Settings() {
 
                 <AspectRatio ratio={6 / 2}  >
                     {coverImage ?
-                        <Image src={coverImage} />
+                        <Image src={URL.createObjectURL(coverImage)} />
                         : <Box className="no-image"></Box>
                     }
                 </AspectRatio>

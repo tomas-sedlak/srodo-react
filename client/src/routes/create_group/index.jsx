@@ -77,7 +77,14 @@ export default function CreateGroup() {
         setIsPublishing(true)
 
         try {
-            const response = await axios.post("/api/group/", data, { headers });
+            const formData = new FormData();
+            formData.append("coverImage", data.coverImage);
+            formData.append("profilePicture", data.profilePicture);
+            formData.append("name", data.name);
+            formData.append("description", data.description);
+            formData.append("isPrivate", data.isPrivate);
+
+            const response = await axios.post("/api/group/", formData, { headers });
             queryClient.invalidateQueries("groups");
             navigate(`/skupiny/${response.data.id}`)
         } catch (err) {
@@ -149,7 +156,7 @@ export default function CreateGroup() {
 
                         <AspectRatio ratio={6 / 2}>
                             {data.coverImage ?
-                                <Image src={data.coverImage} />
+                                <Image src={URL.createObjectURL(data.coverImage)} />
                                 : <Box className="no-image"></Box>
                             }
                         </AspectRatio>
@@ -160,7 +167,7 @@ export default function CreateGroup() {
                             <Avatar
                                 size="xl"
                                 className="no-image"
-                                src={data.profilePicture}
+                                src={data.profilePicture && URL.createObjectURL(data.profilePicture)}
                             />
 
                             <Button

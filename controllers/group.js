@@ -1,31 +1,21 @@
+import { getImage, uploadImage } from "../middleware/s3.js";
 import Group from "../models/Group.js";
-import sharp from "sharp";
-import axios from "axios";
 
 // CREATE
 export const createGroup = async (req, res) => {
     try {
         const {
-            coverImage,
-            profilePicture,
             name,
             description,
             isPrivate,
         } = req.body;
 
-        const response = await axios.get(coverImage, {
-            responseType: "arraybuffer",
-        })
-        const buffer = Buffer.from(response.data, "base64")
+        // Upload images to s3 bucket
+        const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 800, 400);
+        const profilePicture = req.files.profilePicture && await uploadImage(req.files.profilePicture[0], 128, 128);
 
-        const croppedImageBuffer = await sharp(buffer)
-            .resize(800, 400)
-            .toBuffer();
-
-        const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-
-        const newGroup = new Group({
-            coverImage: imageUrl,
+        const group = await Group.create({
+            coverImage,
             profilePicture,
             name,
             description,
@@ -33,9 +23,8 @@ export const createGroup = async (req, res) => {
             owner: req.user.id,
             members: [req.user.id],
         });
-        await newGroup.save();
 
-        res.status(201).json({ id: newGroup._id });
+        res.status(201).json({ id: group._id });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -48,6 +37,14 @@ export const getGroup = async (req, res) => {
         const group = await Group.findById(groupId)
             .populate("owner", "username displayName profilePicture")
             .populate("members", "username displayName profilePicture");
+
+        // Load images from s3 bucket
+        group.coverImage = await getImage(group.coverImage);
+        group.profilePicture = await getImage(group.profilePicture);
+        group.owner.profilePicture = await getImage(group.owner.profilePicture);
+        for (const member of group.members) {
+            member.profilePicture = await getImage(member.profilePicture);
+        }
 
         res.status(200).json(group);
     } catch (err) {
@@ -88,62 +85,19 @@ export const leaveGroup = async (req, res) => {
     }
 }
 
-export const editGroup = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const post = await Post.findById(postId);
-
-        if (post.author != req.user.id) {
-            return res.status(403).send("Access Denied");
-        }
-
-        const {
-            subject,
-            coverImage,
-            title,
-            content,
-        } = req.body;
-
-        post.subject = subject;
-        post.title = title;
-        post.content = content;
-
-        if (post.coverImage != coverImage) {
-            const response = await axios.get(coverImage, {
-                responseType: "arraybuffer",
-            })
-            const buffer = Buffer.from(response.data, "base64")
-
-            const croppedImageBuffer = await sharp(buffer)
-                .resize(800, 400)
-                .toBuffer();
-
-            const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-
-            post.coverImage = imageUrl;
-        }
-
-        await post.save();
-
-        res.status(201).json(post);
-    } catch (err) {
-        res.status(409).json({ message: err.message });
-    }
-}
-
 // DELETE
 export const deleteGroup = async (req, res) => {
     try {
-        const { postId } = req.params;
-        const post = await Post.findById(postId);
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
 
-        if (post.author != req.user.id) {
+        if (group.owner != req.user.id) {
             return res.status(403).send("Access Denied");
         }
 
-        await Post.findByIdAndDelete(postId);
+        await Group.findByIdAndDelete(posgroupIdtId);
 
-        res.status(200).send("Success");
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

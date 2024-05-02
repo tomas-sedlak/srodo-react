@@ -22,6 +22,8 @@ import subjectsRoutes from "./routes/subjects.js";
 import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/post.js";
 import { verifyToken } from "./middleware/auth.js";
+import { createGroup } from "./controllers/group.js";
+import { updateUserSettings } from "./controllers/user.js";
 
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
@@ -52,6 +54,8 @@ const upload = multer({ storage });
 // ROUTES WITH FILES
 app.post("/api/auth/register", upload.single("profilePicture"), register);
 app.post("/api/post", verifyToken, createPost);
+app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
+app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 
 // ROUTES
 app.use("/api/auth", authRoutes);

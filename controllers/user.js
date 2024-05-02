@@ -1,8 +1,7 @@
+import { getImage, uploadImage } from "../middleware/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
-import sharp from "sharp";
-import axios from "axios";
 
 // READ
 export const getUser = async (req, res) => {
@@ -14,6 +13,10 @@ export const getUser = async (req, res) => {
             user = await User.findOne({ username: req.query.username });
         }
 
+        // Load images from s3 bucket
+        user.coverImage = await getImage(user.coverImage);
+        user.profilePicture = await getImage(user.profilePicture);
+
         res.status(200).json(user);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -23,11 +26,16 @@ export const getUser = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        const post = await Post.find({ author: userId })
+        const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture");
 
-        res.status(200).json(post);
+        // Load images from s3 bucket
+        for (const post of posts) {
+            post.author.profilePicture = await getImage(post.author.profilePicture);
+        }
+
+        res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
@@ -36,9 +44,14 @@ export const getUserPosts = async (req, res) => {
 export const getUserGroups = async (req, res) => {
     try {
         const { userId } = req.params;
-        const group = await Group.find({ members: userId })
+        const groups = await Group.find({ members: userId });
 
-        res.status(200).json(group);
+        // Load images from s3 bucket
+        for (const group of groups) {
+            group.profilePicture = await getImage(group.profilePicture);
+        }
+
+        res.status(200).json(groups);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
@@ -50,13 +63,18 @@ export const getUserFavourites = async (req, res) => {
         const posts = await Post.find({ likes: userId })
             .populate("author", "username displayName profilePicture");
 
+        // Load images from s3 bucket
+        for (const post of posts) {
+            post.author.profilePicture = await getImage(post.author.profilePicture);
+        }
+
         res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
 }
 
-export const getUnique= async (req, res) => {
+export const getUnique = async (req, res) => {
     try {
         const query = req.query;
         const result = await User.find(query)
@@ -81,46 +99,29 @@ export const updateUserSettings = async (req, res) => {
         }
 
         const {
-            coverImage,
-            profilePicture,
             displayName,
             bio,
             socials,
         } = req.body;
 
-        const coverImageUrl = await uploadImage(coverImage, 600, 200);
-        const profilePictureUrl = await uploadImage(profilePicture, 92, 92);
+        // Upload images to s3 bucket
+        const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 600, 200);
+        const profilePicture = req.files.profilePicture && await uploadImage(req.files.profilePicture[0], 128, 128);
 
-        const user = await User.findOneAndUpdate({
+        await User.findOneAndUpdate({
             _id: userId
         }, {
-            coverImage: coverImageUrl,
-            profilePicture: profilePictureUrl,
-            displayName: displayName,
-            bio: bio,
-            socials: socials,
+            coverImage,
+            profilePicture,
+            displayName,
+            bio,
+            socials,
         }, {
             new: true,
         });
 
-        res.status(200).json(user);
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
-}
-
-const uploadImage = async (image, width, height) => {
-    if (!image.match("^(http|https)://")) return image;
-
-    const response = await axios.get(image, {
-        responseType: "arraybuffer",
-    })
-    const buffer = Buffer.from(response.data, "base64")
-
-    const croppedImageBuffer = await sharp(buffer)
-        .resize(width, height)
-        .toBuffer();
-
-    const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-    return imageUrl;
 }
