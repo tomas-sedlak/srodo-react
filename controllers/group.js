@@ -52,6 +52,21 @@ export const getGroup = async (req, res) => {
     }
 };
 
+export const getGroupSuggestions = async (req, res) => {
+    try {
+        const groups = await Group.find();
+
+        // Load images from s3 bucket
+        for (const group of groups) {
+            group.profilePicture = await getImage(group.profilePicture);
+        }
+
+        res.status(200).json(groups);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
 // UPDATE
 export const joinGroup = async (req, res) => {
     try {

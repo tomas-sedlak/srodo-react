@@ -23,6 +23,36 @@ export const getUser = async (req, res) => {
     }
 };
 
+export const getUnique = async (req, res) => {
+    try {
+        const query = req.query;
+        const result = await User.find(query)
+
+        if (result.length > 0) {
+            res.status(200).json({ unique: false });
+        } else {
+            res.status(200).json({ unique: true });
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+export const getUserSuggestions = async (req, res) => {
+    try {
+        const users = await User.find();
+
+        // Load images from s3 bucket
+        for (const user of users) {
+            user.profilePicture = await getImage(user.profilePicture);
+        }
+
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -71,21 +101,6 @@ export const getUserFavourites = async (req, res) => {
         res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
-    }
-}
-
-export const getUnique = async (req, res) => {
-    try {
-        const query = req.query;
-        const result = await User.find(query)
-
-        if (result.length > 0) {
-            res.status(200).json({ unique: false });
-        } else {
-            res.status(200).json({ unique: true });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
     }
 }
 
