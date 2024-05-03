@@ -130,7 +130,7 @@ export const updateUserSettings = async (req, res) => {
             profilePicture,
             displayName,
             bio,
-            socials,
+            socials: JSON.parse(socials),
         }, {
             new: true,
         });

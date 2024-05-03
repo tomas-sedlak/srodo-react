@@ -105,7 +105,7 @@ export default function Settings() {
             formData.append("username", username);
             formData.append("displayName", displayName);
             formData.append("bio", bio);
-            formData.append("socials", socials);
+            formData.append("socials", JSON.stringify(socials));
 
             const response = await axios.patch(
                 `/api/user/${userId}/update`, formData, { headers },
