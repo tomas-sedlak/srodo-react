@@ -16,12 +16,12 @@ const menu = [
         url: "/preskumat",
         leftSection: IconSearch,
     },
-    {
-        label: "Šrodo AI",
-        url: "/ai",
-        leftSection: IconPuzzle,
-        badge: "nové!",
-    },
+    // {
+    //     label: "Šrodo AI",
+    //     url: "/ai",
+    //     leftSection: IconPuzzle,
+    //     badge: "nové!",
+    // },
     {
         label: "Obľúbené",
         url: "/oblubene",
