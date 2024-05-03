@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
 import dotenv from "dotenv";
+import { getImage } from "../middleware/s3.js";
 import { generateUsername } from "unique-username-generator";
 dotenv.config();
 
@@ -41,6 +42,9 @@ export const login = async (req, res) => {
 
         const isMatch = await bcrypt.compare(loginPassword, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials." });
+
+        // Load images from s3 bucket
+        user.profilePicture = await getImage(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;
