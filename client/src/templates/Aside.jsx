@@ -28,7 +28,7 @@ export default function Aside() {
         <aside className="aside">
             <div className="news-card">
                 <Text px="lg" py="md" fw={700} size="lg" style={{ lineHeight: 1.2 }}>
-                    Používatelia
+                    Odporúčaní používatelia
                 </Text>
 
                 {data.users.map(user =>
@@ -51,7 +51,7 @@ export default function Aside() {
 
             <div className="news-card">
                 <Text px="lg" py="md" fw={700} size="lg" style={{ lineHeight: 1.2 }}>
-                    Skupiny
+                    Odporúčané skupiny
                 </Text>
 
                 {data.groups.map(group =>
