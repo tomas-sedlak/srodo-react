@@ -123,7 +123,7 @@ export const updateUserSettings = async (req, res) => {
         const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 600, 200);
         const profilePicture = req.files.profilePicture && await uploadImage(req.files.profilePicture[0], 128, 128);
 
-        await User.findOneAndUpdate({
+        const user = await User.findOneAndUpdate({
             _id: userId
         }, {
             coverImage,
@@ -135,7 +135,14 @@ export const updateUserSettings = async (req, res) => {
             new: true,
         });
 
-        res.sendStatus(200);
+        const userData = {
+            _id: user._id,
+            username: user.username,
+            displayName: user.displayName,
+            profilePicture: await getImage(user.profilePicture),
+        }
+
+        res.status(200).send(userData);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

@@ -46,7 +46,7 @@ const maxBioCharacterLenght = 160;
 export default function Settings() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const isMobile = useMediaQuery("(max-width: 768px)");
     const [isPublishing, setIsPublishing] = useState(false);
