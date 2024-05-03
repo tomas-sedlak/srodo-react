@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
 import dotenv from "dotenv";
-import { getImage } from "../middleware/s3.js";
+import { getImage, uploadImage } from "../middleware/s3.js";
 import { generateUsername } from "unique-username-generator";
 dotenv.config();
 
@@ -66,13 +66,13 @@ export const google = async (req, res) => {
         });
 
         const email = response.data.email;
-        const displayName = response.data.name;
-        const profilePicture = response.data.picture;
-
         let user = await User.findOne({ email });
 
-        if (!user){
+        if (!user) {
             const username = generateUsername();
+            const displayName = response.data.name;
+            const profilePicture = await uploadImage(response.data.picture);
+
             user = await User.create({
                 username, email, displayName, profilePicture
             })

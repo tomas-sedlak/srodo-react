@@ -2,19 +2,31 @@ import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, But
 import { IconSearch, IconMoon, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconPlus } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout, setLoginModal } from "state";
 import Navbar from 'templates/Navbar';
+import axios from 'axios';
 
 export default function Header() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
     const isMobile = useMediaQuery("(max-width: 992px)");
+    const userId = useSelector(state => state.user?._id);
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
-    const user = useSelector(state => state.user);
+    const [user, setUser] = useState({});
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const fetchUser = async () => {
+        if (!userId) return
+        const response = await axios.get(`/api/user?userId=${userId}`);
+        setUser(response.data);
+    }
+
+    useEffect(() => {
+        fetchUser()
+    }, []);
 
     return (
         <>
@@ -66,7 +78,7 @@ export default function Header() {
                     />
 
                     <Group ml="auto" gap={8}>
-                        {user ? (
+                        {userId ? (
                             <>
                                 <Button
                                     onClick={() => navigate("/vytvorit/skupina")}
