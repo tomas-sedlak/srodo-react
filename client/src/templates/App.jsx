@@ -9,6 +9,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { setUser } from "state";
 import axios from "axios";
 
+// Setup moment language
+import moment from "moment";
+import "moment/locale/sk";
+moment.locale("sk");
+
 // Routes import
 import Root from "templates/Root";
 import Login from "routes/login";
