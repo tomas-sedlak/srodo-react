@@ -17,14 +17,9 @@ const Favourites = lazy(() => import("routes/favourites"));
 const User = lazy(() => import("routes/user"));
 const Post = lazy(() => import("routes/post"));
 const Group = lazy(() => import("routes/group"));
-const CreateArticle = lazy(() => import("routes/create_article"));
-const CreateQuiz = lazy(() => import("routes/create_quiz"));
-const CreateDiscussion = lazy(() => import("routes/create_discussion"));
 const CreateGroup = lazy(() => import("routes/create_group"));
-const Stats = lazy(() => import("routes/stats"));
 const Settings = lazy(() => import("routes/settings"));
 const Edit = lazy(() => import("routes/edit"));
-const Subject = lazy(() => import("routes/subject"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
@@ -65,8 +60,6 @@ export default function App() {
                                     <Route index element={<Home />} />
                                     <Route path="ai" element={<AI />} />
                                     <Route path="preskumat" element={<Explore />} />
-                                    <Route path="stats" element={<Stats />} />
-                                    <Route path="predmety/:subject" element={<Subject />} />
                                     <Route path="skupiny/:groupId" element={<Group />} />
                                     <Route path="skupiny/:groupId/:tab" element={<Group />} />
                                     <Route exact path=":username" element={<User />} />
@@ -77,15 +70,11 @@ export default function App() {
                                     <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
                                     <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
                                     <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
-                                        <Route path="clanok" element={<CreateArticle />} />
-                                        <Route path="kviz" element={<CreateQuiz />} />
-                                        <Route path="diskusia" element={<CreateDiscussion />} />
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
 
                                     {/* SPECIFIC USER ROUTES */}
                                     <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
-                                    <Route path="statistiky/:postId" element={isAuth ? <Stats /> : <Navigate to="/" />} />
                                 </Route>
 
                                 <Route path="prihlasenie" element={<Login />} />

@@ -1,9 +1,6 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
-import Subject from "../models/Subject.js" // NECCESSARY FOR POPULATING
-import sharp from "sharp";
 import axios from "axios";
-import mongoose from "mongoose";
 
 // CREATE
 export const createPost = async (req, res) => {
