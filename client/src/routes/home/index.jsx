@@ -4,14 +4,16 @@ import { useInView } from "react-intersection-observer";
 import { Loader, Text } from "@mantine/core";
 import { useSelector } from "react-redux";
 import Post from "templates/Post";
+import axios from "axios";
 
 export default function Home() {
     const { ref, inView } = useInView();
-    const userId = useSelector(state => state.userId)
+    const userId = useSelector(state => state.user?._id)
 
     const fetchPosts = async ({ pageParam }) => {
-        const response = await fetch(`/api/post/?page=${pageParam}&userId=${userId}`);
-        return response.json();
+        if (!userId) return []
+        const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`);
+        return response.data;
     }
 
     const {

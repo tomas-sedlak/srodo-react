@@ -2,6 +2,7 @@ import { getImage, uploadImage } from "../middleware/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
+import Comment from "../models/Comment.js";
 
 // READ
 export const getUser = async (req, res) => {
@@ -58,11 +59,15 @@ export const getUserPosts = async (req, res) => {
         const { userId } = req.params;
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture");
+            .populate("author", "username displayName profilePicture")
+            .lean();
 
         // Load images from s3 bucket
         for (const post of posts) {
             post.author.profilePicture = await getImage(post.author.profilePicture);
+
+            const comments = await Comment.find({ postId: post._id });
+            post.comments = comments.length;
         }
 
         res.status(200).json(posts);

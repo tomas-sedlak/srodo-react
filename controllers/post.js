@@ -1,5 +1,7 @@
+import { getImage } from "../middleware/s3.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
+import Group from "../models/Group.js";
 import axios from "axios";
 
 // CREATE
@@ -52,21 +54,24 @@ export const createComment = async (req, res) => {
 // READ
 export const getFeedPosts = async (req, res) => {
     try {
-        const { page = 1, limit = 3 } = req.query;
+        const { page = 1, limit = 10, userId } = req.query;
 
-        const posts = await Post.find()
+        const groups = await Group.find({ members: userId })
+            .select("_id");
+
+        const posts = await Post.find({ groupId: { $in: groups } })
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
             .lean();
 
-        await Promise.all(
-            posts.map(async post => {
-                const comments = await Comment.find({ postId: post._id });
-                post.comments = comments.length;
-            })
-        );
+        for (const post of posts) {
+            post.author.profilePicture = await getImage(post.author.profilePicture);
+
+            const comments = await Comment.find({ postId: post._id });
+            post.comments = comments.length;
+        }
 
         res.status(200).json(posts);
     } catch (err) {
