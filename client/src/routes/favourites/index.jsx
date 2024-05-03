@@ -7,7 +7,7 @@ import Message from "templates/Message"
 import SmallHeader from "templates/SmallHeader"
 
 export default function Favourites() {
-    const userId = useSelector((state) => state.user?._id)
+    const userId = useSelector((state) => state.userId)
 
     const fetchFavourites = async () => {
         const response = await axios.get(`/api/user/${userId}/favourites`)

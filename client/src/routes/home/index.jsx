@@ -7,7 +7,7 @@ import Post from "templates/Post";
 
 export default function Home() {
     const { ref, inView } = useInView();
-    const userId = useSelector(state => state.user?._id)
+    const userId = useSelector(state => state.userId)
 
     const fetchPosts = async ({ pageParam }) => {
         const response = await fetch(`/api/post/?page=${pageParam}&userId=${userId}`);

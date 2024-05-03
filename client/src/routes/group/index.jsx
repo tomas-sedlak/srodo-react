@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, TextInput, Image } from '@mantine/core';
 import { IconCopyCheck, IconGif, IconLock, IconPaperclip, IconPencil, IconPhoto, IconWorld, IconSearch, IconX } from '@tabler/icons-react';
@@ -19,7 +19,7 @@ export default function Group() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const userId = useSelector(state => state.user?._id);
+    const userId = useSelector(state => state.userId);
     const token = useSelector(state => state.token);
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -166,17 +166,28 @@ export default function Group() {
 }
 
 function Posts({ groupId, owner }) {
-    const user = useSelector(state => state.user);
+    const [user, setUser] = useState({});
+    const userId = useSelector(state => state.userId);
 
     const fetchPosts = async () => {
-        const posts = await axios.get("/api/post/")
-        return posts.data
+        const response = await axios.get(`/api/group/${groupId}/posts`)
+        return response.data
+    }
+
+    const fetchUser = async () => {
+        if (!userId) return
+        const response = await axios.get(`/api/user?userId=${userId}`);
+        setUser(response.data)
     }
 
     const { data, status } = useQuery({
         queryFn: fetchPosts,
         queryKey: ["group-posts", groupId],
-    })
+    });
+
+    useEffect(() => {
+        fetchUser()
+    }, [userId]);
 
     return status === "pending" ? (
         <div className="loader-center">
@@ -188,7 +199,7 @@ function Posts({ groupId, owner }) {
         </div>
     ) : (
         <>
-            {user &&
+            {userId &&
                 <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
                     <Avatar mt={3} className="no-image" src={user.profilePicture} />
 

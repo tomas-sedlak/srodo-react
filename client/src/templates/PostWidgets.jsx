@@ -12,7 +12,7 @@ import axios from "axios";
 export function PostButtons(props) {
     const { post } = props;
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.user?._id);
+    const userId = useSelector(state => state.userId);
     const token = useSelector(state => state.token);
 
     const [likes, setLikes] = useState(post.likes.length);
@@ -60,7 +60,7 @@ export function PostButtons(props) {
 export function PostMenu(props) {
     const { post } = props;
     const queryClient = useQueryClient();
-    const userId = useSelector(state => state.user?._id);
+    const userId = useSelector(state => state.userId);
     const token = useSelector(state => state.token);
     const navigate = useNavigate();
 

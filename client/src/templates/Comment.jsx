@@ -14,7 +14,7 @@ moment.locale("sk");
 
 export default function Comment({ data }) {
     const queryClient = useQueryClient();
-    const userId = useSelector(state => state.user?._id);
+    const userId = useSelector(state => state.userId);
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
     const navigate = useNavigate();

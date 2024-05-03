@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Group, Button, Loader, Text, Avatar, Textarea } from '@mantine/core';
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
@@ -6,11 +6,12 @@ import Comment from "templates/Comment";
 import axios from "axios";
 
 export default function Comments({ postId }) {
+    const [user, setUser] = useState({});
     const [isInputOpened, setIsInputOpened] = useState(false);
     const [content, setContent] = useState("");
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const user = useSelector(state => state.user);
+    const userId = useSelector(state => state.userId);
     const token = useSelector(state => state.token);
 
     const cancel = () => {
@@ -29,7 +30,7 @@ export default function Comments({ postId }) {
 
         await axios.post(`/api/post/${postId}/comment`, {
             postId: postId,
-            author: user._id,
+            author: userId,
             content: content.trim(),
         }, {
             headers: { Authorization: `Bearer ${token}` }
@@ -46,10 +47,20 @@ export default function Comments({ postId }) {
         return response.data;
     }
 
+    const fetchUser = async () => {
+        if (!userId) return
+        const response = await axios.get(`/api/user?userId=${userId}`);
+        setUser(response.data)
+    }
+
     const { status, data, refetch } = useQuery({
         queryKey: ["comments", postId],
         queryFn: fetchComments,
     });
+
+    useEffect(() => {
+        fetchUser()
+    }, [userId]);
 
     return status === "pending" ? (
         <div className="loader-center-x">

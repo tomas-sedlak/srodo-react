@@ -11,7 +11,7 @@ import axios from 'axios';
 export default function Header() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
     const isMobile = useMediaQuery("(max-width: 992px)");
-    const userId = useSelector(state => state.user?._id);
+    const userId = useSelector(state => state.userId);
     const [drawerOpened, drawerHandlers] = useDisclosure(false);
     const [searchValue, setSearchValue] = useState("");
     const [user, setUser] = useState({});
@@ -26,7 +26,7 @@ export default function Header() {
 
     useEffect(() => {
         fetchUser()
-    }, []);
+    }, [userId]);
 
     return (
         <>

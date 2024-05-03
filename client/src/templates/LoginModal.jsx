@@ -1,11 +1,10 @@
+import { useState } from "react";
 import { RegisterInput } from "./FloatingInput";
 import { Button, Divider, Group, Modal, Text } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useMediaQuery } from '@mantine/hooks';
 import { useSelector, useDispatch } from "react-redux";
-import { setLoginModal } from "state";
-import { setLogin } from "state";
-import { useState } from "react";
+import { setLogin, setLoginModal } from "state";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 
@@ -40,7 +39,7 @@ export default function LoginModal() {
 
             dispatch(
                 setLogin({
-                    user: response.data.user,
+                    userId: response.data.userId,
                     token: response.data.token,
                 })
             );
@@ -226,7 +225,7 @@ export default function LoginModal() {
 
             dispatch(
                 setLogin({
-                    user: response.data.user,
+                    userId: response.data.userId,
                     token: response.data.token,
                 })
             );
