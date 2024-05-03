@@ -10,7 +10,7 @@ const Post = forwardRef(({ post }, ref) => {
 
     const postContent = (
         <Link to={postUrl}>
-            <Group px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
+            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" className="border-bottom">
                 <Link to={authorUrl}>
                     <Avatar className="no-image" src={post.author.profilePicture} />
                 </Link>

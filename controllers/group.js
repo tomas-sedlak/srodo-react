@@ -1,5 +1,7 @@
 import { getImage, uploadImage } from "../middleware/s3.js";
 import Group from "../models/Group.js";
+import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 
 // CREATE
 export const createGroup = async (req, res) => {
@@ -47,6 +49,32 @@ export const getGroup = async (req, res) => {
         }
 
         res.status(200).json(group);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
+export const getGroupPosts = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const posts = await Post.find({ groupId })
+            .sort({ createdAt: -1 })
+            .populate("author", "username displayName profilePicture")
+            .lean();
+
+        // Loading images from s3 bucket using memoization to improve performance
+        const cache = {}
+        for (const post of posts) {
+            if (!cache[ post.author._id]) {
+                cache[post.author._id] = await getImage(post.author.profilePicture)
+            }
+            post.author.profilePicture = cache[post.author._id];
+
+            const comments = await Comment.find({ postId: post._id });
+            post.comments = comments.length;
+        }
+
+        res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }

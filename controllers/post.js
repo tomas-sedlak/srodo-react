@@ -14,22 +14,11 @@ export const createPost = async (req, res) => {
             quiz,
         } = req.body;
 
-        const response = await axios.get(image, {
-            responseType: "arraybuffer",
-        })
-        const buffer = Buffer.from(response.data, "base64")
-
-        const croppedImageBuffer = await sharp(buffer)
-            .resize(800, 400)
-            .toBuffer();
-
-        const imageUrl = `data:image/jpeg;base64,${croppedImageBuffer.toString("base64")}`;
-
         const newPost = new Post({
             groupId,
             author: req.user.id,
             content,
-            image: imageUrl,
+            image,
             gif,
             attachemnt,
             quiz,
@@ -215,7 +204,7 @@ export const deletePost = async (req, res) => {
 
         await Post.findByIdAndDelete(postId);
 
-        res.status(200).send("Success");
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

@@ -12,7 +12,7 @@ import axios from "axios";
 export function PostButtons(props) {
     const { post } = props;
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
 
     const [likes, setLikes] = useState(post.likes.length);
@@ -60,7 +60,7 @@ export function PostButtons(props) {
 export function PostMenu(props) {
     const { post } = props;
     const queryClient = useQueryClient();
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ export function PostMenu(props) {
     }
 
     const deletePost = async () => {
-        await axios.delete(`/api/post/${post._id}`, {}, { headers });
+        await axios.delete(`/api/post/${post._id}`, { headers });
         queryClient.invalidateQueries("posts");
     }
 
@@ -84,6 +84,7 @@ export function PostMenu(props) {
                     radius="xl"
                     w={32}
                     h={32}
+                    onClick={event => event.preventDefault()}
                 >
                     <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
                 </ActionIcon>
@@ -108,14 +109,17 @@ export function PostMenu(props) {
 
                         <Menu.Item
                             color="red"
-                            onClick={() => modals.openConfirmModal({
-                                title: "Zmazať príspevok",
-                                children: <Text>Určite chceš zmazať tento príspevok?</Text>,
-                                centered: true,
-                                labels: { confirm: "Zmazať", cancel: "Zrušiť" },
-                                confirmProps: { color: "red" },
-                                onConfirm: deletePost,
-                            })}
+                            onClick={event => {
+                                event.preventDefault()
+                                modals.openConfirmModal({
+                                    title: "Zmazať príspevok",
+                                    children: <Text>Určite chceš zmazať tento príspevok?</Text>,
+                                    centered: true,
+                                    labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                    confirmProps: { color: "red" },
+                                    onConfirm: deletePost,
+                                })
+                            }}
                             leftSection={<IconTrash stroke={1.25} />}
                         >
                             <Text>Odstrániť</Text>

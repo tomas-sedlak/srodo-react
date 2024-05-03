@@ -11,7 +11,7 @@ export default function Comments({ postId }) {
     const [content, setContent] = useState("");
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
 
     const cancel = () => {

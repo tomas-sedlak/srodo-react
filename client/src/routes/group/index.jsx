@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import axios from "axios";
 import Post from "templates/Post";
+import CreatePost from "templates/CreatePost";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -19,7 +20,7 @@ export default function Group() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const userId = useSelector(state => state.userId);
+    const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -166,18 +167,9 @@ export default function Group() {
 }
 
 function Posts({ groupId, owner }) {
-    const [user, setUser] = useState({});
-    const userId = useSelector(state => state.userId);
-
     const fetchPosts = async () => {
         const response = await axios.get(`/api/group/${groupId}/posts`)
         return response.data
-    }
-
-    const fetchUser = async () => {
-        if (!userId) return
-        const response = await axios.get(`/api/user?userId=${userId}`);
-        setUser(response.data)
     }
 
     const { data, status } = useQuery({
@@ -185,89 +177,27 @@ function Posts({ groupId, owner }) {
         queryKey: ["group-posts", groupId],
     });
 
-    useEffect(() => {
-        fetchUser()
-    }, [userId]);
-
-    return status === "pending" ? (
-        <div className="loader-center">
-            <Loader />
-        </div>
-    ) : status === "error" ? (
-        <div className="loader-center">
-            <p>Nastala chyba!</p>
-        </div>
-    ) : (
+    return (
         <>
-            {userId &&
-                <Flex px="md" py="sm" gap="xs" align="flex-start" className="border-bottom">
-                    <Avatar mt={3} className="no-image" src={user.profilePicture} />
+            <CreatePost groupId={groupId} />
 
-                    <Stack gap={8} style={{ flex: 1 }}>
-                        <Textarea
-                            // variant="unstyled"
-                            minRows={1}
-                            autosize
-                            size="md"
-                            placeholder="Napíš niečo..."
-                        />
+            {status === "pending" ? (
+                <div className="loader-center">
+                    <Loader />
+                </div>
+            ) : status === "error" ? (
+                <div className="loader-center">
+                    <p>Nastala chyba!</p>
+                </div>
+            ) : (
+                <>
+                    {data.length === 0 &&
+                        <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
+                    }
 
-                        <Flex justify="space-between" align="center">
-                            <Flex gap={8}>
-                                <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        color="gray"
-                                        radius="xl"
-                                    >
-                                        <IconPhoto stroke={1.25} />
-                                    </ActionIcon>
-                                </Tooltip>
-
-                                <Tooltip label="GIF" position="bottom" openDelay={500} withArrow>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        color="gray"
-                                        radius="xl"
-                                    >
-                                        <IconGif stroke={1.25} />
-                                    </ActionIcon>
-                                </Tooltip>
-
-                                <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        color="gray"
-                                        radius="xl"
-                                    >
-                                        <IconPaperclip stroke={1.25} />
-                                    </ActionIcon>
-                                </Tooltip>
-
-                                <Tooltip label="Kvíz" position="bottom" openDelay={500} withArrow>
-                                    <ActionIcon
-                                        variant="transparent"
-                                        color="gray"
-                                        radius="xl"
-                                    >
-                                        <IconCopyCheck stroke={1.25} />
-                                    </ActionIcon>
-                                </Tooltip>
-                            </Flex>
-
-                            <Button>
-                                Publikovať
-                            </Button>
-                        </Flex>
-                    </Stack>
-                </Flex>
-            }
-
-            {data.length === 0 &&
-                <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
-            }
-
-            {data.map(post => <Post post={post} />)}
+                    {data.map(post => <Post post={post} />)}
+                </>
+            )}
         </>
     )
 }

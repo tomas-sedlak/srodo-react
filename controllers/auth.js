@@ -46,8 +46,14 @@ export const login = async (req, res) => {
         // Load images from s3 bucket
         user.profilePicture = await getImage(user.profilePicture);
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-        res.status(200).json({ token, userId: user._id });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const userData = {
+            _id: user._id,
+            username: user.username,
+            displayName: user.displayName,
+            profilePicture: user.profilePicture,
+        }
+        res.status(200).json({ token, user: userData });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -77,8 +83,14 @@ export const google = async (req, res) => {
             })
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-        res.status(200).json({ token, userId: user._id });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const userData = {
+            _id: user._id,
+            username: user.username,
+            displayName: user.displayName,
+            profilePicture: user.profilePicture,
+        }
+        res.status(200).json({ token, user: userData });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

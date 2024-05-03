@@ -191,9 +191,10 @@ main {
 }
 
 .dots {
+  z-index: 9;
   position: absolute;
-  top: -7px;
-  right: -7px;
+  top: 7px;
+  right: 7px;
 }
 
 .members-preview {

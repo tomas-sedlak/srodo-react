@@ -39,7 +39,7 @@ export default function LoginModal() {
 
             dispatch(
                 setLogin({
-                    userId: response.data.userId,
+                    user: response.data.user,
                     token: response.data.token,
                 })
             );
@@ -50,6 +50,7 @@ export default function LoginModal() {
         }
 
         setLoading(false)
+        window.location.reload()
     }
 
     const googleLogin = useGoogleLogin({ onSuccess: handleGoogleLogin });
@@ -225,7 +226,7 @@ export default function LoginModal() {
 
             dispatch(
                 setLogin({
-                    userId: response.data.userId,
+                    user: response.data.user,
                     token: response.data.token,
                 })
             );
@@ -246,6 +247,7 @@ export default function LoginModal() {
 
         if (isLogin) await login();
         if (isRegister) await register();
+        window.location.reload()
     };
 
     return (

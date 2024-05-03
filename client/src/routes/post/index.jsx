@@ -29,41 +29,39 @@ export default function Post() {
         </div>
     ) : (
         <>
-            <Box py="sm" px="md" className="border-bottom">
-                <Box pos="relative" mb="sm">
-                    <Group gap="xs">
-                        <Link to={`/${data.author.username}`}>
-                            <Avatar src={data.author.profilePicture} />
-                        </Link>
+            <Box py="sm" px="md" pos="relative" className="border-bottom">
+                <Group gap="xs">
+                    <Link to={`/${data.author.username}`}>
+                        <Avatar src={data.author.profilePicture} />
+                    </Link>
 
-                        <Stack gap={4} pr={32} style={{ flex: 1 }}>
-                            <Group gap={4}>
-                                <Link to={`/${data.author.username}`}>
-                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                        {data.author.displayName}
-                                    </Text>
-                                </Link>
-                                <Link to={`/${data.author.username}`}>
-                                    <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                        @{data.author.username}
-                                    </Text>
-                                </Link>
-                            </Group>
+                    <Stack gap={4} pr={32} style={{ flex: 1 }}>
+                        <Group gap={4}>
+                            <Link to={`/${data.author.username}`}>
+                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                    {data.author.displayName}
+                                </Text>
+                            </Link>
+                            <Link to={`/${data.author.username}`}>
+                                <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                                    @{data.author.username}
+                                </Text>
+                            </Link>
+                        </Group>
 
-                            <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                {moment(data.createdAt).fromNow()}
-                            </Text>
-                        </Stack>
-                    </Group>
+                        <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
+                            {moment(data.createdAt).fromNow()}
+                        </Text>
+                    </Stack>
+                </Group>
 
-                    <PostMenu post={data} />
+                <PostMenu post={data} />
 
-                    <Box my="sm" style={{ whiteSpace: "pre-line" }}>
-                        {data.content}
-                    </Box>
-
-                    <PostButtons post={data} />
+                <Box my="sm" style={{ whiteSpace: "pre-line" }}>
+                    {data.content}
                 </Box>
+
+                <PostButtons post={data} />
             </Box>
 
             <Comments comments={data.comments} postId={postId} />
