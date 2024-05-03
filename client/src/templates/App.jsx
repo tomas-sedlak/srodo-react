@@ -26,7 +26,6 @@ const Post = lazy(() => import("routes/post"));
 const Group = lazy(() => import("routes/group"));
 const CreateGroup = lazy(() => import("routes/create_group"));
 const Settings = lazy(() => import("routes/settings"));
-const Edit = lazy(() => import("routes/edit"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
@@ -98,9 +97,6 @@ export default function App() {
                                     <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
-
-                                    {/* SPECIFIC USER ROUTES */}
-                                    <Route exact path=":username/:postId/upravit" element={isAuth ? <Edit /> : <Navigate to="/" />} />
                                 </Route>
 
                                 <Route path="prihlasenie" element={<Login />} />
