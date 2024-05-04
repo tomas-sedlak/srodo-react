@@ -245,7 +245,10 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                            
                             <Dropzone
                                 mt="md"
-                                onDrop={(files) => {setImage(files[0])}}
+                                onDrop={(files) => {
+                                    setImage(files[0])
+                                    close()
+                                }}
                                 onReject={(files) => console.log('rejected files', files)}
                                 maxSize={5 * 1024 ** 2}
                                 accept={IMAGE_MIME_TYPE}
