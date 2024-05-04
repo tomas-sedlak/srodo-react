@@ -45,12 +45,12 @@ export default function LoginModal() {
             );
 
             dispatch(setLoginModal(false));
+            window.location.reload()
         } catch (err) {
             setGlobalError("Nastala chyba. Skúste to znova")
         }
 
         setLoading(false)
-        window.location.reload()
     }
 
     const googleLogin = useGoogleLogin({ onSuccess: handleGoogleLogin });
@@ -208,6 +208,7 @@ export default function LoginModal() {
 
             setPageType("login");
             resetInputs()
+            window.location.reload()
         } catch (err) {
             setGlobalError("Nastala chyba. Skontroluj svoje údaje")
         }
@@ -233,6 +234,7 @@ export default function LoginModal() {
 
             dispatch(setLoginModal(false));
             resetInputs()
+            window.location.reload()
         } catch (err) {
             setGlobalError("Nesprávne prihlasovacie údaje")
         }
@@ -247,7 +249,6 @@ export default function LoginModal() {
 
         if (isLogin) await login();
         if (isRegister) await register();
-        window.location.reload()
     };
 
     return (

@@ -37,7 +37,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { usernameOrEmail, loginPassword } = req.body;
-        const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] });
+        const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] }).lean();
         if (!user) return res.status(400).json({ message: "User does not exist." });
 
         const isMatch = await bcrypt.compare(loginPassword, user.password);

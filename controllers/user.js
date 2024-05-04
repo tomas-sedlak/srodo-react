@@ -118,7 +118,7 @@ export const updateUserSettings = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
-        const user = await User.findById(userId);
+        const user = await User.findById(userId).select("-password");
 
         const {
             displayName,
@@ -145,7 +145,6 @@ export const updateUserSettings = async (req, res) => {
 
         user.coverImage = await getImage(user.coverImage);
         user.profilePicture = await getImage(user.profilePicture);
-        delete user.password;
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message })
