@@ -29,7 +29,9 @@ export default function CreatePost({ groupId }) {
         }
 
         await axios.post("/api/post", data, { headers })
-        queryClient.invalidateQueries("post")
+
+        setContent("")
+        queryClient.invalidateQueries("posts")
 
         setIsPuhlishing(false)
     }
@@ -93,9 +95,9 @@ export default function CreatePost({ groupId }) {
                     </Group>
 
                     <Button
-                    onClick={publish}
-                    disabled={!isValid()}
-                    loading={isPublishing}
+                        onClick={publish}
+                        disabled={!isValid()}
+                        loading={isPublishing}
                     >
                         Publikovať
                     </Button>
