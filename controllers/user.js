@@ -1,4 +1,4 @@
-import { getImage, uploadImage } from "../middleware/s3.js";
+import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
@@ -9,7 +9,7 @@ export const getUser = async (req, res) => {
     try {
         let user;
         if (req.query.userId) {
-            user = await User.findOne({ _id: req.query.userId });
+            user = await User.findById(req.query.userId);
         } else if (req.query.username) {
             user = await User.findOne({ username: req.query.username });
         }
@@ -118,27 +118,36 @@ export const updateUserSettings = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
+        const user = await User.findById(userId);
+
         const {
             displayName,
             bio,
             socials,
         } = req.body;
 
-        // Upload images to s3 bucket
-        const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 600, 200);
-        const profilePicture = req.files.profilePicture && await uploadImage(req.files.profilePicture[0], 128, 128);
+        // Upload images to s3 bucket;
+        if (req.files.coverImage) {
+            await deleteImage(user.coverImage);
+            user.coverImage = await uploadImage(req.files.coverImage[0], 600, 200);
+        } else if (user.coverImage) {
+            await deleteImage(user.coverImage);
+            user.coverImage = null;
+        }
 
-        const user = await User.findOneAndUpdate({
-            _id: userId
-        }, {
-            coverImage,
-            profilePicture,
-            displayName,
-            bio,
-            socials: JSON.parse(socials),
-        }, {
-            new: true,
-        });
+        if (req.files.profilePicture) {
+            await deleteImage(user.profilePicture)
+            user.profilePicture = await uploadImage(req.files.profilePicture[0], 128, 128);
+        } else if (user.profilePicture) {
+            await deleteImage(user.profilePicture);
+            user.profilePicture = null;
+        }
+
+        user.displayName = displayName;
+        user.bio = bio;
+        user.socials = JSON.parse(socials)
+
+        await user.save();
 
         const userData = {
             _id: user._id,
