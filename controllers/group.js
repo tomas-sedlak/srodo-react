@@ -1,4 +1,4 @@
-import { getImage, uploadImage } from "../middleware/s3.js";
+import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
@@ -138,6 +138,8 @@ export const deleteGroup = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
+        await deleteImage(group.profilePicture);
+        await deleteImage(group.coverImage);
         await Group.findByIdAndDelete(groupId);
 
         res.sendStatus(200);

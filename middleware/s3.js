@@ -1,4 +1,4 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import crypto from "crypto";
 import sharp from "sharp";
@@ -59,4 +59,16 @@ export const getImage = async (imageName) => {
     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
 
     return url;
+}
+
+export const deleteImage = async (imageName) => {
+    if (!imageName) return
+
+    const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: imageName,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
 }
