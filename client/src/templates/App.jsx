@@ -57,14 +57,7 @@ export default function App() {
     const fetchUser = async () => {
         if (!userId) return
         const response = await axios.get(`/api/user?userId=${userId}`)
-        dispatch(setUser({
-            user: {
-                _id: response.data._id,
-                username: response.data.username,
-                displayName: response.data.displayName,
-                profilePicture: response.data.profilePicture,
-            }
-        }))
+        dispatch(setUser({ user: response.data }))
     }
 
     useEffect(() => {

@@ -130,33 +130,23 @@ export const updateUserSettings = async (req, res) => {
         if (req.files.coverImage) {
             await deleteImage(user.coverImage);
             user.coverImage = await uploadImage(req.files.coverImage[0], 600, 200);
-        } else if (user.coverImage) {
-            await deleteImage(user.coverImage);
-            user.coverImage = null;
         }
 
         if (req.files.profilePicture) {
             await deleteImage(user.profilePicture)
             user.profilePicture = await uploadImage(req.files.profilePicture[0], 128, 128);
-        } else if (user.profilePicture) {
-            await deleteImage(user.profilePicture);
-            user.profilePicture = null;
         }
 
-        user.displayName = displayName;
-        user.bio = bio;
-        user.socials = JSON.parse(socials)
+        if (displayName) user.displayName = displayName;
+        if (bio) user.bio = bio;
+        if (socials) user.socials = JSON.parse(socials);
 
         await user.save();
 
-        const userData = {
-            _id: user._id,
-            username: user.username,
-            displayName: user.displayName,
-            profilePicture: await getImage(user.profilePicture),
-        }
-
-        res.status(200).send(userData);
+        user.coverImage = await getImage(user.coverImage);
+        user.profilePicture = await getImage(user.profilePicture);
+        delete user.password;
+        res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

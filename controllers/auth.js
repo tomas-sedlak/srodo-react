@@ -47,13 +47,8 @@ export const login = async (req, res) => {
         user.profilePicture = await getImage(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        const userData = {
-            _id: user._id,
-            username: user.username,
-            displayName: user.displayName,
-            profilePicture: user.profilePicture,
-        }
-        res.status(200).json({ token, user: userData });
+        delete user.password;
+        res.status(200).json({ token, user });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -84,13 +79,7 @@ export const google = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        const userData = {
-            _id: user._id,
-            username: user.username,
-            displayName: user.displayName,
-            profilePicture: user.profilePicture,
-        }
-        res.status(200).json({ token, user: userData });
+        res.status(200).json({ token, user });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
