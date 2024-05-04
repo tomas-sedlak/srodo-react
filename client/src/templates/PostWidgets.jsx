@@ -96,13 +96,7 @@ export function PostMenu(props) {
                             onClick={() => navigate(`${url}/upravit`)}
                             leftSection={<IconPencil stroke={1.25} />}
                         >
-                            <Text>Upraviť</Text>
-                        </Menu.Item>
-                        <Menu.Item
-                            onClick={() => navigate(`/statistiky/${post._id}`)}
-                            leftSection={<IconChartBar stroke={1.25} />}
-                        >
-                            <Text>Štatistiky</Text>
+                            <Text fw={600} size="sm">Upraviť</Text>
                         </Menu.Item>
 
                         <Menu.Divider />
@@ -122,7 +116,7 @@ export function PostMenu(props) {
                             }}
                             leftSection={<IconTrash stroke={1.25} />}
                         >
-                            <Text>Odstrániť</Text>
+                            <Text fw={600} size="sm">Odstrániť</Text>
                         </Menu.Item>
                     </>
                 ) : (

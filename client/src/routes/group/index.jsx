@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, Textarea, ActionIcon, TextInput, Image } from '@mantine/core';
-import { IconCopyCheck, IconGif, IconLock, IconPaperclip, IconPencil, IconPhoto, IconWorld, IconSearch, IconX } from '@tabler/icons-react';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu } from '@mantine/core';
+import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag } from '@tabler/icons-react';
+import { modals } from "@mantine/modals";
 import { useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
-import axios from "axios";
 import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
+import axios from "axios";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -44,10 +45,22 @@ export default function Group() {
     }
 
     const leaveGroup = async () => {
+        if (!userId) {
+            dispatch(setLoginModal(true))
+            return
+        }
+
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/leave`, {}, { headers })
         queryClient.invalidateQueries("group")
         setIsLoading(false)
+    }
+
+    const deleteGroup = async () => {
+        if (!userId) return
+        await axios.delete(`/api/group/${groupId}`, { headers })
+        queryClient.invalidateQueries("group");
+        navigate("/")
     }
 
     const { data, status } = useQuery({
@@ -80,7 +93,7 @@ export default function Group() {
                 />
             </div>
 
-            <Flex px="md" h={profilePictureSize / 2} justify="flex-end" align="center">
+            <Flex px="md" h={profilePictureSize / 2} gap={8} justify="flex-end" align="center">
                 {data.owner._id == userId ?
                     <Button
                         variant="default"
@@ -104,6 +117,43 @@ export default function Group() {
                             Pripojiť sa
                         </Button>
                 }
+
+                <Menu position="bottom-end" width={180}>
+                    <Menu.Target>
+                        <Button
+                            variant="default"
+                            px={8}
+                        >
+                            <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
+                        </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        {data.owner._id == userId ?
+                            <Menu.Item
+                                leftSection={<IconTrash stroke={1.25} />}
+                                color="red"
+                                onClick={event => {
+                                    event.preventDefault()
+                                    modals.openConfirmModal({
+                                        title: "Zmazať skupinu",
+                                        children: <Text>Určite chceš zmazať túto skupinu?</Text>,
+                                        centered: true,
+                                        labels: { confirm: "Zmazať", cancel: "Zrušiť" },
+                                        confirmProps: { color: "red" },
+                                        onConfirm: deleteGroup,
+                                    })
+                                }}
+                            >
+                                <Text fw={600} size="sm">Zmazať skupinu</Text>
+                            </Menu.Item>
+                            : <Menu.Item
+                                leftSection={<IconFlag stroke={1.25} />}
+                            >
+                                <Text fw={600} size="sm">Nahlásiť</Text>
+                            </Menu.Item>
+                        }
+                    </Menu.Dropdown>
+                </Menu>
             </Flex>
 
             <Box px="md" py="sm">

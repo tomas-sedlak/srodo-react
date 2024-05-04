@@ -138,7 +138,7 @@ export const deleteGroup = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
-        await Group.findByIdAndDelete(posgroupIdtId);
+        await Group.findByIdAndDelete(groupId);
 
         res.sendStatus(200);
     } catch (err) {

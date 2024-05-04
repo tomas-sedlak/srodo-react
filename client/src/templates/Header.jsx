@@ -103,19 +103,19 @@ export default function Header() {
                                             onClick={() => navigate("/nastavenia")}
                                             leftSection={<IconSettings stroke={1.25} />}
                                         >
-                                            <Text>Nastavenia</Text>
+                                            <Text fw={600} size="sm">Nastavenia</Text>
                                         </Menu.Item>
                                         <Menu.Item
                                             onClick={() => navigate("/statistiky")}
                                             leftSection={<IconChartBar stroke={1.25} />}
                                         >
-                                            <Text>Štatistiky</Text>
+                                            <Text fw={600} size="sm">Štatistiky</Text>
                                         </Menu.Item>
                                         <Menu.Item
                                             leftSection={<IconMoon stroke={1.25} />}
                                         >
                                             <Group justify="space-between">
-                                                <Text>Tmavý režim</Text>
+                                                <Text fw={600} size="sm">Tmavý režim</Text>
                                                 <Switch
                                                     checked={colorScheme === "dark"}
                                                     onClick={toggleColorScheme}
@@ -130,7 +130,7 @@ export default function Header() {
                                             onClick={() => dispatch(setLogout())}
                                             leftSection={<IconLogout stroke={1.25} />}
                                         >
-                                            <Text>Odhlásiť sa</Text>
+                                            <Text fw={600} size="sm">Odhlásiť sa</Text>
                                         </Menu.Item>
                                     </Menu.Dropdown>
                                 </Menu>
