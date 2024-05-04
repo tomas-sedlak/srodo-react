@@ -65,7 +65,7 @@ export const getGroupPosts = async (req, res) => {
         // Loading images from s3 bucket using memoization to improve performance
         const cache = {}
         for (const post of posts) {
-            if (!cache[ post.author._id]) {
+            if (!cache[post.author._id]) {
                 cache[post.author._id] = await getImage(post.author.profilePicture)
             }
             post.author.profilePicture = cache[post.author._id];
@@ -79,6 +79,26 @@ export const getGroupPosts = async (req, res) => {
         res.status(404).json({ message: err.message });
     }
 };
+
+export const getGroupMembers = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const { q = "" } = req.query;
+        const group = await Group.findById(groupId)
+            .populate("members", "username displayName profilePicture")
+            .lean();
+
+        // Load images from s3 bucket
+        const members = group.members.filter(member => member.displayName.toLowerCase().includes(q.toLowerCase()))
+        for (const member of members) {
+            member.profilePicture = await getImage(member.profilePicture);
+        }
+
+        res.status(200).json(members);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+}
 
 export const getGroupSuggestions = async (req, res) => {
     try {

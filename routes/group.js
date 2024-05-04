@@ -3,6 +3,7 @@ import {
     getGroupSuggestions,
     getGroup,
     getGroupPosts,
+    getGroupMembers,
     joinGroup,
     leaveGroup,
     deleteGroup,
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/suggestions", getGroupSuggestions);
 router.get("/:groupId", getGroup);
 router.get("/:groupId/posts", getGroupPosts);
+router.get("/:groupId/members", getGroupMembers);
 
 // UPDATE
 router.patch("/:groupId/join", verifyToken, joinGroup);

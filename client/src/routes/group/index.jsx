@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu } from '@mantine/core';
 import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag } from '@tabler/icons-react';
 import { modals } from "@mantine/modals";
-import { useMediaQuery } from "@mantine/hooks";
+import { useDebounceCallback, useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
@@ -211,7 +211,7 @@ export default function Group() {
 
             {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
 
-            {tab === "clenovia" && <Members owner={data.owner} members={data.members} />}
+            {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} members={data.members} />}
         </>
     )
 }
@@ -252,8 +252,19 @@ function Posts({ groupId, owner }) {
     )
 }
 
-function Members({ owner, members }) {
+function Members({ groupId }) {
+    const [members, setMembers] = useState([]);
     const [searchValue, setSearchValue] = useState("");
+
+    const handleSearch = useDebounceCallback(async (value) => {
+        const response = await axios.get(`/api/group/${groupId}/members?q=${value}`)
+        setMembers(response.data)
+    }, 200)
+
+    const handleChange = event => {
+        setSearchValue(event.currentTarget.value)
+        handleSearch(event.currentTarget.value)
+    }
 
     return (
         <>
@@ -264,7 +275,7 @@ function Members({ owner, members }) {
                 className="border-bottom"
                 placeholder="Hľadať členov"
                 value={searchValue}
-                onChange={event => setSearchValue(event.target.value)}
+                onChange={handleChange}
                 leftSection={<IconSearch stroke={1.25} />}
                 rightSection={
                     searchValue !== "" && (
