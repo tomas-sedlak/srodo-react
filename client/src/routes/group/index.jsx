@@ -65,7 +65,7 @@ export default function Group() {
 
     const { data, status } = useQuery({
         queryFn: fetchGroup,
-        queryKey: ["group", "posts", groupId],
+        queryKey: ["group", groupId],
     })
 
     return status === "pending" ? (
@@ -211,7 +211,7 @@ export default function Group() {
 
             {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
 
-            {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} members={data.members} />}
+            {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} />}
         </>
     )
 }
@@ -224,7 +224,7 @@ function Posts({ groupId, owner }) {
 
     const { data, status } = useQuery({
         queryFn: fetchPosts,
-        queryKey: ["group-posts", groupId],
+        queryKey: ["group", "posts", groupId],
     });
 
     return (
@@ -232,11 +232,11 @@ function Posts({ groupId, owner }) {
             <CreatePost groupId={groupId} />
 
             {status === "pending" ? (
-                <div className="loader-center">
+                <div className="loader-center-x">
                     <Loader />
                 </div>
             ) : status === "error" ? (
-                <div className="loader-center">
+                <div className="loader-center-x">
                     <p>Nastala chyba!</p>
                 </div>
             ) : (
@@ -252,19 +252,27 @@ function Posts({ groupId, owner }) {
     )
 }
 
-function Members({ groupId }) {
-    const [members, setMembers] = useState([]);
+function Members({ groupId, owner }) {
     const [searchValue, setSearchValue] = useState("");
 
-    const handleSearch = useDebounceCallback(async (value) => {
-        const response = await axios.get(`/api/group/${groupId}/members?q=${value}`)
-        setMembers(response.data)
-    }, 200)
+    const handleSearch = useDebounceCallback(async () => {
+        refetch()
+    }, 500)
 
-    const handleChange = event => {
-        setSearchValue(event.currentTarget.value)
-        handleSearch(event.currentTarget.value)
+    const handleChange = value => {
+        setSearchValue(value)
+        handleSearch()
     }
+
+    const fetchMembers = async () => {
+        const response = await axios.get(`/api/group/${groupId}/members?q=${searchValue}`)
+        return response.data
+    }
+
+    const { data, status, refetch, isFetching } = useQuery({
+        queryFn: fetchMembers,
+        queryKey: ["group", "members", groupId],
+    })
 
     return (
         <>
@@ -275,21 +283,37 @@ function Members({ groupId }) {
                 className="border-bottom"
                 placeholder="Hľadať členov"
                 value={searchValue}
-                onChange={handleChange}
+                onChange={event => handleChange(event.currentTarget.value)}
                 leftSection={<IconSearch stroke={1.25} />}
                 rightSection={
                     searchValue !== "" && (
                         <IconX
                             className="pointer"
-                            onClick={() => setSearchValue("")}
+                            onClick={() => handleChange("")}
                             stroke={1.25}
                         />
                     )
                 }
             />
 
-            {members.map(member =>
-                <UserProfile user={member} badge={member._id === owner._id && "Admin"} />
+            {status === "pending" || isFetching ? (
+                <div className="loader-center-x">
+                    <Loader />
+                </div>
+            ) : status === "error" ? (
+                <div className="loader-center-x">
+                    <p>Nastala chyba!</p>
+                </div>
+            ) : (
+                <>
+                    {data.length === 0 &&
+                        <Text px="md" py="sm" c="dimmed">Neboli nájdení žiadni členovia</Text>
+                    }
+
+                    {data.map(member =>
+                        <UserProfile user={member} badge={member._id === owner._id && "Admin"} />
+                    )}
+                </>
             )}
         </>
     )

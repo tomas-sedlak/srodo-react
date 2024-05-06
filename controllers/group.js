@@ -2,6 +2,7 @@ import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
+import normalizeStrings from "normalize-strings";
 
 // CREATE
 export const createGroup = async (req, res) => {
@@ -84,12 +85,25 @@ export const getGroupMembers = async (req, res) => {
     try {
         const { groupId } = req.params;
         const { q = "" } = req.query;
-        const group = await Group.findById(groupId)
-            .populate("members", "username displayName profilePicture")
+
+        const normalizedQuery = normalizeStrings(q);
+        const regexQuery = new RegExp(normalizedQuery.replace(/[^\w\s]/gi, ""), "i");
+
+        const { members } = await Group.findById(groupId)
+            .select("members")
+            .populate({
+                path: "members",
+                select: "username displayName profilePicture",
+                match: {
+                    $or: [
+                        { username: regexQuery },
+                        { displayName: regexQuery },
+                    ]
+                }
+            })
             .lean();
 
         // Load images from s3 bucket
-        const members = group.members.filter(member => member.displayName.toLowerCase().includes(q.toLowerCase()))
         for (const member of members) {
             member.profilePicture = await getImage(member.profilePicture);
         }
