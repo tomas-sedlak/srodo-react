@@ -1,10 +1,10 @@
 import { forwardRef } from "react";
-import { Group, Text, Avatar, Stack, Spoiler, Image } from '@mantine/core';
+import { Group, Text, Avatar, Stack, Spoiler, Image, Badge } from '@mantine/core';
 import { Link } from "react-router-dom";
 import { PostButtons, PostMenu } from "./PostWidgets";
 import moment from "moment";
 
-const Post = forwardRef(({ post }, ref) => {
+const Post = forwardRef(({ post, owner }, ref) => {
     const authorUrl = `/${post.author.username}`;
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
 
@@ -24,9 +24,9 @@ const Post = forwardRef(({ post }, ref) => {
                                 {post.author.displayName}
                             </Text>
                         </Link>
-                        {/* {post.author._id === owner._id &&
+                        {owner && post.author._id === owner._id &&
                             <Badge variant="light" size="xs">Admin</Badge>
-                        } */}
+                        }
                         <Link to={"/" + post.author.username}>
                             <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                                 @{post.author.username}
