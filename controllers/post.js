@@ -116,6 +116,14 @@ export const getPostComments = async (req, res) => {
             return (b.upvotes.length - b.downvotes.length) - (a.upvotes.length - a.downvotes.length);
         })
 
+        const cache = {}
+        for (const comment of comments) {
+            if (!cache[comment.author._id]) {
+                cache[comment.author._id] = await getImage(comment.author.profilePicture);
+            }
+            comment.author.profilePicture = cache[comment.author._id];
+        }
+
         res.status(200).json(comments);
     } catch (err) {
         res.status(404).json({ message: err.message });

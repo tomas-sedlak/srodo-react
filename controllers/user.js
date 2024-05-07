@@ -57,14 +57,21 @@ export const getUserSuggestions = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
+
+        const user = await User.findById(userId)
+            .select("username displayName profilePicture");
+
+        user.profilePicture = await getImage(user.profilePicture);
+
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture")
             .lean();
 
         // Load images from s3 bucket
         for (const post of posts) {
-            post.author.profilePicture = await getImage(post.author.profilePicture);
+            post.author = user;
+
+            post.image = await getImage(post.image);
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
@@ -96,11 +103,21 @@ export const getUserFavourites = async (req, res) => {
     try {
         const { userId } = req.params;
         const posts = await Post.find({ likes: userId })
-            .populate("author", "username displayName profilePicture");
+            .populate("author", "username displayName profilePicture")
+            .lean();
 
         // Load images from s3 bucket
+        let cache = {};
         for (const post of posts) {
-            post.author.profilePicture = await getImage(post.author.profilePicture);
+            if (!cache[post.author._id]) {
+                cache[post.author._id] = await getImage(post.author.profilePicture);
+            }
+            post.author.profilePicture = cache[post.author._id];
+
+            post.image = await getImage(post.image);
+
+            const comments = await Comment.find({ postId: post._id });
+            post.comments = comments.length;
         }
 
         res.status(200).json(posts);
