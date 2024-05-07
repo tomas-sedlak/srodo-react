@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { Box, Text, Group, Avatar, Loader, Stack } from '@mantine/core';
+import { Box, Text, Group, Avatar, Loader, Stack, Image } from '@mantine/core';
 import { PostButtons, PostMenu } from 'templates/PostWidgets';
 import Comments from "templates/Comments";
 import axios from "axios";
@@ -57,11 +57,13 @@ export default function Post() {
 
                 <PostMenu post={data} />
 
-                <Box my="sm" style={{ whiteSpace: "pre-line" }}>
+                <Box mt="sm" style={{ whiteSpace: "pre-line" }}>
                     {data.content}
                 </Box>
 
-                <PostButtons post={data} />
+                {data.image && <Image mt="sm" radius="lg" src={data.image} />}
+
+                <PostButtons mt="sm" post={data} />
             </Box>
 
             <Comments comments={data.comments} postId={postId} />

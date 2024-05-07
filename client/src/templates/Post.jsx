@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Group, Text, Avatar, Stack, Spoiler } from '@mantine/core';
+import { Group, Text, Avatar, Stack, Spoiler, Image } from '@mantine/core';
 import { Link } from "react-router-dom";
 import { PostButtons, PostMenu } from "./PostWidgets";
 import moment from "moment";
@@ -17,8 +17,8 @@ const Post = forwardRef(({ post }, ref) => {
 
                 <PostMenu post={post} />
 
-                <Stack gap={4} pos="relative" style={{ flex: 1 }}>
-                    <Group gap={4}>
+                <Stack gap={0} pos="relative" style={{ flex: 1 }}>
+                    <Group mb={2} gap={4}>
                         <Link to={"/" + post.author.username}>
                             <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
@@ -53,7 +53,9 @@ const Post = forwardRef(({ post }, ref) => {
                         </div>
                     </Spoiler>
 
-                    <PostButtons post={post} />
+                    {post.image && <Image mt={8} radius="lg" src={post.image} />}
+
+                    <PostButtons mt={8} post={post} />
                 </Stack>
             </Group>
         </Link>

@@ -1,4 +1,4 @@
-import { getImage } from "../middleware/s3.js";
+import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import Group from "../models/Group.js";
@@ -10,13 +10,15 @@ export const createPost = async (req, res) => {
         const {
             groupId,
             content,
-            image,
             gif,
             attachemnt,
             quiz,
         } = req.body;
 
-        const newPost = new Post({
+        // Upload files to s3 bucket
+        const image = await uploadImage(req.file, 800);
+
+        await Post.create({
             groupId,
             author: req.user.id,
             content,
@@ -25,9 +27,8 @@ export const createPost = async (req, res) => {
             attachemnt,
             quiz,
         });
-        await newPost.save();
 
-        res.status(201).json(newPost);
+        res.sendStatus(201);
     } catch (err) {
         res.status(409).json({ message: err.message });
     }
@@ -66,8 +67,14 @@ export const getFeedPosts = async (req, res) => {
             .populate("author", "username displayName profilePicture")
             .lean();
 
+        const cache = {}
         for (const post of posts) {
-            post.author.profilePicture = await getImage(post.author.profilePicture);
+            if (!cache[post.author._id]) {
+                cache[post.author._id] = await getImage(post.author.profilePicture);
+            }
+            post.author.profilePicture = cache[post.author._id];
+
+            post.image = await getImage(post.image);
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
@@ -85,6 +92,9 @@ export const getPost = async (req, res) => {
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
             .lean();
+
+        post.author.profilePicture = await getImage(post.author.profilePicture);
+        post.image = await getImage(post.image);
 
         const comments = await Comment.find({ postId: post._id });
         post.comments = comments.length;
@@ -207,6 +217,7 @@ export const deletePost = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
+        await deleteImage(post.image);
         await Post.findByIdAndDelete(postId);
 
         res.sendStatus(200);

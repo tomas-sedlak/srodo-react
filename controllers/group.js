@@ -67,9 +67,11 @@ export const getGroupPosts = async (req, res) => {
         const cache = {}
         for (const post of posts) {
             if (!cache[post.author._id]) {
-                cache[post.author._id] = await getImage(post.author.profilePicture)
+                cache[post.author._id] = await getImage(post.author.profilePicture);
             }
             post.author.profilePicture = cache[post.author._id];
+
+            post.image = await getImage(post.image);
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
