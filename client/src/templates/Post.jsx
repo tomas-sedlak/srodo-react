@@ -54,12 +54,15 @@ const Post = forwardRef(({ post, owner }, ref) => {
                     </Spoiler>
 
                     {post.images.length > 0 &&
-                        post.images.map(image =>
-                            <Image mt={8} radius="lg" src={image.thumbnail} />
-                        )}
+                        <Stack mt={8} gap={4}>
+                            {post.images.map(image =>
+                                <Image radius="lg" src={image.thumbnail} />
+                            )}
+                        </Stack>
+                    }
 
                     {post.files.length > 0 &&
-                        <Group mt={8} gap={8}>
+                        <Group mt={8} gap={4}>
                             {post.files.map(file =>
                                 <DownloadFile file={file} />
                             )}

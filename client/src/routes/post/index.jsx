@@ -62,12 +62,15 @@ export default function Post() {
                 </Box>
 
                 {data.images.length > 0 &&
-                    data.images.map(image =>
-                        <Image mt="sm" radius="lg" src={image.large} />
-                    )}
+                    <Stack mt="sm" gap={4}>
+                        {data.images.map(image =>
+                            <Image radius="lg" src={image.large} />
+                        )}
+                    </Stack>
+                }
 
                 {data.files.length > 0 &&
-                    <Group mt="sm" gap={8}>
+                    <Group mt="sm" gap={4}>
                         {data.files.map(file =>
                             <DownloadFile file={file} />
                         )}
