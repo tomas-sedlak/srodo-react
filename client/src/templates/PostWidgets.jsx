@@ -145,11 +145,11 @@ function getSize(size) {
 export function DownloadFile({ file }) {
     return (
         <a href={file.file} download={file.name}>
-            <Group gap="xs" className="file-download">
+            <Group gap="xs" wrap="nowrap" className="file-download">
                 <IconDownload stroke={1.25} />
 
                 <Stack gap={4}>
-                    <Text fw={600} style={{ lineHeight: 1 }}>{file.name}</Text>
+                    <Text size="sm" fw={600} style={{ lineHeight: 1 }}>{file.name}</Text>
                     <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>{getSize(file.size)}</Text>
                 </Stack>
             </Group>

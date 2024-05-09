@@ -57,7 +57,7 @@ export default function Post() {
 
                 <PostMenu post={data} />
 
-                <Box mt="sm" style={{ whiteSpace: "pre-line" }}>
+                <Box mt="sm" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
                     {data.content}
                 </Box>
 

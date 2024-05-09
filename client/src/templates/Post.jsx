@@ -10,7 +10,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
 
     const postContent = (
         <Link to={postUrl}>
-            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" className="border-bottom">
+            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
                 <Link to={authorUrl}>
                     <Avatar className="no-image" src={post.author.profilePicture} />
                 </Link>
@@ -18,7 +18,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
                 <PostMenu post={post} />
 
                 <Stack gap={0} pos="relative" style={{ flex: 1 }}>
-                    <Group mb={2} gap={4}>
+                    <Group mb={2} pr={32} gap={4}>
                         <Link to={"/" + post.author.username}>
                             <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
@@ -48,7 +48,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
                             control: { color: "var(--mantine-color-dimmed)" },
                         }}
                     >
-                        <div style={{ whiteSpace: "pre-line" }}>
+                        <div style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
                             {post.content}
                         </div>
                     </Spoiler>
