@@ -1,11 +1,9 @@
+import { getObject, uploadImage } from "../middleware/s3.js";
+import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
-import dotenv from "dotenv";
-import { getImage, uploadImage } from "../middleware/s3.js";
-import { generateUsername } from "unique-username-generator";
-dotenv.config();
 
 // REGISTER USER
 export const register = async (req, res) => {
@@ -44,7 +42,7 @@ export const login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials." });
 
         // Load images from s3 bucket
-        user.profilePicture = await getImage(user.profilePicture);
+        user.profilePicture = await getObject(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;

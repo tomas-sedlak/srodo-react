@@ -1,8 +1,10 @@
-import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadFile, uploadImage } from "../middleware/s3.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import Group from "../models/Group.js";
 import axios from "axios";
+import Image from "../models/Image.js";
+import File from "../models/File.js";
 
 // CREATE
 export const createPost = async (req, res) => {
@@ -11,20 +13,42 @@ export const createPost = async (req, res) => {
             groupId,
             content,
             gif,
-            attachemnt,
             quiz,
         } = req.body;
 
         // Upload files to s3 bucket
-        const image = await uploadImage(req.file, 800);
+        let images = [];
+        if (req.files.images) {
+            for (const image of req.files.images) {
+                const newImage = await Image.create({
+                    author: req.user.id,
+                    thumbnail: await uploadImage(image, 800),
+                    large: await uploadImage(image),
+                })
+                images.push(newImage._id);
+            }
+        }
+
+        let files = [];
+        if (req.files.files) {
+            for (const file of req.files.files) {
+                const newFile = await File.create({
+                    author: req.user.id,
+                    file: await uploadFile(file),
+                    name: file.originalname,
+                    size: file.size,
+                })
+                files.push(newFile._id);
+            }
+        }
 
         await Post.create({
             groupId,
             author: req.user.id,
             content,
-            image,
+            images,
+            files,
             gif,
-            attachemnt,
             quiz,
         });
 
@@ -65,16 +89,25 @@ export const getFeedPosts = async (req, res) => {
             .limit(limit)
             .skip(limit * (page - 1))
             .populate("author", "username displayName profilePicture")
+            .populate("images", "thumbnail large")
+            .populate("files", "file name size")
             .lean();
 
         const cache = {}
         for (const post of posts) {
             if (!cache[post.author._id]) {
-                cache[post.author._id] = await getImage(post.author.profilePicture);
+                cache[post.author._id] = await getObject(post.author.profilePicture);
             }
             post.author.profilePicture = cache[post.author._id];
 
-            post.image = await getImage(post.image);
+            for (const image of post.images) {
+                image.thumbnail = await getObject(image.thumbnail);
+                image.large = await getObject(image.large);
+            }
+
+            for (const file of post.files) {
+                file.file = await getObject(file.file);
+            }
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
@@ -91,10 +124,20 @@ export const getPost = async (req, res) => {
         const { postId } = req.params;
         const post = await Post.findById(postId)
             .populate("author", "username displayName profilePicture")
+            .populate("images", "thumbnail large")
+            .populate("files", "file name size")
             .lean();
 
-        post.author.profilePicture = await getImage(post.author.profilePicture);
-        post.image = await getImage(post.image);
+        post.author.profilePicture = await getObject(post.author.profilePicture);
+
+        for (const image of post.images) {
+            image.thumbnail = await getObject(image.thumbnail);
+            image.large = await getObject(image.large);
+        }
+
+        for (const file of post.files) {
+            file.file = await getObject(file.file);
+        }
 
         const comments = await Comment.find({ postId: post._id });
         post.comments = comments.length;
@@ -119,7 +162,7 @@ export const getPostComments = async (req, res) => {
         const cache = {}
         for (const comment of comments) {
             if (!cache[comment.author._id]) {
-                cache[comment.author._id] = await getImage(comment.author.profilePicture);
+                cache[comment.author._id] = await getObject(comment.author.profilePicture);
             }
             comment.author.profilePicture = cache[comment.author._id];
         }
@@ -225,7 +268,7 @@ export const deletePost = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
-        await deleteImage(post.image);
+        await deleteObject(post.image);
         await Post.findByIdAndDelete(postId);
 
         res.sendStatus(200);

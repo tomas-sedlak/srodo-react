@@ -4,11 +4,13 @@ import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { DownloadFile } from "./PostWidgets";
 
 export default function CreatePost({ groupId }) {
     const queryClient = useQueryClient();
     const [content, setContent] = useState("");
-    const [image, setImage] = useState(null);
+    const [images, setImages] = useState([]);
+    const [files, setFiles] = useState([]);
     const [isPublishing, setIsPuhlishing] = useState(false)
     const profilePicture = useSelector(state => state.user?.profilePicture);
 
@@ -19,7 +21,8 @@ export default function CreatePost({ groupId }) {
 
     const clear = () => {
         setContent("")
-        setImage(null)
+        setImages([])
+        setFiles([])
     }
 
     const isValid = () => {
@@ -32,7 +35,12 @@ export default function CreatePost({ groupId }) {
         const formData = new FormData()
         formData.append("groupId", groupId)
         formData.append("content", content)
-        formData.append("image", image)
+        for (const image of images) {
+            formData.append("images", image)
+        }
+        for (const file of files) {
+            formData.append("files", file)
+        }
 
         await axios.post("/api/post", formData, { headers })
 
@@ -57,14 +65,24 @@ export default function CreatePost({ groupId }) {
                     onChange={event => setContent(event.target.value)}
                 />
 
-                {image &&
-                    <Image radius="lg" src={URL.createObjectURL(image)} />
+                {images.length > 0 &&
+                    images.map(image =>
+                        <Image radius="lg" src={URL.createObjectURL(image)} />
+                    )
+                }
+
+                {files.length > 0 &&
+                    <Group gap={8}>
+                        {files.map(file =>
+                            <DownloadFile file={file} />
+                        )}
+                    </Group>
                 }
 
                 <Group justify="space-between" align="center">
                     <Group gap={8}>
                         <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
-                            <FileButton onChange={setImage} accept="image/png,image/jpeg">
+                            <FileButton onChange={setImages} multiple accept="image/png,image/jpeg">
                                 {props =>
                                     <ActionIcon
                                         variant="transparent"
@@ -89,13 +107,18 @@ export default function CreatePost({ groupId }) {
                         </Tooltip>
 
                         <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
-                            <ActionIcon
-                                variant="transparent"
-                                color="gray"
-                                radius="xl"
-                            >
-                                <IconPaperclip stroke={1.25} />
-                            </ActionIcon>
+                            <FileButton onChange={setFiles} multiple accept="text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
+                                {props =>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="gray"
+                                        radius="xl"
+                                        {...props}
+                                    >
+                                        <IconPaperclip stroke={1.25} />
+                                    </ActionIcon>
+                                }
+                            </FileButton>
                         </Tooltip>
 
                         <Tooltip label="Kvíz" position="bottom" openDelay={500} withArrow>

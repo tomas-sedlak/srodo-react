@@ -1,4 +1,4 @@
-import { deleteImage, getImage, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadImage } from "../middleware/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
@@ -15,8 +15,8 @@ export const getUser = async (req, res) => {
         }
 
         // Load images from s3 bucket
-        user.coverImage = await getImage(user.coverImage);
-        user.profilePicture = await getImage(user.profilePicture);
+        user.coverImage = await getObject(user.coverImage);
+        user.profilePicture = await getObject(user.profilePicture);
 
         res.status(200).json(user);
     } catch (err) {
@@ -45,7 +45,7 @@ export const getUserSuggestions = async (req, res) => {
 
         // Load images from s3 bucket
         for (const user of users) {
-            user.profilePicture = await getImage(user.profilePicture);
+            user.profilePicture = await getObject(user.profilePicture);
         }
 
         res.status(200).json(users);
@@ -61,7 +61,7 @@ export const getUserPosts = async (req, res) => {
         const user = await User.findById(userId)
             .select("username displayName profilePicture");
 
-        user.profilePicture = await getImage(user.profilePicture);
+        user.profilePicture = await getObject(user.profilePicture);
 
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
@@ -71,7 +71,7 @@ export const getUserPosts = async (req, res) => {
         for (const post of posts) {
             post.author = user;
 
-            post.image = await getImage(post.image);
+            post.image = await getObject(post.image);
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
@@ -90,7 +90,7 @@ export const getUserGroups = async (req, res) => {
 
         // Load images from s3 bucket
         for (const group of groups) {
-            group.profilePicture = await getImage(group.profilePicture);
+            group.profilePicture = await getObject(group.profilePicture);
         }
 
         res.status(200).json(groups);
@@ -110,11 +110,11 @@ export const getUserFavourites = async (req, res) => {
         let cache = {};
         for (const post of posts) {
             if (!cache[post.author._id]) {
-                cache[post.author._id] = await getImage(post.author.profilePicture);
+                cache[post.author._id] = await getObject(post.author.profilePicture);
             }
             post.author.profilePicture = cache[post.author._id];
 
-            post.image = await getImage(post.image);
+            post.image = await getObject(post.image);
 
             const comments = await Comment.find({ postId: post._id });
             post.comments = comments.length;
@@ -145,12 +145,12 @@ export const updateUserSettings = async (req, res) => {
 
         // Upload images to s3 bucket;
         if (req.files.coverImage) {
-            await deleteImage(user.coverImage);
+            await deleteObject(user.coverImage);
             user.coverImage = await uploadImage(req.files.coverImage[0], 600, 200);
         }
 
         if (req.files.profilePicture) {
-            await deleteImage(user.profilePicture)
+            await deleteObject(user.profilePicture)
             user.profilePicture = await uploadImage(req.files.profilePicture[0], 128, 128);
         }
 
@@ -160,8 +160,8 @@ export const updateUserSettings = async (req, res) => {
 
         await user.save();
 
-        user.coverImage = await getImage(user.coverImage);
-        user.profilePicture = await getImage(user.profilePicture);
+        user.coverImage = await getObject(user.coverImage);
+        user.profilePicture = await getObject(user.profilePicture);
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message })

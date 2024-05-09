@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { Box, Text, Group, Avatar, Loader, Stack, Image } from '@mantine/core';
-import { PostButtons, PostMenu } from 'templates/PostWidgets';
+import { DownloadFile, PostButtons, PostMenu } from 'templates/PostWidgets';
 import Comments from "templates/Comments";
 import axios from "axios";
 import moment from "moment";
@@ -61,7 +61,18 @@ export default function Post() {
                     {data.content}
                 </Box>
 
-                {data.image && <Image mt="sm" radius="lg" src={data.image} />}
+                {data.images.length > 0 &&
+                    data.images.map(image =>
+                        <Image mt="sm" radius="lg" src={image.large} />
+                    )}
+
+                {data.files.length > 0 &&
+                    <Group mt="sm" gap={8}>
+                        {data.files.map(file =>
+                            <DownloadFile file={file} />
+                        )}
+                    </Group>
+                }
 
                 <PostButtons mt="sm" post={data} />
             </Box>

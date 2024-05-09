@@ -11,9 +11,17 @@ const postSchema = new Schema({
         type: String,
         trim: true,
     },
-    image: String,
+    images: [{
+        type: Schema.Types.ObjectId,
+        default: [],
+        ref: "Image",
+    }],
     gif: String,
-    attachment: String,
+    files: [{
+        type: Schema.Types.ObjectId,
+        default: [],
+        ref: "File",
+    }],
     quiz: [{
         type: Schema.Types.ObjectId,
         ref: "Quiz",

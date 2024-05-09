@@ -47,12 +47,29 @@ export const uploadImage = async (image, width, height) => {
     return imageName;
 }
 
-export const getImage = async (imageName) => {
-    if (!imageName) return
+export const uploadFile = async (file) => {
+    if (!file) return
+
+    const fileName = crypto.randomBytes(32).toString("hex");
+    const params = {
+        Bucket: process.env.BUCKET_NAME,
+        Key: fileName,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+    };
+
+    const command = new PutObjectCommand(params);
+    await s3.send(command);
+
+    return fileName;
+}
+
+export const getObject = async (object) => {
+    if (!object) return
 
     const params = {
         Bucket: process.env.BUCKET_NAME,
-        Key: imageName,
+        Key: object,
     };
 
     const command = new GetObjectCommand(params);
@@ -61,12 +78,12 @@ export const getImage = async (imageName) => {
     return url;
 }
 
-export const deleteImage = async (imageName) => {
-    if (!imageName) return
+export const deleteObject = async (object) => {
+    if (!object) return
 
     const params = {
         Bucket: process.env.BUCKET_NAME,
-        Key: imageName,
+        Key: object,
     };
 
     const command = new DeleteObjectCommand(params);

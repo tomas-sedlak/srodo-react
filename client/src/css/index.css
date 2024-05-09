@@ -233,8 +233,15 @@ main {
   border-bottom-right-radius: var(--mantine-radius-lg);
 }
 
-.news-card-item:hover {
+.news-card-item:hover, .file-download:hover {
   background-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
+.file-download {
+  cursor: pointer;
+  border-radius: var(--mantine-radius-md);
+  background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
 }
 
 /* All custom cards END */

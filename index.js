@@ -51,7 +51,7 @@ const upload = multer({ storage });
 
 // ROUTES WITH FILES
 app.post("/api/auth/register", upload.single("profilePicture"), register);
-app.post("/api/post", verifyToken, upload.single("image"), createPost);
+app.post("/api/post", verifyToken, upload.fields([{ name: "images", maxCount: 4 }, { name: "files", maxCount: 4 }]), createPost);
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 

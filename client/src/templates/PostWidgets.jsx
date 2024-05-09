@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ActionIcon, Group, Menu, Text } from "@mantine/core"
-import { IconChartBar, IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react"
+import { ActionIcon, Group, Menu, Stack, Text } from "@mantine/core"
+import { IconDownload, IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react"
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import { modals } from "@mantine/modals";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export function PostButtons(props) {
     const { post } = props;
@@ -126,5 +127,32 @@ export function PostMenu(props) {
                 )}
             </Menu.Dropdown>
         </Menu>
+    )
+}
+
+function getSize(size) {
+    let sizes = [" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"];
+
+    for (let i = 1; i < sizes.length; i++) {
+        if (size < Math.pow(1024, i)) {
+            return (Math.round((size / Math.pow(1024, i - 1)) * 100) / 100) + sizes[i - 1];
+        }
+    }
+
+    return size;
+}
+
+export function DownloadFile({ file }) {
+    return (
+        <a href={file.file} download={file.name}>
+            <Group gap="xs" className="file-download">
+                <IconDownload stroke={1.25} />
+
+                <Stack gap={4}>
+                    <Text fw={600} style={{ lineHeight: 1 }}>{file.name}</Text>
+                    <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>{getSize(file.size)}</Text>
+                </Stack>
+            </Group>
+        </a>
     )
 }
