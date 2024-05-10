@@ -1,4 +1,57 @@
+import { uploadImage } from "../utils/s3.js";
 import Comment from "../models/Comment.js";
+
+// CREATE
+export const createComment = async (req, res) => {
+    try {
+        const {
+            postId,
+            content,
+            gif,
+            quiz,
+        } = req.body;
+
+        // Upload files to s3 bucket
+        let images = [];
+        if (req.files.images) {
+            for (const image of req.files.images) {
+                const newImage = await Image.create({
+                    author: req.user.id,
+                    thumbnail: await uploadImage(image, 800),
+                    large: await uploadImage(image),
+                })
+                images.push(newImage._id);
+            }
+        }
+
+        let files = [];
+        if (req.files.files) {
+            for (const file of req.files.files) {
+                const newFile = await File.create({
+                    author: req.user.id,
+                    file: await uploadFile(file),
+                    name: file.originalname,
+                    size: file.size,
+                })
+                files.push(newFile._id);
+            }
+        }
+
+        await Comment.create({
+            postId,
+            author: req.user.id,
+            content,
+            images,
+            files,
+            gif,
+            quiz,
+        });
+
+        res.sendStatus(201);
+    } catch (err) {
+        res.status(409).json({ message: err.message })
+    }
+}
 
 // UPDATE
 export const upvoteComment = async (req, res) => {

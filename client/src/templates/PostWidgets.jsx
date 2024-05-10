@@ -36,7 +36,7 @@ export function PostButtons(props) {
     }, [post])
 
     return (
-        <Group gap={8} {...props}>
+        <Group gap={4} {...props}>
             <div
                 className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                 onClick={event => {
@@ -74,8 +74,8 @@ export function PostMenu(props) {
     }
 
     const deletePost = async () => {
-        await axios.delete(`/api/post/${post._id}`, { headers });
-        queryClient.invalidateQueries("posts");
+        await axios.delete(`/api/${props.type}/${post._id}`, { headers });
+        queryClient.invalidateQueries(props.type);
     }
 
     return (

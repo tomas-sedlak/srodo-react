@@ -58,11 +58,11 @@ export default function User() {
                     <Text c="dimmed" style={{ lineHeight: 1 }}>@{data.user.username}</Text>
                 </Stack>
 
-                <Text mt="sm">
+                <Text mt="sm" style={{ lineHeight: 1.4 }}>
                     {data.user.bio}
                 </Text>
 
-                <Text c="dimmed">Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
+                <Text mt={4} c="dimmed" style={{ lineHeight: 1.4 }}>Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
 
                 {data.user.socials.length !== 0 &&
                     <Group mt="sm" gap={4}>

@@ -59,24 +59,6 @@ export const createPost = async (req, res) => {
     }
 };
 
-export const createComment = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        const { author, content } = req.body;
-
-        const comment = new Comment({
-            postId,
-            author,
-            content,
-        });
-        await comment.save();
-
-        res.status(201).json(comment);
-    } catch (err) {
-        res.status(409).json({ message: err.message })
-    }
-}
-
 // READ
 export const getFeedPosts = async (req, res) => {
     try {

@@ -7,7 +7,29 @@ const commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
-    content: String,
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+    content: {
+        type: String,
+        trim: true,
+    },
+    images: [{
+        type: Schema.Types.ObjectId,
+        default: [],
+        ref: "Image",
+    }],
+    gif: String,
+    files: [{
+        type: Schema.Types.ObjectId,
+        default: [],
+        ref: "File",
+    }],
+    quiz: [{
+        type: Schema.Types.ObjectId,
+        ref: "Quiz",
+    }],
     upvotes: [Schema.Types.ObjectId],
     downvotes: [Schema.Types.ObjectId],
 }, {

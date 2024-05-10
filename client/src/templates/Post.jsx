@@ -15,7 +15,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
                     <Avatar className="no-image" src={post.author.profilePicture} />
                 </Link>
 
-                <PostMenu post={post} />
+                <PostMenu type="post" post={post} />
 
                 <Stack gap={0} pos="relative" style={{ flex: 1 }}>
                     <Group mb={2} pr={32} gap={4}>

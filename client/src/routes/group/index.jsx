@@ -161,11 +161,11 @@ export default function Group() {
                     {data.name}
                 </Text>
 
-                <Text mt="sm">
+                <Text mt="sm" style={{ lineHeight: 1.4 }}>
                     {data.description}
                 </Text>
 
-                <Flex gap={4}>
+                <Flex gap={4} mt={4}>
                     {data.isPrivate ?
                         <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
                         : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
@@ -217,6 +217,8 @@ export default function Group() {
 }
 
 function Posts({ groupId, owner }) {
+    const userId = useSelector(state => state.user?._id);
+
     const fetchPosts = async () => {
         const response = await axios.get(`/api/group/${groupId}/posts`)
         return response.data
@@ -229,7 +231,9 @@ function Posts({ groupId, owner }) {
 
     return (
         <>
-            <CreatePost groupId={groupId} />
+            {userId &&
+                <CreatePost groupId={groupId} />
+            }
 
             {status === "pending" ? (
                 <div className="loader-center-x">
