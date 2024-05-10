@@ -1,4 +1,4 @@
-import { getObject, uploadImage } from "../middleware/s3.js";
+import { getObject, uploadImage } from "../utils/s3.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";

@@ -1,10 +1,11 @@
-import { deleteObject, getObject, uploadFile, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadFile, uploadImage } from "../utils/s3.js";
+import { getPostUtil } from "../utils/utils.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import Group from "../models/Group.js";
-import axios from "axios";
 import Image from "../models/Image.js";
 import File from "../models/File.js";
+import axios from "axios";
 
 // CREATE
 export const createPost = async (req, res) => {
@@ -95,22 +96,7 @@ export const getFeedPosts = async (req, res) => {
 
         const cache = {}
         for (const post of posts) {
-            if (!cache[post.author._id]) {
-                cache[post.author._id] = await getObject(post.author.profilePicture);
-            }
-            post.author.profilePicture = cache[post.author._id];
-
-            for (const image of post.images) {
-                image.thumbnail = await getObject(image.thumbnail);
-                image.large = await getObject(image.large);
-            }
-
-            for (const file of post.files) {
-                file.file = await getObject(file.file);
-            }
-
-            const comments = await Comment.find({ postId: post._id });
-            post.comments = comments.length;
+            await getPostUtil(post, cache);
         }
 
         res.status(200).json(posts);
@@ -128,19 +114,7 @@ export const getPost = async (req, res) => {
             .populate("files", "file name size")
             .lean();
 
-        post.author.profilePicture = await getObject(post.author.profilePicture);
-
-        for (const image of post.images) {
-            image.thumbnail = await getObject(image.thumbnail);
-            image.large = await getObject(image.large);
-        }
-
-        for (const file of post.files) {
-            file.file = await getObject(file.file);
-        }
-
-        const comments = await Comment.find({ postId: post._id });
-        post.comments = comments.length;
+        await getPostUtil(post);
 
         res.status(200).json(post);
     } catch (err) {

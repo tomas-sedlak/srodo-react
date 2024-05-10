@@ -1,4 +1,5 @@
-import { deleteObject, getObject, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
+import { getPostUtil } from "../utils/utils.js";
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
@@ -68,24 +69,9 @@ export const getGroupPosts = async (req, res) => {
             .lean();
 
         // Loading images from s3 bucket using memoization to improve performance
-        const cache = {}
+        const cache = {};
         for (const post of posts) {
-            if (!cache[post.author._id]) {
-                cache[post.author._id] = await getObject(post.author.profilePicture);
-            }
-            post.author.profilePicture = cache[post.author._id];
-
-            for (const image of post.images) {
-                image.thumbnail = await getObject(image.thumbnail);
-                image.large = await getObject(image.large);
-            }
-
-            for (const file of post.files) {
-                file.file = await getObject(file.file);
-            }
-
-            const comments = await Comment.find({ postId: post._id });
-            post.comments = comments.length;
+            await getPostUtil(post, cache);
         }
 
         res.status(200).json(posts);

@@ -1,4 +1,4 @@
-import { deleteObject, getObject, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
