@@ -70,11 +70,11 @@ export default function Post() {
                 }
 
                 {data.files.length > 0 &&
-                    <Group mt="sm" gap={4}>
+                    <Stack mt="sm" gap={4}>
                         {data.files.map(file =>
                             <DownloadFile file={file} />
                         )}
-                    </Group>
+                    </Stack>
                 }
 
                 <PostButtons mt="sm" post={data} />

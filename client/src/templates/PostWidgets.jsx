@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import { modals } from "@mantine/modals";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 export function PostButtons(props) {
     const { post } = props;

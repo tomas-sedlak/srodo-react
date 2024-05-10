@@ -62,11 +62,11 @@ const Post = forwardRef(({ post, owner }, ref) => {
                     }
 
                     {post.files.length > 0 &&
-                        <Group mt={8} gap={4}>
+                        <Stack mt={8} gap={4}>
                             {post.files.map(file =>
                                 <DownloadFile file={file} />
                             )}
-                        </Group>
+                        </Stack>
                     }
 
                     <PostButtons mt={8} post={post} />
