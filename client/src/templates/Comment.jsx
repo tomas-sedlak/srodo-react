@@ -88,7 +88,7 @@ export default function Comment({ data }) {
                 {data.images.length > 0 &&
                     <Stack mt={8} gap={4}>
                         {data.images.map(image =>
-                            <Image radius="lg" src={image.thumbnail} />
+                            <Image key={image.thumbnail} radius="lg" src={image.thumbnail} />
                         )}
                     </Stack>
                 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActionIcon, Group, Menu, Stack, Text } from "@mantine/core"
 import { IconDownload, IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react"
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,8 +15,8 @@ export function PostButtons(props) {
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
 
-    const [likes, setLikes] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
+    const [likes, setLikes] = useState(post.likes.length);
+    const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
 
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -29,11 +29,6 @@ export function PostButtons(props) {
             `/api/post/${post._id}/like`, {}, { headers },
         )
     }
-
-    useEffect(() => {
-        setLikes(post.likes.length)
-        setIsLiked(post.likes.includes(userId))
-    }, [post])
 
     return (
         <Group gap={4} {...props}>
@@ -148,7 +143,7 @@ function getSize(size) {
 
 export function DownloadFile({ file }) {
     return (
-        <a href={file.file} download={file.name}>
+        <a key={file._id} href={file.file} download={file.name}>
             <Group gap="xs" wrap="nowrap" className="file-download">
                 <IconDownload stroke={1.25} />
 

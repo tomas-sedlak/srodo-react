@@ -9,7 +9,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
 
     const postContent = (
-        <Link to={postUrl}>
+        <Link to={postUrl} key={post._id}>
             <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
                 <Link to={authorUrl}>
                     <Avatar className="no-image" src={post.author.profilePicture} />
@@ -56,7 +56,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
                     {post.images.length > 0 &&
                         <Stack mt={8} gap={4}>
                             {post.images.map(image =>
-                                <Image radius="lg" src={image.thumbnail} />
+                                <Image key={image.thumbnail} radius="lg" src={image.thumbnail} />
                             )}
                         </Stack>
                     }

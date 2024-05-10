@@ -77,7 +77,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                 {images.length > 0 &&
                     <Stack mt={8} gap={4}>
                         {images.map(image =>
-                            <Image radius="lg" src={URL.createObjectURL(image)} />
+                            <Image key={image.originalname} radius="lg" src={URL.createObjectURL(image)} />
                         )}
                     </Stack>
                 }
