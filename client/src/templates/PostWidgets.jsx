@@ -152,8 +152,8 @@ export function DownloadFile({ file }) {
             <Group gap="xs" wrap="nowrap" className="file-download">
                 <IconDownload stroke={1.25} />
 
-                <Stack gap={4}>
-                    <Text size="sm" fw={600} style={{ lineHeight: 1 }}>{file.name}</Text>
+                <Stack gap={4} style={{ flex: 1 }}>
+                    <Text size="sm" fw={600} style={{ lineHeight: 1, wordBreak: "break-all" }}>{file.name}</Text>
                     <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>{getSize(file.size)}</Text>
                 </Stack>
             </Group>

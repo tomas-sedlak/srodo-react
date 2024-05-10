@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, Image, FileButton, Box } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, Image, FileButton, Box, Stack } from "@mantine/core";
 import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -60,7 +60,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
     }
 
     return (
-        <Group px="md" py="sm" gap="xs" align="Group-start" className="border-bottom">
+        <Group px="md" py="sm" gap="xs" align="Group-start" wrap="nowrap" className="border-bottom">
             <Avatar mt={3} className="no-image" src={profilePicture} />
 
             <Box style={{ flex: 1 }}>
@@ -75,17 +75,19 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                 />
 
                 {images.length > 0 &&
-                    images.map(image =>
-                        <Image radius="lg" src={URL.createObjectURL(image)} />
-                    )
+                    <Stack mt={8} gap={4}>
+                        {images.map(image =>
+                            <Image radius="lg" src={URL.createObjectURL(image)} />
+                        )}
+                    </Stack>
                 }
 
                 {files.length > 0 &&
-                    <Group gap={8}>
+                    <Stack mt={8} gap={4}>
                         {files.map(file =>
                             <DownloadFile file={file} />
                         )}
-                    </Group>
+                    </Stack>
                 }
 
                 <Group

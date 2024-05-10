@@ -1,5 +1,7 @@
-import { uploadImage } from "../utils/s3.js";
+import { uploadFile, uploadImage } from "../utils/s3.js";
 import Comment from "../models/Comment.js";
+import Image from "../models/Image.js";
+import File from "../models/File.js";
 
 // CREATE
 export const createComment = async (req, res) => {

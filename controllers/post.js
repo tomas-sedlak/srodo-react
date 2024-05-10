@@ -110,6 +110,9 @@ export const getPostComments = async (req, res) => {
         const comments = await Comment.find({ postId })
             .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture")
+            .populate("images", "thumbnail large")
+            .populate("files", "file name size")
+            .lean();
 
         comments.sort((a, b) => {
             return (b.upvotes.length - b.downvotes.length) - (a.upvotes.length - a.downvotes.length);
@@ -117,10 +120,7 @@ export const getPostComments = async (req, res) => {
 
         const cache = {}
         for (const comment of comments) {
-            if (!cache[comment.author._id]) {
-                cache[comment.author._id] = await getObject(comment.author.profilePicture);
-            }
-            comment.author.profilePicture = cache[comment.author._id];
+            await getPostUtil(comment, cache);
         }
 
         res.status(200).json(comments);
