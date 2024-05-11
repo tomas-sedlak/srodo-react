@@ -180,7 +180,7 @@ export default function Group() {
                                 <Link to={`/${member.username}`} key={member._id}>
                                     <Avatar
                                         className="no-image"
-                                        src={member.profilePicture}
+                                        src={member.profilePicture && member.profilePicture.thumbnail}
                                         style={{ outline: "var(--mantine-color-body) solid 2px" }}
                                     />
                                 </Link>
