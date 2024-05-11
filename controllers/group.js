@@ -17,11 +17,20 @@ export const createGroup = async (req, res) => {
         } = req.body;
 
         // Upload images to s3 bucket
-        const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 1080, 360);
+        let coverImage = null;
+        if (req.files.coverImage) {
+            coverImage = await uploadImage(req.files.coverImage[0], 1080, 360);
+        } else if (req.body.coverImage) {
+            coverImage = await uploadImage(req.body.coverImage, 1080, 360);
+        }
+        
         let profilePicture = {};
         if (req.files.profilePicture) {
             profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
             profilePicture.large = await uploadImage(req.files.profilePicture[0], 400, 400);
+        } else if (req.body.profilePicture) {
+            profilePicture.thumbnail = await uploadImage(req.body.profilePicture, 76, 76);
+            profilePicture.large = await uploadImage(req.body.profilePicture, 400, 400);
         }
 
         const group = await Group.create({

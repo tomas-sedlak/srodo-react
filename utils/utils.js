@@ -24,6 +24,7 @@ export const getPostUtil = async (post, cache = {}) => {
 }
 
 export const getProfilePicture = async (profilePicture) => {
+    if (!profilePicture) return;
     profilePicture.thumbnail = await getObject(profilePicture.thumbnail);
     profilePicture.large = await getObject(profilePicture.large);
 }
