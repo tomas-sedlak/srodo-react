@@ -18,11 +18,11 @@ import postRoutes from "./routes/post.js";
 import commentRoutes from "./routes/comment.js";
 
 // CONTROLLERS
-import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/post.js";
-import { verifyToken } from "./middleware/auth.js";
+import { createComment } from "./controllers/comment.js";
 import { createGroup } from "./controllers/group.js";
 import { updateUserSettings } from "./controllers/user.js";
+import { verifyToken } from "./middleware/auth.js";
 
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
@@ -50,8 +50,8 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // ROUTES WITH FILES
-app.post("/api/auth/register", upload.single("profilePicture"), register);
 app.post("/api/post", verifyToken, upload.fields([{ name: "images", maxCount: 4 }, { name: "files", maxCount: 4 }]), createPost);
+app.post("/api/comment", verifyToken, upload.fields([{ name: "images", maxCount: 4 }, { name: "files", maxCount: 4 }]), createComment);
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 

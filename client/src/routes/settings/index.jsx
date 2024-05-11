@@ -129,7 +129,7 @@ export default function Settings() {
                 setImage={setCoverImage}
                 columns={2}
                 aspectRatio={6 / 2}
-                qkey="coverImage"
+                qkey="settingsCoverImage"
             />
 
             <ImagesModal
@@ -138,7 +138,7 @@ export default function Settings() {
                 setImage={setProfilePicture}
                 columns={3}
                 aspectRatio={1 / 1}
-                qkey="profilePicture"
+                qkey="settingsProfilePicture"
             />
 
             <Modal
@@ -277,7 +277,7 @@ export default function Settings() {
 
                 <AspectRatio ratio={6 / 2}  >
                     {user.coverImage || coverImage ?
-                        <Image src={coverImage ? URL.createObjectURL(coverImage) : user.coverImage} />
+                        <Image src={coverImage ? typeof coverImage === "string" ? coverImage : URL.createObjectURL(coverImage) : user.coverImage} />
                         : <Box className="no-image"></Box>
                     }
                 </AspectRatio>
@@ -288,7 +288,7 @@ export default function Settings() {
                     <Avatar
                         size="xl"
                         className="no-image"
-                        src={profilePicture ? URL.createObjectURL(profilePicture) : user.profilePicture}
+                        src={profilePicture ? typeof profilePicture === "string" ? profilePicture : URL.createObjectURL(profilePicture) : user.profilePicture.large}
                     />
 
                     <Button

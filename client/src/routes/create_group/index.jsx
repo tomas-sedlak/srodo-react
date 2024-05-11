@@ -102,6 +102,7 @@ export default function CreateGroup() {
                 setImage={setCoverImage}
                 columns={isMobile ? 1 : 2}
                 aspectRatio={6 / 2}
+                qkey="groupCoverImage"
             />
 
             <ImagesModal
@@ -110,6 +111,7 @@ export default function CreateGroup() {
                 setImage={setProfilePicture}
                 columns={isMobile ? 2 : 3}
                 aspectRatio={1 / 1}
+                qkey="groupProfilePicture"
             />
 
             <Tabs
@@ -156,7 +158,7 @@ export default function CreateGroup() {
 
                         <AspectRatio ratio={6 / 2}>
                             {data.coverImage ?
-                                <Image src={URL.createObjectURL(data.coverImage)} />
+                                <Image src={typeof data.coverImage === "string" ? data.coverImage : URL.createObjectURL(data.coverImage)} />
                                 : <Box className="no-image"></Box>
                             }
                         </AspectRatio>
@@ -167,7 +169,7 @@ export default function CreateGroup() {
                             <Avatar
                                 size="xl"
                                 className="no-image"
-                                src={data.profilePicture && URL.createObjectURL(data.profilePicture)}
+                                src={data.profilePicture && (typeof data.profilePicture === "string" ? data.profilePicture : URL.createObjectURL(data.profilePicture))}
                             />
 
                             <Button

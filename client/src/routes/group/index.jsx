@@ -89,12 +89,12 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
-                    src={data.profilePicture}
+                    src={data.profilePicture && data.profilePicture.large}
                 />
             </div>
 
             <Flex px="md" h={profilePictureSize / 2} gap={8} justify="flex-end" align="center">
-                {data.owner._id == userId ?
+                {data.owner == userId ?
                     <Button
                         variant="default"
                         leftSection={<IconPencil stroke={1.25} />}
@@ -128,7 +128,7 @@ export default function Group() {
                         </Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        {data.owner._id == userId ?
+                        {data.owner == userId ?
                             <Menu.Item
                                 leftSection={<IconTrash stroke={1.25} />}
                                 color="red"
@@ -161,11 +161,11 @@ export default function Group() {
                     {data.name}
                 </Text>
 
-                <Text mt="sm">
+                <Text mt="sm" style={{ lineHeight: 1.4 }}>
                     {data.description}
                 </Text>
 
-                <Flex gap={4}>
+                <Flex gap={4} mt={4}>
                     {data.isPrivate ?
                         <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
                         : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
@@ -180,7 +180,7 @@ export default function Group() {
                                 <Link to={`/${member.username}`} key={member._id}>
                                     <Avatar
                                         className="no-image"
-                                        src={member.profilePicture}
+                                        src={member.profilePicture && member.profilePicture.thumbnail}
                                         style={{ outline: "var(--mantine-color-body) solid 2px" }}
                                     />
                                 </Link>
@@ -217,6 +217,8 @@ export default function Group() {
 }
 
 function Posts({ groupId, owner }) {
+    const userId = useSelector(state => state.user?._id);
+
     const fetchPosts = async () => {
         const response = await axios.get(`/api/group/${groupId}/posts`)
         return response.data
@@ -229,7 +231,9 @@ function Posts({ groupId, owner }) {
 
     return (
         <>
-            <CreatePost groupId={groupId} />
+            {userId &&
+                <CreatePost groupId={groupId} />
+            }
 
             {status === "pending" ? (
                 <div className="loader-center-x">
@@ -311,7 +315,7 @@ function Members({ groupId, owner }) {
                     }
 
                     {data.map(member =>
-                        <UserProfile user={member} badge={member._id === owner._id && "Admin"} />
+                        <UserProfile user={member} badge={member._id === owner && "Admin"} />
                     )}
                 </>
             )}
@@ -323,7 +327,7 @@ function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
-                <Avatar className="no-image" src={user.profilePicture} />
+                <Avatar className="no-image" src={user.profilePicture.thumbnail} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
                     <Flex gap={4} align="center">

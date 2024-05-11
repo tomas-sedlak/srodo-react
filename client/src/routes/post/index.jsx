@@ -32,7 +32,7 @@ export default function Post() {
             <Box py="sm" px="md" pos="relative" className="border-bottom">
                 <Group gap="xs">
                     <Link to={`/${data.author.username}`}>
-                        <Avatar src={data.author.profilePicture} />
+                        <Avatar src={data.author.profilePicture.thumbnail} />
                     </Link>
 
                     <Stack gap={4} pr={32} style={{ flex: 1 }}>
@@ -57,21 +57,24 @@ export default function Post() {
 
                 <PostMenu post={data} />
 
-                <Box mt="sm" style={{ whiteSpace: "pre-line" }}>
+                <Box mt="sm" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
                     {data.content}
                 </Box>
 
                 {data.images.length > 0 &&
-                    data.images.map(image =>
-                        <Image mt="sm" radius="lg" src={image.large} />
-                    )}
+                    <Stack mt="sm" gap={4}>
+                        {data.images.map(image =>
+                            <Image radius="lg" src={image.large} />
+                        )}
+                    </Stack>
+                }
 
                 {data.files.length > 0 &&
-                    <Group mt="sm" gap={8}>
+                    <Stack mt="sm" gap={4}>
                         {data.files.map(file =>
                             <DownloadFile file={file} />
                         )}
-                    </Group>
+                    </Stack>
                 }
 
                 <PostButtons mt="sm" post={data} />

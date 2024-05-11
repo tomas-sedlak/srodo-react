@@ -1,4 +1,5 @@
-import { deleteObject, getObject, uploadImage } from "../middleware/s3.js";
+import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
+import { getPostUtil, getProfilePicture } from "../utils/utils.js";
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
@@ -16,8 +17,21 @@ export const createGroup = async (req, res) => {
         } = req.body;
 
         // Upload images to s3 bucket
-        const coverImage = req.files.coverImage && await uploadImage(req.files.coverImage[0], 800, 400);
-        const profilePicture = req.files.profilePicture && await uploadImage(req.files.profilePicture[0], 128, 128);
+        let coverImage = null;
+        if (req.files.coverImage) {
+            coverImage = await uploadImage(req.files.coverImage[0], 1080, 360);
+        } else if (req.body.coverImage) {
+            coverImage = await uploadImage(req.body.coverImage, 1080, 360);
+        }
+        
+        let profilePicture = {};
+        if (req.files.profilePicture) {
+            profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
+            profilePicture.large = await uploadImage(req.files.profilePicture[0], 400, 400);
+        } else if (req.body.profilePicture) {
+            profilePicture.thumbnail = await uploadImage(req.body.profilePicture, 76, 76);
+            profilePicture.large = await uploadImage(req.body.profilePicture, 400, 400);
+        }
 
         const group = await Group.create({
             coverImage,
@@ -40,15 +54,14 @@ export const getGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
         const group = await Group.findById(groupId)
-            .populate("owner", "username displayName profilePicture")
-            .populate("members", "username displayName profilePicture");
+            .populate("members", "username displayName profilePicture")
+            .lean();
 
         // Load images from s3 bucket
         group.coverImage = await getObject(group.coverImage);
-        group.profilePicture = await getObject(group.profilePicture);
-        group.owner.profilePicture = await getObject(group.owner.profilePicture);
+        await getProfilePicture(group.profilePicture);
         for (const member of group.members) {
-            member.profilePicture = await getObject(member.profilePicture);
+            await getProfilePicture(member.profilePicture);
         }
 
         res.status(200).json(group);
@@ -68,24 +81,9 @@ export const getGroupPosts = async (req, res) => {
             .lean();
 
         // Loading images from s3 bucket using memoization to improve performance
-        const cache = {}
+        const cache = {};
         for (const post of posts) {
-            if (!cache[post.author._id]) {
-                cache[post.author._id] = await getObject(post.author.profilePicture);
-            }
-            post.author.profilePicture = cache[post.author._id];
-
-            for (const image of post.images) {
-                image.thumbnail = await getObject(image.thumbnail);
-                image.large = await getObject(image.large);
-            }
-
-            for (const file of post.files) {
-                file.file = await getObject(file.file);
-            }
-
-            const comments = await Comment.find({ postId: post._id });
-            post.comments = comments.length;
+            await getPostUtil(post, cache);
         }
 
         res.status(200).json(posts);
@@ -118,7 +116,7 @@ export const getGroupMembers = async (req, res) => {
 
         // Load images from s3 bucket
         for (const member of members) {
-            member.profilePicture = await getObject(member.profilePicture);
+            await getProfilePicture(member.profilePicture);
         }
 
         res.status(200).json(members);
@@ -129,11 +127,11 @@ export const getGroupMembers = async (req, res) => {
 
 export const getGroupSuggestions = async (req, res) => {
     try {
-        const groups = await Group.find();
+        const groups = await Group.find().lean();
 
         // Load images from s3 bucket
         for (const group of groups) {
-            group.profilePicture = await getObject(group.profilePicture);
+            await getProfilePicture(group.profilePicture);
         }
 
         res.status(200).json(groups);
@@ -185,8 +183,9 @@ export const deleteGroup = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
-        await deleteObject(group.profilePicture);
         await deleteObject(group.coverImage);
+        await deleteObject(group.profilePicture.thumbnail);
+        await deleteObject(group.profilePicture.large);
         await Group.findByIdAndDelete(groupId);
 
         res.sendStatus(200);

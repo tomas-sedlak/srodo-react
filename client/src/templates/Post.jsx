@@ -9,22 +9,22 @@ const Post = forwardRef(({ post, owner }, ref) => {
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
 
     const postContent = (
-        <Link to={postUrl}>
-            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" className="border-bottom">
+        <Link to={postUrl} key={post._id}>
+            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
                 <Link to={authorUrl}>
-                    <Avatar className="no-image" src={post.author.profilePicture} />
+                    <Avatar className="no-image" src={post.author.profilePicture && post.author.profilePicture.thumbnail} />
                 </Link>
 
-                <PostMenu post={post} />
+                <PostMenu type="post" post={post} />
 
                 <Stack gap={0} pos="relative" style={{ flex: 1 }}>
-                    <Group mb={2} gap={4}>
+                    <Group mb={2} pr={32} gap={4}>
                         <Link to={"/" + post.author.username}>
                             <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                                 {post.author.displayName}
                             </Text>
                         </Link>
-                        {owner && post.author._id === owner._id &&
+                        {post.author._id === owner &&
                             <Badge variant="light" size="xs">Admin</Badge>
                         }
                         <Link to={"/" + post.author.username}>
@@ -48,22 +48,25 @@ const Post = forwardRef(({ post, owner }, ref) => {
                             control: { color: "var(--mantine-color-dimmed)" },
                         }}
                     >
-                        <div style={{ whiteSpace: "pre-line" }}>
+                        <div style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
                             {post.content}
                         </div>
                     </Spoiler>
 
                     {post.images.length > 0 &&
-                        post.images.map(image =>
-                            <Image mt={8} radius="lg" src={image.thumbnail} />
-                        )}
+                        <Stack mt={8} gap={4}>
+                            {post.images.map(image =>
+                                <Image key={image.thumbnail} radius="lg" src={image.thumbnail} />
+                            )}
+                        </Stack>
+                    }
 
                     {post.files.length > 0 &&
-                        <Group mt={8} gap={8}>
+                        <Stack mt={8} gap={4}>
                             {post.files.map(file =>
                                 <DownloadFile file={file} />
                             )}
-                        </Group>
+                        </Stack>
                     }
 
                     <PostButtons mt={8} post={post} />

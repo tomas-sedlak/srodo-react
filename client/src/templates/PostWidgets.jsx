@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import { modals } from "@mantine/modals";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 export function PostButtons(props) {
     const { post } = props;
@@ -32,7 +31,7 @@ export function PostButtons(props) {
     }
 
     return (
-        <Group gap={8} {...props}>
+        <Group gap={4} {...props}>
             <div
                 className={`icon-wrapper ${isLiked ? "like-selected" : "like"}`}
                 onClick={event => {
@@ -70,8 +69,8 @@ export function PostMenu(props) {
     }
 
     const deletePost = async () => {
-        await axios.delete(`/api/post/${post._id}`, { headers });
-        queryClient.invalidateQueries("posts");
+        await axios.delete(`/api/${props.type}/${post._id}`, { headers });
+        queryClient.invalidateQueries(props.type);
     }
 
     return (
@@ -99,9 +98,6 @@ export function PostMenu(props) {
                         >
                             <Text fw={600} size="sm">Upraviť</Text>
                         </Menu.Item>
-
-                        <Menu.Divider />
-
                         <Menu.Item
                             color="red"
                             onClick={event => {
@@ -144,12 +140,12 @@ function getSize(size) {
 
 export function DownloadFile({ file }) {
     return (
-        <a href={file.file} download={file.name}>
-            <Group gap="xs" className="file-download">
+        <a key={file._id} href={file.file} download={file.name}>
+            <Group gap="xs" wrap="nowrap" className="file-download">
                 <IconDownload stroke={1.25} />
 
-                <Stack gap={4}>
-                    <Text fw={600} style={{ lineHeight: 1 }}>{file.name}</Text>
+                <Stack gap={4} style={{ flex: 1 }}>
+                    <Text size="sm" fw={600} style={{ lineHeight: 1, wordBreak: "break-all" }}>{file.name}</Text>
                     <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>{getSize(file.size)}</Text>
                 </Stack>
             </Group>

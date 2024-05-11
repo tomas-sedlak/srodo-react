@@ -1,19 +1,20 @@
 import { useState } from "react";
-import { ActionIcon, Avatar, Button, Group, Stack, Textarea, Tooltip, Image, FileButton } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, Image, FileButton, Box, Stack } from "@mantine/core";
 import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { DownloadFile } from "./PostWidgets";
+import axios from "axios";
 
-export default function CreatePost({ groupId }) {
+export default function CreatePost({ groupId, postId, opened = true }) {
     const queryClient = useQueryClient();
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
     const [files, setFiles] = useState([]);
-    const [isPublishing, setIsPuhlishing] = useState(false)
-    const profilePicture = useSelector(state => state.user?.profilePicture);
+    const [isInputOpened, setIsInputOpened] = useState(opened);
+    const [isPublishing, setIsPuhlishing] = useState(false);
 
+    const profilePicture = useSelector(state => state.user?.profilePicture);
     const token = useSelector(state => state.token);
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -23,6 +24,7 @@ export default function CreatePost({ groupId }) {
         setContent("")
         setImages([])
         setFiles([])
+        setIsInputOpened(opened)
     }
 
     const isValid = () => {
@@ -32,100 +34,116 @@ export default function CreatePost({ groupId }) {
     const publish = async () => {
         setIsPuhlishing(true)
 
-        const formData = new FormData()
-        formData.append("groupId", groupId)
-        formData.append("content", content)
-        for (const image of images) {
-            formData.append("images", image)
-        }
-        for (const file of files) {
-            formData.append("files", file)
-        }
+        try {
+            const formData = new FormData()
+            groupId && formData.append("groupId", groupId)
+            postId && formData.append("postId", postId)
+            formData.append("content", content)
+            for (const image of images) {
+                formData.append("images", image)
+            }
+            for (const file of files) {
+                formData.append("files", file)
+            }
 
-        await axios.post("/api/post", formData, { headers })
+            groupId && await axios.post("/api/post", formData, { headers })
+            postId && await axios.post("/api/comment", formData, { headers })
 
-        clear()
-        queryClient.invalidateQueries("posts")
+            clear()
+            groupId && queryClient.invalidateQueries("posts")
+            postId && queryClient.invalidateQueries("comments")
+        } catch (err) {
+            console.log(err.message)
+        }
 
         setIsPuhlishing(false)
     }
 
     return (
-        <Group px="md" py="sm" gap="xs" align="Group-start" className="border-bottom">
-            <Avatar mt={3} className="no-image" src={profilePicture} />
+        <Group px="md" py="sm" gap="xs" align="Group-start" wrap="nowrap" className="border-bottom">
+            <Avatar mt={3} className="no-image" src={profilePicture && profilePicture.thumbnail} />
 
-            <Stack gap={8} style={{ flex: 1 }}>
+            <Box style={{ flex: 1 }}>
                 <Textarea
-                    // variant="unstyled"
                     minRows={1}
                     autosize
                     size="md"
                     placeholder="Napíš niečo..."
                     value={content}
+                    onClick={() => setIsInputOpened(true)}
                     onChange={event => setContent(event.target.value)}
                 />
 
                 {images.length > 0 &&
-                    images.map(image =>
-                        <Image radius="lg" src={URL.createObjectURL(image)} />
-                    )
+                    <Stack mt={8} gap={4}>
+                        {images.map(image =>
+                            <Image key={image.originalname} radius="lg" src={URL.createObjectURL(image)} />
+                        )}
+                    </Stack>
                 }
 
                 {files.length > 0 &&
-                    <Group gap={8}>
+                    <Stack mt={8} gap={4}>
                         {files.map(file =>
                             <DownloadFile file={file} />
                         )}
-                    </Group>
+                    </Stack>
                 }
 
-                <Group justify="space-between" align="center">
+                <Group
+                    justify="space-between"
+                    gap={4}
+                    mt={isInputOpened && 8}
+                    mah={isInputOpened ? 36 : 0}
+                    style={{
+                        transition: "max-height 0.15s ease",
+                        overflow: "hidden"
+                    }}
+                >
                     <Group gap={8}>
-                        <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
-                            <FileButton onChange={setImages} multiple accept="image/png,image/jpeg">
-                                {props =>
+                        <FileButton onChange={setImages} multiple accept="image/png,image/jpeg">
+                            {props =>
+                                <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
                                     <ActionIcon
                                         variant="transparent"
                                         color="gray"
-                                        radius="xl"
                                         {...props}
                                     >
                                         <IconPhoto stroke={1.25} />
                                     </ActionIcon>
-                                }
-                            </FileButton>
-                        </Tooltip>
+                                </Tooltip>
+                            }
+                        </FileButton>
 
                         <Tooltip label="GIF" position="bottom" openDelay={500} withArrow>
                             <ActionIcon
                                 variant="transparent"
                                 color="gray"
-                                radius="xl"
+                                disabled
                             >
                                 <IconGif stroke={1.25} />
                             </ActionIcon>
                         </Tooltip>
 
-                        <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
-                            <FileButton onChange={setFiles} multiple accept="text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
-                                {props =>
+                        <FileButton onChange={setFiles} multiple accept="text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
+                            {props =>
+                                <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
                                     <ActionIcon
                                         variant="transparent"
                                         color="gray"
-                                        radius="xl"
                                         {...props}
                                     >
                                         <IconPaperclip stroke={1.25} />
                                     </ActionIcon>
-                                }
-                            </FileButton>
-                        </Tooltip>
+                                </Tooltip>
+                            }
+                        </FileButton>
 
                         <Tooltip label="Kvíz" position="bottom" openDelay={500} withArrow>
                             <ActionIcon
                                 variant="transparent"
                                 color="gray"
-                                radius="xl"
+                                disabled
                             >
                                 <IconCopyCheck stroke={1.25} />
                             </ActionIcon>
@@ -140,7 +158,7 @@ export default function CreatePost({ groupId }) {
                         Publikovať
                     </Button>
                 </Group>
-            </Stack>
+            </Box>
         </Group>
     )
 }
