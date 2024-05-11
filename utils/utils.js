@@ -3,10 +3,7 @@ import Comment from "../models/Comment.js";
 
 export const getPostUtil = async (post, cache = {}) => {
     if (!cache[post.author._id]) {
-        cache[post.author._id] = {
-            thumbnail: await getObject(post.author.profilePicture.thumbnail),
-            large: await getObject(post.author.profilePicture.large),
-        };
+        cache[post.author._id] = await getProfilePicture(post.author.profilePicture);
     }
     post.author.profilePicture = cache[post.author._id];
 
@@ -27,4 +24,5 @@ export const getProfilePicture = async (profilePicture) => {
     if (!profilePicture) return;
     profilePicture.thumbnail = await getObject(profilePicture.thumbnail);
     profilePicture.large = await getObject(profilePicture.large);
+    return profilePicture
 }
