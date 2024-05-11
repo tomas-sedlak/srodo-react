@@ -288,7 +288,7 @@ export default function Settings() {
                     <Avatar
                         size="xl"
                         className="no-image"
-                        src={profilePicture ? typeof profilePicture === "string" ? profilePicture : URL.createObjectURL(profilePicture) : user.profilePicture.large}
+                        src={profilePicture ? typeof profilePicture === "string" ? profilePicture : URL.createObjectURL(profilePicture) : user.profilePicture && user.profilePicture.large}
                     />
 
                     <Button

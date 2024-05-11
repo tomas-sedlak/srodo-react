@@ -46,7 +46,7 @@ export default function User() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
-                    src={data.user.profilePicture.large}
+                    src={data.user.profilePicture && data.user.profilePicture.large}
                 />
             </div>
 

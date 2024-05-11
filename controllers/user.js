@@ -61,6 +61,8 @@ export const getUserPosts = async (req, res) => {
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture")
+            .populate("images", "thumbnail large")
+            .populate("files", "file name size")
             .lean();
 
         // Load images from s3 bucket
@@ -96,6 +98,8 @@ export const getUserFavourites = async (req, res) => {
         const { userId } = req.params;
         const posts = await Post.find({ likes: userId })
             .populate("author", "username displayName profilePicture")
+            .populate("images", "thumbnail large")
+            .populate("files", "file name size")
             .lean();
 
         // Load images from s3 bucket
