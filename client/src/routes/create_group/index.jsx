@@ -235,7 +235,7 @@ export default function CreateGroup() {
                             />
                             <Text>Súkromná skupina</Text>
                         </Group>
-                        <Text mt={4} size="xs" c="dimmed">Ak je skupina súkromna, príspevky budú vidieť iba pozvaný používatelia</Text>
+                        <Text mt={4} size="xs" c="dimmed">Ak je skupina súkromná, príspevky budú vidieť iba pozvaní používatelia</Text>
 
                         <Group mt="md">
                             <Button
