@@ -32,7 +32,7 @@ export default function Post() {
             <Box py="sm" px="md" pos="relative" className="border-bottom">
                 <Group gap="xs">
                     <Link to={`/${data.author.username}`}>
-                        <Avatar src={data.author.profilePicture} />
+                        <Avatar src={data.author.profilePicture.thumbnail} />
                     </Link>
 
                     <Stack gap={4} pr={32} style={{ flex: 1 }}>

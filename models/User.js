@@ -25,7 +25,8 @@ const userSchema = new Schema({
         max: 32,
     },
     profilePicture: {
-        type: String,
+        thumbnail: String,
+        large: String,
         // default: "/images/default_profile.jpg",
     },
     coverImage: {

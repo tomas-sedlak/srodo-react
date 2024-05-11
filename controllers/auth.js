@@ -1,9 +1,10 @@
-import { getObject, uploadImage } from "../utils/s3.js";
+import { uploadImage } from "../utils/s3.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
+import { getProfilePicture } from "../utils/utils.js";
 
 // REGISTER USER
 export const register = async (req, res) => {
@@ -42,7 +43,7 @@ export const login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials." });
 
         // Load images from s3 bucket
-        user.profilePicture = await getObject(user.profilePicture);
+        await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;
@@ -69,12 +70,18 @@ export const google = async (req, res) => {
         if (!user) {
             const username = generateUsername();
             const displayName = response.data.name;
-            const profilePicture = await uploadImage(response.data.picture);
+            const profilePicture = {
+                thumbnail: await uploadImage(response.data.picture, 76, 76),
+                large: await uploadImage(response.data.picture, 400, 400),
+            };
 
             user = await User.create({
                 username, email, displayName, profilePicture
             })
         }
+
+        // Load images from s3 bucket
+        await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.status(200).json({ token, user });

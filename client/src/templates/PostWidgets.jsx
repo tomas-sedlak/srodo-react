@@ -98,9 +98,6 @@ export function PostMenu(props) {
                         >
                             <Text fw={600} size="sm">Upraviť</Text>
                         </Menu.Item>
-
-                        <Menu.Divider />
-
                         <Menu.Item
                             color="red"
                             onClick={event => {

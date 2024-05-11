@@ -47,7 +47,7 @@ export default function Comment({ data }) {
     return (
         <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
             <Link to={`/${data.author.username}`}>
-                <Avatar className="no-image" src={data.author.profilePicture} />
+                <Avatar className="no-image" src={data.author.profilePicture.thumbnail} />
             </Link>
 
             <PostMenu type="comment" post={data} />

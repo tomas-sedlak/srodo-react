@@ -1,4 +1,5 @@
 import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
+import { getPostUtil, getProfilePicture } from "../utils/utils.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
@@ -16,7 +17,7 @@ export const getUser = async (req, res) => {
 
         // Load images from s3 bucket
         user.coverImage = await getObject(user.coverImage);
-        user.profilePicture = await getObject(user.profilePicture);
+        await getProfilePicture(user.profilePicture);
 
         res.status(200).json(user);
     } catch (err) {
@@ -41,11 +42,11 @@ export const getUnique = async (req, res) => {
 
 export const getUserSuggestions = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().lean();
 
         // Load images from s3 bucket
         for (const user of users) {
-            user.profilePicture = await getObject(user.profilePicture);
+            await getProfilePicture(user.profilePicture);
         }
 
         res.status(200).json(users);
@@ -57,24 +58,15 @@ export const getUserSuggestions = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-
-        const user = await User.findById(userId)
-            .select("username displayName profilePicture");
-
-        user.profilePicture = await getObject(user.profilePicture);
-
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
+            .populate("author", "username displayName profilePicture")
             .lean();
 
         // Load images from s3 bucket
+        let cache = {};
         for (const post of posts) {
-            post.author = user;
-
-            post.image = await getObject(post.image);
-
-            const comments = await Comment.find({ postId: post._id });
-            post.comments = comments.length;
+            await getPostUtil(post, cache);
         }
 
         res.status(200).json(posts);
@@ -90,7 +82,7 @@ export const getUserGroups = async (req, res) => {
 
         // Load images from s3 bucket
         for (const group of groups) {
-            group.profilePicture = await getObject(group.profilePicture);
+            await getProfilePicture(group.profilePicture);
         }
 
         res.status(200).json(groups);
@@ -109,15 +101,7 @@ export const getUserFavourites = async (req, res) => {
         // Load images from s3 bucket
         let cache = {};
         for (const post of posts) {
-            if (!cache[post.author._id]) {
-                cache[post.author._id] = await getObject(post.author.profilePicture);
-            }
-            post.author.profilePicture = cache[post.author._id];
-
-            post.image = await getObject(post.image);
-
-            const comments = await Comment.find({ postId: post._id });
-            post.comments = comments.length;
+            await getPostUtil(post, cache);
         }
 
         res.status(200).json(posts);
@@ -146,12 +130,14 @@ export const updateUserSettings = async (req, res) => {
         // Upload images to s3 bucket;
         if (req.files.coverImage) {
             await deleteObject(user.coverImage);
-            user.coverImage = await uploadImage(req.files.coverImage[0], 600, 200);
+            user.coverImage = await uploadImage(req.files.coverImage[0], 1080, 360);
         }
 
         if (req.files.profilePicture) {
-            await deleteObject(user.profilePicture)
-            user.profilePicture = await uploadImage(req.files.profilePicture[0], 128, 128);
+            await deleteObject(user.profilePicture.thumbnail);
+            await deleteObject(user.profilePicture.large);
+            user.profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
+            user.profilePicture.large = await uploadImage(req.files.profilePicture[0], 400, 400);
         }
 
         if (displayName) user.displayName = displayName;
@@ -161,7 +147,7 @@ export const updateUserSettings = async (req, res) => {
         await user.save();
 
         user.coverImage = await getObject(user.coverImage);
-        user.profilePicture = await getObject(user.profilePicture);
+        await getProfilePicture(user.profilePicture);
         res.status(200).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message })

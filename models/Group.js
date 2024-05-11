@@ -7,8 +7,8 @@ const groupSchema = new Schema({
         default: "",
     },
     profilePicture: {
-        type: String,
-        default: "",
+        thumbnail: String,
+        large: String,
     },
     name: {
         type: String,

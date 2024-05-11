@@ -89,7 +89,7 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
-                    src={data.profilePicture}
+                    src={data.profilePicture.large}
                 />
             </div>
 

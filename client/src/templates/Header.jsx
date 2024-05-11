@@ -78,12 +78,12 @@ export default function Header() {
 
                                 <Menu position="bottom-end" width={240}>
                                     <Menu.Target>
-                                        <Avatar className="pointer" src={user.profilePicture} />
+                                        <Avatar className="pointer" src={user.profilePicture.thumbnail} />
                                     </Menu.Target>
                                     <Menu.Dropdown>
                                         <Menu.Item
                                             onClick={() => navigate(`/${user.username}`)}
-                                            leftSection={<Avatar src={user.profilePicture} />}
+                                            leftSection={<Avatar src={user.profilePicture.thumbnail} />}
                                         >
                                             <Stack gap={4}>
                                                 <Text fw={700} size="sm" style={{ lineHeight: 1 }}>{user.displayName}</Text>

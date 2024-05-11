@@ -61,7 +61,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
 
     return (
         <Group px="md" py="sm" gap="xs" align="Group-start" wrap="nowrap" className="border-bottom">
-            <Avatar mt={3} className="no-image" src={profilePicture} />
+            <Avatar mt={3} className="no-image" src={profilePicture.thumbnail} />
 
             <Box style={{ flex: 1 }}>
                 <Textarea

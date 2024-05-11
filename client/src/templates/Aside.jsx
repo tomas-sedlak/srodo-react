@@ -34,7 +34,7 @@ export default function Aside() {
                 {data.users.map(user =>
                     <Link to={`/${user.username}`} key={user._id} className="news-card-item">
                         <Group gap="xs">
-                            <Avatar className="no-image" src={user.profilePicture} />
+                            <Avatar className="no-image" src={user.profilePicture.thumbnail} />
 
                             <Stack gap={4}>
                                 <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
@@ -57,7 +57,7 @@ export default function Aside() {
                 {data.groups.map(group =>
                     <Link to={`/skupiny/${group._id}`} key={group._id} className="news-card-item">
                         <Group gap="xs">
-                            <Avatar className="no-image" src={group.profilePicture} />
+                            <Avatar className="no-image" src={group.profilePicture.thumbnail} />
 
                             <Stack gap={4}>
                                 <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
