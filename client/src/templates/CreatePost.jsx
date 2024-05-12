@@ -28,7 +28,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
     }
 
     const isValid = () => {
-        return content.trim() !== ""
+        return content.trim() !== "" || images.length > 0 || files.length > 0;
     }
 
     const publish = async () => {
