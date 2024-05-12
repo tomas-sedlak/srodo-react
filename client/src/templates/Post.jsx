@@ -1,7 +1,8 @@
 import { forwardRef } from "react";
-import { Group, Text, Avatar, Stack, Spoiler, Image, Badge } from '@mantine/core';
-import { Link } from "react-router-dom";
+import { Group, Text, Avatar, Stack, Spoiler, Badge } from '@mantine/core';
 import { DownloadFile, PostButtons, PostMenu } from "./PostWidgets";
+import { Link } from "react-router-dom";
+import ImagesDisplay from "./ImagesDisplay";
 import moment from "moment";
 
 const Post = forwardRef(({ post, owner }, ref) => {
@@ -53,13 +54,7 @@ const Post = forwardRef(({ post, owner }, ref) => {
                         </div>
                     </Spoiler>
 
-                    {post.images.length > 0 &&
-                        <Stack mt={8} gap={4}>
-                            {post.images.map(image =>
-                                <Image key={image.thumbnail} radius="lg" src={image.thumbnail} />
-                            )}
-                        </Stack>
-                    }
+                    <ImagesDisplay mt={8} images={post.images} />
 
                     {post.files.length > 0 &&
                         <Stack mt={8} gap={4}>

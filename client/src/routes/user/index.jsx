@@ -117,7 +117,7 @@ export default function User() {
                     {data.groups.map(group =>
                         <Link to={`/skupiny/${group._id}`} key={group._id}>
                             <Group gap="xs" px="md" py="sm" className="border-bottom light-hover">
-                                <Avatar src={group.profilePicture} />
+                                <Avatar className="no-image" src={group.profilePicture && group.profilePicture.thumbnail} />
 
                                 <Stack gap={4} style={{ flex: 1 }}>
                                     <Text fw={700} size="sm" style={{ lineHeight: 1 }}>

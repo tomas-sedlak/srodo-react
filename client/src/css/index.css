@@ -178,6 +178,10 @@ main {
   cursor: pointer;
 }
 
+.border {
+  border: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
+}
+
 .border-bottom {
   border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-4));
 }

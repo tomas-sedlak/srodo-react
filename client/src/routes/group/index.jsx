@@ -327,7 +327,7 @@ function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
-                <Avatar className="no-image" src={user.profilePicture.thumbnail} />
+                <Avatar className="no-image" src={user.profilePicture && user.profilePicture.thumbnail} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
                     <Flex gap={4} align="center">

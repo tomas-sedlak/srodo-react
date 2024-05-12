@@ -1,10 +1,11 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { Box, Text, Group, Avatar, Loader, Stack, Image } from '@mantine/core';
+import { Box, Text, Group, Avatar, Loader, Stack } from '@mantine/core';
 import { DownloadFile, PostButtons, PostMenu } from 'templates/PostWidgets';
+import ImagesDisplay from "templates/ImagesDisplay";
 import Comments from "templates/Comments";
-import axios from "axios";
 import moment from "moment";
+import axios from "axios";
 
 export default function Post() {
     const { postId } = useParams();
@@ -61,13 +62,7 @@ export default function Post() {
                     {data.content}
                 </Box>
 
-                {data.images.length > 0 &&
-                    <Stack mt="sm" gap={4}>
-                        {data.images.map(image =>
-                            <Image radius="lg" src={image.large} />
-                        )}
-                    </Stack>
-                }
+                <ImagesDisplay mt="sm" images={data.images} />
 
                 {data.files.length > 0 &&
                     <Stack mt="sm" gap={4}>
