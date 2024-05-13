@@ -5,8 +5,11 @@ import { PostButtons, PostMenu } from 'templates/PostWidgets';
 import ImagesDisplay from "templates/ImagesDisplay";
 import FilesDisplay from "templates/FilesDisplay";
 import Comments from "templates/Comments";
-import moment from "moment";
 import axios from "axios";
+
+import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
 
 export default function Post() {
     const { postId } = useParams();

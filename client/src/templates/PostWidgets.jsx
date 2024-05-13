@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ActionIcon, Group, Menu, Stack, Text } from "@mantine/core"
-import { IconDownload, IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react"
+import { ActionIcon, Group, Menu, Text } from "@mantine/core"
+import { IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react"
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
@@ -123,32 +123,5 @@ export function PostMenu(props) {
                 )}
             </Menu.Dropdown>
         </Menu>
-    )
-}
-
-function getSize(size) {
-    let sizes = [" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB"];
-
-    for (let i = 1; i < sizes.length; i++) {
-        if (size < Math.pow(1024, i)) {
-            return (Math.round((size / Math.pow(1024, i - 1)) * 100) / 100) + sizes[i - 1];
-        }
-    }
-
-    return size;
-}
-
-export function DownloadFile({ file }) {
-    return (
-        <a key={file._id} href={file.file} download={file.name}>
-            <Group gap="xs" wrap="nowrap" className="file-download">
-                <IconDownload stroke={1.25} />
-
-                <Stack gap={4} style={{ flex: 1 }}>
-                    <Text size="sm" fw={600} style={{ lineHeight: 1, wordBreak: "break-all" }}>{file.name}</Text>
-                    <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>{getSize(file.size)}</Text>
-                </Stack>
-            </Group>
-        </a>
     )
 }

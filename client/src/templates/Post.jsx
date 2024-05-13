@@ -4,7 +4,10 @@ import { PostButtons, PostMenu } from "./PostWidgets";
 import { Link } from "react-router-dom";
 import ImagesDisplay from "./ImagesDisplay";
 import FilesDisplay from "./FilesDisplay";
+
 import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
 
 const Post = forwardRef(({ post, owner }, ref) => {
     const authorUrl = `/${post.author.username}`;

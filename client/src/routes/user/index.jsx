@@ -5,7 +5,10 @@ import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
 import axios from "axios";
+
 import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
 
 export default function User() {
     const { username, tab = "prispevky" } = useParams();
