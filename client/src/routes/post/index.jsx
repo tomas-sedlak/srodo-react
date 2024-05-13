@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { Box, Text, Group, Avatar, Loader, Stack } from '@mantine/core';
-import { DownloadFile, PostButtons, PostMenu } from 'templates/PostWidgets';
+import { PostButtons, PostMenu } from 'templates/PostWidgets';
 import ImagesDisplay from "templates/ImagesDisplay";
+import FilesDisplay from "templates/FilesDisplay";
 import Comments from "templates/Comments";
 import moment from "moment";
 import axios from "axios";
@@ -64,13 +65,7 @@ export default function Post() {
 
                 <ImagesDisplay mt="sm" images={data.images} />
 
-                {data.files.length > 0 &&
-                    <Stack mt="sm" gap={4}>
-                        {data.files.map(file =>
-                            <DownloadFile file={file} />
-                        )}
-                    </Stack>
-                }
+                <FilesDisplay mt="sm" files={data.files} />
 
                 <PostButtons mt="sm" post={data} />
             </Box>

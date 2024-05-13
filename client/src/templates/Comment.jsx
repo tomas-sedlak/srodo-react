@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Text, Group, Avatar, Spoiler, Stack, Image } from '@mantine/core';
+import { Text, Group, Avatar, Spoiler, Stack } from '@mantine/core';
 import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconShare } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
-import { DownloadFile, PostMenu } from './PostWidgets';
+import { PostMenu } from './PostWidgets';
+import ImagesDisplay from './ImagesDisplay';
+import FilesDisplay from './FilesDisplay';
 import axios from "axios";
 
 import moment from "moment";
@@ -85,21 +87,9 @@ export default function Comment({ data }) {
                     </div>
                 </Spoiler>
 
-                {data.images.length > 0 &&
-                    <Stack mt={8} gap={4}>
-                        {data.images.map(image =>
-                            <Image key={image.thumbnail} radius="lg" src={image.thumbnail} />
-                        )}
-                    </Stack>
-                }
+                <ImagesDisplay mt={8} images={data.images} />
 
-                {data.files.length > 0 &&
-                    <Stack mt={8} gap={4}>
-                        {data.files.map(file =>
-                            <DownloadFile file={file} />
-                        )}
-                    </Stack>
-                }
+                <FilesDisplay mt={8} files={data.files} />
 
                 <Group mt={8} gap={4}>
                     <div className="icon-wrapper">

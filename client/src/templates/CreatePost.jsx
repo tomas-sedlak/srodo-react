@@ -1,16 +1,22 @@
 import { useState } from "react";
-import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, Image, FileButton, Box, Stack } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, FileButton, Box, Text } from "@mantine/core";
 import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { DownloadFile } from "./PostWidgets";
+import ImagesDisplay from "./ImagesDisplay";
+import FilesDisplay from "./FilesDisplay";
+import byteSize from "byte-size";
 import axios from "axios";
+
+const maxImageSize = 10000000;
+const maxFileSize = 20000000;
 
 export default function CreatePost({ groupId, postId, opened = true }) {
     const queryClient = useQueryClient();
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
     const [files, setFiles] = useState([]);
+    const [error, setError] = useState(null);
     const [isInputOpened, setIsInputOpened] = useState(opened);
     const [isPublishing, setIsPuhlishing] = useState(false);
 
@@ -24,7 +30,42 @@ export default function CreatePost({ groupId, postId, opened = true }) {
         setContent("")
         setImages([])
         setFiles([])
+        setError(null)
         setIsInputOpened(opened)
+    }
+
+    const handleImageChange = selectedImages => {
+        if (images.length + selectedImages.length > 4) {
+            setError("Môžeš nahrať maximálne 4 obrázky")
+            return
+        }
+
+        for (const selectedImage of selectedImages) {
+            if (selectedImage.size > maxImageSize) {
+                setError(`Maximálna veľkosť obrázka môže byť ${byteSize(maxImageSize)}`)
+                return
+            }
+        }
+
+        setImages([...images, ...selectedImages])
+        setError(null)
+    }
+
+    const handleFileChange = selectedFiles => {
+        if (files.length + selectedFiles.length > 4) {
+            setError("Môžeš nahrať maximálne 4 súbory")
+            return
+        }
+
+        for (const selectedFile of selectedFiles) {
+            if (selectedFile.size > maxFileSize) {
+                setError(`Maximálna veľkosť súboru môže byť ${byteSize(maxFileSize)}`)
+                return
+            }
+        }
+
+        setFiles([...files, ...selectedFiles])
+        setError(null)
     }
 
     const isValid = () => {
@@ -74,21 +115,9 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                     onChange={event => setContent(event.target.value)}
                 />
 
-                {images.length > 0 &&
-                    <Stack mt={8} gap={4}>
-                        {images.map(image =>
-                            <Image key={image.originalname} radius="lg" src={URL.createObjectURL(image)} />
-                        )}
-                    </Stack>
-                }
+                <ImagesDisplay mt={8} images={images} setImages={setImages} withCloseButtons />
 
-                {files.length > 0 &&
-                    <Stack mt={8} gap={4}>
-                        {files.map(file =>
-                            <DownloadFile file={file} />
-                        )}
-                    </Stack>
-                }
+                <FilesDisplay mt={8} files={files} setFiles={setFiles} withCloseButtons />
 
                 <Group
                     justify="space-between"
@@ -101,7 +130,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                     }}
                 >
                     <Group gap={8}>
-                        <FileButton onChange={setImages} multiple accept="image/png,image/jpeg">
+                        <FileButton onChange={handleImageChange} multiple accept="image/png,image/jpeg">
                             {props =>
                                 <Tooltip label="Obrázok" position="bottom" openDelay={500} withArrow>
                                     <ActionIcon
@@ -125,7 +154,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                             </ActionIcon>
                         </Tooltip>
 
-                        <FileButton onChange={setFiles} multiple accept="text/csv,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
+                        <FileButton onChange={handleFileChange} multiple>
                             {props =>
                                 <Tooltip label="Súbor" position="bottom" openDelay={500} withArrow>
                                     <ActionIcon
@@ -158,6 +187,8 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                         Publikovať
                     </Button>
                 </Group>
+
+                {error && <Text mt={8} size="sm" c="red">{error}</Text>}
             </Box>
         </Group>
     )

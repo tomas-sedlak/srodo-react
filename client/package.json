@@ -31,6 +31,7 @@
     "@types/react-dom": "^18.2.15",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "axios": "^1.6.5",
+    "byte-size": "^8.1.1",
     "cors": "^2.8.5",
     "eslint": "^8.53.0",
     "eslint-plugin-react": "^7.33.2",
