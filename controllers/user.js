@@ -135,6 +135,9 @@ export const updateUserSettings = async (req, res) => {
         if (req.files.coverImage) {
             await deleteObject(user.coverImage);
             user.coverImage = await uploadImage(req.files.coverImage[0], 1080, 360);
+        } else if (req.body.coverImage == "") {
+            await deleteObject(user.coverImage);
+            user.coverImage = "";
         } else if (req.body.coverImage) {
             await deleteObject(user.coverImage);
             user.coverImage = await uploadImage(req.body.coverImage, 1080, 360);
@@ -145,6 +148,11 @@ export const updateUserSettings = async (req, res) => {
             await deleteObject(user.profilePicture.large);
             user.profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
             user.profilePicture.large = await uploadImage(req.files.profilePicture[0], 400, 400);
+        } else if (req.body.profilePicture == "") {
+            await deleteObject(user.profilePicture.thumbnail);
+            await deleteObject(user.profilePicture.large);
+            user.profilePicture.thumbnail = "";
+            user.profilePicture.large = "";
         } else if (req.body.profilePicture) {
             await deleteObject(user.profilePicture.thumbnail);
             await deleteObject(user.profilePicture.large);
@@ -160,7 +168,7 @@ export const updateUserSettings = async (req, res) => {
 
         user.coverImage = await getObject(user.coverImage);
         await getProfilePicture(user.profilePicture);
-        res.status(200).json(user);
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }

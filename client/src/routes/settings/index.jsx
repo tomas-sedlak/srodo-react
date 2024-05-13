@@ -51,15 +51,15 @@ export default function Settings() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const [isPublishing, setIsPublishing] = useState(false);
 
-    const [coverImage, setCoverImage] = useState(null);
+    const [coverImage, setCoverImage] = useState(user.coverImage || "");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
-    const [profilePicture, setProfilePicture] = useState(null);
+    const [profilePicture, setProfilePicture] = useState(user.profilePicture?.large || "");
     const [profilePictureModalOpened, profilePictureModalHandlers] = useDisclosure(false);
 
-    const [displayName, setDisplayName] = useState(null);
-    const [username, setUsername] = useState(null);
-    const [bio, setBio] = useState(null);
-    const [socials, setSocials] = useState(null);
+    const [displayName, setDisplayName] = useState(user.displayName || "");
+    const [username, setUsername] = useState(user.username || "");
+    const [bio, setBio] = useState(user.bio || "");
+    const [socials, setSocials] = useState(user.socials || []);
 
     const [modalType, setModalType] = useState(null);
     const [selectedSocial, setSelectedSocial] = useState(null);
@@ -100,12 +100,12 @@ export default function Settings() {
 
         try {
             const formData = new FormData();
-            coverImage && formData.append("coverImage", coverImage);
-            profilePicture && formData.append("profilePicture", profilePicture);
-            username && formData.append("username", username);
-            displayName && formData.append("displayName", displayName);
-            bio && formData.append("bio", bio);
-            socials && formData.append("socials", JSON.stringify(socials));
+            user.coverImage != coverImage && formData.append("coverImage", coverImage);
+            user.profilePicture?.large != profilePicture && formData.append("profilePicture", profilePicture);
+            user.username != username && formData.append("username", username);
+            user.displayName != displayName && formData.append("displayName", displayName);
+            user.bio != bio && formData.append("bio", bio);
+            user.socials != socials && formData.append("socials", JSON.stringify(socials));
 
             const response = await axios.patch(
                 `/api/user/${user._id}/update`, formData, { headers },
@@ -276,8 +276,8 @@ export default function Settings() {
                 </Group>
 
                 <AspectRatio ratio={6 / 2}  >
-                    {user.coverImage || coverImage ?
-                        <Image src={coverImage ? typeof coverImage === "string" ? coverImage : URL.createObjectURL(coverImage) : user.coverImage} />
+                    {coverImage ?
+                        <Image src={typeof coverImage === "string" ? coverImage : URL.createObjectURL(coverImage)} />
                         : <Box className="no-image"></Box>
                     }
                 </AspectRatio>
@@ -288,7 +288,7 @@ export default function Settings() {
                     <Avatar
                         size="xl"
                         className="no-image"
-                        src={profilePicture ? typeof profilePicture === "string" ? profilePicture : URL.createObjectURL(profilePicture) : user.profilePicture && user.profilePicture.large}
+                        src={typeof profilePicture === "string" ? profilePicture : URL.createObjectURL(profilePicture)}
                     />
 
                     <Button
@@ -319,7 +319,7 @@ export default function Settings() {
                         label="Display name"
                         description="Použi aj smajlíkov 🥳🤪"
                         styles={{ input: { paddingRight: 46 } }}
-                        value={displayName || user.displayName}
+                        value={displayName}
                         maxLength={maxDisplaynameCharacterLimit}
                         onChange={event => {
                             setDisplayName(event.currentTarget.value)
@@ -330,7 +330,7 @@ export default function Settings() {
                         c="dimmed"
                         className="input-counter"
                     >
-                        {displayName ? displayName.length : user.displayName.length}/{maxDisplaynameCharacterLimit}
+                        {displayName.length}/{maxDisplaynameCharacterLimit}
                     </Text>
                 </Box>
 
@@ -339,7 +339,7 @@ export default function Settings() {
                     label="Použivateľské meno"
                     description="Použivateľské meno sa momentálne nedá zmeniť"
                     styles={{ input: { paddingRight: 46 } }}
-                    value={username || user.username}
+                    value={username}
                     disabled
                 />
 
@@ -351,7 +351,7 @@ export default function Settings() {
                         styles={{ input: { paddingRight: 46 } }}
                         autosize
                         minRows={2}
-                        value={bio || user.bio}
+                        value={bio}
                         maxLength={maxBioCharacterLenght}
                         onChange={event => {
                             setBio(event.currentTarget.value)
@@ -362,14 +362,14 @@ export default function Settings() {
                         c="dimmed"
                         className="input-counter"
                     >
-                        {bio ? bio.length : user.bio.length}/{maxBioCharacterLenght}
+                        {bio.length}/{maxBioCharacterLenght}
                     </Text>
                 </Box>
 
                 <Text mt="sm" size="sm" fw={500} style={{ lineHeight: 1.55 }}>Sociálne siete</Text>
                 <Text c="dimmed" size="xs" style={{ flex: 1 }}>Môžeš mať maximálne 5 sociálnych sietí</Text>
                 <Group mt={5} style={{ rowGap: 8, columnGap: 4 }}>
-                    {(socials || user.socials).map((social, index) =>
+                    {socials.map((social, index) =>
                         <div
                             className="icon-wrapper"
                             onClick={() => {
@@ -384,13 +384,13 @@ export default function Settings() {
                                 stroke={1.25}
                                 onClick={event => {
                                     event.stopPropagation() // So the update onClick function won't get triggered
-                                    setSocials((socials || user.socials).filter(a => a !== social))
+                                    setSocials(socials.filter(a => a !== social))
                                 }}
                             />
                         </div>
                     )}
 
-                    {(socials ? socials.length < 5 : user.socials.length < 5) &&
+                    {socials.length < 5 &&
                         < div
                             className="icon-wrapper"
                             onClick={() => setModalType("select")}
