@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { unstable_usePrompt as Prompt } from "react-router-dom";
+// import { Prompt } from "react-router";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, Text, Modal, Button } from "@mantine/core";
 import { IconPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
@@ -8,6 +10,7 @@ import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
+import { modals } from "@mantine/modals";
 
 const socialsData = [
     {
@@ -121,8 +124,49 @@ export default function Settings() {
         setIsPublishing(false)
     }
 
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            const shouldShowConfirmation = true; // Flag to control confirmation message
+
+            if (shouldShowConfirmation) {
+                // event.returnValue = 'Are you sure you want to leave?';
+                
+                modals.openConfirmModal({
+                    title: "Uložiť zmeny",
+                    children: <Text>Určite chceš odísť z tejto stránky? Zmeny, ktoré si urobil sa nemusia uložiť.</Text>,
+                    centered: true,
+                    labels: { confirm: "Uložiť", cancel: "Zrušiť" },
+                    confirmProps: { color: "red" },
+                    onConfirm: publish,
+                })
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, []);
+
+
+
+    //         modals.openConfirmModal({
+    //             title: "Uložiť zmeny",
+    //             children: <Text>Určite chceš odísť z tejto stránky? Zmeny, ktoré si urobil sa nemusia uložiť.</Text>,
+    //             centered: true,
+    //             labels: { confirm: "Uložiť", cancel: "Zrušiť" },
+    //             confirmProps: { color: "red" },
+    //             onConfirm: publish,
+    //         })
+
+
     return (
         <>
+
+
+
             <ImagesModal
                 opened={coverImageModalOpened}
                 close={coverImageModalHandlers.close}
@@ -249,6 +293,24 @@ export default function Settings() {
                 }
             </Modal>
 
+            {/* Your component content */}
+            {/* <Modal open={isModalOpen} onClose={handleCloseModal}>
+                <p>You are about to leave the page. Are you sure?</p>
+                <Button onClick={handleCloseModal}>Stay</Button>
+                <Button variant="outline" onClick={() => setIsModalOpen(false)}>Leave</Button>
+            </Modal> */}
+            <>
+                {/* {if (isLeaving) {event => {
+                    modals.openConfirmModal({
+                        title: "Uložiť zmeny",
+                        children: <Text>Určite chceš odísť z tejto stránky? Zmeny, ktoré si urobil sa nemusia uložiť.</Text>,
+                        centered: true,
+                        labels: { confirm: "Uložiť", cancel: "Zrušiť" },
+                        confirmProps: { color: "red" },
+                        onConfirm: publish,
+                    })
+                }}} */}
+            </>
             <SmallHeader title="⚙️ Nastavenia profilu" />
 
             <Box pos="relative">
@@ -400,6 +462,10 @@ export default function Settings() {
                         </div>
                     }
                 </Group>
+
+
+
+
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>
