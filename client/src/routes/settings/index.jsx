@@ -43,7 +43,7 @@ const socialsData = [
     },
 ];
 
-const maxDisplaynameCharacterLimit = 64;
+const maxDisplaynameCharacterLimit = 32;
 const maxBioCharacterLenght = 160;
 
 export default function Settings() {

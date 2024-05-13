@@ -6,17 +6,16 @@ const userSchema = new Schema({
         type: String,
         trim: true,
         lowercase: true,
-        min: [1, "Minimálna dĺžka je 1 znak"],
-        max: [16, "Maximálna dĺžka je 32 znakov"],
-        required: [true, "Používateľské meno je povinné"],
+        max: 32,
+        required: true,
         unique: true,
     },
     email: {
         type: String,
         trim: true,
         lowercase: true,
-        max: [320, "Príliš dlhý email"],
-        required: [true, "Email je povinný"],
+        max: 320,
+        required: true,
         unique: true,
     },
     password: String,
@@ -27,11 +26,9 @@ const userSchema = new Schema({
     profilePicture: {
         thumbnail: String,
         large: String,
-        // default: "/images/default_profile.jpg",
     },
     coverImage: {
         type: String,
-        // default: "/images/default_cover.jpg",
     },
     bio: {
         type: String,
