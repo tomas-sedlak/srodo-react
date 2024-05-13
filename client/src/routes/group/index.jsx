@@ -89,7 +89,7 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
-                    src={data.profilePicture && data.profilePicture.large}
+                    src={data.profilePicture?.large}
                 />
             </div>
 
@@ -180,7 +180,7 @@ export default function Group() {
                                 <Link to={`/${member.username}`} key={member._id}>
                                     <Avatar
                                         className="no-image"
-                                        src={member.profilePicture && member.profilePicture.thumbnail}
+                                        src={member.profilePicture?.thumbnail}
                                         style={{ outline: "var(--mantine-color-body) solid 2px" }}
                                     />
                                 </Link>
@@ -327,7 +327,7 @@ function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">
-                <Avatar className="no-image" src={user.profilePicture && user.profilePicture.thumbnail} />
+                <Avatar className="no-image" src={user.profilePicture?.thumbnail} />
 
                 <Stack gap={4} style={{ flex: 1 }}>
                     <Flex gap={4} align="center">

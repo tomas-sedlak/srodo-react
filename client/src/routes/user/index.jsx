@@ -46,7 +46,7 @@ export default function User() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
-                    src={data.user.profilePicture && data.user.profilePicture.large}
+                    src={data.user.profilePicture?.large}
                 />
             </div>
 
@@ -117,7 +117,7 @@ export default function User() {
                     {data.groups.map(group =>
                         <Link to={`/skupiny/${group._id}`} key={group._id}>
                             <Group gap="xs" px="md" py="sm" className="border-bottom light-hover">
-                                <Avatar className="no-image" src={group.profilePicture && group.profilePicture.thumbnail} />
+                                <Avatar className="no-image" src={ggroup.profilePicture?.thumbnail} />
 
                                 <Stack gap={4} style={{ flex: 1 }}>
                                     <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
