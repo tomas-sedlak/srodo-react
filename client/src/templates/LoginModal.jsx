@@ -45,7 +45,6 @@ export default function LoginModal() {
             );
 
             dispatch(setLoginModal(false));
-            window.location.reload()
         } catch (err) {
             setGlobalError("Nastala chyba. Skúste to znova")
         }
@@ -208,7 +207,6 @@ export default function LoginModal() {
 
             setPageType("login");
             resetInputs()
-            window.location.reload()
         } catch (err) {
             setGlobalError("Nastala chyba. Skontroluj svoje údaje")
         }
@@ -234,7 +232,6 @@ export default function LoginModal() {
 
             dispatch(setLoginModal(false));
             resetInputs()
-            window.location.reload()
         } catch (err) {
             setGlobalError("Nesprávne prihlasovacie údaje")
         }

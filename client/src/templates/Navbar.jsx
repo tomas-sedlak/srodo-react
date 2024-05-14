@@ -41,7 +41,7 @@ export default function Navbar({ close }) {
     }
 
     const { status, data } = useQuery({
-        queryKey: ["groups"],
+        queryKey: ["groups", userId],
         queryFn: fetchGroups,
     })
 
