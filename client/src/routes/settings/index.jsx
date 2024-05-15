@@ -4,7 +4,7 @@ import { unstable_usePrompt as Prompt } from "react-router-dom";
 // import { Prompt } from "react-router";
 import { Avatar, Box, TextInput, Textarea, AspectRatio, Image, Group, Text, Modal, Button } from "@mantine/core";
 import { IconPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-react";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
 import ImagesModal from "templates/ImagesModal";
@@ -50,8 +50,7 @@ export default function Settings() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector(state => state.user);
-    const token = useSelector(state => state.token);
-    const isMobile = useMediaQuery("(max-width: 768px)");
+    const token = useSelector(state => state.token);;
     const [isPublishing, setIsPublishing] = useState(false);
 
     const [coverImage, setCoverImage] = useState(user.coverImage || "");
@@ -189,8 +188,7 @@ export default function Settings() {
                 opened={modalType}
                 onClose={closeModal}
                 title={<Text fw={700} fz="lg">Pridať sociálnu sieť</Text>}
-                radius={isMobile ? 0 : "lg"}
-                fullScreen={isMobile}
+                radius="lg"
                 centered
             >
                 {modalType === "select" &&
