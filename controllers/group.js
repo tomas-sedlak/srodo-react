@@ -127,11 +127,18 @@ export const getGroupMembers = async (req, res) => {
 
 export const getGroupSuggestions = async (req, res) => {
     try {
-        const groups = await Group.find().lean();
+        const groups = await Group.find()
+            .populate("members", "username displayName profilePicture")
+            .lean();
 
         // Load images from s3 bucket
         for (const group of groups) {
+            group.coverImage = await getObject(group.coverImage);
             await getProfilePicture(group.profilePicture);
+            
+            for (const member of group.members) {
+                await getProfilePicture(member.profilePicture);
+            }
         }
 
         res.status(200).json(groups);
