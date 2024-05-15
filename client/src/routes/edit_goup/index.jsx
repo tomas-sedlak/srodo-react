@@ -5,6 +5,7 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useQueryClient } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
 import ImagesModal from "templates/ImagesModal";
 import axios from 'axios';
 
@@ -71,8 +72,12 @@ export default function EditGroup() {
             data.description != originalData.description && formData.append("description", data.description);
 
             await axios.patch(`/api/group/${groupId}/update`, formData, { headers });
-            queryClient.invalidateQueries("groups");
-            navigate(`/skupiny/${groupId}`)
+            await queryClient.invalidateQueries("groups");
+            navigate(`/skupiny/${groupId}`);
+
+            notifications.show({
+                title: "Zmeny boli uložené",
+            });
         } catch (err) {
             console.log(err)
         }

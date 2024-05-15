@@ -80,7 +80,10 @@ export function PostMenu(props) {
 
     const deletePost = async () => {
         await axios.delete(`/api/${props.type}/${post._id}`, { headers });
-        queryClient.invalidateQueries(props.type);
+        await queryClient.invalidateQueries(props.type + "s");
+        notifications.show({
+            title: `${props.type === "post" ? "Príspevok" : "Komentár"} bol zmazaný`,
+        })
     }
 
     return (
