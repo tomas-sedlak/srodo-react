@@ -1,4 +1,4 @@
-import { uploadImage } from "../utils/s3.js";
+import { uploadImage, getObject } from "../utils/s3.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -43,6 +43,7 @@ export const login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials." });
 
         // Load images from s3 bucket
+        user.coverImage = await getObject(user.coverImage);
         await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
@@ -81,6 +82,7 @@ export const google = async (req, res) => {
         }
 
         // Load images from s3 bucket
+        user.coverImage = await getObject(user.coverImage);
         await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
