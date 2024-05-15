@@ -127,7 +127,18 @@ export const getGroupMembers = async (req, res) => {
 
 export const getGroupSuggestions = async (req, res) => {
     try {
+        const querySort = req.query.sort;
+
+        let sort = {};
+        if (querySort === "najnovsie") {
+            sort = { createdAt: -1 };
+        }
+        if (querySort === "popularne") {
+            sort = { membersLength: -1 };
+        }
+
         const groups = await Group.find()
+            .sort(sort)
             .populate("members", "username displayName profilePicture")
             .lean();
 
@@ -135,7 +146,7 @@ export const getGroupSuggestions = async (req, res) => {
         for (const group of groups) {
             group.coverImage = await getObject(group.coverImage);
             await getProfilePicture(group.profilePicture);
-            
+
             for (const member of group.members) {
                 await getProfilePicture(member.profilePicture);
             }

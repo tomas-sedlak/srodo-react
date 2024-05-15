@@ -74,6 +74,7 @@ export default function App() {
                                     <Route index element={<Home />} />
                                     <Route path="ai" element={<AI />} />
                                     <Route path="preskumat" element={<Explore />} />
+                                    <Route path="preskumat/:tab" element={<Explore />} />
                                     <Route path="skupiny/:groupId" element={<Group />} />
                                     <Route path="skupiny/:groupId/:tab" element={<Group />} />
                                     <Route exact path=":username" element={<User />} />
