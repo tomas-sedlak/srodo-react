@@ -106,12 +106,6 @@ export default function Header() {
                                             <Text fw={600} size="sm">Nastavenia</Text>
                                         </Menu.Item>
                                         <Menu.Item
-                                            onClick={() => navigate("/statistiky")}
-                                            leftSection={<IconChartBar stroke={1.25} />}
-                                        >
-                                            <Text fw={600} size="sm">Štatistiky</Text>
-                                        </Menu.Item>
-                                        <Menu.Item
                                             leftSection={<IconMoon stroke={1.25} />}
                                         >
                                             <Group justify="space-between">
