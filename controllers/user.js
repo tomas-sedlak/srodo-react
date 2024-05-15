@@ -168,7 +168,7 @@ export const updateUserSettings = async (req, res) => {
 
         user.coverImage = await getObject(user.coverImage);
         await getProfilePicture(user.profilePicture);
-        res.sendStatus(200);
+        res.status(200).send(user);
     } catch (err) {
         res.status(500).json({ message: err.message })
     }
