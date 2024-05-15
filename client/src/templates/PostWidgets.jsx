@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
+import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 import axios from "axios";
 
@@ -49,7 +50,16 @@ export function PostButtons(props) {
                 <span>{post.comments}</span>
             </HashLink>
 
-            <div className="icon-wrapper">
+            <div
+                className="icon-wrapper"
+                onClick={event => {
+                    event.preventDefault()
+                    navigator.clipboard.writeText(`https://srodo.sk/${post.author.username}/prispevok/${post._id}`)
+                    notifications.show({
+                        title: "Skopírované do schránky"
+                    })
+                }}
+            >
                 <IconShare stroke={1.25} />
                 <span>Zdieľať</span>
             </div>

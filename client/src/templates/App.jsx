@@ -3,6 +3,7 @@ import { lazy, useEffect } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { MantineProvider, createTheme } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -63,6 +64,7 @@ export default function App() {
     return (
         <MantineProvider theme={theme} defaultColorScheme="auto">
             <ModalsProvider>
+                <Notifications />
                 <QueryClientProvider client={queryClient}>
                     <GoogleOAuthProvider clientId="1025882831817-q56up75r66liinfsm368qdbolepva3fr.apps.googleusercontent.com">
                         <BrowserRouter>
