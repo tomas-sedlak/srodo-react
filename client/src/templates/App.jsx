@@ -20,6 +20,7 @@ const User = lazy(() => import("routes/user"));
 const Post = lazy(() => import("routes/post"));
 const Group = lazy(() => import("routes/group"));
 const CreateGroup = lazy(() => import("routes/create_group"));
+const EditGroup = lazy(() => import("routes/edit_goup"));
 const Settings = lazy(() => import("routes/settings"));
 
 import ScrollToTop from "./ScrollToTop";
@@ -82,6 +83,7 @@ export default function App() {
                                     {/* PRIVATE ROUTES */}
                                     <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
                                     <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
+                                    <Route path="skupiny/:groupId/upravit" element={isAuth ? <EditGroup /> : <Navigate to="/" />} />
                                     <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>

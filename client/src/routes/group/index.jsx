@@ -99,6 +99,7 @@ export default function Group() {
                         variant="default"
                         leftSection={<IconPencil stroke={1.25} />}
                         styles={{ section: { marginRight: 4 } }}
+                        onClick={() => navigate(`/skupiny/${groupId}/upravit`)}
                     >
                         Upraviť
                     </Button>

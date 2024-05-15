@@ -23,7 +23,7 @@ export const createGroup = async (req, res) => {
         } else if (req.body.coverImage) {
             coverImage = await uploadImage(req.body.coverImage, 1080, 360);
         }
-        
+
         let profilePicture = {};
         if (req.files.profilePicture) {
             profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
@@ -167,6 +167,62 @@ export const leaveGroup = async (req, res) => {
         }
 
         await group.save();
+        res.sendStatus(200);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export const updateGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+
+        if (!group.owner._id.equals(req.user.id)) {
+            return res.status(403).send("Access Denied");
+        }
+
+        const {
+            name,
+            description
+        } = req.body;
+
+        // Upload images to s3 bucket;
+        if (req.files.coverImage) {
+            await deleteObject(group.coverImage);
+            group.coverImage = await uploadImage(req.files.coverImage[0], 1080, 360);
+        } else if (req.body.coverImage == "") {
+            await deleteObject(group.coverImage);
+            group.coverImage = "";
+        } else if (req.body.coverImage) {
+            await deleteObject(group.coverImage);
+            group.coverImage = await uploadImage(req.body.coverImage, 1080, 360);
+        }
+
+        if (req.files.profilePicture) {
+            await deleteObject(group.profilePicture.thumbnail);
+            await deleteObject(group.profilePicture.large);
+            group.profilePicture.thumbnail = await uploadImage(req.files.profilePicture[0], 76, 76);
+            group.profilePicture.large = await uploadImage(req.files.profilePicture[0], 400, 400);
+        } else if (req.body.profilePicture == "") {
+            await deleteObject(group.profilePicture.thumbnail);
+            await deleteObject(group.profilePicture.large);
+            group.profilePicture.thumbnail = "";
+            group.profilePicture.large = "";
+        } else if (req.body.profilePicture) {
+            await deleteObject(group.profilePicture.thumbnail);
+            await deleteObject(group.profilePicture.large);
+            group.profilePicture.thumbnail = await uploadImage(req.body.profilePicture, 76, 76);
+            group.profilePicture.large = await uploadImage(req.body.profilePicture, 400, 400);
+        }
+
+        if (name) group.name = name;
+        if (description) group.description = description;
+
+        await group.save();
+
+        group.coverImage = await getObject(group.coverImage);
+        await getProfilePicture(group.profilePicture);
         res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });

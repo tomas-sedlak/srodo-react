@@ -20,7 +20,7 @@ import commentRoutes from "./routes/comment.js";
 // CONTROLLERS
 import { createPost } from "./controllers/post.js";
 import { createComment } from "./controllers/comment.js";
-import { createGroup } from "./controllers/group.js";
+import { createGroup, updateGroup } from "./controllers/group.js";
 import { updateUserSettings } from "./controllers/user.js";
 import { verifyToken } from "./middleware/auth.js";
 
@@ -54,6 +54,7 @@ app.post("/api/post", verifyToken, upload.fields([{ name: "images", maxCount: 4 
 app.post("/api/comment", verifyToken, upload.fields([{ name: "images", maxCount: 4 }, { name: "files", maxCount: 4 }]), createComment);
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
+app.patch("/api/group/:groupId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateGroup);
 
 // ROUTES
 app.use("/api/auth", authRoutes);
