@@ -7,6 +7,7 @@ import { useDebounceCallback, useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
+import { notifications } from "@mantine/notifications";
 import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
 import axios from "axios";
@@ -40,7 +41,7 @@ export default function Group() {
 
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
-        queryClient.invalidateQueries("group")
+        await queryClient.invalidateQueries("group")
         setIsLoading(false)
     }
 
@@ -52,15 +53,18 @@ export default function Group() {
 
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/leave`, {}, { headers })
-        queryClient.invalidateQueries("group")
+        await queryClient.invalidateQueries("group")
         setIsLoading(false)
     }
 
     const deleteGroup = async () => {
         if (!userId) return
         await axios.delete(`/api/group/${groupId}`, { headers })
-        queryClient.invalidateQueries("group");
-        navigate("/")
+        navigate("/");
+
+        notifications.show({
+            title: "Skupina zmazaná",
+        });
     }
 
     const { data, status } = useQuery({

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
+import { modals } from "@mantine/modals";
 import axios from "axios";
 
 export function PostButtons(props) {
@@ -48,7 +49,16 @@ export function PostButtons(props) {
                 <span>{post.comments}</span>
             </HashLink>
 
-            <div className="icon-wrapper">
+            <div
+                className="icon-wrapper"
+                onClick={event => {
+                    event.preventDefault()
+                    navigator.clipboard.writeText(`https://srodo.sk/${post.author.username}/prispevok/${post._id}`)
+                    notifications.show({
+                        title: "Skopírované do schránky"
+                    })
+                }}
+            >
                 <IconShare stroke={1.25} />
                 <span>Zdieľať</span>
             </div>
@@ -93,7 +103,10 @@ export function PostMenu(props) {
 
     const deletePost = async () => {
         await axios.delete(`/api/${props.type}/${post._id}`, { headers });
-        queryClient.invalidateQueries(props.type);
+        await queryClient.invalidateQueries(props.type + "s");
+        notifications.show({
+            title: `${props.type === "post" ? "Príspevok" : "Komentár"} bol zmazaný`,
+        })
     }
 
     const handleReport = async () => {

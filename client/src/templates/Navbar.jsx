@@ -57,7 +57,9 @@ export default function Navbar({ close }) {
         <>
             {/* Navigation items */}
             {menu.map(item => {
-                const active = item.url === pathname;
+                let active = false;
+                if (item.url === "/") active = pathname === "/";
+                else if (pathname.startsWith(item.url)) active = true;
 
                 return (
                     <Link

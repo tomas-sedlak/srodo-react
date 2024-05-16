@@ -103,11 +103,6 @@ export default function Comment({ data }) {
                             : <IconArrowBigDownFilled stroke={1.25} onClick={() => userId ? downvoteComment() : dispatch(setLoginModal(true))} />
                         }
                     </div>
-
-                    <div className="icon-wrapper">
-                        <IconShare stroke={1.25} />
-                        <span>Zdieľať</span>
-                    </div>
                 </Group>
             </Stack>
         </Group>

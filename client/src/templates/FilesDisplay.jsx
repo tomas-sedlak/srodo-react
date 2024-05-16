@@ -36,7 +36,7 @@ function CustomFile(props) {
                         <IconX stroke={1.25} />
                     </ActionIcon>
                 }
-                <Group gap="xs" wrap="nowrap" className="file-download">
+                <Group gap="xs" wrap="nowrap" pr={setFiles && 40} className="file-download">
                     <IconDownload stroke={1.25} />
 
                     <Stack gap={4} style={{ flex: 1 }}>

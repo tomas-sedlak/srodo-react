@@ -3,6 +3,7 @@ import { ActionIcon, Avatar, Button, Group, Textarea, Tooltip, FileButton, Box, 
 import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { notifications } from "@mantine/notifications";
 import ImagesDisplay from "./ImagesDisplay";
 import FilesDisplay from "./FilesDisplay";
 import byteSize from "byte-size";
@@ -91,8 +92,12 @@ export default function CreatePost({ groupId, postId, opened = true }) {
             postId && await axios.post("/api/comment", formData, { headers })
 
             clear()
-            groupId && queryClient.invalidateQueries("posts")
-            postId && queryClient.invalidateQueries("comments")
+            groupId && await queryClient.invalidateQueries("posts")
+            postId && await queryClient.invalidateQueries("comments")
+
+            notifications.show({
+                title: `${groupId ? "Príspevok" : "Komentár"} úspešne pridaný`,
+            })
         } catch (err) {
             console.log(err.message)
         }

@@ -4,7 +4,7 @@ import App from "templates/App";
 
 // CSS imports
 import "@mantine/core/styles.css";
-import "@mantine/charts/styles.css";
+import "@mantine/notifications/styles.css";
 import "css/textEditor.css";
 import "css/index.css";
 

@@ -33,6 +33,12 @@ const groupSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     }],
+    membersLength: {
+        type: Number,
+        get: function() {
+            return this.members.length;
+        },
+    },
 }, {
     timestamps: true
 })

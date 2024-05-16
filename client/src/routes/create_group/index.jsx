@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Box, Group, Button, AspectRatio, TextInput, Switch, Text, Tabs, Textarea, Avatar, Image } from '@mantine/core';
 import { IconCamera, IconLock, IconTrash, IconWorld } from "@tabler/icons-react";
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { notifications } from '@mantine/notifications';
 import ImagesModal from "templates/ImagesModal";
 import axios from 'axios';
-import { useQueryClient } from '@tanstack/react-query';
 
 const nameMaxLength = 64;
 const descriptionMaxLength = 160;
@@ -85,8 +86,12 @@ export default function CreateGroup() {
             formData.append("isPrivate", data.isPrivate);
 
             const response = await axios.post("/api/group/", formData, { headers });
-            queryClient.invalidateQueries("groups");
-            navigate(`/skupiny/${response.data.id}`)
+            await queryClient.invalidateQueries("groups");
+            navigate(`/skupiny/${response.data.id}`);
+
+            notifications.show({
+                title: "Skupina vytvorená",
+            });
         } catch (err) {
             console.log(err)
         }

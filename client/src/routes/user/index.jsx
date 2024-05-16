@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs, Badge } from "@mantine/core";
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "templates/Post";
@@ -123,9 +123,14 @@ export default function User() {
                                 <Avatar className="no-image" src={group.profilePicture?.thumbnail} />
 
                                 <Stack gap={4} style={{ flex: 1 }}>
-                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                        {group.name}
-                                    </Text>
+                                    <Group gap={4}>
+                                        <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                            {group.name}
+                                        </Text>
+                                        {data.user._id === group.owner &&
+                                            <Badge variant="light" size="xs">Admin</Badge>
+                                        }
+                                    </Group>
                                     <Group gap={2}>
                                         {group.isPrivate ?
                                             <IconLock color="var(--mantine-color-dimmed)" width={16} height={16} stroke={1.25} />

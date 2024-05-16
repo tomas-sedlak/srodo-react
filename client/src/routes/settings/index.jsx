@@ -7,10 +7,11 @@ import { IconPlus, IconCircleX, IconCamera, IconTrash } from "@tabler/icons-reac
 import { useDisclosure } from "@mantine/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "state";
+import { modals } from "@mantine/modals";
+import { notifications } from "@mantine/notifications";
 import ImagesModal from "templates/ImagesModal";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
-import { modals } from "@mantine/modals";
 
 const socialsData = [
     {
@@ -116,6 +117,10 @@ export default function Settings() {
             dispatch(setUser({ user: response.data }))
 
             navigate(`/${user.username}`)
+
+            notifications.show({
+                title: "Zmeny boli uložené",
+            });
         } catch (err) {
             console.log(err)
         }
