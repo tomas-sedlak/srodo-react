@@ -86,7 +86,7 @@ export default function EditGroup() {
     }
 
     const fetchGroup = async () => {
-        const response = await axios(`/api/group/${groupId}`)
+        const response = await axios(`/api/group/${groupId}`, { headers })
         setData({
             coverImage: response.data.coverImage,
             profilePicture: response.data.profilePicture?.large,

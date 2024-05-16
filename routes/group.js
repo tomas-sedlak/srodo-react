@@ -4,6 +4,7 @@ import {
     getGroup,
     getGroupPosts,
     getGroupMembers,
+    getInvite,
     joinGroup,
     leaveGroup,
     deleteGroup,
@@ -17,6 +18,7 @@ router.get("/suggestions", getGroupSuggestions);
 router.get("/:groupId", getGroup);
 router.get("/:groupId/posts", getGroupPosts);
 router.get("/:groupId/members", getGroupMembers);
+router.get("/invite/:privateKey", verifyToken, getInvite);
 
 // UPDATE
 router.patch("/:groupId/join", verifyToken, joinGroup);

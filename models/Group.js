@@ -25,6 +25,7 @@ const groupSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    privateKey: String,
     owner: {
         type: Schema.Types.ObjectId,
         ref: "User",

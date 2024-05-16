@@ -6,6 +6,8 @@ import Comment from "../models/Comment.js";
 import File from "../models/File.js";
 import Image from "../models/Image.js";
 import normalizeStrings from "normalize-strings";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 // CREATE
 export const createGroup = async (req, res) => {
@@ -33,12 +35,16 @@ export const createGroup = async (req, res) => {
             profilePicture.large = await uploadImage(req.body.profilePicture, 400, 400);
         }
 
+        let privateKey = undefined;
+        if (isPrivate) privateKey = crypto.randomBytes(16).toString("hex");
+
         const group = await Group.create({
             coverImage,
             profilePicture,
             name,
             description,
             isPrivate,
+            privateKey,
             owner: req.user.id,
             members: [req.user.id],
         });
@@ -56,6 +62,22 @@ export const getGroup = async (req, res) => {
         const group = await Group.findById(groupId)
             .populate("members", "username displayName profilePicture")
             .lean();
+
+        if (group.isPrivate) {
+            let token = req.header("Authorization");
+
+            if (!token) {
+                return res.status(403).send("Access Denied");
+            }
+
+            if (token.startsWith("Bearer ")) {
+                token = token.slice(7, token.length).trimLeft();
+            }
+
+            const user = jwt.verify(token, process.env.JWT_SECRET);
+
+            if (!group.members.find(member => member._id.equals(user.id))) return res.status(403).send("Access denied!");
+        }
 
         // Load images from s3 bucket
         group.coverImage = await getObject(group.coverImage);
@@ -158,6 +180,23 @@ export const getGroupSuggestions = async (req, res) => {
     }
 };
 
+export const getInvite = async (req, res) => {
+    try {
+        const { privateKey } = req.params;
+
+        const group = await Group.findOne({ privateKey });
+
+        if (!group.members.includes(req.user.id)) {
+            group.members.push(req.user.id);
+            await group.save();
+        }
+
+        res.status(200).send(group._id);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+}
+
 // UPDATE
 export const joinGroup = async (req, res) => {
     try {
@@ -166,9 +205,9 @@ export const joinGroup = async (req, res) => {
 
         if (!group.members.includes(req.user.id)) {
             group.members.push(req.user.id);
+            await group.save();
         }
 
-        await group.save();
         res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -182,9 +221,9 @@ export const leaveGroup = async (req, res) => {
 
         if (group.members.includes(req.user.id)) {
             group.members.pull(req.user.id);
+            await group.save();
         }
 
-        await group.save();
         res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });

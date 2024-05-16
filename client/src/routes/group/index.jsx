@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu } from '@mantine/core';
-import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus } from '@tabler/icons-react';
+import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu, Modal, ActionIcon } from '@mantine/core';
+import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus, IconCopy, IconClipboard } from '@tabler/icons-react';
 import { modals } from "@mantine/modals";
 import { useDebounceCallback, useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,6 +16,7 @@ export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
+    const [urlModalOpened, setUrlModalOpened] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const queryClient = useQueryClient();
@@ -29,7 +30,7 @@ export default function Group() {
     }
 
     const fetchGroup = async () => {
-        const group = await axios.get(`/api/group/${groupId}`)
+        const group = await axios.get(`/api/group/${groupId}`, { headers })
         return group.data
     }
 
@@ -41,7 +42,7 @@ export default function Group() {
 
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/join`, {}, { headers })
-        await queryClient.invalidateQueries("group")
+        await queryClient.invalidateQueries("groups")
         setIsLoading(false)
     }
 
@@ -53,7 +54,7 @@ export default function Group() {
 
         setIsLoading(true)
         await axios.patch(`/api/group/${groupId}/leave`, {}, { headers })
-        await queryClient.invalidateQueries("group")
+        await queryClient.invalidateQueries("groups")
         setIsLoading(false)
     }
 
@@ -82,12 +83,14 @@ export default function Group() {
         </div>
     ) : (
         <>
-            <AspectRatio ratio={6 / 2}>
+            {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
+
+            < AspectRatio ratio={6 / 2}>
                 {data.coverImage ?
                     <Image src={data.coverImage} />
                     : <Box className="no-image"></Box>
                 }
-            </AspectRatio>
+            </AspectRatio >
 
             <div style={{ position: "relative" }}>
                 <Avatar
@@ -103,6 +106,7 @@ export default function Group() {
                         variant="filled"
                         leftSection={<IconPlus stroke={1.25} />}
                         styles={{ section: { marginRight: 4 } }}
+                        onClick={() => setUrlModalOpened(true)}
                     >
                         Pozvať
                     </Button>
@@ -119,7 +123,10 @@ export default function Group() {
                     : data.members.find(user => user._id == userId) ?
                         <Button
                             variant="default"
-                            onClick={leaveGroup}
+                            onClick={() => {
+                                leaveGroup()
+                                data.isPrivate && navigate("/", { replace: true })
+                            }}
                             loading={isLoading}
                         >
                             Odísť
@@ -356,5 +363,37 @@ function UserProfile({ user, badge }) {
                 </Stack>
             </Flex>
         </Link>
+    )
+}
+
+function UrlModal({ url, opened, close }) {
+    return (
+        <Modal
+            opened={opened}
+            onClose={close}
+            title={<Text fz="lg" fw={700}>Pozvať do skupiny</Text>}
+            radius="lg"
+            centered
+        >
+            <Text c="dimmed" style={{ lineHeight: 1.4 }}>Pošli svojim priateľom tento link s ktorým sa budú vedieť pridať do tvojej skupiny.</Text>
+
+            <Flex mt="sm" gap={8}>
+                <TextInput value={url} style={{ flex: 1 }} />
+                <Tooltip label="Skopírovať URL">
+                    <ActionIcon
+                        w={36}
+                        h={36}
+                        onClick={() => {
+                            navigator.clipboard.writeText(url)
+                            notifications.show({
+                                title: "Skopírované do schránky",
+                            })
+                        }}
+                    >
+                        <IconClipboard stroke={1.25} />
+                    </ActionIcon>
+                </Tooltip>
+            </Flex>
+        </Modal>
     )
 }

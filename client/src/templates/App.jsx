@@ -23,6 +23,7 @@ const Group = lazy(() => import("routes/group"));
 const CreateGroup = lazy(() => import("routes/create_group"));
 const EditGroup = lazy(() => import("routes/edit_goup"));
 const Settings = lazy(() => import("routes/settings"));
+const Invite = lazy(() => import("routes/invite"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
@@ -84,12 +85,14 @@ export default function App() {
                                     <Route exact path=":username/prispevok/:postId" element={<Post />} />
 
                                     {/* PRIVATE ROUTES */}
-                                    <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" />} />
-                                    <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" />} />
-                                    <Route path="skupiny/:groupId/upravit" element={isAuth ? <EditGroup /> : <Navigate to="/" />} />
-                                    <Route path="vytvorit" element={!isAuth && <Navigate to="/" />}>
+                                    <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" replace />} />
+                                    <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" replace />} />
+                                    <Route path="skupiny/:groupId/upravit" element={isAuth ? <EditGroup /> : <Navigate to="/" replace />} />
+                                    <Route path="vytvorit" element={!isAuth && <Navigate to="/" replace />}>
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
+
+                                    <Route path="pozvanka/:privateKey" element={isAuth ? <Invite /> : <Navigate to="/prihlasenie" replace />} />
                                 </Route>
 
                                 <Route path="prihlasenie" element={<Login />} />
