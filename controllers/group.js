@@ -137,7 +137,7 @@ export const getGroupSuggestions = async (req, res) => {
             sort = { membersLength: -1 };
         }
 
-        const groups = await Group.find()
+        const groups = await Group.find({ isPrivate: false })
             .sort(sort)
             .populate("members", "username displayName profilePicture")
             .lean();

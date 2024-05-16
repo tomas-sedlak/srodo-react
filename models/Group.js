@@ -21,7 +21,7 @@ const groupSchema = new Schema({
         max: 160,
         trim: true,
     },
-    private: {
+    isPrivate: {
         type: Boolean,
         default: false,
     },

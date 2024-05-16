@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu } from '@mantine/core';
-import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag } from '@tabler/icons-react';
+import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus } from '@tabler/icons-react';
 import { modals } from "@mantine/modals";
 import { useDebounceCallback, useMediaQuery } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -98,6 +98,15 @@ export default function Group() {
             </div>
 
             <Flex px="md" h={profilePictureSize / 2} gap={8} justify="flex-end" align="center">
+                {data.owner == userId && data.isPrivate &&
+                    <Button
+                        variant="filled"
+                        leftSection={<IconPlus stroke={1.25} />}
+                        styles={{ section: { marginRight: 4 } }}
+                    >
+                        Pozvať
+                    </Button>
+                }
                 {data.owner == userId ?
                     <Button
                         variant="default"
