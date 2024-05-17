@@ -1,10 +1,30 @@
 import { uploadImage, getObject } from "../utils/s3.js";
+import { getProfilePicture } from "../utils/utils.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
+import hbs from "handlebars";
+import fs from "fs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
-import { getProfilePicture } from "../utils/utils.js";
+
+const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+    },
+});
+
+const compileTemplate = async (templatePath, data) => {
+    const rawTemplate = fs.readFileSync(templatePath, "utf8");
+    const template = hbs.compile(rawTemplate);
+    return template(data);
+};
 
 // REGISTER USER
 export const register = async (req, res) => {
@@ -26,6 +46,27 @@ export const register = async (req, res) => {
         });
 
         const savedUser = await newUser.save();
+
+        const url = "https://srodo.sk/test";
+
+        const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Overenie emailovej adresy Šrodo.sk",
+            text: `Pre overenie klikni na URL: ${url}`,
+            html: emailContent,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email: ", error);
+            } else {
+                console.log("Email sent: ", info.response);
+            }
+        });
+
         res.status(201).json(savedUser);
     } catch (err) {
         res.status(500).json({ message: err.message });
