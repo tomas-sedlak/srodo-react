@@ -1,11 +1,12 @@
 import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch } from '@mantine/core';
-import { IconSearch, IconMoon, IconSettings, IconChartBar, IconLogout, IconMenu2, IconX, IconPlus } from '@tabler/icons-react';
+import { IconSearch, IconMoon, IconSettings, IconLogout, IconMenu2, IconX, IconPlus } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout, setLoginModal } from "state";
 import Navbar from 'templates/Navbar';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -20,8 +21,8 @@ export default function Header() {
         <>
             <header>
                 <div className="header-inner">
-                    {isMobile ? (
-                        <Group>
+                    <Group h="100%">
+                        {isMobile ? (
                             <ActionIcon
                                 variant="subtle"
                                 onClick={drawerHandlers.open}
@@ -33,13 +34,15 @@ export default function Header() {
                             >
                                 <IconMenu2 stroke={1.25} />
                             </ActionIcon>
-                        </Group>
-                    ) : (
-                        <Group gap={8}>
-                            {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
-                            <Text fw={700} size="xl">Šrodo</Text>
-                        </Group>
-                    )}
+                        ) : (
+                            <Link to="/">
+                                <Group gap={8}>
+                                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                                    <Text fw={700} size="xl">Šrodo</Text>
+                                </Group>
+                            </Link>
+                        )}
+                    </Group>
 
                     <Autocomplete
                         data={["test", "admin"]}
@@ -144,10 +147,12 @@ export default function Header() {
                 size={280}
                 padding="sm"
                 title={
-                    <Group gap={8}>
-                        {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
-                        <Text fw={700} size="xl">Šrodo</Text>
-                    </Group>
+                    <Link to="/" onClick={drawerHandlers.close}>
+                        <Group gap={8}>
+                            {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                            <Text fw={700} size="xl">Šrodo</Text>
+                        </Group>
+                    </Link>
                 }
             >
                 <Navbar close={drawerHandlers.close} />
