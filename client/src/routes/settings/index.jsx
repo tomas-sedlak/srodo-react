@@ -342,7 +342,7 @@ export default function Settings() {
 
                 <AspectRatio ratio={6 / 2}  >
                     {coverImage ?
-                        <Image src={typeof coverImage === "string" ? coverImage : URL.createObjectURL(coverImage)} />
+                        <Image className="no-image" src={typeof coverImage === "string" ? coverImage : URL.createObjectURL(coverImage)} />
                         : <Box className="no-image"></Box>
                     }
                 </AspectRatio>

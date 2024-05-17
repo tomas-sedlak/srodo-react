@@ -14,7 +14,7 @@ export default function Comments({ postId }) {
     }
 
     const { status, data } = useQuery({
-        queryKey: ["comments", postId],
+        queryKey: ["comments", postId, userId],
         queryFn: fetchComments,
     });
 

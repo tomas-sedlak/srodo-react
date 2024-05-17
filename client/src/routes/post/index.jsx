@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { Box, Text, Group, Avatar, Loader, Stack } from '@mantine/core';
 import { PostButtons, PostMenu } from 'templates/PostWidgets';
+import { useSelector } from "react-redux";
 import ImagesDisplay from "templates/ImagesDisplay";
 import FilesDisplay from "templates/FilesDisplay";
 import Comments from "templates/Comments";
@@ -13,6 +14,7 @@ moment.locale("sk");
 
 export default function Post() {
     const { postId } = useParams();
+    const userId = useSelector(state => state.user?._id);
 
     const fetchPost = async () => {
         const post = await axios.get(`/api/post/${postId}`)
@@ -21,7 +23,7 @@ export default function Post() {
 
     const { data, status } = useQuery({
         queryFn: fetchPost,
-        queryKey: ["post", postId],
+        queryKey: ["post", postId, userId],
     })
 
     return status === "pending" ? (

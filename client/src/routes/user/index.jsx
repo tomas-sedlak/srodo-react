@@ -3,6 +3,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs, Badge } from "@mantine/core";
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import Post from "templates/Post";
 import axios from "axios";
 
@@ -12,6 +13,7 @@ moment.locale("sk");
 
 export default function User() {
     const { username, tab = "prispevky" } = useParams();
+    const userId = useSelector(state => state.user?._id);
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ export default function User() {
 
     const { data, status } = useQuery({
         queryFn: getData,
-        queryKey: ["userPage", username],
+        queryKey: ["userPage", username, userId],
     })
 
     return status === "pending" ? (
@@ -40,7 +42,7 @@ export default function User() {
         <>
             <AspectRatio ratio={6 / 2}>
                 {data.user.coverImage ?
-                    <Image src={data.user.coverImage} />
+                    <Image className="no-image" src={data.user.coverImage} />
                     : <Box className="no-image"></Box>
                 }
             </AspectRatio>

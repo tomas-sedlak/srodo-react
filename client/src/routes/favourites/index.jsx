@@ -15,7 +15,7 @@ export default function Favourites() {
     }
 
     const { status, data } = useQuery({
-        queryKey: ["favourites"],
+        queryKey: ["favourites", userId],
         queryFn: fetchFavourites,
     })
 

@@ -14,11 +14,15 @@ export default function Invite() {
     }
 
     const handleInvite = async () => {
-        const response = await axios.get(`/api/group/invite/${privateKey}`, { headers })
-        navigate(`/skupiny/${response.data}`, { replace: true })
-        notifications.show({
-            title: "Úspešne pridaný do skupiny",
-        })
+        try {
+            const response = await axios.get(`/api/group/invite/${privateKey}`, { headers })
+            navigate(`/skupiny/${response.data}`, { replace: true })
+            notifications.show({
+                title: "Úspešne pridaný do skupiny",
+            })
+        } catch (err) {
+            navigate("/")
+        }
     }
 
     useEffect(() => {

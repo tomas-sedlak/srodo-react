@@ -11,6 +11,7 @@ import { notifications } from "@mantine/notifications";
 import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
 import axios from "axios";
+import Message from "templates/Message";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -70,7 +71,10 @@ export default function Group() {
 
     const { data, status } = useQuery({
         queryFn: fetchGroup,
-        queryKey: ["group", groupId],
+        queryKey: ["group", groupId, userId],
+        retry: () => {
+            return false;
+        }
     })
 
     return status === "pending" ? (
@@ -79,7 +83,7 @@ export default function Group() {
         </div>
     ) : status === "error" ? (
         <div className="loader-center">
-            <p>Nastala chyba!</p>
+            <Message title="Nastala chyba! 💔" content="Skupina, ktorú hľadáš nebola nájdená." />
         </div>
     ) : (
         <>
@@ -87,7 +91,7 @@ export default function Group() {
 
             < AspectRatio ratio={6 / 2}>
                 {data.coverImage ?
-                    <Image src={data.coverImage} />
+                    <Image className="no-image" src={data.coverImage} />
                     : <Box className="no-image"></Box>
                 }
             </AspectRatio >

@@ -11,7 +11,7 @@ const Suggestion = forwardRef(({ group }, ref) => {
         <Link to={groupUrl} key={group._id}>
             <AspectRatio ratio={4 / 1}>
                 {group.coverImage ?
-                    <Image src={group.coverImage} />
+                    <Image className="no-image" src={group.coverImage} />
                     : <Box className="no-image"></Box>
                 }
             </AspectRatio>
