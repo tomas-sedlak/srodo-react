@@ -2,6 +2,7 @@ import { uploadImage, getObject } from "../utils/s3.js";
 import { getProfilePicture } from "../utils/utils.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import nodemailer from "nodemailer";
 import hbs from "handlebars";
 import fs from "fs";
@@ -9,15 +10,15 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
 
-const transporter = nodemailer.createTransport({
+var transporter = nodemailer.createTransport({
     service: "Gmail",
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL_USER,
+        user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
-    },
+    }
 });
 
 const compileTemplate = async (templatePath, data) => {
@@ -38,21 +39,21 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const newUser = new User({
+        const user = new User({
             displayName: username,
             username: username,
             email: email,
             password: passwordHash,
+            verifyKey: crypto.randomBytes(32).toString("hex"),
         });
 
-        const savedUser = await newUser.save();
+        await user.save();
 
-        const url = "https://srodo.sk/test";
-
+        const url = `https://srodo.sk/api/user/verify/${user.verifyKey}`;
         const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: process.env.EMAIL,
             to: email,
             subject: "Overenie emailovej adresy Šrodo.sk",
             text: `Pre overenie klikni na URL: ${url}`,
@@ -67,11 +68,28 @@ export const register = async (req, res) => {
             }
         });
 
-        res.status(201).json(savedUser);
+        res.status(201).json(user);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
+
+export const verify = async (req, res) => {
+    try {
+        const { verifyKey } = req.params;
+        const user = await User.findOne({ verifyKey });
+
+        if (!user)  return res.status(400).send("invalid Key!");
+
+        user.verified = true;
+        user.verifyKey = undefined;
+        await user.save();
+
+        res.sendStatus(200);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
 
 // LOGGING IN
 export const login = async (req, res) => {

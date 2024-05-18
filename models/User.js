@@ -48,7 +48,8 @@ const userSchema = new Schema({
     verified: {
         type: Boolean,
         default: false,
-    }
+    },
+    verifyKey: String,
 }, {
     timestamps: true,
 })
