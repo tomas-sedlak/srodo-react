@@ -32,10 +32,14 @@ export default function Favourites() {
         <>
             <SmallHeader title="❤️ Moje obľúbené príspevky" />
 
-            {data.length === 0 && <Message
-                title="Zatiaľ žiadne príspevky"
-                content="Klikni srdce na hocijakom príspevku. Keď tak urobíš, už tu nebude tak prázdno."
-            />}
+            {data.length === 0 &&
+                <div className="loader-center">
+                    <Message
+                        title="Zatiaľ žiadne príspevky"
+                        content="Klikni srdce na hocijakom príspevku. Keď tak urobíš, už tu nebude tak prázdno."
+                    />
+                </div>
+            }
 
             {data.map(post => <Post post={post} />)}
         </>

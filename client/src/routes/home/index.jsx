@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { Loader, Text } from "@mantine/core";
+import { Button, Loader, Text } from "@mantine/core";
 import { useSelector } from "react-redux";
 import Post from "templates/Post";
 import axios from "axios";
+import Message from "templates/Message";
+import { Link } from "react-router-dom";
 
 export default function Home() {
     const { ref, inView } = useInView();
@@ -48,6 +50,20 @@ export default function Home() {
         </div>
     ) : (
         <>
+            {data.pages[0].length === 0 &&
+                <div className="loader-center">
+                    <Message
+                        title="Zatiaľ nikoho nesleduješ"
+                        content="Pripoj sa do skupiny a tu sa ti zobrazia najnovšie príspevky."
+                        cta={
+                            <Link to="/preskumat">
+                                <Button>Nájdi skupinu</Button>
+                            </Link>
+                        }
+                    />
+                </div>
+            }
+
             {data.pages.map((page) => (
                 page.map((post, i) => {
                     return <Post ref={page.length === i + 1 ? ref : undefined} post={post} />

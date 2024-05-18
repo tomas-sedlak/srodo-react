@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setLogout, setLoginModal } from "state";
-import Navbar from 'templates/Navbar';
 import { Link } from 'react-router-dom';
+import Navbar from 'templates/Navbar';
 
 export default function Header() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
