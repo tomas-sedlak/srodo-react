@@ -23,6 +23,7 @@ const Group = lazy(() => import("routes/group"));
 const CreateGroup = lazy(() => import("routes/create_group"));
 const EditGroup = lazy(() => import("routes/edit_goup"));
 const Settings = lazy(() => import("routes/settings"));
+const Verify = lazy(() => import("routes/verify"));
 const Invite = lazy(() => import("routes/invite"));
 
 import ScrollToTop from "./ScrollToTop";
@@ -92,6 +93,7 @@ export default function App() {
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
 
+                                    <Route path="skontroluj/:verifyKey" element={<Verify />} />
                                     <Route path="pozvanka/:privateKey" element={isAuth ? <Invite /> : <Navigate to="/prihlasenie" replace />} />
                                 </Route>
 

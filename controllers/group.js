@@ -8,6 +8,7 @@ import Image from "../models/Image.js";
 import normalizeStrings from "normalize-strings";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 // CREATE
 export const createGroup = async (req, res) => {

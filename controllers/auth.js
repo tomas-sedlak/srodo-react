@@ -11,10 +11,8 @@ import User from "../models/User.js";
 import axios from "axios";
 
 var transporter = nodemailer.createTransport({
-    service: "Gmail",
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    host: "live.smtp.mailtrap.io",
+    port: 587,
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD,
@@ -49,11 +47,11 @@ export const register = async (req, res) => {
 
         await user.save();
 
-        const url = `https://srodo.sk/api/user/verify/${user.verifyKey}`;
+        const url = `https://srodo.sk/skontroluj/${user.verifyKey}`;
         const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
 
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: "noreply@srodo.sk",
             to: email,
             subject: "Overenie emailovej adresy Šrodo.sk",
             text: `Pre overenie klikni na URL: ${url}`,
@@ -79,7 +77,7 @@ export const verify = async (req, res) => {
         const { verifyKey } = req.params;
         const user = await User.findOne({ verifyKey });
 
-        if (!user)  return res.status(400).send("invalid Key!");
+        if (!user) return res.status(400).send("invalid Key!");
 
         user.verified = true;
         user.verifyKey = undefined;
@@ -96,10 +94,12 @@ export const login = async (req, res) => {
     try {
         const { usernameOrEmail, loginPassword } = req.body;
         const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] }).lean();
-        if (!user) return res.status(400).json({ message: "User does not exist." });
+        if (!user) return res.status(400).send("Nesprávne prihlasovacie údaje.");
+        if (!user.verified) return res.status(400).send("Email ešte nie je overený.");
+        if (!user.password) return res.status(400).send("Iný spôsob prihlásenia.");
 
         const isMatch = await bcrypt.compare(loginPassword, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Invalid credentials." });
+        if (!isMatch) return res.status(400).send("Nesprávne prihlasovacie údaje.");
 
         // Load images from s3 bucket
         user.coverImage = await getObject(user.coverImage);
@@ -125,7 +125,7 @@ export const google = async (req, res) => {
         });
 
         const email = response.data.email;
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email, password: undefined });
 
         if (!user) {
             const username = generateUsername();
@@ -136,7 +136,7 @@ export const google = async (req, res) => {
             };
 
             user = await User.create({
-                username, email, displayName, profilePicture
+                username, email, displayName, profilePicture, verified: true,
             })
         }
 

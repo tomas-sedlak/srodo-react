@@ -205,7 +205,7 @@ export default function LoginModal() {
                 values,
             )
 
-            setPageType("login");
+            setPageType("email");
             resetInputs()
         } catch (err) {
             setGlobalError("Nastala chyba. Skontroluj svoje údaje")
@@ -233,7 +233,8 @@ export default function LoginModal() {
             dispatch(setLoginModal(false));
             resetInputs()
         } catch (err) {
-            setGlobalError("Nesprávne prihlasovacie údaje")
+            console.log(err.response.data)
+            setGlobalError(err.response.data)
         }
 
         setLoading(false)
@@ -262,104 +263,113 @@ export default function LoginModal() {
             radius={isMobile ? 0 : "lg"}
             fullScreen={isMobile}
             centered
-            title={<Text fw={700} fz="lg">{isLogin ? "Prihlásiť sa na Šrodo" : "Registrovať sa na Šrodo"}</Text>}
+            title={<Text fw={700} fz="lg">{isLogin ? "Prihlásiť sa na Šrodo" : isRegister ? "Registrovať sa na Šrodo" : "Overenie emailu"}</Text>}
         >
-            <form onSubmit={handleFormSubmit}>
-                {globalError &&
-                    <Group
-                        bg="var(--mantine-color-red-light)"
-                        p="sm"
-                        mb="lg"
-                        gap={8}
-                        style={{ borderRadius: 8 }}
-                        align="flex-start"
-                    >
-                        <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
-                        <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
-                    </Group>
-                }
-
-                {isRegister ? (
-                    <>
-                        {registerInputs.map((input) =>
-                            <RegisterInput
-                                value={values[input.name]}
-                                setValue={setValue}
-                                error={errors[input.name]}
-                                status={statuses[input.name]}
-                                {...input}
-                            />
-                        )}
-                    </>
-                ) : (
-                    <>
-                        {loginInputs.map((input) =>
-                            <RegisterInput
-                                value={values[input.name]}
-                                setValue={setValue}
-                                error={errors[input.name]}
-                                status={statuses[input.name]}
-                                {...input}
-                            />
-                        )}
-
-                        <Text
-                            mt={4}
-                            ta="right"
-                            size="sm"
-                            c="dimmed"
-                            className="pointer"
+            {(isRegister || isLogin) &&
+                <form onSubmit={handleFormSubmit}>
+                    {globalError &&
+                        <Group
+                            bg="var(--mantine-color-red-light)"
+                            p="sm"
+                            mb="lg"
+                            gap={8}
+                            style={{ borderRadius: 8 }}
+                            align="flex-start"
                         >
-                            Zabudnuté heslo?
-                        </Text>
-                    </>
-                )}
+                            <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
+                            <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
+                        </Group>
+                    }
 
-                <Button
-                    fullWidth
-                    mt="lg"
-                    type="submit"
-                    loading={loading}
-                >
-                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
-                </Button>
+                    {isRegister ? (
+                        <>
+                            {registerInputs.map((input) =>
+                                <RegisterInput
+                                    value={values[input.name]}
+                                    setValue={setValue}
+                                    error={errors[input.name]}
+                                    status={statuses[input.name]}
+                                    {...input}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {loginInputs.map((input) =>
+                                <RegisterInput
+                                    value={values[input.name]}
+                                    setValue={setValue}
+                                    error={errors[input.name]}
+                                    status={statuses[input.name]}
+                                    {...input}
+                                />
+                            )}
 
-                <Divider label="alebo" my="md" />
+                            <Text
+                                mt={4}
+                                ta="right"
+                                size="sm"
+                                c="dimmed"
+                                className="pointer"
+                            >
+                                Zabudnuté heslo?
+                            </Text>
+                        </>
+                    )}
 
-                <Button
-                    variant="default"
-                    // component="a"
-                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
-                    // href="/api/auth/google"
-                    onClick={googleLogin}
-                    fullWidth
-                >
-                    {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google
-                </Button>
-
-
-                <Text
-                    mt="xl"
-                    ta="center"
-                    c="dimmed"
-                    size="sm"
-                >
-                    {isLogin ? "Nemáte účet?" : "Už máte účet?"}
-                    <Text
-                        span
-                        ml={4}
-                        c="srobarka"
-                        fw={600}
-                        className="pointer"
-                        onClick={() => {
-                            setPageType(isLogin ? "register" : "login")
-                            resetInputs()
-                        }}
+                    <Button
+                        fullWidth
+                        mt="lg"
+                        type="submit"
+                        loading={loading}
                     >
-                        {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                        {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"}
+                    </Button>
+
+                    <Divider label="alebo" my="md" />
+
+                    <Button
+                        variant="default"
+                        // component="a"
+                        leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
+                        // href="/api/auth/google"
+                        onClick={googleLogin}
+                        fullWidth
+                    >
+                        {isLogin ? "Prihlásiť sa" : "Zaregistrovať sa"} cez Google
+                    </Button>
+
+
+                    <Text
+                        mt="xl"
+                        ta="center"
+                        c="dimmed"
+                        size="sm"
+                    >
+                        {isLogin ? "Nemáte účet?" : "Už máte účet?"}
+                        <Text
+                            span
+                            ml={4}
+                            c="srobarka"
+                            fw={600}
+                            className="pointer"
+                            onClick={() => {
+                                setPageType(isLogin ? "register" : "login")
+                                resetInputs()
+                            }}
+                        >
+                            {isLogin ? "Zaregistrovať sa" : "Prihlásiť sa"}
+                        </Text>
                     </Text>
-                </Text>
-            </form>
+                </form>
+            }
+
+            {pageType === "email" &&
+                <>
+                    <Text c="dimmed">Zaslali sme email s overovacím linkom na <Text component="span" fw={600} c="white">{values.email}</Text></Text>
+                    <Text mt={8}>Pokiaľ nepotvrdíš svoj email nebudeš môcť využívať funkcie účtu.</Text>
+                </>
+            }
         </Modal>
     );
 }

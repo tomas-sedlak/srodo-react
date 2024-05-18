@@ -53,8 +53,8 @@ export default function Home() {
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message
-                        title="Zatiaľ nikoho nesleduješ"
-                        content="Pripoj sa do skupiny a tu sa ti zobrazia najnovšie príspevky."
+                        title="Zatiaľ celkom nuda, čo 🥱? "
+                        content="Pripoj sa do skupiny a tu sa ti zobrazia jej najnovšie príspevky."
                         cta={
                             <Link to="/preskumat">
                                 <Button>Nájdi skupinu</Button>
