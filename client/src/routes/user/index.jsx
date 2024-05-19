@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Progress, Center, Tabs, Badge } from "@mantine/core";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge } from "@mantine/core";
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -149,20 +149,7 @@ export default function User() {
 
             {tab === "ocenenia" &&
                 <Box px="md" py="sm">
-                    <Group>
-                        <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
-                            <Center>
-                                <Text c="white" >4</Text>
-                            </Center>
-                        </Box>
-
-                        <Progress size="lg" value={25} style={{ flex: 1 }} />
-                        <Box style={{ borderRadius: "var(--mantine-radius-xl)" }} bg="var(--mantine-color-srobarka-filled)" w={32} h={32} p={2}>
-                            <Center>
-                                <Text c="white">5</Text>
-                            </Center>
-                        </Box>
-                    </Group>
+                    <Text c="dimmed">🎉 COMING SOON 🎉</Text>
                 </Box>
             }
         </>
