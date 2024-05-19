@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Divider, Group, Text } from "@mantine/core";
 import { RegisterInput } from "templates/FloatingInput";
+import { Box, Button, Divider, Group, Text } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons-react";
-import { useDispatch } from "react-redux";
-import { setLogin, setLoginModal } from "state";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useDispatch } from "react-redux";
+import { setLoginModal } from "state";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
 
 const initialValues = {
-    usernameOrEmail: "",
+    username: "",
+    email: "",
     password: "",
 }
 
-export default function Login({ modal }) {
+export default function Register() {
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState(initialValues);
     const [globalError, setGlobalError] = useState(null);
@@ -25,13 +26,33 @@ export default function Login({ modal }) {
     const inputs = [
         {
             type: "text",
-            name: "usernameOrEmail",
-            label: "Používateľské meno alebo email",
+            name: "username",
+            label: "Používateľské meno",
             validate: (value) => {
                 let error = null
-                if (value.length === 0) error = "Toto pole je povinné"
+                if (value.length === 0) {
+                    error = "Toto pole je povinné"
+                } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                    error = 'Môže obsahovať iba písmená, čísla a "_"'
+                }
 
-                setError("usernameOrEmail", error)
+                setError("username", error)
+            }
+        },
+        {
+            type: "email",
+            name: "email",
+            label: "Email",
+            mt: "sm",
+            validate: (value) => {
+                let error = null
+                if (value.length === 0) {
+                    error = "Toto pole je povinné"
+                } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/.test(value)) {
+                    error = "Neplatný email"
+                }
+
+                setError("email", error)
             }
         },
         {
@@ -41,7 +62,11 @@ export default function Login({ modal }) {
             mt: "sm",
             validate: (value) => {
                 let error = null
-                if (value.length === 0) error = "Toto pole je povinné"
+                if (value.length === 0) {
+                    error = "Toto pole je povinné"
+                } else if (value.length < 8) {
+                    error = "Heslo musí mať aspoň 8 znakov"
+                }
 
                 setError("password", error)
             }
@@ -67,23 +92,13 @@ export default function Login({ modal }) {
         setLoading(true)
 
         try {
-            const response = await axios.post(
-                "/api/auth/login",
+            await axios.post(
+                "/api/auth/register",
                 values,
             )
 
-            dispatch(
-                setLogin({
-                    user: response.data.user,
-                    token: response.data.token,
-                })
-            );
-
             dispatch(setLoginModal(false))
-            navigate("/")
-            notifications.show({
-                title: "Úspešne prihlásený."
-            })
+            navigate("/kontorla-emailu")
         } catch (err) {
             setGlobalError(err.response.data)
         }
@@ -120,9 +135,9 @@ export default function Login({ modal }) {
     const googleLogin = useGoogleLogin({ onSuccess: handleGoogleLogin });
 
     return (
-        <Box className={!modal && "form-center-wrapper"}>
-            <form onSubmit={handleLogin} className={!modal && "form-center-inner"}>
-                {!modal && <Text fw={700} size="xl" mb="lg">Prihlásiť sa na Šrodo</Text>}
+        <Box className="form-center-wrapper">
+            <form onSubmit={handleLogin} className="form-center-inner">
+                <Text fw={700} size="xl" mb="lg">Registrovať sa na Šrodo</Text>
 
                 {globalError &&
                     <Group
@@ -147,23 +162,13 @@ export default function Login({ modal }) {
                     />
                 )}
 
-                <Text
-                    mt={4}
-                    ta="right"
-                    size="sm"
-                    c="dimmed"
-                    className="pointer"
-                >
-                    Zabudnuté heslo?
-                </Text>
-
                 <Button
                     fullWidth
                     mt="lg"
                     type="submit"
                     loading={loading}
                 >
-                    Prihlásiť sa
+                    Zaregistrovať sa
                 </Button>
 
                 <Divider label="alebo" my="md" />
@@ -174,7 +179,7 @@ export default function Login({ modal }) {
                     onClick={googleLogin}
                     fullWidth
                 >
-                    Prihlásiť sa cez Google
+                    Zaregistrovať sa cez Google
                 </Button>
 
                 <Text
@@ -183,7 +188,7 @@ export default function Login({ modal }) {
                     c="dimmed"
                     size="sm"
                 >
-                    Nemáte účet?
+                    Už máte účet?
                     <Text
                         ml={4}
                         component="span"
@@ -192,10 +197,10 @@ export default function Login({ modal }) {
                         className="pointer"
                         onClick={() => {
                             dispatch(setLoginModal(false))
-                            navigate("/registracia")
+                            navigate("/prihlasenie")
                         }}
                     >
-                        Zaregistrovať sa
+                        Prihlásiť sa
                     </Text>
                 </Text>
             </form>

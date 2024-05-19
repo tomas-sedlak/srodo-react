@@ -34,15 +34,28 @@ export const register = async (req, res) => {
             password,
         } = req.body;
 
+        // Check if username and email is unique
+        const sameUsername = await User.find({ username });
+        if (sameUsername.length > 0) {
+            return res.status(400).send("Toto používateľské meno sa už používa");
+        }
+
+        const sameEmail = await User.find({ email });
+        if (sameEmail.length > 0) {
+            return res.status(400).send("Tento email sa už používa");
+        }
+
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
         const user = new User({
             displayName: username,
-            username: username,
-            email: email,
-            password: passwordHash,
+            username,
+            email,
+            verified: false,
             verifyKey: crypto.randomBytes(32).toString("hex"),
+            password: passwordHash,
+            loginMethod: "email",
         });
 
         await user.save();
@@ -66,9 +79,9 @@ export const register = async (req, res) => {
             }
         });
 
-        res.status(201).json(user);
+        res.sendStatus(201);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).send(err.message);
     }
 };
 
@@ -77,7 +90,7 @@ export const verify = async (req, res) => {
         const { verifyKey } = req.params;
         const user = await User.findOne({ verifyKey });
 
-        if (!user) return res.status(400).send("invalid Key!");
+        if (!user) return res.status(400).send("Nesprávny URL link.");
 
         user.verified = true;
         user.verifyKey = undefined;
@@ -85,20 +98,21 @@ export const verify = async (req, res) => {
 
         res.sendStatus(200);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).send(err.message);
     }
 }
 
 // LOGGING IN
 export const login = async (req, res) => {
     try {
-        const { usernameOrEmail, loginPassword } = req.body;
+        const { usernameOrEmail, password } = req.body;
         const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] }).lean();
+
         if (!user) return res.status(400).send("Nesprávne prihlasovacie údaje.");
         if (!user.verified) return res.status(400).send("Email ešte nie je overený.");
-        if (!user.password) return res.status(400).send("Iný spôsob prihlásenia.");
+        if (user.loginMethod !== "email") return res.status(400).send("Iný spôsob prihlásenia.");
 
-        const isMatch = await bcrypt.compare(loginPassword, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).send("Nesprávne prihlasovacie údaje.");
 
         // Load images from s3 bucket
@@ -109,7 +123,7 @@ export const login = async (req, res) => {
         delete user.password;
         res.status(200).json({ token, user });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).send(err.message);
     }
 };
 
@@ -118,15 +132,19 @@ export const google = async (req, res) => {
     try {
         const { accessToken } = req.body;
 
-        const response = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
-            headers: {
-                "Authorization": `Bearer ${accessToken}`
+        const response = await axios.get(
+            "https://www.googleapis.com/oauth2/v3/userinfo",
+            {
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
             }
-        });
+        );
 
         const email = response.data.email;
-        let user = await User.findOne({ email, password: undefined });
+        let user = await User.findOne({ email });
 
+        if (user && user.loginMethod !== "google") return res.status(400).send("Iný spôsob prihlásenia.");
         if (!user) {
             const username = generateUsername();
             const displayName = response.data.name;
@@ -136,8 +154,13 @@ export const google = async (req, res) => {
             };
 
             user = await User.create({
-                username, email, displayName, profilePicture, verified: true,
-            })
+                username,
+                email,
+                displayName,
+                profilePicture,
+                verified: true,
+                loginMethod: "google",
+            });
         }
 
         // Load images from s3 bucket
@@ -147,6 +170,6 @@ export const google = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.status(200).json({ token, user });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).send(err.message);
     }
 }

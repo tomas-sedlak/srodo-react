@@ -84,7 +84,7 @@ export function RegisterInput(props) {
             onFocus={() => setFocused(true)}
             onBlur={async (event) => {
                 setFocused(false)
-                await validate(event)
+                validate(event.target.value)
             }}
             onChange={setValue}
             rightSection={type === "password" ?

@@ -18,7 +18,17 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
+    verified: {
+        type: Boolean,
+        default: false,
+    },
+    verifyKey: String,
     password: String,
+    loginMethod: {
+        type: String,
+        enum: ["email", "google"],
+        required: true,
+    },
     displayName: {
         type: String,
         max: 32,
@@ -45,11 +55,6 @@ const userSchema = new Schema({
         },
         maxLength: 5,
     }],
-    verified: {
-        type: Boolean,
-        default: false,
-    },
-    verifyKey: String,
 }, {
     timestamps: true,
 })

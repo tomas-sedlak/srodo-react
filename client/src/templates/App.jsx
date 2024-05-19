@@ -13,6 +13,7 @@ import axios from "axios";
 // Routes import
 import Root from "templates/Root";
 import Login from "routes/login";
+import Register from "routes/register";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
 const Explore = lazy(() => import("routes/explore"));
@@ -98,6 +99,7 @@ export default function App() {
                                 </Route>
 
                                 <Route path="prihlasenie" element={<Login />} />
+                                <Route path="registracia" element={<Register />} />
                             </Routes>
                         </BrowserRouter>
                     </GoogleOAuthProvider>
