@@ -12,17 +12,14 @@ export default function LoginModal() {
     return (
         <Modal
             opened={opened}
-            onClose={() => dispatch(setLoginModal(false))}
-            padding={isMobile ? "sm" : "lg"}
             size="sm"
-            radius={isMobile ? 0 : "lg"}
-            fullScreen={isMobile}
+            radius="lg"
+            padding={isMobile ? "md" : "lg"}
             centered
             title={<Text fw={700} fz="lg">Prihlásiť sa na Šrodo</Text>}
+            onClose={() => dispatch(setLoginModal(false))}
         >
             <Login modal />
-                    {/* <Text c="dimmed">Zaslali sme email s overovacím linkom na <Text component="span" fw={600} c="white">{values.email}</Text></Text>
-                    <Text mt={8}>Pokiaľ nepotvrdíš svoj email nebudeš môcť využívať funkcie účtu.</Text> */}
         </Modal>
     );
 }

@@ -1,11 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { notifications } from "@mantine/notifications";
+import Message from "templates/Message";
+import axios from "axios";
 
 export default function Invite() {
     const { privateKey } = useParams();
+    const [component, setComponent] = useState();
     const navigate = useNavigate();
 
     const token = useSelector(state => state.token);
@@ -21,11 +23,17 @@ export default function Invite() {
                 title: "Úspešne pridaný do skupiny",
             })
         } catch (err) {
-            navigate("/")
+            setComponent(
+                <div className="loader-center">
+                    <Message title="Nesprávna URL adresa" content="Máš nesprávny link alebo link už nie je platný." />
+                </div>
+            )
         }
     }
 
     useEffect(() => {
         handleInvite()
     }, [])
+
+    return component
 }

@@ -60,7 +60,7 @@ export const register = async (req, res) => {
 
         await user.save();
 
-        const url = `https://srodo.sk/skontroluj/${user.verifyKey}`;
+        const url = `https://srodo.sk/overenie-emailu/${user.verifyKey}`;
         const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
 
         const mailOptions = {
@@ -90,13 +90,20 @@ export const verify = async (req, res) => {
         const { verifyKey } = req.params;
         const user = await User.findOne({ verifyKey });
 
-        if (!user) return res.status(400).send("Nesprávny URL link.");
+        if (!user) return res.status(400).send("Nesprávna URL adresa.");
 
         user.verified = true;
         user.verifyKey = undefined;
         await user.save();
 
-        res.sendStatus(200);
+        // Load images from s3 bucket
+        user.coverImage = await getObject(user.coverImage);
+        await getProfilePicture(user.profilePicture);
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        delete user.password;
+
+        res.status(200).json({ token, user });
     } catch (err) {
         res.status(500).send(err.message);
     }

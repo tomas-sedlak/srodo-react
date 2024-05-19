@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RegisterInput } from "templates/FloatingInput";
 import { Box, Button, Divider, Group, Text } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconCircleCheck } from "@tabler/icons-react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -16,6 +16,7 @@ const initialValues = {
 }
 
 export default function Register() {
+    const [pageType, setPageType] = useState("form");
     const [values, setValues] = useState(initialValues);
     const [errors, setErrors] = useState(initialValues);
     const [globalError, setGlobalError] = useState(null);
@@ -98,7 +99,7 @@ export default function Register() {
             )
 
             dispatch(setLoginModal(false))
-            navigate("/kontorla-emailu")
+            setPageType("info")
         } catch (err) {
             setGlobalError(err.response.data)
         }
@@ -123,7 +124,7 @@ export default function Register() {
             dispatch(setLoginModal(false))
             navigate("/")
             notifications.show({
-                title: "Úspešne prihlásený."
+                title: "Úspešne prihlásený. Vitaj na Šrodo.sk 👋"
             })
         } catch (err) {
             setGlobalError(err.response.data)
@@ -136,74 +137,83 @@ export default function Register() {
 
     return (
         <Box className="form-center-wrapper">
-            <form onSubmit={handleLogin} className="form-center-inner">
-                <Text fw={700} size="xl" mb="lg">Registrovať sa na Šrodo</Text>
+            {pageType === "form" &&
+                <form onSubmit={handleLogin} className="form-center-inner">
+                    <Text fw={700} size="xl" mb="lg">Registrovať sa na Šrodo</Text>
 
-                {globalError &&
-                    <Group
-                        bg="var(--mantine-color-red-light)"
-                        p="sm"
-                        mb="lg"
-                        gap={8}
-                        style={{ borderRadius: 8 }}
-                        align="flex-start"
+                    {globalError &&
+                        <Group
+                            bg="var(--mantine-color-red-light)"
+                            p="sm"
+                            mb="lg"
+                            gap={8}
+                            style={{ borderRadius: 8 }}
+                            align="flex-start"
+                        >
+                            <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
+                            <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
+                        </Group>
+                    }
+
+                    {inputs.map((input) =>
+                        <RegisterInput
+                            value={values[input.name]}
+                            setValue={setValue}
+                            error={errors[input.name]}
+                            {...input}
+                        />
+                    )}
+
+                    <Button
+                        fullWidth
+                        mt="lg"
+                        type="submit"
+                        loading={loading}
                     >
-                        <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
-                        <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
-                    </Group>
-                }
+                        Zaregistrovať sa
+                    </Button>
 
-                {inputs.map((input) =>
-                    <RegisterInput
-                        value={values[input.name]}
-                        setValue={setValue}
-                        error={errors[input.name]}
-                        {...input}
-                    />
-                )}
+                    <Divider label="alebo" my="md" />
 
-                <Button
-                    fullWidth
-                    mt="lg"
-                    type="submit"
-                    loading={loading}
-                >
-                    Zaregistrovať sa
-                </Button>
+                    <Button
+                        variant="default"
+                        leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
+                        onClick={googleLogin}
+                        fullWidth
+                    >
+                        Zaregistrovať sa cez Google
+                    </Button>
 
-                <Divider label="alebo" my="md" />
-
-                <Button
-                    variant="default"
-                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
-                    onClick={googleLogin}
-                    fullWidth
-                >
-                    Zaregistrovať sa cez Google
-                </Button>
-
-                <Text
-                    mt="xl"
-                    ta="center"
-                    c="dimmed"
-                    size="sm"
-                >
-                    Už máte účet?
                     <Text
-                        ml={4}
-                        component="span"
-                        c="srobarka"
-                        fw={600}
-                        className="pointer"
-                        onClick={() => {
-                            dispatch(setLoginModal(false))
-                            navigate("/prihlasenie")
-                        }}
+                        mt="xl"
+                        ta="center"
+                        c="dimmed"
+                        size="sm"
                     >
-                        Prihlásiť sa
+                        Už máte účet?
+                        <Text
+                            ml={4}
+                            component="span"
+                            c="srobarka"
+                            fw={600}
+                            className="pointer"
+                            onClick={() => {
+                                dispatch(setLoginModal(false))
+                                navigate("/prihlasenie")
+                            }}
+                        >
+                            Prihlásiť sa
+                        </Text>
                     </Text>
-                </Text>
-            </form>
+                </form>
+            }
+
+            {pageType === "info" &&
+                <>
+                    <IconCircleCheck size={128} stroke={1} color="green" />
+                    <Text mt="sm" ta="center" c="dimmed">Email s overovacím linkom bol zaslaný na <Text component="span" fw={600} c="white">{values.email}</Text></Text>
+                </>
+            }
         </Box>
     );
 }

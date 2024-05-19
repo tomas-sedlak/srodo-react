@@ -82,7 +82,7 @@ export default function Login({ modal }) {
             dispatch(setLoginModal(false))
             navigate("/")
             notifications.show({
-                title: "Úspešne prihlásený."
+                title: "Úspešne prihlásený. Vitaj späť 👋"
             })
         } catch (err) {
             setGlobalError(err.response.data)
@@ -108,7 +108,7 @@ export default function Login({ modal }) {
             dispatch(setLoginModal(false))
             navigate("/")
             notifications.show({
-                title: "Úspešne prihlásený."
+                title: "Úspešne prihlásený. Vitaj na Šrodo.sk 👋"
             })
         } catch (err) {
             setGlobalError(err.response.data)

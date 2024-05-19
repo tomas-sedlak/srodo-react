@@ -94,7 +94,7 @@ export default function App() {
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
 
-                                    <Route path="skontroluj/:verifyKey" element={<Verify />} />
+                                    <Route path="overenie-emailu/:verifyKey" element={<Verify />} />
                                     <Route path="pozvanka/:privateKey" element={isAuth ? <Invite /> : <Navigate to="/prihlasenie" replace />} />
                                 </Route>
 
