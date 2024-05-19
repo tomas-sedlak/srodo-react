@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Loader, Text, Image, TextInput, Modal, Box, rem, Button, Center, Group, Tabs } from '@mantine/core';
-import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import { IconSearch, IconX, IconUpload, IconPhoto } from '@tabler/icons-react';
-import { useMediaQuery } from '@mantine/hooks';
+import { Loader, Text, Image, TextInput, Modal, Box, Button, Group, Tabs } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
+import { IconSearch, IconX, IconUpload } from '@tabler/icons-react';
+import { useDebounceCallback, useMediaQuery } from '@mantine/hooks';
 import { createClient } from 'pexels';
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FixedSizeGrid } from "react-window";
@@ -35,6 +35,15 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
     const [tab, setTab] = useState("pexels");
     const isMobile = useMediaQuery("(max-width: 768px)");
 
+    const handleSearch = useDebounceCallback(async () => {
+        refetch()
+    }, 200)
+
+    const handleChange = value => {
+        setQuery(value)
+        handleSearch()
+    }
+
     async function search({ pageParam }) {
         if (!query || query === "") return await emptySearch(pageParam)
         else return await querySearch(pageParam)
@@ -56,8 +65,9 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
         data,
         fetchNextPage,
         status,
+        refetch,
     } = useInfiniteQuery({
-        queryKey: ["imagesModal", qkey, query],
+        queryKey: ["imagesModal", qkey],
         queryFn: search,
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) => {
@@ -65,11 +75,6 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
             return nextPage
         },
     })
-
-    const handleAddImage = () => {
-        // Trigger the file input
-        document.getElementById('imageInput').click();
-    }
 
     return (
         <Modal.Root
@@ -103,13 +108,13 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                                 className="search images-modal-search"
                                 placeholder="Obrázky musíš vyhľadávať po anglicky!"
                                 value={query}
-                                onChange={event => setQuery(event.currentTarget.value)}
+                                onChange={event => handleChange(event.currentTarget.value)}
                                 leftSection={<IconSearch stroke={1.25} />}
                                 rightSection={
                                     query !== "" && (
                                         <IconX
                                             className="pointer"
-                                            onClick={() => setQuery("")}
+                                            onClick={() => handleChange("")}
                                             stroke={1.25}
                                         />
                                     )
@@ -163,18 +168,18 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                                                             const index = rowIndex * columns + columnIndex;
                                                             let image;
                                                             try {
-                                                                image = data.pages[Math.floor(index / LIMIT)][index % LIMIT].src.landscape;
+                                                                image = data.pages[Math.floor(index / LIMIT)][index % LIMIT].src;
                                                             } catch {
                                                                 return (<></>)
                                                             }
 
                                                             return (
                                                                 <Image
-                                                                    src={image}
+                                                                    src={image.large}
                                                                     radius="lg"
                                                                     p={2}
                                                                     onClick={() => {
-                                                                        setImage(image)
+                                                                        setImage(image.landscape)
                                                                         close()
                                                                     }}
                                                                     style={{ ...style, cursor: "pointer" }}
@@ -240,49 +245,25 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                             )}
                         </>
                     ) : (
-                        // Trying the dropzone
-                        <>
-                           
-                            <Dropzone
-                                mt="md"
-                                onDrop={(files) => {
-                                    setImage(files[0])
-                                    close()
-                                }}
-                                onReject={(files) => console.log('rejected files', files)}
-                                maxSize={5 * 1024 ** 2}
-                                accept={IMAGE_MIME_TYPE}
-                            >
-                                <Center>
-                                    <Dropzone.Accept>
-                                        <IconUpload
-                                            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
-                                            stroke={1.5}
-                                        />
-                                    </Dropzone.Accept>
-                                    <Dropzone.Reject>
-                                        <IconX
-                                            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
-                                            stroke={1.5}
-                                        />
-                                    </Dropzone.Reject>
-                                    <Dropzone.Idle>
-                                        <IconPhoto
-                                            style={{ width: rem(104), height: rem(104), color: 'var(--mantine-color-dimmed)' }}
-                                            stroke={1.5}
-                                        />
-                                    </Dropzone.Idle>
-                                </Center>
-                                <Center mt="md" >
-                                    <Text size="xl" inline>
-                                        Drag images here or click to select files
-                                    </Text>
-                                </Center>
-                                <Center mt="md" >
-                                    <Button onClick={handleAddImage}>Add Images</Button>
-                                </Center>
-                            </Dropzone>
-                        </>
+                        <Dropzone
+                            h="100%"
+                            onDrop={(files) => {
+                                setImage(files[0])
+                                close()
+                            }}
+                            onReject={(files) => console.log('rejected files', files)}
+                            maxSize={5 * 1024 ** 2}
+                            accept={["image/png", "image/jpeg"]}
+                            styles={{ inner: { height: "100%" } }}
+                        >
+                            <div className="loader-center">
+                                <IconUpload color="var(--mantine-color-dimmed)" size={128} stroke={1} />
+                                <Text c="dimmed">
+                                    Potiahni tu obrázky alebo klikni na tlačidlo a nahraj ich
+                                </Text>
+                                <Button mt={8}>Pridaj obrázky</Button>
+                            </div>
+                        </Dropzone>
                     )}
                 </Modal.Body>
             </Modal.Content>
