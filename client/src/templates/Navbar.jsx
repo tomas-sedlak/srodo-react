@@ -1,5 +1,5 @@
-import { Badge, Text, Loader, Avatar } from '@mantine/core';
-import { IconHome, IconHeart, IconPuzzle, IconSearch } from '@tabler/icons-react';
+import { Badge, Text, Loader, Avatar, Button } from '@mantine/core';
+import { IconHome, IconHeart, IconPuzzle, IconSearch, IconBug } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
@@ -79,6 +79,26 @@ export default function Navbar({ close }) {
                     </Link>
                 )
             })}
+
+            {/* Only for beta testing */}
+            <Link
+                key="report"
+                to="https://forms.gle/LxgnHVcujEr8rjRD6"
+                target="_blank"
+                onClick={close}
+                style={{ marginTop: "var(--mantine-spacing-sm)" }}
+            >
+                <Button
+                    size="md"
+                    fw={500}
+                    justify="flex-start"
+                    leftSection={<IconBug stroke={1.25} />}
+                    fullWidth
+                >
+                    Nahlásiť bug
+                </Button>
+            </Link >
+            {/* Only for beta testing */}
 
             {/* Subject items */}
             <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
