@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
+import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
 import axios from "axios";
 
