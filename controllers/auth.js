@@ -64,10 +64,10 @@ export const register = async (req, res) => {
         const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
 
         const mailOptions = {
-            from: "noreply@srodo.sk",
+            from: "Šrodo.sk <no-reply@srodo.sk>",
             to: email,
-            subject: "Overenie emailovej adresy Šrodo.sk",
-            text: `Pre overenie klikni na URL: ${url}`,
+            subject: "Over svoj e-mail",
+            text: `Pripravený získať 100% na teste? Over svoje konto a začni používať Šrodo naplno: ${url}`,
             html: emailContent,
         };
 
