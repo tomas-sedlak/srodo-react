@@ -5,7 +5,7 @@ import { Box, Button, Divider, Group, Text } from "@mantine/core";
 import { IconAlertCircle, IconCircleCheck } from "@tabler/icons-react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
-import { setLoginModal } from "state";
+import { setLogin, setLoginModal } from "state";
 import { notifications } from "@mantine/notifications";
 import axios from "axios";
 
