@@ -2,9 +2,14 @@ import { getObject } from "./s3.js";
 import Comment from "../models/Comment.js";
 
 export const getPostUtil = async (post, cache = {}) => {
+    if (post.group?._id && !cache[post.group._id]) {
+        cache[post.group._id] = await getProfilePicture(post.group.profilePicture);
+    }
     if (!cache[post.author._id]) {
         cache[post.author._id] = await getProfilePicture(post.author.profilePicture);
     }
+
+    if (post.group?._id) post.group.profilePicture = cache[post.group._id];
     post.author.profilePicture = cache[post.author._id];
 
     for (const image of post.images) {

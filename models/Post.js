@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const postSchema = new Schema({
-    groupId: Schema.Types.ObjectId,
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+    },
     author: {
         type: Schema.Types.ObjectId,
         ref: "User",

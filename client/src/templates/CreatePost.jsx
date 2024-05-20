@@ -78,7 +78,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
 
         try {
             const formData = new FormData()
-            groupId && formData.append("groupId", groupId)
+            groupId && formData.append("group", groupId)
             postId && formData.append("postId", postId)
             formData.append("content", content)
             for (const image of images) {

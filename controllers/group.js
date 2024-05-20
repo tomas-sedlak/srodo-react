@@ -96,7 +96,7 @@ export const getGroup = async (req, res) => {
 export const getGroupPosts = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const posts = await Post.find({ groupId })
+        const posts = await Post.find({ group: groupId })
             .sort({ createdAt: -1 })
             .populate("author", "username displayName profilePicture")
             .populate("images", "thumbnail large")

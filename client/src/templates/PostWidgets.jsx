@@ -68,7 +68,7 @@ export function PostButtons(props) {
 }
 
 export function PostMenu(props) {
-    const { post } = props;
+    const { post, type = "post" } = props;
     const queryClient = useQueryClient();
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
@@ -103,10 +103,10 @@ export function PostMenu(props) {
     }
 
     const deletePost = async () => {
-        await axios.delete(`/api/${props.type}/${post._id}`, { headers });
-        await queryClient.invalidateQueries(props.type + "s");
+        await axios.delete(`/api/${type}/${post._id}`, { headers });
+        await queryClient.invalidateQueries(type + "s");
         notifications.show({
-            title: `${props.type === "post" ? "Príspevok" : "Komentár"} bol zmazaný`,
+            title: `${type === "post" ? "Príspevok" : "Komentár"} bol zmazaný`,
         })
     }
 

@@ -274,7 +274,7 @@ function Posts({ groupId, owner }) {
                         <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
                     }
 
-                    {data.map(post => <Post post={post} owner={owner} />)}
+                    {data.map(post => <Post post={post} owner={owner} group />)}
                 </>
             )}
         </>

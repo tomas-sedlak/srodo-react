@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Text, Group, Avatar, Spoiler, Stack } from '@mantine/core';
-import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled, IconShare } from '@tabler/icons-react';
+import { Text, Group, Avatar, Spoiler, Stack, Badge } from '@mantine/core';
+import { IconArrowBigUp, IconArrowBigUpFilled, IconArrowBigDown, IconArrowBigDownFilled } from '@tabler/icons-react';
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoginModal } from "state";
@@ -13,7 +13,8 @@ import moment from "moment";
 import "moment/dist/locale/sk";
 moment.locale("sk");
 
-export default function Comment({ data }) {
+export default function Comment({ data, owner }) {
+    const authorUrl = `/${data.author.username}`;
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
     const dispatch = useDispatch();
@@ -55,17 +56,15 @@ export default function Comment({ data }) {
             <PostMenu type="comment" post={data} />
 
             <Stack gap={0} pos="relative" style={{ flex: 1 }}>
-                <Group gap={4}>
-                    <Link to={"/" + data.author.username}>
+                <Group mb={4} pr={32} gap={4}>
+                    <Link to={authorUrl}>
                         <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
                             {data.author.displayName}
                         </Text>
                     </Link>
-                    <Link to={"/" + data.author.username}>
-                        <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                            @{data.author.username}
-                        </Text>
-                    </Link>
+                    {data.author._id === owner &&
+                        <Badge variant="light" size="xs">Admin</Badge>
+                    }
                     <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                         &middot;
                     </Text>

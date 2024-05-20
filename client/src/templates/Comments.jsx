@@ -5,7 +5,7 @@ import CreatePost from "./CreatePost";
 import Comment from "templates/Comment";
 import axios from "axios";
 
-export default function Comments({ postId }) {
+export default function Comments({ postId, owner }) {
     const userId = useSelector(state => state.user?._id);
 
     const fetchComments = async () => {
@@ -38,7 +38,7 @@ export default function Comments({ postId }) {
                         <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne komentáre</Text>
                     )}
 
-                    {data.map(comment => <Comment key={comment._id} data={comment} />)}
+                    {data.map(comment => <Comment key={comment._id} data={comment} owner={owner} />)}
                 </div>
             )}
         </>

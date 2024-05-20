@@ -11,7 +11,7 @@ import axios from "axios";
 export const createPost = async (req, res) => {
     try {
         const {
-            groupId,
+            group,
             content,
             gif,
             quiz,
@@ -44,7 +44,7 @@ export const createPost = async (req, res) => {
         }
 
         await Post.create({
-            groupId,
+            group,
             author: req.user.id,
             content,
             images,
@@ -67,10 +67,11 @@ export const getFeedPosts = async (req, res) => {
         const groups = await Group.find({ members: userId })
             .select("_id");
 
-        const posts = await Post.find({ groupId: { $in: groups } })
+        const posts = await Post.find({ group: { $in: groups } })
             .sort({ createdAt: -1 })
             .limit(limit)
             .skip(limit * (page - 1))
+            .populate("group", "name profilePicture owner isPrivate")
             .populate("author", "username displayName profilePicture")
             .populate("images", "thumbnail large")
             .populate("files", "file name size")
@@ -91,6 +92,7 @@ export const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
         const post = await Post.findById(postId)
+            .populate("group", "name profilePicture owner isPrivate")
             .populate("author", "username displayName profilePicture")
             .populate("images", "thumbnail large")
             .populate("files", "file name size")

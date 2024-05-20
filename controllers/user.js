@@ -60,6 +60,7 @@ export const getUserPosts = async (req, res) => {
         const { userId } = req.params;
         const posts = await Post.find({ author: userId })
             .sort({ createdAt: -1 })
+            .populate("group", "name profilePicture isPrivate")
             .populate("author", "username displayName profilePicture")
             .populate("images", "thumbnail large")
             .populate("files", "file name size")

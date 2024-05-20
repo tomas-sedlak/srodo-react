@@ -1,10 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { Box, Text, Group, Avatar, Loader, Stack } from '@mantine/core';
-import { PostButtons, PostMenu } from 'templates/PostWidgets';
+import { Loader } from '@mantine/core';
 import { useSelector } from "react-redux";
-import ImagesDisplay from "templates/ImagesDisplay";
-import FilesDisplay from "templates/FilesDisplay";
+import PostTemplate from "templates/Post";
 import Comments from "templates/Comments";
 import axios from "axios";
 
@@ -36,46 +34,9 @@ export default function Post() {
         </div>
     ) : (
         <>
-            <Box py="sm" px="md" pos="relative" className="border-bottom">
-                <Group gap="xs">
-                    <Link to={`/${data.author.username}`}>
-                        <Avatar src={data.author.profilePicture?.thumbnail} />
-                    </Link>
+            <PostTemplate post={data} />
 
-                    <Stack gap={4} pr={32} style={{ flex: 1 }}>
-                        <Group gap={4}>
-                            <Link to={`/${data.author.username}`}>
-                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                    {data.author.displayName}
-                                </Text>
-                            </Link>
-                            <Link to={`/${data.author.username}`}>
-                                <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                                    @{data.author.username}
-                                </Text>
-                            </Link>
-                        </Group>
-
-                        <Text size="sm" c="dimmed" style={{ lineHeight: 1 }}>
-                            {moment(data.createdAt).fromNow()}
-                        </Text>
-                    </Stack>
-                </Group>
-
-                <PostMenu post={data} />
-
-                <Box mt="sm" style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
-                    {data.content}
-                </Box>
-
-                <ImagesDisplay mt="sm" images={data.images} />
-
-                <FilesDisplay mt="sm" files={data.files} />
-
-                <PostButtons mt="sm" post={data} />
-            </Box>
-
-            <Comments comments={data.comments} postId={postId} />
+            <Comments postId={postId} owner={data.group.owner} />
         </>
     )
 }

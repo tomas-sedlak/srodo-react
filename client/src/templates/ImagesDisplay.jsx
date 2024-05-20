@@ -47,8 +47,8 @@ export default function ImagesDisplay(props) {
 
             {
                 images.length === 1 &&
-                <Box {...props} style={{ borderRadius: "var(--mantine-radius-lg)" }} className="border">
-                    <CustomImage images={images} setImages={setImages} index={0} width="100%" height="100%" paddingRight={1} inner={{ borderRadius: "var(--mantine-radius-lg)" }} />
+                <Box {...props} style={{ width: "fit-content", borderRadius: "var(--mantine-radius-lg)" }} className="border">
+                    <CustomImage images={images} setImages={setImages} index={0} inner={{ maxHeight: 400, borderRadius: "var(--mantine-radius-lg)" }} />
                 </Box>
             }
         </>
