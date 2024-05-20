@@ -7,14 +7,14 @@ import Message from "templates/Message";
 import axios from "axios";
 
 export default function Verify() {
-    const { verifyKey } = useParams();
+    const { verifyEmailToken } = useParams();
     const [component, setComponent] = useState();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleVerify = async () => {
         try {
-            const response = await axios.get(`/api/auth/verify/${verifyKey}`)
+            const response = await axios.get(`/api/auth/verify/${verifyEmailToken}`)
 
             dispatch(
                 setLogin({

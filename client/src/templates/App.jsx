@@ -13,6 +13,7 @@ import axios from "axios";
 // Routes import
 import Root from "templates/Root";
 import Login from "routes/login";
+import ResetPassword from "routes/reset_password";
 import Register from "routes/register";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
@@ -29,6 +30,7 @@ const Invite = lazy(() => import("routes/invite"));
 
 import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
+import ResetPasswordConfirm from "routes/reset_password_confirm";
 
 export default function App() {
     const isAuth = Boolean(useSelector(state => state.token));
@@ -94,11 +96,13 @@ export default function App() {
                                         <Route path="skupina" element={<CreateGroup />} />
                                     </Route>
 
-                                    <Route path="overenie-emailu/:verifyKey" element={<Verify />} />
+                                    <Route path="overenie-emailu/:verifyEmailToken" element={<Verify />} />
                                     <Route path="pozvanka/:privateKey" element={isAuth ? <Invite /> : <Navigate to="/prihlasenie" replace />} />
                                 </Route>
 
                                 <Route path="prihlasenie" element={<Login />} />
+                                <Route path="resetovat-heslo" element={<ResetPassword />} />
+                                <Route path="resetovat-heslo/:token" element={<ResetPasswordConfirm />} />
                                 <Route path="registracia" element={<Register />} />
                             </Routes>
                         </BrowserRouter>

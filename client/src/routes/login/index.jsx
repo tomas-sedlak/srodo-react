@@ -153,6 +153,10 @@ export default function Login({ modal }) {
                     size="sm"
                     c="dimmed"
                     className="pointer"
+                    onClick={() => {
+                        dispatch(setLoginModal(false))
+                        navigate("/resetovat-heslo")
+                    }}
                 >
                     Zabudnuté heslo?
                 </Text>

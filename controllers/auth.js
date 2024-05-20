@@ -1,29 +1,10 @@
 import { uploadImage, getObject } from "../utils/s3.js";
-import { getProfilePicture } from "../utils/utils.js";
+import { compileEmailTemplate, generateToken, getProfilePicture, sendMail } from "../utils/utils.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
-import nodemailer from "nodemailer";
-import hbs from "handlebars";
-import fs from "fs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import axios from "axios";
-
-var transporter = nodemailer.createTransport({
-    host: "live.smtp.mailtrap.io",
-    port: 587,
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-    }
-});
-
-const compileTemplate = async (templatePath, data) => {
-    const rawTemplate = fs.readFileSync(templatePath, "utf8");
-    const template = hbs.compile(rawTemplate);
-    return template(data);
-};
 
 // REGISTER USER
 export const register = async (req, res) => {
@@ -48,20 +29,20 @@ export const register = async (req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
 
-        const user = new User({
+        const verifyEmailToken = generateToken();
+
+        await User.create({
             displayName: username,
             username,
             email,
+            verifyEmailToken,
             verified: false,
-            verifyKey: crypto.randomBytes(32).toString("hex"),
             password: passwordHash,
             loginMethod: "email",
         });
 
-        await user.save();
-
-        const url = `https://srodo.sk/overenie-emailu/${user.verifyKey}`;
-        const emailContent = await compileTemplate("email_templates/verify.hbs", { url });
+        const url = `https://srodo.sk/overenie-emailu/${verifyEmailToken}`;
+        const emailContent = await compileEmailTemplate("email_templates/verify.hbs", { url });
 
         const mailOptions = {
             from: "Šrodo.sk <no-reply@srodo.sk>",
@@ -71,13 +52,7 @@ export const register = async (req, res) => {
             html: emailContent,
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error("Error sending email: ", error);
-            } else {
-                console.log("Email sent: ", info.response);
-            }
-        });
+        sendMail(mailOptions);
 
         res.sendStatus(201);
     } catch (err) {
@@ -87,13 +62,13 @@ export const register = async (req, res) => {
 
 export const verify = async (req, res) => {
     try {
-        const { verifyKey } = req.params;
-        const user = await User.findOne({ verifyKey });
+        const { verifyEmailToken } = req.params;
+        const user = await User.findOne({ verifyEmailToken });
 
         if (!user) return res.status(400).send("Nesprávna URL adresa.");
 
-        user.verified = true;
-        user.verifyKey = undefined;
+        user.verifiedEmail = true;
+        user.verifyEmailToken = undefined;
         await user.save();
 
         // Load images from s3 bucket
@@ -116,7 +91,7 @@ export const login = async (req, res) => {
         const user = await User.findOne({ $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }] }).lean();
 
         if (!user) return res.status(400).send("Nesprávne prihlasovacie údaje.");
-        if (!user.verified) return res.status(400).send("Email ešte nie je overený.");
+        if (!user.verifiedEmail) return res.status(400).send("Email ešte nie je overený.");
         if (user.loginMethod !== "email") return res.status(400).send("Iný spôsob prihlásenia.");
 
         const isMatch = await bcrypt.compare(password, user.password);
@@ -165,7 +140,7 @@ export const google = async (req, res) => {
                 email,
                 displayName,
                 profilePicture,
-                verified: true,
+                verifiedEmail: true,
                 loginMethod: "google",
             });
         }
@@ -176,6 +151,61 @@ export const google = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.status(200).json({ token, user });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
+// RESET PASSWORD
+export const resetPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) return res.status(404).send("Používateľ nebol nájdený.");
+        if (user.loginMethod !== "email") return res.status(400).send("Iný spôsob prihlásenia.");
+
+        const resetToken = generateToken();
+        user.resetPassword.token = resetToken;
+        user.resetPassword.expires = Date.now() + 3600000; // 1 hour
+        await user.save();
+
+        const url = `https://srodo.sk/resetovat-heslo/${resetToken}`;
+        const emailContent = await compileEmailTemplate("email_templates/reset_password.hbs", { url });
+
+        const mailOptions = {
+            from: "Šrodo.sk <no-reply@srodo.sk>",
+            to: email,
+            subject: "Obnovenie hesla",
+            text: `Po kliknutí na link nižšie budeš presmerovaný na stránku, kde vytvoríš svoje nové heslo: ${url} (Link je platný iba 1 hodinu od generácie)`,
+            html: emailContent,
+        }
+        sendMail(mailOptions);
+
+        res.sendStatus(201);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+}
+
+export const resetPasswordConfirm = async (req, res) => {
+    try {
+        const { newPassword } = req.body;
+        const { token } = req.params;
+
+        const user = await User.findOne({
+            "resetPassword.token": token,
+            "resetPassword.expires": { $gt: Date.now() },
+        })
+        if (!user) return res.status(404).send("Nesprávny alebo neplatný token.");
+
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(newPassword, salt);
+
+        user.password = passwordHash;
+        user.resetPassword = null;
+        await user.save();
+
+        res.sendStatus(200)
     } catch (err) {
         res.status(500).send(err.message);
     }

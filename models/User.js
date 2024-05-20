@@ -18,12 +18,16 @@ const userSchema = new Schema({
         required: true,
         unique: true,
     },
-    verified: {
+    verifiedEmail: {
         type: Boolean,
         default: false,
     },
-    verifyKey: String,
+    verifyEmailToken: String,
     password: String,
+    resetPassword: {
+        token: String,
+        expires: Date,
+    },
     loginMethod: {
         type: String,
         enum: ["email", "google"],
