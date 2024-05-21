@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu, Modal, ActionIcon } from '@mantine/core';
 import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus, IconCopy, IconClipboard } from '@tabler/icons-react';
 import { modals } from "@mantine/modals";
-import { useDebounceCallback, useMediaQuery } from "@mantine/hooks";
+import { useDebounceCallback, useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
@@ -12,6 +12,7 @@ import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
 import axios from "axios";
 import Message from "templates/Message";
+import { ReportModal } from "templates/ReportModal";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -29,6 +30,10 @@ export default function Group() {
     const headers = {
         Authorization: `Bearer ${token}`,
     }
+
+    const [opened, { open, close }] = useDisclosure(false);
+    const [reportReason, setReportReason] = useState('');
+
 
     const fetchGroup = async () => {
         const group = await axios.get(`/api/group/${groupId}`, { headers })
@@ -174,7 +179,7 @@ export default function Group() {
                             : <Menu.Item
                                 leftSection={<IconFlag stroke={1.25} />}
                             >
-                                <Text fw={600} size="sm">Nahlásiť</Text>
+                                <Text fw={600} size="sm" onClick={open}>Nahlásiť</Text>
                             </Menu.Item>
                         }
                     </Menu.Dropdown>
@@ -233,6 +238,8 @@ export default function Group() {
                     </Tabs.Tab>
                 </Tabs.List>
             </Tabs>
+
+            <ReportModal opened={opened} close={close} reportReason={reportReason} setReportReason={setReportReason}/>
 
             {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
 
