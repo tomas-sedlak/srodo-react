@@ -32,6 +32,9 @@ import ScrollToTop from "./ScrollToTop";
 import LoginModal from "templates/LoginModal";
 import ResetPasswordConfirm from "routes/reset_password_confirm";
 
+import ReactGa from "react-ga4";
+ReactGa.initialize("G-F26LVP1SF6")
+
 export default function App() {
     const isAuth = Boolean(useSelector(state => state.token));
     const userId = useSelector(state => state.user?._id);
@@ -64,6 +67,7 @@ export default function App() {
 
     useEffect(() => {
         fetchUser()
+        ReactGa.send({ hitType: "pageview", page: window.location.pathname });
     }, [])
 
     return (
