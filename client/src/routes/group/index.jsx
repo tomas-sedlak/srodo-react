@@ -32,7 +32,7 @@ export default function Group() {
     }
 
     const [opened, { open, close }] = useDisclosure(false);
-    const [reportReason, setReportReason] = useState('');
+    // const [reportReason, setReportReason] = useState('');
 
 
     const fetchGroup = async () => {
@@ -93,6 +93,8 @@ export default function Group() {
     ) : (
         <>
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
+
+            <ReportModal opened={opened} close={close} />
 
             < AspectRatio ratio={6 / 2}>
                 {data.coverImage ?
@@ -239,7 +241,7 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            <ReportModal opened={opened} close={close} reportReason={reportReason} setReportReason={setReportReason}/>
+
 
             {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
 

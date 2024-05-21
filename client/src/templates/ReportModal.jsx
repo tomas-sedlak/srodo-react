@@ -1,8 +1,9 @@
 import { Group, Button, Modal, Radio } from "@mantine/core";
+import { useState } from "react";
 import axios from "axios";
 
 
-export function ReportModal({ opened, close, reportReason, setReportReason }) {
+export function ReportModal({ opened, close }) {
 
     const reasons = [
         "Sexuálny obsah",
@@ -18,7 +19,7 @@ export function ReportModal({ opened, close, reportReason, setReportReason }) {
     ];
 
     // const [opened, { open, close }] = useDisclosure(false);
-    // const [reportReason, setReportReason] = useState('');
+    const [reportReason, setReportReason] = useState('');
 
     const handleReport = async () => {
         if (reportReason.trim() === '') return;
@@ -33,7 +34,10 @@ export function ReportModal({ opened, close, reportReason, setReportReason }) {
     return (
         <Modal
             opened={opened}
-            onClose={close}
+            onClose={event => {
+                close()
+                setReportReason('')
+            }}
             title="Nahlásiť príspevok"
             centered
             radius="lg"
@@ -48,8 +52,11 @@ export function ReportModal({ opened, close, reportReason, setReportReason }) {
 
                 ))}
             </Radio.Group>
-            <Group position="right" mt="md">
-                <Button variant="outline" onClick={close}>
+            <Group mt="md" justify="flex-end">
+                <Button variant="outline" onClick={() => {
+                    close()
+                    setReportReason('')
+                }}>
                     Zrušiť
                 </Button>
                 <Button color="red" onClick={handleReport} disabled={!reportReason} >
