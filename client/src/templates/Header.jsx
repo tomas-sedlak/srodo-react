@@ -45,7 +45,6 @@ export default function Header() {
                     </Group>
 
                     <Autocomplete
-                        data={["test", "admin"]}
                         width="100%"
                         placeholder="Hľadať"
                         leftSection={<IconSearch stroke={1.25} />}
