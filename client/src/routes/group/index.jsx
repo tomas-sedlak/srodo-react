@@ -241,16 +241,14 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-
-
-            {tab === "prispevky" && <Posts groupId={groupId} owner={data.owner} />}
+            {tab === "prispevky" && <Posts groupId={groupId} members={data.members} owner={data.owner} />}
 
             {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} />}
         </>
     )
 }
 
-function Posts({ groupId, owner }) {
+function Posts({ groupId, members, owner }) {
     const userId = useSelector(state => state.user?._id);
 
     const fetchPosts = async () => {
@@ -265,7 +263,7 @@ function Posts({ groupId, owner }) {
 
     return (
         <>
-            {userId &&
+            {userId && members.find(member => member._id === userId) &&
                 <CreatePost groupId={groupId} />
             }
 
