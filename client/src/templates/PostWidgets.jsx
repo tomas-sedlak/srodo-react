@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { ActionIcon, Group, Menu, Text, Button, Modal, Radio, RadioGroup, Box } from "@mantine/core";
+import { ActionIcon, Group, Menu, Text } from "@mantine/core";
 import { IconDots, IconFlag, IconHeart, IconHeartFilled, IconMessageCircle, IconPencil, IconShare, IconTrash } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
+import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { modals } from "@mantine/modals";
+import { ReportModal } from "./ReportModal";
 import axios from "axios";
 
 export function PostButtons(props) {
@@ -71,33 +73,11 @@ export function PostMenu(props) {
     const { post, type = "post" } = props;
     const queryClient = useQueryClient();
     const userId = useSelector(state => state.user?._id);
-    const token = useSelector(state => state.token);
     const navigate = useNavigate();
-
-    const [reportModalOpened, setReportModalOpened] = useState(false);
-    const [reportReason, setReportReason] = useState('');
-
-    // const reasons = [
-    //     "Spam",
-    //     "Hate Speech",
-    //     "Harassment",
-    //     "Misinformation",
-    //     "Other"
-    // ];
-
-    const reasons = [
-        "Sexuálny obsah",
-        "Násilný alebo odpudivý obsah",
-        "Nenávistný alebo urážlivý obsah",
-        "Obťažovanie alebo šikanovanie",
-        "Nebezpečné alebo škodlivé činnosti",
-        "Nepravdivé informácie",
-        "Zneužívanie detí",
-        "Propagácia terorizmu",
-        "Spam alebo zavádzajúci obsah",
-        "Právna záležitosť",
-    ];
-
+    
+    const [reportModalOpened, reportModalHandlers] = useDisclosure();
+    
+    const token = useSelector(state => state.token);
     const headers = {
         Authorization: `Bearer ${token}`,
     }
@@ -110,16 +90,10 @@ export function PostMenu(props) {
         })
     }
 
-    const handleReport = async () => {
-        if (reportReason.trim() === '') return;
-
-        await axios.post(`/api/report/${post._id}`, { reason: reportReason }, { headers });
-        setReportModalOpened(false);
-        setReportReason('');
-    }
-
     return (
         <>
+            <ReportModal opened={reportModalOpened} close={reportModalHandlers.close} />
+
             <Menu position="bottom-end" width={180}>
                 <Menu.Target>
                     <ActionIcon
@@ -165,39 +139,16 @@ export function PostMenu(props) {
                     ) : (
                         <Menu.Item
                             leftSection={<IconFlag stroke={1.25} />}
-                            onClick={() => setReportModalOpened(true)}
+                            onClick={(event) => {
+                                event.stopPropagation()
+                                reportModalHandlers.open()
+                            }}
                         >
                             <Text>Nahlásiť</Text>
                         </Menu.Item>
                     )}
                 </Menu.Dropdown>
             </Menu>
-
-            <Modal
-                opened={reportModalOpened}
-                onClose={() => setReportModalOpened(false)}
-                title="Nahlásiť príspevok"
-                centered
-            >
-                <Radio.Group
-                    value={reportReason}
-                    onChange={setReportReason}
-                >
-                    {reasons.map((reason) => (
-
-                        <Radio key={reason} value={reason} label={reason} p="sm" />
-                        
-                    ))}
-                </Radio.Group>
-                <Group position="right" mt="md">
-                    <Button variant="outline" onClick={() => setReportModalOpened(false)}>
-                        Zrušiť
-                    </Button>
-                    <Button color="red" onClick={handleReport}>
-                        Nahlásiť
-                    </Button>
-                </Group>
-            </Modal>
         </>
     )
 }

@@ -1,28 +1,27 @@
-import { Group, Button, Modal, Radio, Text, RadioGroup } from "@mantine/core";
 import { useState } from "react";
+import { Group, Button, Modal, Radio, Text, RadioGroup } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import axios from "axios";
 
+const reasons = [
+    "Sexuálny obsah",
+    "Násilný alebo odpudivý obsah",
+    "Nenávistný alebo urážlivý obsah",
+    "Obťažovanie alebo šikanovanie",
+    "Nebezpečné alebo škodlivé činnosti",
+    "Nepravdivé informácie",
+    "Zneužívanie detí",
+    "Propagácia terorizmu",
+    "Spam alebo zavádzajúci obsah",
+    "Právna záležitosť",
+];
 
 export function ReportModal({ opened, close }) {
-    const reasons = [
-        "Sexuálny obsah",
-        "Násilný alebo odpudivý obsah",
-        "Nenávistný alebo urážlivý obsah",
-        "Obťažovanie alebo šikanovanie",
-        "Nebezpečné alebo škodlivé činnosti",
-        "Nepravdivé informácie",
-        "Zneužívanie detí",
-        "Propagácia terorizmu",
-        "Spam alebo zavádzajúci obsah",
-        "Právna záležitosť",
-    ];
-
+    const isMobile = useMediaQuery("(max-width: 768px)");
     const [reportReason, setReportReason] = useState(null);
     const [error, setError] = useState(null);
 
     const handleReport = async () => {
-        if (!reportReason) return;
-
         try {
             await axios.post(`/api/report/${post._id}`, { reason: reportReason }, { headers });
             setReportModalOpened(false);
@@ -39,8 +38,11 @@ export function ReportModal({ opened, close }) {
                 close()
                 setReportReason(null)
             }}
+            onClick={(event) => event.stopPropagation()}
             title={<Text fw={700} fz="lg">Nahlásiť príspevok</Text>}
+            size="sm"
             radius="lg"
+            padding={isMobile ? "md" : "lg"}
             centered
         >
             <RadioGroup
@@ -48,7 +50,7 @@ export function ReportModal({ opened, close }) {
                 onChange={setReportReason}
             >
                 {reasons.map((reason) => (
-                    <Radio mb="sm" key={reason} value={reason} label={reason} />
+                    <Radio mb="md" key={reason} value={reason} label={reason} />
                 ))}
             </RadioGroup>
 
@@ -66,7 +68,7 @@ export function ReportModal({ opened, close }) {
                 </Button>
                 <Button
                     color="red"
-                    onClick={handleReport}
+                    onClick={close}
                     disabled={!reportReason}
                 >
                     Nahlásiť

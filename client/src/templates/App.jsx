@@ -57,6 +57,7 @@ export default function App() {
         },
         primaryColor: "srobarka",
         defaultRadius: "md",
+        cursorType: "pointer",
     })
 
     const fetchUser = async () => {
