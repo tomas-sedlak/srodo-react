@@ -62,10 +62,11 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                         </Group>
 
                         <Spoiler
-                            maxHeight={100}
+                            maxHeight={90}
                             hideLabel="Zobraziť menej"
                             showLabel="Zobraziť viac"
                             styles={{
+                                content: { lineHeight: 1.4 },
                                 control: { color: "var(--mantine-color-dimmed)" },
                             }}
                         >
@@ -118,10 +119,11 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                     </Group>
 
                     <Spoiler
-                        maxHeight={100}
+                        maxHeight={90}
                         hideLabel="Zobraziť menej"
                         showLabel="Zobraziť viac"
                         styles={{
+                            content: { lineHeight: 1.4 },
                             control: { color: "var(--mantine-color-dimmed)" },
                         }}
                     >
