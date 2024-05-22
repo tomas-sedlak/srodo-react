@@ -66,7 +66,7 @@ const Post = forwardRef(({ post, owner, group }, ref) => {
                     </>
                 ) : (
                     <Box style={{ flex: 1 }}>
-                        <Group mb={8} pr={32} gap="xs">
+                        <Group mb={8} pr={32} gap="xs" wrap="nowrap">
                             <Link to={groupUrl}>
                                 <Avatar className="no-image" src={post.group.profilePicture?.thumbnail} />
                             </Link>
