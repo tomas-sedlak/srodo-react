@@ -1,4 +1,4 @@
-import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch } from '@mantine/core';
+import { Text, Autocomplete, Group, Avatar, Menu, Stack, Drawer, ActionIcon, Button, useMantineColorScheme, Switch, Badge } from '@mantine/core';
 import { IconSearch, IconMoon, IconSettings, IconLogout, IconMenu2, IconX, IconPlus } from '@tabler/icons-react';
 import { useMediaQuery, useDisclosure } from '@mantine/hooks';
 import { useNavigate } from "react-router-dom";
@@ -36,9 +36,10 @@ export default function Header() {
                             </ActionIcon>
                         ) : (
                             <Link to="/">
-                                <Group gap={8}>
+                                <Group gap={0}>
                                     {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
-                                    <Text fw={700} size="xl">Šrodo</Text>
+                                    <Text ml={8} fw={700} fz={24}>Šrodo</Text>
+                                    <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                                 </Group>
                             </Link>
                         )}
@@ -147,9 +148,10 @@ export default function Header() {
                 padding="sm"
                 title={
                     <Link to="/" onClick={drawerHandlers.close}>
-                        <Group gap={8}>
+                        <Group gap={0}>
                             {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
-                            <Text fw={700} size="xl">Šrodo</Text>
+                            <Text ml={8} fw={700} fz={24}>Šrodo</Text>
+                            <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                         </Group>
                     </Link>
                 }
