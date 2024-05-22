@@ -1,9 +1,9 @@
-import { Group, Button, Modal, Radio } from "@mantine/core";
+import { Group, Button, Modal, Radio, Text, RadioGroup } from "@mantine/core";
+import { useState } from "react";
 import axios from "axios";
 
 
-export function ReportModal({ opened, close, reportReason, setReportReason }) {
-
+export function ReportModal({ opened, close }) {
     const reasons = [
         "Sexuálny obsah",
         "Násilný alebo odpudivý obsah",
@@ -17,42 +17,58 @@ export function ReportModal({ opened, close, reportReason, setReportReason }) {
         "Právna záležitosť",
     ];
 
-    // const [opened, { open, close }] = useDisclosure(false);
-    // const [reportReason, setReportReason] = useState('');
+    const [reportReason, setReportReason] = useState(null);
+    const [error, setError] = useState(null);
 
     const handleReport = async () => {
-        if (reportReason.trim() === '') return;
+        if (!reportReason) return;
 
-        await axios.post(`/api/report/${post._id}`, { reason: reportReason }, { headers });
-        setReportModalOpened(false);
-        setReportReason('');
+        try {
+            await axios.post(`/api/report/${post._id}`, { reason: reportReason }, { headers });
+            setReportModalOpened(false);
+            setReportReason(null);
+        } catch (err) {
+            setError(err.response.message)
+        }
     }
-
-
 
     return (
         <Modal
             opened={opened}
-            onClose={close}
-            title="Nahlásiť príspevok"
-            centered
+            onClose={() => {
+                close()
+                setReportReason(null)
+            }}
+            title={<Text fw={700} fz="lg">Nahlásiť príspevok</Text>}
             radius="lg"
+            centered
         >
-            <Radio.Group
+            <RadioGroup
                 value={reportReason}
                 onChange={setReportReason}
             >
                 {reasons.map((reason) => (
-
-                    <Radio key={reason} value={reason} label={reason} p="sm" />
-
+                    <Radio mb="sm" key={reason} value={reason} label={reason} />
                 ))}
-            </Radio.Group>
-            <Group position="right" mt="md">
-                <Button variant="outline" onClick={close}>
+            </RadioGroup>
+
+            {error && <Text c="red">{error}</Text>}
+
+            <Group mt="md" justify="flex-end" gap={8}>
+                <Button
+                    variant="default"
+                    onClick={() => {
+                        close()
+                        setReportReason(null)
+                    }}
+                >
                     Zrušiť
                 </Button>
-                <Button color="red" onClick={handleReport} disabled={!reportReason} >
+                <Button
+                    color="red"
+                    onClick={handleReport}
+                    disabled={!reportReason}
+                >
                     Nahlásiť
                 </Button>
             </Group>
