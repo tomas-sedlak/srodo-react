@@ -1,105 +1,64 @@
 import { forwardRef } from "react";
-import { Group, Text, Avatar, Stack, Spoiler, Badge, Box } from '@mantine/core';
-import { PostButtons, PostMenu } from "./PostWidgets";
+import { Group, Text, Avatar, Stack, Spoiler, Badge } from '@mantine/core';
+import { IconLock, IconWorld } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import { PostButtons, PostMenu } from "./PostWidgets";
 import ImagesDisplay from "./ImagesDisplay";
 import FilesDisplay from "./FilesDisplay";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
-import { IconLock, IconWorld } from "@tabler/icons-react";
 moment.locale("sk");
 
-const Post = forwardRef(({ post, owner, group }, ref) => {
+const Linkify = ({ children }) => {
+    const isUrl = word => {
+        const urlPattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
+        return word.match(urlPattern)
+    }
+
+    const addMarkup = word => {
+        return isUrl(word) ?
+            `<a href="${word}" target="_blank" style="text-decoration: underline; color: var(--mantine-color-blue-4);">${word}</a>` :
+            word
+    }
+
+    const words = children.split(' ')
+    const formatedWords = words.map((w, i) => addMarkup(w))
+    const html = formatedWords.join(' ')
+    return (<span style={{ whiteSpace: "pre-line", wordBreak: "break-word" }} dangerouslySetInnerHTML={{ __html: html }} />)
+}
+
+const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
     const groupUrl = `/skupiny/${post.group._id}`;
     const authorUrl = `/${post.author.username}`;
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
 
-    const postContent = (
-        <Link to={postUrl} key={post._id}>
-            <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
-                <PostMenu type="post" post={post} />
+    let postContent = (
+        <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
+            <PostMenu type="post" post={post} />
 
-                {group ? (
-                    <>
-                        <Link to={authorUrl}>
-                            <Avatar className="no-image" src={post.author.profilePicture?.thumbnail} />
-                        </Link>
+            {group ? (
+                <>
+                    <Link to={authorUrl}>
+                        <Avatar className="no-image" src={post.author.profilePicture?.thumbnail} />
+                    </Link>
 
-                        <Stack gap={0} pos="relative" style={{ flex: 1 }}>
-                            <Group mb={4} pr={32} gap={4}>
-                                <Link to={authorUrl}>
-                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                        {post.author.displayName}
-                                    </Text>
-                                </Link>
-                                {post.author._id === owner &&
-                                    <Badge variant="light" size="xs">Admin</Badge>
-                                }
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    &middot;
+                    <Stack gap={8} pos="relative" style={{ flex: 1 }}>
+                        <Group pr={32} gap={4}>
+                            <Link to={authorUrl}>
+                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                    {post.author.displayName}
                                 </Text>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    {moment(post.createdAt).fromNow()}
-                                </Text>
-                            </Group>
-
-                            <Spoiler
-                                maxHeight={100}
-                                hideLabel="Zobraziť menej"
-                                showLabel="Zobraziť viac"
-                                styles={{
-                                    control: { color: "var(--mantine-color-dimmed)" },
-                                }}
-                            >
-                                <div style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
-                                    {post.content}
-                                </div>
-                            </Spoiler>
-
-                            <ImagesDisplay mt={8} images={post.images} />
-
-                            <FilesDisplay mt={8} files={post.files} />
-
-                            <PostButtons mt={8} post={post} />
-                        </Stack>
-                    </>
-                ) : (
-                    <Box style={{ flex: 1 }}>
-                        <Group mb={8} pr={32} gap="xs" wrap="nowrap">
-                            <Link to={groupUrl}>
-                                <Avatar className="no-image" src={post.group.profilePicture?.thumbnail} />
                             </Link>
-
-                            <Stack gap={4}>
-                                <Group gap={4}>
-                                    <Link to={groupUrl}>
-                                        <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
-                                            {post.group.name}
-                                        </Text>
-                                    </Link>
-                                    {post.group.isPrivate ?
-                                        <IconLock size={16} stroke={1.25} />
-                                        : <IconWorld size={16} stroke={1.25} />
-                                    }
-                                </Group>
-                                <Group gap={4}>
-                                    <Link to={authorUrl}>
-                                        <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                            {post.author.displayName}
-                                        </Text>
-                                    </Link>
-                                    {post.author._id === post.group.owner &&
-                                        <Badge variant="light" size="xs">Admin</Badge>
-                                    }
-                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                        &middot;
-                                    </Text>
-                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                        {moment(post.createdAt).fromNow()}
-                                    </Text>
-                                </Group>
-                            </Stack>
+                            {post.author._id === owner &&
+                                <Badge variant="light" size="xs">Admin</Badge>
+                            }
+                            <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                &middot;
+                            </Text>
+                            <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                {moment(post.createdAt).fromNow()}
+                            </Text>
                         </Group>
 
                         <Spoiler
@@ -110,21 +69,82 @@ const Post = forwardRef(({ post, owner, group }, ref) => {
                                 control: { color: "var(--mantine-color-dimmed)" },
                             }}
                         >
-                            <div style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
-                                {post.content}
-                            </div>
+                            <Linkify>{post.content}</Linkify>
                         </Spoiler>
 
-                        <ImagesDisplay mt={8} images={post.images} />
+                        <ImagesDisplay images={post.images} />
 
-                        <FilesDisplay mt={8} files={post.files} />
+                        <FilesDisplay files={post.files} />
 
-                        <PostButtons mt={8} post={post} />
-                    </Box>
-                )}
-            </Group>
-        </Link>
+                        <PostButtons post={post} />
+                    </Stack>
+                </>
+            ) : (
+                <Stack gap={8} style={{ flex: 1 }}>
+                    <Group pr={32} gap="xs" wrap="nowrap">
+                        <Link to={groupUrl}>
+                            <Avatar className="no-image" src={post.group.profilePicture?.thumbnail} />
+                        </Link>
+
+                        <Stack gap={4}>
+                            <Group gap={4}>
+                                <Link to={groupUrl}>
+                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                                        {post.group.name}
+                                    </Text>
+                                </Link>
+                                {post.group.isPrivate ?
+                                    <IconLock size={16} stroke={1.25} />
+                                    : <IconWorld size={16} stroke={1.25} />
+                                }
+                            </Group>
+                            <Group gap={4}>
+                                <Link to={authorUrl}>
+                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                        {post.author.displayName}
+                                    </Text>
+                                </Link>
+                                {post.author._id === post.group.owner &&
+                                    <Badge variant="light" size="xs">Admin</Badge>
+                                }
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    &middot;
+                                </Text>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    {moment(post.createdAt).fromNow()}
+                                </Text>
+                            </Group>
+                        </Stack>
+                    </Group>
+
+                    <Spoiler
+                        maxHeight={100}
+                        hideLabel="Zobraziť menej"
+                        showLabel="Zobraziť viac"
+                        styles={{
+                            control: { color: "var(--mantine-color-dimmed)" },
+                        }}
+                    >
+                        <div style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}>
+                            <Linkify>{post.content}</Linkify>
+                        </div>
+                    </Spoiler>
+
+                    <ImagesDisplay images={post.images} />
+
+                    <FilesDisplay files={post.files} />
+
+                    <PostButtons post={post} />
+                </Stack>
+            )}
+        </Group>
     )
+
+    if (!withoutLink) {
+        postContent = (
+            <Link to={postUrl} key={post._id}>{postContent}</Link>
+        )
+    }
 
     // Ref is used for infinte scroll. Checks if last post is visible on screen and then loads new posts
     return ref ? <div ref={ref}>{postContent}</div> : postContent
