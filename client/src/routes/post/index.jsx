@@ -34,7 +34,7 @@ export default function Post() {
         </div>
     ) : (
         <>
-            <PostTemplate post={data} />
+            <PostTemplate post={data} withoutLink />
 
             <Comments postId={postId} owner={data.group.owner} />
         </>

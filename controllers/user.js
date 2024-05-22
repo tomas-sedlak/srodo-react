@@ -42,7 +42,7 @@ export const getUnique = async (req, res) => {
 
 export const getUserSuggestions = async (req, res) => {
     try {
-        const users = await User.find({ verified: true }).lean();
+        const users = await User.find({ verifiedEmail: true }).lean();
 
         // Load images from s3 bucket
         for (const user of users) {
