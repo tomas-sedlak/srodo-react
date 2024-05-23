@@ -257,8 +257,8 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                             styles={{ inner: { height: "100%" } }}
                         >
                             <div className="loader-center">
-                                <IconUpload color="var(--mantine-color-dimmed)" size={128} stroke={1} />
-                                <Text c="dimmed">
+                                <IconUpload color="var(--mantine-color-dimmed)" size={100} stroke={1} />
+                                <Text c="dimmed" ta="center" px="md">
                                     Potiahni tu obrázky alebo klikni na tlačidlo a nahraj ich
                                 </Text>
                                 <Button mt={8}>Pridaj obrázky</Button>
