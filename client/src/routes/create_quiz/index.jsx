@@ -63,8 +63,6 @@ export default function CreateQuiz() {
         setQuestions([...questions, { question: '', options: ["", ""] }]);
         
     };
-   
-
 
     const handleRemoveQuestion = (questionIndex) => {
         const newQuestions = [...questions];

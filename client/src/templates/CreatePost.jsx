@@ -4,6 +4,7 @@ import { IconCopyCheck, IconGif, IconPaperclip, IconPhoto } from "@tabler/icons-
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { notifications } from "@mantine/notifications";
+import QuizDisplay from "./QuizDisplay";
 import ImagesDisplay from "./ImagesDisplay";
 import FilesDisplay from "./FilesDisplay";
 import byteSize from "byte-size";
@@ -119,6 +120,8 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                     onClick={() => setIsInputOpened(true)}
                     onChange={event => setContent(event.target.value)}
                 />
+
+                <QuizDisplay mt={8} />
 
                 <ImagesDisplay mt={8} images={images} setImages={setImages} withCloseButtons />
 
