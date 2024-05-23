@@ -30,11 +30,13 @@ export const uploadImage = async (image, width, height) => {
     if (isValidUrl(image)) {
         const response = await axios.get(image, { responseType: "arraybuffer" });
         body = await sharp(response.data)
+            .withMetadata({ orientation: null })
             .resize(width, height)
             .jpeg({ quality: 100 })
             .toBuffer();
     } else {
         body = await sharp(image.buffer)
+            .withMetadata({ orientation: null })
             .resize(width, height)
             .jpeg({ quality: 100 })
             .toBuffer();
