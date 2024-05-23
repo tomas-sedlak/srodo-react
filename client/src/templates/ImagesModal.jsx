@@ -254,6 +254,7 @@ export default function ImagesModal({ opened, close, setImage, columns, aspectRa
                             onReject={(files) => console.log('rejected files', files)}
                             maxSize={5 * 1024 ** 2}
                             accept={["image/png", "image/jpeg"]}
+                            multiple={false}
                             styles={{ inner: { height: "100%" } }}
                         >
                             <div className="loader-center">
