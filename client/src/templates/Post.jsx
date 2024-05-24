@@ -128,9 +128,14 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                                 <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                                     &middot;
                                 </Text>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    {moment(post.createdAt).fromNow()}
-                                </Text>
+                                <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMM yyyy")} openDelay={500} withArrow>
+                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                        {showLongTime ?
+                                            moment(post.createdAt).format("D. MMM yyyy")
+                                            : moment(post.createdAt).fromNow(true)
+                                        }
+                                    </Text>
+                                </Tooltip>
                             </Group>
                         </Stack>
                     </Group>
