@@ -1,4 +1,4 @@
-import { Badge, Text, Loader, Avatar, Button } from '@mantine/core';
+import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme } from '@mantine/core';
 import { IconHome, IconHeart, IconPuzzle, IconSearch, IconBug } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
@@ -30,6 +30,7 @@ const menu = [
 ]
 
 export default function Navbar({ close }) {
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
     const { pathname } = useLocation();
     const userId = useSelector(state => state.user?._id)
 
@@ -55,6 +56,15 @@ export default function Navbar({ close }) {
         </div>
     ) : (
         <>
+
+            <Link to="/">
+                <Group gap={0} mb="lg">
+                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                    <Text ml={8} fw={700} fz={24}>Šrodo</Text>
+                    <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
+                </Group>
+            </Link>
+
             {/* Navigation items */}
             {menu.map(item => {
                 let active = false;

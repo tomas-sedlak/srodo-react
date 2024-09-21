@@ -4,7 +4,7 @@
 } */
 
 :root {
-  --header-height: 58px;
+  /* --header-height: 58px; */
 }
 
 * {
@@ -121,6 +121,7 @@ main {
 
 .loader-center-x,
 .loader-center {
+  --header-height: 58px;
   padding: var(--mantine-spacing-lg) 0;
   display: flex;
   align-items: center;

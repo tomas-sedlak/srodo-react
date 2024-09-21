@@ -8,7 +8,7 @@ import Navbar from "templates/Navbar";
 export default function Root() {
     return (
         <div className="page-wrapper">
-            <Header />
+            {/* <Header /> */}
 
             <nav className="navbar">
                 <Navbar />
