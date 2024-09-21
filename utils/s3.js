@@ -1,6 +1,5 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import crypto from "crypto";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { generateToken } from "./utils.js";
 import sharp from "sharp";
 import axios from "axios";
 
@@ -24,7 +23,7 @@ const isValidUrl = urlString => {
 export const uploadImage = async (image, width, height) => {
     if (!image) return
 
-    const imageName = crypto.randomBytes(32).toString("hex");
+    const imageName = generateToken();
 
     let body;
     if (isValidUrl(image)) {
@@ -52,13 +51,13 @@ export const uploadImage = async (image, width, height) => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    return imageName;
+    return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${imageName}`;
 }
 
 export const uploadFile = async (file) => {
     if (!file) return
 
-    const fileName = crypto.randomBytes(32).toString("hex");
+    const fileName = generateToken();
     const params = {
         Bucket: process.env.BUCKET_NAME,
         Key: fileName,
@@ -69,21 +68,7 @@ export const uploadFile = async (file) => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    return fileName;
-}
-
-export const getObject = async (object) => {
-    if (!object) return
-
-    const params = {
-        Bucket: process.env.BUCKET_NAME,
-        Key: object,
-    };
-
-    const command = new GetObjectCommand(params);
-    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-
-    return url;
+    return `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${fileName}`;
 }
 
 export const deleteObject = async (object) => {

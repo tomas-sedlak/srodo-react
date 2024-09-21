@@ -1,5 +1,4 @@
-import { deleteObject, getObject, uploadFile, uploadImage } from "../utils/s3.js";
-import { getPostUtil } from "../utils/utils.js";
+import { deleteObject, uploadFile, uploadImage } from "../utils/s3.js";
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import Group from "../models/Group.js";
@@ -77,9 +76,8 @@ export const getFeedPosts = async (req, res) => {
             .populate("files", "file name size")
             .lean();
 
-        const cache = {}
         for (const post of posts) {
-            await getPostUtil(post, cache);
+            post.comments = await Comment.find({ postId: post._id }).countDocuments()
         }
 
         res.status(200).json(posts);
@@ -98,7 +96,7 @@ export const getPost = async (req, res) => {
             .populate("files", "file name size")
             .lean();
 
-        await getPostUtil(post);
+        post.comments = await Comment.find({ postId: postId }).countDocuments()
 
         res.status(200).json(post);
     } catch (err) {
@@ -119,11 +117,6 @@ export const getPostComments = async (req, res) => {
         comments.sort((a, b) => {
             return (b.upvotes.length - b.downvotes.length) - (a.upvotes.length - a.downvotes.length);
         })
-
-        const cache = {}
-        for (const comment of comments) {
-            await getPostUtil(comment, cache);
-        }
 
         res.status(200).json(comments);
     } catch (err) {
