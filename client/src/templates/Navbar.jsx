@@ -1,9 +1,12 @@
 import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme } from '@mantine/core';
-import { IconHome, IconHeart, IconPuzzle, IconSearch, IconBug } from '@tabler/icons-react';
+import { IconHome, IconCirclePlus, IconCpu, IconSearch } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+
+import { useMediaQuery } from '@mantine/hooks';
+
 
 const menu = [
     {
@@ -16,23 +19,26 @@ const menu = [
         url: "/preskumat",
         leftSection: IconSearch,
     },
-    // {
-    //     label: "Šrodo AI",
-    //     url: "/ai",
-    //     leftSection: IconPuzzle,
-    //     badge: "nové!",
-    // },
     {
-        label: "Obľúbené",
-        url: "/oblubene",
-        leftSection: IconHeart,
+        label: "Šrodo AI",
+        url: "/ai",
+        leftSection: IconCpu,
+        badge: "nové!",
+    },
+    {
+        label: "Profil",
+        url: "/", // add link to profile here
+        leftSection: Avatar,
     },
 ]
 
 export default function Navbar({ close }) {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-    const { pathname } = useLocation();
+    const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+    const { pathname } = useLocation()
     const userId = useSelector(state => state.user?._id)
+
+    const isMobile = useMediaQuery('(max-width: 768px)');
+
 
     const fetchGroups = async () => {
         if (!userId) return []
@@ -68,8 +74,8 @@ export default function Navbar({ close }) {
             {/* Navigation items */}
             {menu.map(item => {
                 let active = false;
-                if (item.url === "/") active = pathname === "/";
-                else if (pathname.startsWith(item.url)) active = true;
+                if (item.url === "/") active = pathname === "/"
+                else if (pathname.startsWith(item.url)) active = true
 
                 return (
                     <Link
@@ -90,10 +96,11 @@ export default function Navbar({ close }) {
                 )
             })}
 
+            
             {/* Only for beta testing */}
             <Link
                 key="report"
-                to="https://forms.gle/LxgnHVcujEr8rjRD6"
+                to="/" // Add link to creating new post 
                 target="_blank"
                 onClick={close}
                 style={{ marginTop: "var(--mantine-spacing-sm)" }}
@@ -101,17 +108,18 @@ export default function Navbar({ close }) {
                 <Button
                     size="md"
                     fw={500}
-                    justify="flex-start"
-                    leftSection={<IconBug stroke={1.25} />}
+                    justify="center"
                     fullWidth
                 >
-                    Nahlásiť bug
+                    Nový píspevok
                 </Button>
             </Link >
+
             {/* Only for beta testing */}
 
             {/* Subject items */}
-            <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
+            {/* IMPORTANT - delete these later */}
+            {/* <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
 
             {!userId &&
                 <Text px="sm" c="dimmed" style={{ lineHeight: 1.4 }}>Tu sa zobrazia tvoje skupiny po prihlásení.</Text>
@@ -119,11 +127,11 @@ export default function Navbar({ close }) {
 
             {userId && data.length === 0 &&
                 <Text px="sm" c="dimmed">Zatiaľ žiadne skupiny.</Text>
-            }
+            } */}
 
             {userId && data.map(group => {
-                const url = `/skupiny/${group._id}`;
-                const active = url === pathname;
+                const url = `/skupiny/${group._id}`
+                const active = url === pathname
 
                 return (
                     <Link

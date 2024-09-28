@@ -360,11 +360,15 @@ main {
   margin-bottom: 0;
 }
 
+.mobile-navbar {
+  display: none;
+}
+
 /* Small PC screens */
 @media screen and (max-width: 992px) {
-  .navbar {
+  /* .navbar {
     display: none;
-  }
+  } */
 
   .header-inner {
     display: flex;
@@ -398,4 +402,13 @@ main {
   main {
     border-right: none;
   }
+
+  .mobile-navbar {
+    display: flex;
+  }
+
+  .navbar {
+    display: none;
+  }
+ 
 }
