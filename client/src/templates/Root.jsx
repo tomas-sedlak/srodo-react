@@ -11,9 +11,6 @@ export default function Root() {
             <nav className="navbar">
                 <Navbar />
             </nav>
-            <nav className="mobile-navbar"> {/*maybe change this later - 2 navbars? */}
-                <MobileNavbar />
-            </nav>
 
             <main>
                 <Suspense fallback={
@@ -27,6 +24,10 @@ export default function Root() {
             </main>
 
             <Aside />
+
+            <nav className="mobile-navbar">
+                <MobileNavbar />
+            </nav>
         </div>
     )
 }

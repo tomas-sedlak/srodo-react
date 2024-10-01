@@ -1,13 +1,7 @@
-import { Badge, Avatar, useMantineColorScheme, Tabs } from '@mantine/core';
-import { IconHome, IconCirclePlus, IconCpu, IconSearch } from '@tabler/icons-react';
-import { useLocation, Link } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
+import { Badge, Avatar, Group } from '@mantine/core';
+import { IconHome, IconCirclePlus, IconSearch, IconSparkles } from '@tabler/icons-react';
+import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
-
-import axios from 'axios';
-
-import { useMediaQuery } from '@mantine/hooks';
-
 
 const menu = [
     {
@@ -22,87 +16,52 @@ const menu = [
     },
     {
         label: "Nový príspevok",
-        url: "/Vytvorit", //change this later to the route for creating
+        url: "/vytvorit/skupina",
         leftSection: IconCirclePlus,
     },
     {
         label: "Šrodo AI",
         url: "/ai",
-        leftSection: IconCpu,
-        badge: "nové!",
-    },
-    {
-        label: "Profil",
-        url: "/", // add link to profile here
-        leftSection: Avatar,
+        leftSection: IconSparkles,
     },
 ]
 
 export default function MobileNavbar({ close }) {
-    const { colorScheme, toggleColorScheme } = useMantineColorScheme()
-    const { pathname } = useLocation()
-    const userId = useSelector(state => state.user?._id)
-
-    const isMobile = useMediaQuery('(max-width: 768px)')
-
-
-    const fetchGroups = async () => {
-        if (!userId) return []
-
-        const response = await axios.get(`/api/user/${userId}/groups`)
-        return response.data
-    }
-
-    const { status, data } = useQuery({
-        queryKey: ["groups", userId],
-        queryFn: fetchGroups,
-    })
-
+    const user = useSelector(state => state.user)
+    const userId = user?._id
 
     return (
-
-
-        <Tabs
-            defaultValue={menu[0].label}
-            variant="outline"
-            className='mobile-navbar-tabs'
-            w="100%"
-        >
-            <Tabs.List grow>
-                {menu.map(item => (
-                    <Tabs.Tab
+        <Group justify="space-around" w="100%">
+            {menu.map(item => (
+                    <Link
                         key={item.label}
-                        value={item.label}
-                        leftSection={<item.leftSection stroke={1.25} size={32} />}
-                        onClick={() => window.location.href = item.url}
-                    />
-                ))}
-                {/* <Tabs.Tab value="user" key="user">
-                    {userId && data.map(group => {
-                        const url = `/skupiny/${group._id}`
-                        const active = url === pathname
+                        to={item.url}
+                        style={{ display: "flex" }}
+                    >
+                        <item.leftSection stroke={1} size={36} />
+                    </Link>
+                )
+            )}
 
-                        return (
-                            <Link
-                                key={group.name}
-                                to={url}
-                                onClick={close}
-                                className="menu-item"
-                                data-active={active || undefined}
-                            >
-                                <Avatar className="no-image" size={32} src={group.profilePicture?.thumbnail} /> {/* Not yet working...*/}
-                                {/* <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
-                                {group.badge && (
-                                    <Badge variant="light">
-                                        {group.badge}
-                                    </Badge>
-                                )}
-                            </Link>
-                        )
-                    })} */}
-                {/* </Tabs.Tab> */}
-            </Tabs.List>
-        </Tabs>
+            {userId &&
+                <Link
+                    key="profile"
+                    to={`/${user.username}`}
+                    style={{ display: "flex" }}
+                >
+                    <Avatar size={36} src={user.profilePicture?.thumbnail} />
+                </Link>
+            }
 
+            {!userId &&
+                <Link
+                    key="login"
+                    to="/prihlasenie"
+                    style={{ display: "flex" }}
+                >
+                    <Avatar size={36} />
+                </Link>
+            }
+        </Group>
     )
 }

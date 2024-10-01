@@ -1,12 +1,10 @@
 import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme } from '@mantine/core';
-import { IconHome, IconCirclePlus, IconCpu, IconSearch } from '@tabler/icons-react';
+import { IconHome, IconSearch, IconSparkles } from '@tabler/icons-react';
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoginModal } from 'state';
 import axios from 'axios';
-
-import { useMediaQuery } from '@mantine/hooks';
-
 
 const menu = [
     {
@@ -22,23 +20,17 @@ const menu = [
     {
         label: "Šrodo AI",
         url: "/ai",
-        leftSection: IconCpu,
+        leftSection: IconSparkles,
         badge: "nové!",
-    },
-    {
-        label: "Profil",
-        url: "/", // add link to profile here
-        leftSection: Avatar,
     },
 ]
 
-export default function Navbar({ close }) {
+export default function Navbar() {
     const { colorScheme, toggleColorScheme } = useMantineColorScheme()
     const { pathname } = useLocation()
-    const userId = useSelector(state => state.user?._id)
-
-    const isMobile = useMediaQuery('(max-width: 768px)');
-
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user)
+    const userId = user?._id
 
     const fetchGroups = async () => {
         if (!userId) return []
@@ -62,12 +54,11 @@ export default function Navbar({ close }) {
         </div>
     ) : (
         <>
-
             <Link to="/">
                 <Group gap={0} mb="lg">
                     {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
                     <Text ml={8} fw={700} fz={24}>Šrodo</Text>
-                    <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
+                    {/* <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge> */}
                 </Group>
             </Link>
 
@@ -81,7 +72,6 @@ export default function Navbar({ close }) {
                     <Link
                         key={item.label}
                         to={item.url}
-                        onClick={close}
                         className="menu-item"
                         data-active={active || undefined}
                     >
@@ -96,30 +86,50 @@ export default function Navbar({ close }) {
                 )
             })}
 
-            
-            {/* Only for beta testing */}
-            <Link
-                key="report"
-                to="/" // Add link to creating new post 
-                target="_blank"
-                onClick={close}
-                style={{ marginTop: "var(--mantine-spacing-sm)" }}
-            >
+            {!userId &&
                 <Button
+                    key="login"
                     size="md"
-                    fw={500}
+                    fw={600}
                     justify="center"
                     fullWidth
+                    onClick={() => dispatch(setLoginModal(true))}
+                    style={{ marginTop: "var(--mantine-spacing-xs)" }}
                 >
-                    Nový píspevok
+                    Prihlásiť sa
                 </Button>
-            </Link >
+            }
 
-            {/* Only for beta testing */}
+            {userId &&
+                <Link
+                    key="profil"
+                    to={`/${user.username}`}
+                    className="menu-item"
+                    data-active={pathname.startsWith(`/${user.username}`) || undefined}
+                >
+                    <Avatar size="sm" src={user.profilePicture?.thumbnail} />
+                    <span>Profil</span>
+                </Link>
+            }
+            
+            {userId &&
+                <Link
+                    key="new_group"
+                    to="/vytvorit/skupina"
+                    style={{ marginTop: "var(--mantine-spacing-xs)" }}
+                >
+                    <Button
+                        size="md"
+                        fw={600}
+                        justify="center"
+                        fullWidth
+                    >
+                        Vytvoriť skupinu
+                    </Button>
+                </Link >
+            }
 
-            {/* Subject items */}
-            {/* IMPORTANT - delete these later */}
-            {/* <Text fw={700} size="lg" px="sm" pb="sm" pt="md" style={{ lineHeight: 1 }}>Skupiny</Text>
+            <Text fw={700} size="lg" px="sm" pb="sm" pt="lg" style={{ lineHeight: 1 }}>Moje skupiny</Text>
 
             {!userId &&
                 <Text px="sm" c="dimmed" style={{ lineHeight: 1.4 }}>Tu sa zobrazia tvoje skupiny po prihlásení.</Text>
@@ -127,7 +137,7 @@ export default function Navbar({ close }) {
 
             {userId && data.length === 0 &&
                 <Text px="sm" c="dimmed">Zatiaľ žiadne skupiny.</Text>
-            } */}
+            }
 
             {userId && data.map(group => {
                 const url = `/skupiny/${group._id}`
