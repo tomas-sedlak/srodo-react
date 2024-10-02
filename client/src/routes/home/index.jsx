@@ -50,8 +50,7 @@ export default function Home() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <>
-            <SmallHeader />
+        <>            
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message

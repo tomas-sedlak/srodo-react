@@ -4,6 +4,7 @@ import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badg
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import SmallHeader from "templates/SmallHeader";
 import Post from "templates/Post";
 import axios from "axios";
 
@@ -40,6 +41,8 @@ export default function User() {
         </div>
     ) : (
         <>
+            <SmallHeader withArrow title={data.user.displayName} />
+
             <AspectRatio ratio={6 / 2}>
                 {data.user.coverImage ?
                     <Image className="no-image" src={data.user.coverImage} />
