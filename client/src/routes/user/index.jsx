@@ -1,9 +1,11 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge } from "@mantine/core";
-import { IconLock, IconWorld } from "@tabler/icons-react";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge, Button, Menu } from "@mantine/core";
+import { IconDots, IconLock, IconLogout, IconPencil, IconSettings, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setLogout } from "state";
+import SmallHeader from "templates/SmallHeader";
 import Post from "templates/Post";
 import axios from "axios";
 
@@ -17,6 +19,7 @@ export default function User() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const getData = async () => {
         const user = await axios.get(`/api/user?username=${username}`);
@@ -40,6 +43,8 @@ export default function User() {
         </div>
     ) : (
         <>
+            <SmallHeader withArrow title={data.user.displayName} />
+
             <AspectRatio ratio={6 / 2}>
                 {data.user.coverImage ?
                     <Image className="no-image" src={data.user.coverImage} />
@@ -55,7 +60,42 @@ export default function User() {
                 />
             </div>
 
-            <Box px="md" py="sm" mt={profilePictureSize / 2}>
+            <Group px="md" h={profilePictureSize / 2} gap={8} justify="flex-end" align="center">
+                {data.user._id == userId &&
+                    <>
+                        <Button
+                            variant="default"
+                            leftSection={<IconSettings stroke={1.25} />}
+                            styles={{ section: { marginRight: 4 } }}
+                            onClick={() => navigate("/nastavenia")}
+                        >
+                            Nastavenia
+                        </Button>
+
+                        <Menu position="bottom-end" width={180}>
+                            <Menu.Target>
+                                <Button
+                                    variant="default"
+                                    px={8}
+                                >
+                                    <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
+                                </Button>
+                            </Menu.Target>
+                            <Menu.Dropdown>
+                                <Menu.Item
+                                    leftSection={<IconLogout stroke={1.25} />}
+                                    color="red"
+                                    onClick={() => dispatch(setLogout())}
+                                >
+                                    <Text fw={600} size="sm">Odhlásť sa</Text>
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                    </>
+                }
+            </Group>
+
+            <Box px="md" py="sm">
                 <Stack gap={4}>
                     <Text fw={700} size="xl" style={{ lineHeight: 1.2 }}>
                         {data.user.displayName}

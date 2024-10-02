@@ -1,26 +1,18 @@
-import { Text } from "@mantine/core"
-import { useEffect, useState } from "react"
+import { Group, Text } from "@mantine/core"
+import { IconArrowLeft } from "@tabler/icons-react"
+import { useNavigate } from "react-router-dom"
 
-export default function SmallHeader({ title }) {
-    const [show, setShow] = useState(true)
-    const [lastScrollY, setLastScrollY] = useState(0)
-
-    const handleScroll = () => {
-        setShow(lastScrollY > window.scrollY)
-        setLastScrollY(window.scrollY)
-    }
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll)
-
-        return () => {
-            window.removeEventListener("scroll", handleScroll)
-        }
-    })
+export default function SmallHeader({ title = "", withArrow = false }) {
+    const navigate = useNavigate()
 
     return (
-        <div className={`small-header ${!show && "hide"}`}>
-            {typeof title === "string" ? <Text px="md" py="sm" fw={600}>{title}</Text> : title}
+        <div className="small-header">
+            <Group gap="sm" h="100%" px="var(--mantine-spacing-md)">
+                {withArrow &&
+                    <IconArrowLeft className="pointer" onClick={() => navigate(-1)} />
+                }
+                {typeof title === "string" ? <Text fw={600}>{title}</Text> : title}
+            </Group>
         </div>
     )
 }

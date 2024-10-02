@@ -4,6 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { Button, Loader, Text } from "@mantine/core";
 import { useSelector } from "react-redux";
 import Post from "templates/Post";
+import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 import Message from "templates/Message";
 import { Link } from "react-router-dom";
@@ -49,7 +50,7 @@ export default function Home() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <>
+        <>            
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message
