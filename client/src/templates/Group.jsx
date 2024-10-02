@@ -2,10 +2,12 @@ import { forwardRef } from "react";
 import { Group, Image, Text, Avatar, Stack, AspectRatio, Box, Tooltip } from '@mantine/core';
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "@mantine/hooks";
 
 const Suggestion = forwardRef(({ group }, ref) => {
     const groupUrl = `/skupiny/${group._id}`;
-    const profilePictureSize = 96;
+    const isMobile = useMediaQuery("(max-width: 768px)");
+    const profilePictureSize = isMobile ? 96 : 128;
 
     const suggestionContent = (
         <Link to={groupUrl} key={group._id}>
@@ -42,24 +44,7 @@ const Suggestion = forwardRef(({ group }, ref) => {
 
                 {group.description && <Text mt={8}>{group.description}</Text>}
 
-                <Group mt={8}>
-                    <Text c="dimmed">Členovia: <Text component="span" c="white" fw={700}>{group.members.length}</Text></Text>
-                    {group.members.length > 3 &&
-                        <Box className="members-preview">
-                            {group.members.slice(-12).map(member =>
-                                <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                                    <Link to={`/${member.username}`} key={member._id}>
-                                        <Avatar
-                                            className="no-image"
-                                            src={member.profilePicture?.thumbnail}
-                                            style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                        />
-                                    </Link>
-                                </Tooltip>
-                            )}
-                        </Box>
-                    }
-                </Group>
+                <Text c="dimmed">Členovia: <Text component="span" c="white" fw={700}>{group.members.length}</Text></Text>
             </Stack>
         </Link>
     )

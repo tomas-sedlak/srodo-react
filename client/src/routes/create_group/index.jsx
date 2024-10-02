@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { notifications } from '@mantine/notifications';
 import ImagesModal from "templates/ImagesModal";
+import SmallHeader from 'templates/SmallHeader';
 import axios from 'axios';
 
 const nameMaxLength = 64;
@@ -118,6 +119,8 @@ export default function CreateGroup() {
                 aspectRatio={1 / 1}
                 qkey="groupProfilePicture"
             />
+
+            <SmallHeader withArrow title="Vytvoriť skupinu" />
 
             <Tabs
                 px="md"

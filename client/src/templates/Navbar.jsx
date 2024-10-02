@@ -1,5 +1,6 @@
 import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme } from '@mantine/core';
-import { IconHome, IconSearch, IconSparkles } from '@tabler/icons-react';
+import { HomeIcon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline"
+import { HomeIcon as HomeIconSolid, MagnifyingGlassIcon as MagnifyingGlassIconSolid, SparklesIcon as SparklesIconSolid } from "@heroicons/react/24/solid"
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,17 +11,20 @@ const menu = [
     {
         label: "Domov",
         url: "/",
-        leftSection: IconHome,
+        leftSection: HomeIcon,
+        leftSectionSelected: HomeIconSolid,
     },
     {
         label: "Preskúmať",
         url: "/preskumat",
-        leftSection: IconSearch,
+        leftSection: MagnifyingGlassIcon,
+        leftSectionSelected: MagnifyingGlassIconSolid,
     },
     {
         label: "Šrodo AI",
         url: "/ai",
-        leftSection: IconSparkles,
+        leftSection: SparklesIcon,
+        leftSectionSelected: SparklesIconSolid,
         badge: "nové!",
     },
 ]
@@ -75,7 +79,11 @@ export default function Navbar() {
                         className="menu-item"
                         data-active={active || undefined}
                     >
-                        <item.leftSection stroke={1.25} />
+                        {active ?
+                            <item.leftSectionSelected strokeWidth={1.25} width={24} height={24} />
+                            :
+                            <item.leftSection strokeWidth={1.25} width={24} height={24} />
+                        }
                         <span>{item.label}</span>
                         {item.badge && (
                             <Badge variant="light">
@@ -107,11 +115,15 @@ export default function Navbar() {
                     className="menu-item"
                     data-active={pathname.startsWith(`/${user.username}`) || undefined}
                 >
-                    <Avatar size="sm" src={user.profilePicture?.thumbnail} />
+                    <Avatar
+                        size="sm"
+                        src={user.profilePicture?.thumbnail}
+                        style={{ outline: pathname.startsWith(`/${user.username}`) && "1.5px solid var(--mantine-color-text)" }}
+                    />
                     <span>Profil</span>
                 </Link>
             }
-            
+
             {userId &&
                 <Link
                     key="new_group"

@@ -210,7 +210,7 @@ export default function Group() {
 
                 {data.members.length > 1 &&
                     <Box mt="sm" className="members-preview">
-                        {data.members.slice(-12).map(member =>
+                        {data.members.slice(-8).map(member =>
                             <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
                                 <Link to={`/${member.username}`} key={member._id}>
                                     <Avatar

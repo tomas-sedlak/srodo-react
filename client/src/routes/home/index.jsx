@@ -1,17 +1,20 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { Button, Loader, Text } from "@mantine/core";
+import { Button, Group, Loader, Text, useMantineColorScheme } from "@mantine/core";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "@mantine/hooks";
+import { Link } from "react-router-dom";
 import Post from "templates/Post";
 import SmallHeader from "templates/SmallHeader";
-import axios from "axios";
 import Message from "templates/Message";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Home() {
     const { ref, inView } = useInView();
     const userId = useSelector(state => state.user?._id)
+    const { colorScheme } = useMantineColorScheme()
+    const isMobile = useMediaQuery("(max-width: 768px)")
 
     const fetchPosts = async ({ pageParam }) => {
         if (!userId) return []
@@ -50,7 +53,21 @@ export default function Home() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <>            
+        <>
+            {isMobile &&
+                <SmallHeader
+                    title={
+                        <Link to="/">
+                            <Group gap={0}>
+                                {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                                <Text ml={8} fw={700} fz={24}>Šrodo</Text>
+                                {/* <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge> */}
+                            </Group>
+                        </Link>
+                    }
+                />
+            }
+
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message
