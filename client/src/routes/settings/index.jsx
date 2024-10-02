@@ -155,7 +155,6 @@ export default function Settings() {
     }, []);
 
 
-
     //         modals.openConfirmModal({
     //             title: "Uložiť zmeny",
     //             children: <Text>Určite chceš odísť z tejto stránky? Zmeny, ktoré si urobil sa nemusia uložiť.</Text>,
@@ -168,9 +167,6 @@ export default function Settings() {
 
     return (
         <>
-
-
-
             <ImagesModal
                 opened={coverImageModalOpened}
                 close={coverImageModalHandlers.close}
@@ -314,7 +310,8 @@ export default function Settings() {
                     })
                 }}} */}
             </>
-            <SmallHeader title="⚙️ Nastavenia profilu" />
+
+            <SmallHeader withArrow title="Nastavenia profilu" />
 
             <Box pos="relative">
                 <Group gap={8} className="bottom-right">
