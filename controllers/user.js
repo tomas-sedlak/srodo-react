@@ -1,5 +1,4 @@
-import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
-import { getPostUtil, getProfilePicture } from "../utils/utils.js";
+import { deleteObject, uploadImage } from "../utils/s3.js";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import Group from "../models/Group.js";
@@ -14,10 +13,6 @@ export const getUser = async (req, res) => {
         } else if (req.query.username) {
             user = await User.findOne({ username: req.query.username });
         }
-
-        // Load images from s3 bucket
-        user.coverImage = await getObject(user.coverImage);
-        await getProfilePicture(user.profilePicture);
 
         res.status(200).json(user);
     } catch (err) {
@@ -44,11 +39,6 @@ export const getUserSuggestions = async (req, res) => {
     try {
         const users = await User.find({ verifiedEmail: true }).lean();
 
-        // Load images from s3 bucket
-        for (const user of users) {
-            await getProfilePicture(user.profilePicture);
-        }
-
         res.status(200).json(users);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -66,12 +56,6 @@ export const getUserPosts = async (req, res) => {
             .populate("files", "file name size")
             .lean();
 
-        // Load images from s3 bucket
-        let cache = {};
-        for (const post of posts) {
-            await getPostUtil(post, cache);
-        }
-
         res.status(200).json(posts);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -82,11 +66,6 @@ export const getUserGroups = async (req, res) => {
     try {
         const { userId } = req.params;
         const groups = await Group.find({ members: userId });
-
-        // Load images from s3 bucket
-        for (const group of groups) {
-            await getProfilePicture(group.profilePicture);
-        }
 
         res.status(200).json(groups);
     } catch (err) {
@@ -102,12 +81,6 @@ export const getUserFavourites = async (req, res) => {
             .populate("images", "thumbnail large")
             .populate("files", "file name size")
             .lean();
-
-        // Load images from s3 bucket
-        let cache = {};
-        for (const post of posts) {
-            await getPostUtil(post, cache);
-        }
 
         res.status(200).json(posts);
     } catch (err) {
@@ -167,8 +140,6 @@ export const updateUserSettings = async (req, res) => {
 
         await user.save();
 
-        user.coverImage = await getObject(user.coverImage);
-        await getProfilePicture(user.profilePicture);
         res.status(200).send(user);
     } catch (err) {
         res.status(500).json({ message: err.message })

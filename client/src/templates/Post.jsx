@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Group, Text, Avatar, Stack, Spoiler, Badge } from '@mantine/core';
+import { Group, Text, Avatar, Stack, Spoiler, Badge, Tooltip } from '@mantine/core';
 import { IconLock, IconWorld } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { PostButtons, PostMenu } from "./PostWidgets";
@@ -8,7 +8,17 @@ import FilesDisplay from "./FilesDisplay";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
-moment.locale("sk");
+moment.locale("sk", {
+    relativeTime: {
+        s: "%ds",
+        m: "%dmin",
+        mm: "%dmin",
+        h: "%dh",
+        hh: "%dh",
+        d: "%dd",
+        dd: "%dd",
+    }
+});
 
 const Linkify = ({ children }) => {
     const isUrl = word => {
@@ -33,8 +43,10 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
     const authorUrl = `/${post.author.username}`;
     const postUrl = `${authorUrl}/prispevok/${post._id}`;
 
+    const showLongTime = Date.now() - new Date(post.createdAt) > 1000 * 60 * 60 * 24 * 30; // less then a month
+
     let postContent = (
-        <Group px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
+        <Group key={post._id} px="md" py="sm" gap="xs" align="flex-start" pos="relative" wrap="nowrap" className="border-bottom">
             <PostMenu type="post" post={post} />
 
             {group ? (
@@ -56,9 +68,14 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                             <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                                 &middot;
                             </Text>
-                            <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                {moment(post.createdAt).fromNow()}
-                            </Text>
+                            <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMM yyyy")} openDelay={500} withArrow>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    {showLongTime ?
+                                        moment(post.createdAt).format("D. MMM yyyy")
+                                        : moment(post.createdAt).fromNow(true)
+                                    }
+                                </Text>
+                            </Tooltip>
                         </Group>
 
                         <Spoiler
@@ -111,9 +128,14 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                                 <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                                     &middot;
                                 </Text>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
-                                    {moment(post.createdAt).fromNow()}
-                                </Text>
+                                <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMM yyyy")} openDelay={500} withArrow>
+                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                        {showLongTime ?
+                                            moment(post.createdAt).format("D. MMM yyyy")
+                                            : moment(post.createdAt).fromNow(true)
+                                        }
+                                    </Text>
+                                </Tooltip>
                             </Group>
                         </Stack>
                     </Group>

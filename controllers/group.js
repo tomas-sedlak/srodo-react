@@ -1,14 +1,10 @@
-import { deleteObject, getObject, uploadImage } from "../utils/s3.js";
-import { getPostUtil, getProfilePicture } from "../utils/utils.js";
+import { deleteObject, uploadImage } from "../utils/s3.js";
 import Group from "../models/Group.js";
 import Post from "../models/Post.js";
-import Comment from "../models/Comment.js";
-import File from "../models/File.js";
-import Image from "../models/Image.js";
 import normalizeStrings from "normalize-strings";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import Comment from "../models/Comment.js";
 
 // CREATE
 export const createGroup = async (req, res) => {
@@ -80,13 +76,6 @@ export const getGroup = async (req, res) => {
             if (!group.members.find(member => member._id.equals(user.id))) return res.status(403).send("Access denied!");
         }
 
-        // Load images from s3 bucket
-        group.coverImage = await getObject(group.coverImage);
-        await getProfilePicture(group.profilePicture);
-        for (const member of group.members) {
-            await getProfilePicture(member.profilePicture);
-        }
-
         res.status(200).json(group);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -103,10 +92,8 @@ export const getGroupPosts = async (req, res) => {
             .populate("files", "file name size")
             .lean();
 
-        // Loading images from s3 bucket using memoization to improve performance
-        const cache = {};
         for (const post of posts) {
-            await getPostUtil(post, cache);
+            post.comments = await Comment.find({ postId: post._id }).countDocuments()
         }
 
         res.status(200).json(posts);
@@ -137,11 +124,6 @@ export const getGroupMembers = async (req, res) => {
             })
             .lean();
 
-        // Load images from s3 bucket
-        for (const member of members) {
-            await getProfilePicture(member.profilePicture);
-        }
-
         res.status(200).json(members);
     } catch (err) {
         res.status(404).json({ message: err.message });
@@ -164,16 +146,6 @@ export const getGroupSuggestions = async (req, res) => {
             .sort(sort)
             .populate("members", "username displayName profilePicture")
             .lean();
-
-        // Load images from s3 bucket
-        for (const group of groups) {
-            group.coverImage = await getObject(group.coverImage);
-            await getProfilePicture(group.profilePicture);
-
-            for (const member of group.members) {
-                await getProfilePicture(member.profilePicture);
-            }
-        }
 
         res.status(200).json(groups);
     } catch (err) {
@@ -279,8 +251,6 @@ export const updateGroup = async (req, res) => {
 
         await group.save();
 
-        group.coverImage = await getObject(group.coverImage);
-        await getProfilePicture(group.profilePicture);
         res.sendStatus(200);
     } catch (err) {
         res.status(500).json({ message: err.message });

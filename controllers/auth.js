@@ -1,5 +1,5 @@
-import { uploadImage, getObject } from "../utils/s3.js";
-import { compileEmailTemplate, generateToken, getProfilePicture, sendMail } from "../utils/utils.js";
+import { uploadImage } from "../utils/s3.js";
+import { compileEmailTemplate, generateToken, sendMail } from "../utils/utils.js";
 import { generateUsername } from "unique-username-generator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -71,10 +71,6 @@ export const verify = async (req, res) => {
         user.verifyEmailToken = undefined;
         await user.save();
 
-        // Load images from s3 bucket
-        user.coverImage = await getObject(user.coverImage);
-        await getProfilePicture(user.profilePicture);
-
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;
 
@@ -96,10 +92,6 @@ export const login = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).send("Nesprávne prihlasovacie údaje.");
-
-        // Load images from s3 bucket
-        user.coverImage = await getObject(user.coverImage);
-        await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         delete user.password;
@@ -144,10 +136,6 @@ export const google = async (req, res) => {
                 loginMethod: "google",
             });
         }
-
-        // Load images from s3 bucket
-        user.coverImage = await getObject(user.coverImage);
-        await getProfilePicture(user.profilePicture);
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         res.status(200).json({ token, user });
