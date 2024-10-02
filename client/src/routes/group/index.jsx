@@ -13,6 +13,7 @@ import CreatePost from "templates/CreatePost";
 import axios from "axios";
 import Message from "templates/Message";
 import { ReportModal } from "templates/ReportModal";
+import SmallHeader from "templates/SmallHeader";
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -95,6 +96,8 @@ export default function Group() {
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
 
             <ReportModal opened={opened} close={close} />
+
+            <SmallHeader withArrow title={data.name} />
 
             < AspectRatio ratio={6 / 2}>
                 {data.coverImage ?

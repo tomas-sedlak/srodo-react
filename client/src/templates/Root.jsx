@@ -1,15 +1,13 @@
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import { Loader, Text } from "@mantine/core";
-import Header from "templates/Header";
 import Aside from "templates/Aside";
 import Navbar from "templates/Navbar";
+import MobileNavbar from "templates/MobileNavbar";
 
 export default function Root() {
     return (
         <div className="page-wrapper">
-            <Header />
-
             <nav className="navbar">
                 <Navbar />
             </nav>
@@ -26,6 +24,10 @@ export default function Root() {
             </main>
 
             <Aside />
+
+            <nav className="mobile-navbar">
+                <MobileNavbar />
+            </nav>
         </div>
     )
 }
