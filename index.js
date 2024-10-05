@@ -16,7 +16,6 @@ import userRoutes from "./routes/user.js";
 import groupRoutes from "./routes/group.js";
 import postRoutes from "./routes/post.js";
 import commentRoutes from "./routes/comment.js";
-import aiRoutes from "./routes/ai.js";
 
 // CONTROLLERS
 import { createPost } from "./controllers/post.js";
@@ -24,6 +23,7 @@ import { createComment } from "./controllers/comment.js";
 import { createGroup, updateGroup } from "./controllers/group.js";
 import { updateUserSettings } from "./controllers/user.js";
 import { verifyToken } from "./middleware/auth.js";
+import { generateQuiz } from "./controllers/ai.js";
 
 // CONFIGURATION
 const __filename = fileURLToPath(import.meta.url);
@@ -55,6 +55,7 @@ app.post("/api/comment", verifyToken, upload.fields([{ name: "images", maxCount:
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 app.patch("/api/group/:groupId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateGroup);
+app.post("/api/ai", upload.fields([{ name: "file", maxCount: 1 }]), generateQuiz);
 
 // ROUTES
 app.use("/api/auth", authRoutes);
@@ -62,7 +63,6 @@ app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
-app.use("/api/ai", aiRoutes);
 
 // PRODUCTION REACT ROUTES
 if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
