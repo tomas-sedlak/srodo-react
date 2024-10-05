@@ -37,7 +37,7 @@ export default function MobileNavbar({ close }) {
     const userId = user?._id
 
     return (
-        <Group justify="space-around" w="100%">
+        <Group justify="space-evenly" w="100%">
             {menu.map(item => {
                 let active = false;
                 if (item.url === "/") active = pathname === "/"
