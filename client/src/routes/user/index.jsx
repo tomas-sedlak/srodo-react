@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
 import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge, Button, Menu } from "@mantine/core";
-import { IconDots, IconLock, IconLogout, IconPencil, IconSettings, IconWorld } from "@tabler/icons-react";
+import { IconCalendarMonth, IconDots, IconLock, IconLogout, IconSettings, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state";
@@ -107,7 +107,10 @@ export default function User() {
                     {data.user.bio}
                 </Text>
 
-                <Text mt={4} c="dimmed" style={{ lineHeight: 1.4 }}>Profil vytvorený {moment(data.user.createdAt).format("D. M. yyyy")}</Text>
+                <Group gap={4} mt={4}>
+                    <IconCalendarMonth color="var(--mantine-color-dimmed)" stroke={1.25} />
+                    <Text c="dimmed" style={{ lineHeight: 1.4 }}>{moment(data.user.createdAt).format("D. MMMM yyyy")}</Text>
+                </Group>
 
                 {data.user.socials.length !== 0 &&
                     <Group mt="sm" gap={4}>

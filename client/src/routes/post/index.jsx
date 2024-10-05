@@ -8,6 +8,7 @@ import axios from "axios";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
+import SmallHeader from "templates/SmallHeader";
 moment.locale("sk");
 
 export default function Post() {
@@ -34,6 +35,8 @@ export default function Post() {
         </div>
     ) : (
         <>
+            <SmallHeader withArrow title="Príspevok" />
+
             <PostTemplate post={data} withoutLink />
 
             <Comments postId={postId} owner={data.group.owner} />

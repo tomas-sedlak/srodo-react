@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { AspectRatio, Box, Text, Flex, Loader, Tabs, Stack, Avatar, Badge, Button, Tooltip, TextInput, Image, Menu, Modal, ActionIcon } from '@mantine/core';
-import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus, IconCopy, IconClipboard } from '@tabler/icons-react';
+import { IconLock, IconPencil, IconWorld, IconSearch, IconX, IconDots, IconTrash, IconFlag, IconPlus, IconClipboard, IconCalendarMonth } from '@tabler/icons-react';
 import { modals } from "@mantine/modals";
 import { useDebounceCallback, useMediaQuery, useDisclosure } from "@mantine/hooks";
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +14,10 @@ import axios from "axios";
 import Message from "templates/Message";
 import { ReportModal } from "templates/ReportModal";
 import SmallHeader from "templates/SmallHeader";
+
+import moment from "moment";
+import "moment/dist/locale/sk";
+moment.locale("sk");
 
 export default function Group() {
     const { groupId, tab = "prispevky" } = useParams();
@@ -200,12 +204,18 @@ export default function Group() {
                     {data.description}
                 </Text>
 
-                <Flex gap={4} mt={4}>
-                    {data.isPrivate ?
-                        <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
-                        : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
-                    }
-                    <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
+                <Flex gap="md" mt={4}>
+                    <Flex gap={4}>
+                        {data.isPrivate ?
+                            <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
+                            : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
+                        }
+                        <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
+                    </Flex>
+                    <Flex gap={4}>
+                        <IconCalendarMonth color="var(--mantine-color-dimmed)" stroke={1.25} />
+                        <Text c="dimmed" style={{ lineHeight: 1.4 }}>{moment(data.createdAt).format("D. MMMM yyyy")}</Text>
+                    </Flex>
                 </Flex>
 
                 {data.members.length > 1 &&
