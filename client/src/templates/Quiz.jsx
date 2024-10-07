@@ -1,28 +1,23 @@
 import { Progress, Radio, Text, Group, Button, Box } from "@mantine/core";
 import { useState } from "react";
 
-const data = [
-    {
-        question: "Do you know the first question?",
-        answers: [
-            { answer: "First answer" },
-            { answer: "Second answer" },
-            { answer: "Third answer" },
-            { answer: "Fourth answer" },
-        ],
-        correctAnswer: 2,
-    },
-    {
-        question: "Do you know the first question?",
-        answers: [
-            { answer: "First answer" },
-            { answer: "Second answer" },
-            { answer: "Third answer" },
-            { answer: "Fourth answer" },
-        ],
-        correctAnswer: 2,
-    },
-];
+const data = {
+    title: "This is the title",
+    questions: [
+        {
+            question: "Do you know the first question?",
+            answers: ["First answer", "Second answer", "Third answer", "Fourth answer",],
+            correctAnswer: 2,
+            explanation: "This is an explanation.",
+        },
+        {
+            question: "Do you know the second question?",
+            answers: ["First answer", "Second answer", "Third answer", "Fourth answer",],
+            correctAnswer: 2,
+            explanation: "This is a explanation.",
+        },
+    ]
+};
 
 export default function Quiz() {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -36,11 +31,11 @@ export default function Quiz() {
 
     const handleSubmit = () => {
         setIsAnswerSubmitted(true);
-        setCorrectAnswerIndex(data[currentQuestion].correctAnswer);
+        setCorrectAnswerIndex(data.questions[currentQuestion].correctAnswer);
     };
 
     const handleNextQuestion = () => {
-        if (currentQuestion < data.length - 1) {
+        if (currentQuestion < data.questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
             setSelectedAnswer(null); // Reset selected answer for the next question
             setIsAnswerSubmitted(false); // Reset answer submission state
@@ -48,14 +43,14 @@ export default function Quiz() {
         }
     };
 
-    const question = data[currentQuestion];
+    const question = data.questions[currentQuestion];
 
     return (
         <>
             <Box m="sm">
                 <Group>
                     <Progress value={(currentQuestion + 1) / data.length * 100} mt="lg" />
-                    <Text>{}</Text>
+                    <Text>{ }</Text>
 
                 </Group>
                 <Text mt="lg" mb="sm">{question.question}</Text> {/* Maybe change the margin later */}
@@ -90,16 +85,17 @@ export default function Quiz() {
                             }}
                         >
                             <Radio
-                                label={answer.answer}
+                                label={answer}
                                 checked={selectedAnswer === index}
                             />
                         </Group>
                     )
                 })}
-                {isAnswerSubmitted ? (
-                    <Button variant="filled" p="sm" onClick={handleNextQuestion}>
-                        Next
-                    </Button>
+                {isAnswerSubmitted ? (                   
+                        <Button variant="filled" p="sm" onClick={handleNextQuestion}>
+                            Next
+                        </Button>
+                    
                 ) : (
                     <Button variant="filled" p="sm" disabled={selectedAnswer === null} onClick={handleSubmit}>
                         Skontroluj
