@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import path from "path";
 import officeParser from "officeparser";
+import Quiz from "../models/Quiz.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -43,7 +44,7 @@ const generateQuizFromText = async (text, language) => {
 const generateQuizFromFile = async (file, language) => {
     const allowedExtensions = [".docx", ".pptx", ".xlsx", ".odt", ".odp", ".ods", ".pdf"];
     const maxSize = 5 * 1024 * 1024; // 5MB
-    
+
     const fileExt = path.extname(file.originalname).toLowerCase();
     if (!allowedExtensions.includes(fileExt)) {
         return new Error("Invalid file type.");
@@ -92,18 +93,31 @@ export const generateQuiz = async (req, res) => {
     try {
         const { language = "Slovak" } = req.params;
 
+        let quizContent;
         if (req.body.text) {
-            const quiz = await generateQuizFromText(req.body.text, language);
-            res.json(quiz);
+            quizContent = await generateQuizFromText(req.body.text, language);
         } else if (req.files.file) {
-            const quiz = await generateQuizFromFile(req.files.file, language);
-            res.json(quiz);
+            quizContent = await generateQuizFromFile(req.files.file, language);
         } else if (req.files.images) {
             // TODO
         } else {
             return res.status(400).json({ message: "Invalid input. Please provide text, file or image." });
         }
+
+        const quiz = await Quiz.create(quizContent);
+        res.status(201).json({ id: quiz._id });
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+export const getQuiz = async (req, res) => {
+    try {
+        const { quizId } = req.params;
+        const quiz = await Quiz.findById(quizId);
+
+        res.status(200).json(quiz);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
     }
 }

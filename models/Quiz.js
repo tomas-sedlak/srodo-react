@@ -2,10 +2,13 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema
 
 const quizSchema = new Schema({
-    question: String,
-    image: String,
-    options: [String],
-    correctOption: String,
+    title: String,
+    questions: [{
+        question: String,
+        answers: [String],
+        correctAnser: Number,
+        explanation: String,
+    }],
 })
 
 const Quiz = mongoose.model("Quiz", quizSchema)

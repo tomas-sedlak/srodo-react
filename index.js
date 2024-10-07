@@ -16,6 +16,7 @@ import userRoutes from "./routes/user.js";
 import groupRoutes from "./routes/group.js";
 import postRoutes from "./routes/post.js";
 import commentRoutes from "./routes/comment.js";
+import aiRoutes from "./routes/ai.js";
 
 // CONTROLLERS
 import { createPost } from "./controllers/post.js";
@@ -63,6 +64,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/group", groupRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
+app.use("/api/ai", aiRoutes);
 
 // PRODUCTION REACT ROUTES
 if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "staging") {
