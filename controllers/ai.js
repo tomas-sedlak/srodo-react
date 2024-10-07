@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import path from "path";
 import officeParser from "officeparser";
-import Quiz from "../models/Quiz.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -108,16 +107,5 @@ export const generateQuiz = async (req, res) => {
         res.status(201).json({ id: quiz._id });
     } catch (err) {
         res.status(500).json({ message: err.message });
-    }
-}
-
-export const getQuiz = async (req, res) => {
-    try {
-        const { quizId } = req.params;
-        const quiz = await Quiz.findById(quizId);
-
-        res.status(200).json(quiz);
-    } catch (err) {
-        res.status(500).send({ message: err.message });
     }
 }
