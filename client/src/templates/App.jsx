@@ -17,6 +17,7 @@ import ResetPassword from "routes/reset_password";
 import Register from "routes/register";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
+const QuizRoute = lazy(() => import("routes/quiz")); {/* Route for quiz testing */ }
 const Explore = lazy(() => import("routes/explore"));
 const Favourites = lazy(() => import("routes/favourites"));
 const User = lazy(() => import("routes/user"));
@@ -85,6 +86,7 @@ export default function App() {
                                     {/* PUBLIC ROUTES */}
                                     <Route index element={<Home />} />
                                     <Route path="ai" element={<AI />} />
+                                    <Route path="quiz" element={<QuizRoute />} /> {/* Added route to quiz fro testing */}
                                     <Route path="preskumat" element={<Explore />} />
                                     <Route path="preskumat/:tab" element={<Explore />} />
                                     <Route path="skupiny/:groupId" element={<Group />} />
