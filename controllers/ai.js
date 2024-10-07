@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import path from "path";
 import officeParser from "officeparser";
+import Quiz from "../models/Quiz.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -95,8 +96,8 @@ export const generateQuiz = async (req, res) => {
         let quizContent;
         if (req.body.text) {
             quizContent = await generateQuizFromText(req.body.text, language);
-        } else if (req.files.file) {
-            quizContent = await generateQuizFromFile(req.files.file, language);
+        } else if (req.files.file[0]) {
+            quizContent = await generateQuizFromFile(req.files.file[0], language);
         } else if (req.files.images) {
             // TODO
         } else {
