@@ -1,5 +1,7 @@
-import { Progress, Radio, Text, Group, Button, Box } from "@mantine/core";
+import { Progress, Radio, Text, Group, Button, Box, Stack } from "@mantine/core";
+import { IconMessage } from "@tabler/icons-react";
 import { useState } from "react";
+import SmallHeader from "./SmallHeader";
 
 export default function Quiz({ data }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -29,53 +31,61 @@ export default function Quiz({ data }) {
 
     return (
         <>
-            <Box m="md">
+            <SmallHeader withArrow title={data.title} />
+
+            <Box mx="md" my="sm">
                 <Group>
                     <Progress value={(currentQuestion + 1) / data.questions.length * 100} style={{ flex: 1 }} />
-                    <Text>{currentQuestion + 1}/{data.questions.length}</Text>
+                    <Text c="dimmed">{currentQuestion + 1}/{data.questions.length}</Text>
                 </Group>
 
+                <Text mt="sm" mb="md" size="lg">{question.question}</Text> {/* Maybe change the margin later */}
 
-                <Text mt="lg" mb="md">{question.question}</Text> {/* Maybe change the margin later */}
-                {question.answers.map((answer, index) => {
-                    let border
-                    if (isAnswerSubmitted) {
-                        if (index == correctAnswerIndex) {
-                            border = "2px solid var(--mantine-color-green-5)"
+                <Stack gap={8}>
+                    {question.answers.map((answer, index) => {
+                        let border
+                        if (isAnswerSubmitted) {
+                            if (index == correctAnswerIndex) {
+                                border = "2px solid var(--mantine-color-green-9)"
+                            }
+                            if (selectedAnswer !== correctAnswerIndex && index === selectedAnswer) {
+                                border = "2px solid var(--mantine-color-red-9)"
+                            }
                         }
-                        if (selectedAnswer !== correctAnswerIndex && index === selectedAnswer) {
-                            border = "2px solid var(--mantine-color-red-5)"
-                        }
-                    }
 
-                    return (
-                        <Group
-                            key={index}
-                            p="sm"
-                            mb={4}
-                            onClick={isAnswerSubmitted ? null : () => handleChange(index)}
-                            className="pointer border"
-                            style={{
-                                outline: border,
-                                borderRadius: 8,
-                            }}
-                        >
-                            <Radio
-                                label={answer}
-                                checked={selectedAnswer === index}
-                            />
-                        </Group>
-                    )
-                })}
+                        return (
+                            <Group
+                                px="sm"
+                                py={8}
+                                key={index}
+                                onClick={isAnswerSubmitted ? null : () => handleChange(index)}
+                                className="pointer border background-light"
+                                style={{
+                                    outline: border,
+                                    borderRadius: 8,
+                                }}
+                            >
+                                <Radio checked={selectedAnswer === index} />
+                                <Text>{answer}</Text>
+                            </Group>
+                        )
+                    })}
+                </Stack>
+
                 {isAnswerSubmitted ? (
-
                     <>
-                        <Group mt="md" p="sm" gap={6}>
-                            <Text fw={600}>Vysvetlenie:</Text>
-                            <Text >{question.explanation}</Text>
+                        <Group
+                            mt="sm"
+                            px="sm"
+                            py={8}
+                            className="pointer border background-light"
+                            style={{ borderRadius: 8 }}
+                        >
+                            <IconMessage stroke={1.25} />
+                            <Text style={{ flex: 1 }}>{question.explanation}</Text>
                         </Group>
-                        <Button variant="filled" p="sm" onClick={handleNextQuestion} mt="lg">
-                            Next
+                        <Button mt="md" variant="filled" onClick={handleNextQuestion}>
+                            Ďalej
                         </Button>
                     </>
                 ) : (
