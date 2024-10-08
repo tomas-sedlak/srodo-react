@@ -1,30 +1,7 @@
 import { Progress, Radio, Text, Group, Button, Box } from "@mantine/core";
 import { useState } from "react";
 
-const data = [
-    {
-        question: "Do you know the first question?",
-        answers: [
-            { answer: "First answer" },
-            { answer: "Second answer" },
-            { answer: "Third answer" },
-            { answer: "Fourth answer" },
-        ],
-        correctAnswer: 2,
-    },
-    {
-        question: "Do you know the first question?",
-        answers: [
-            { answer: "First answer" },
-            { answer: "Second answer" },
-            { answer: "Third answer" },
-            { answer: "Fourth answer" },
-        ],
-        correctAnswer: 2,
-    },
-];
-
-export default function Quiz() {
+export default function Quiz({ data }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
@@ -36,11 +13,11 @@ export default function Quiz() {
 
     const handleSubmit = () => {
         setIsAnswerSubmitted(true);
-        setCorrectAnswerIndex(data[currentQuestion].correctAnswer);
+        setCorrectAnswerIndex(data.questions[currentQuestion].correctAnswer);
     };
 
     const handleNextQuestion = () => {
-        if (currentQuestion < data.length - 1) {
+        if (currentQuestion < data.questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
             setSelectedAnswer(null); // Reset selected answer for the next question
             setIsAnswerSubmitted(false); // Reset answer submission state
@@ -48,25 +25,26 @@ export default function Quiz() {
         }
     };
 
-    const question = data[currentQuestion];
+    const question = data.questions[currentQuestion];
 
     return (
         <>
-            <Box m="sm">
+            <Box m="md">
                 <Group>
-                    <Progress value={(currentQuestion + 1) / data.length * 100} mt="lg" />
-                    <Text>{}</Text>
-
+                    <Progress value={(currentQuestion + 1) / data.questions.length * 100} style={{ flex: 1 }} />
+                    <Text>{currentQuestion + 1}/{data.questions.length}</Text>
                 </Group>
-                <Text mt="lg" mb="sm">{question.question}</Text> {/* Maybe change the margin later */}
+
+
+                <Text mt="lg" mb="md">{question.question}</Text> {/* Maybe change the margin later */}
                 {question.answers.map((answer, index) => {
                     let border
                     if (isAnswerSubmitted) {
                         if (index == correctAnswerIndex) {
-                            border = "2px solid green"
+                            border = "2px solid var(--mantine-color-green-5)"
                         }
                         if (selectedAnswer !== correctAnswerIndex && index === selectedAnswer) {
-                            border = "2px solid red"
+                            border = "2px solid var(--mantine-color-red-5)"
                         }
                     }
 
@@ -74,34 +52,34 @@ export default function Quiz() {
                         <Group
                             key={index}
                             p="sm"
-                            mb="sm"
-                            onClick={() => handleChange(index)}
+                            mb={4}
+                            onClick={isAnswerSubmitted ? null : () => handleChange(index)}
                             className="pointer border"
                             style={{
-                                // border: isAnswerSubmitted ? (
-                                //     index == correctAnswerIndex
-                                //         ? "2px solid green"
-                                //         : isIncorrectAnswer && index === selectedAnswer
-                                //             ? "2px solid red"
-                                //             : "1px solid #424242"
-                                // ) : "1px solid #424242",
                                 outline: border,
                                 borderRadius: 8,
                             }}
                         >
                             <Radio
-                                label={answer.answer}
+                                label={answer}
                                 checked={selectedAnswer === index}
                             />
                         </Group>
                     )
                 })}
                 {isAnswerSubmitted ? (
-                    <Button variant="filled" p="sm" onClick={handleNextQuestion}>
-                        Next
-                    </Button>
+
+                    <>
+                        <Group mt="md" p="sm" gap={6}>
+                            <Text fw={600}>Vysvetlenie:</Text>
+                            <Text >{question.explanation}</Text>
+                        </Group>
+                        <Button variant="filled" p="sm" onClick={handleNextQuestion} mt="lg">
+                            Next
+                        </Button>
+                    </>
                 ) : (
-                    <Button variant="filled" p="sm" disabled={selectedAnswer === null} onClick={handleSubmit}>
+                    <Button variant="filled" mt="md" disabled={selectedAnswer === null} onClick={handleSubmit}>
                         Skontroluj
                     </Button>
                 )}
