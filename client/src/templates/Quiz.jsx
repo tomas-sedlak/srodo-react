@@ -49,8 +49,10 @@ export default function Quiz() {
     return (
         <>
             <Box m="md">
-                
-                <Progress value={(currentQuestion + 1) / data.questions.length * 100} mt="sm" />
+                <Group>
+                    <Progress value={(currentQuestion + 1) / data.questions.length * 100} style={{ flex: 1 }} />
+                    <Text>{currentQuestion + 1}/{data.questions.length}</Text>
+                </Group>
 
 
                 <Text mt="lg" mb="md">{question.question}</Text> {/* Maybe change the margin later */}
@@ -96,7 +98,7 @@ export default function Quiz() {
                         </Button>
                     </>
                 ) : (
-                    <Button variant="filled" p="sm" mt="md" disabled={selectedAnswer === null} onClick={handleSubmit}>
+                    <Button variant="filled" mt="md" disabled={selectedAnswer === null} onClick={handleSubmit}>
                         Skontroluj
                     </Button>
                 )}
