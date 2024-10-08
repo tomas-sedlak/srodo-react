@@ -1,26 +1,7 @@
 import { Progress, Radio, Text, Group, Button, Box } from "@mantine/core";
-import { IconCircleCheckFilled, IconCircleXFilled } from "@tabler/icons-react";
 import { useState } from "react";
 
-const data = {
-    title: "This is the title",
-    questions: [
-        {
-            question: "Do you know the first question?",
-            answers: ["First answer", "Second answer", "Third answer", "Fourth answer",],
-            correctAnswer: 2,
-            explanation: "This is an explanation.",
-        },
-        {
-            question: "Do you know the second question?",
-            answers: ["First answer", "Second answer", "Third answer", "Fourth answer",],
-            correctAnswer: 2,
-            explanation: "This is a explanation.",
-        },
-    ]
-};
-
-export default function Quiz() {
+export default function Quiz({ data }) {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
