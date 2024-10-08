@@ -6,7 +6,7 @@ const quizSchema = new Schema({
     questions: [{
         question: String,
         answers: [String],
-        correctAnser: Number,
+        correctAnswer: Number,
         explanation: String,
     }],
 })
