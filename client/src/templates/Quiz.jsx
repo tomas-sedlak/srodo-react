@@ -48,9 +48,9 @@ export default function Quiz() {
 
     return (
         <>
-            <Box m="sm">
-
-                <Progress value={(currentQuestion + 1) / data.questions.length * 100} mt="lg" />
+            <Box m="md">
+                
+                <Progress value={(currentQuestion + 1) / data.questions.length * 100} mt="sm" />
 
 
                 <Text mt="lg" mb="md">{question.question}</Text> {/* Maybe change the margin later */}
@@ -69,17 +69,10 @@ export default function Quiz() {
                         <Group
                             key={index}
                             p="sm"
-                            mb="sm"
-                            onClick={() => handleChange(index)}
+                            mb={4}
+                            onClick={isAnswerSubmitted ? null : () => handleChange(index)}
                             className="pointer border"
                             style={{
-                                // border: isAnswerSubmitted ? (
-                                //     index == correctAnswerIndex
-                                //         ? "2px solid green"
-                                //         : isIncorrectAnswer && index === selectedAnswer
-                                //             ? "2px solid red"
-                                //             : "1px solid #424242"
-                                // ) : "1px solid #424242",
                                 outline: border,
                                 borderRadius: 8,
                             }}
@@ -103,7 +96,7 @@ export default function Quiz() {
                         </Button>
                     </>
                 ) : (
-                    <Button variant="filled" p="sm" disabled={selectedAnswer === null} onClick={handleSubmit}>
+                    <Button variant="filled" p="sm" mt="md" disabled={selectedAnswer === null} onClick={handleSubmit}>
                         Skontroluj
                     </Button>
                 )}
