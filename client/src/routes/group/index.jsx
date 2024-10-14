@@ -8,6 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import { notifications } from "@mantine/notifications";
+import { Helmet } from "react-helmet";
 import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
 import axios from "axios";
@@ -97,6 +98,11 @@ export default function Group() {
         </div>
     ) : (
         <>
+            <Helmet>
+                <title>{`${data.name} / Šrodo`}</title>
+                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.members.length} členov - ${data.name} na Šrodo: "${data.description}"`} />
+            </Helmet>
+
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
 
             <ReportModal opened={opened} close={close} />
@@ -219,19 +225,22 @@ export default function Group() {
                 </Flex>
 
                 {data.members.length > 1 &&
-                    <Box mt="sm" className="members-preview">
-                        {data.members.slice(-8).map(member =>
-                            <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                                <Link to={`/${member.username}`} key={member._id}>
-                                    <Avatar
-                                        className="no-image"
-                                        src={member.profilePicture?.thumbnail}
-                                        style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                    />
-                                </Link>
-                            </Tooltip>
-                        )}
-                    </Box>
+                    <Flex mt="sm" align="center" gap="sm">
+                        <Box className="members-preview">
+                            {data.members.slice(-5).map(member =>
+                                <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
+                                    <Link to={`/${member.username}`} key={member._id}>
+                                        <Avatar
+                                            className="no-image"
+                                            src={member.profilePicture?.thumbnail}
+                                            style={{ outline: "var(--mantine-color-body) solid 2px" }}
+                                        />
+                                    </Link>
+                                </Tooltip>
+                            )}
+                        </Box>
+                        <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{data.members.length}</Text> členov</Text>
+                    </Flex>
                 }
             </Box>
 

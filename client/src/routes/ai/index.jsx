@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
+import { Helmet } from "react-helmet";
 
 const textMaxLength = 5000;
 
@@ -45,6 +46,11 @@ export default function AI() {
 
     return (
         <>
+            <Helmet>
+                <title>Šrodo AI</title>
+                <meta name="description" content="Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti." />
+            </Helmet>
+        
             <SmallHeader withArrow title="Šrodo AI" />
 
             {isLoading ? (

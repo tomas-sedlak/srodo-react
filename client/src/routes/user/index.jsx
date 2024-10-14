@@ -45,7 +45,7 @@ export default function User() {
     ) : (
         <>
             <Helmet>
-                <title>{`${data.user.displayName} (@${data.user.username})`}</title>
+                <title>{`${data.user.displayName} (@${data.user.username}) / Šrodo`}</title>
                 <meta name="description" content={`${data.posts.length} príspevkov - ${data.user.displayName} (@${data.user.username}) na Šrodo: "${data.user.bio}"`} />
             </Helmet>
 

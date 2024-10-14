@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { notifications } from '@mantine/notifications';
+import { Helmet } from 'react-helmet';
 import ImagesModal from "templates/ImagesModal";
 import SmallHeader from 'templates/SmallHeader';
 import axios from 'axios';
@@ -102,6 +103,11 @@ export default function CreateGroup() {
 
     return (
         <>
+            <Helmet>
+                <title>Vytvoriť skupinu / Šrodo</title>
+                <meta name="description" content="Vytvor skupinu na Šrodo a zdieľaj vedomosti." />
+            </Helmet>
+
             <ImagesModal
                 opened={coverImageModalOpened}
                 close={coverImageModalHandlers.close}

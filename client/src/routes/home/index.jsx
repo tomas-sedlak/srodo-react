@@ -56,8 +56,8 @@ export default function Home() {
     ) : (
         <>
             <Helmet>
-                <title>Šrodo</title>
-                <meta name="description" content="Šrodo je sociálna sieť pre študentov, kde môžu zdieľať svoje vedomosti a zapájať sa do diskusií." />
+                <title>Šrodo - Od študentov študentom</title>
+                <meta name="description" content="Šrodo je sociálna sieť pre študentov, kde môžu zdieľať svoje vedomosti a zapájať sa do diskusií. Taktiež aj generovať interaktívne kvízy s pomocou AI." />
             </Helmet>
 
             {isMobile &&
