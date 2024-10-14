@@ -50,9 +50,9 @@ export default function MobileNavbar({ close }) {
                         style={{ display: "flex" }}
                     >
                         {active ?
-                            <item.leftSectionSelected strokeWidth={1.25} width={36} height={36} />
+                            <item.leftSectionSelected strokeWidth={1.25} width={32} height={32} />
                             :
-                            <item.leftSection strokeWidth={1.25} width={36} height={36} />
+                            <item.leftSection strokeWidth={1.25} width={32} height={32} />
                         }
                     </Link>
                 )
@@ -65,7 +65,7 @@ export default function MobileNavbar({ close }) {
                     style={{ display: "flex" }}
                 >
                     <Avatar
-                        size={36}
+                        size={28}
                         src={user.profilePicture?.thumbnail}
                         style={{ outline: pathname.startsWith(`/${user.username}`) && "2px solid var(--mantine-color-text)" }}
                     />
@@ -78,7 +78,7 @@ export default function MobileNavbar({ close }) {
                     to="/prihlasenie"
                     style={{ display: "flex" }}
                 >
-                    <Avatar size={36} />
+                    <Avatar size={32} />
                 </Link>
             }
         </Group>
