@@ -5,6 +5,7 @@ import { IconCalendarMonth, IconDots, IconLock, IconLogout, IconSettings, IconWo
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout } from "state";
+import { Helmet } from "react-helmet";
 import SmallHeader from "templates/SmallHeader";
 import Post from "templates/Post";
 import axios from "axios";
@@ -43,6 +44,11 @@ export default function User() {
         </div>
     ) : (
         <>
+            <Helmet>
+                <title>{`${data.user.displayName} (@${data.user.username})`}</title>
+                <meta name="description" content={`${data.posts.length} príspevkov - ${data.user.displayName} (@${data.user.username}) na Šrodo: "${data.user.bio}"`} />
+            </Helmet>
+
             <SmallHeader withArrow title={data.user.displayName} />
 
             <AspectRatio ratio={6 / 2}>
