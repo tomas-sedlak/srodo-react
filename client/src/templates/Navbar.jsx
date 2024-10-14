@@ -62,7 +62,7 @@ export default function Navbar() {
                 <Group gap={0} mb="lg">
                     {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
                     <Text ml={8} fw={700} fz={24}>Šrodo</Text>
-                    {/* <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge> */}
+                    <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                 </Group>
             </Link>
 
