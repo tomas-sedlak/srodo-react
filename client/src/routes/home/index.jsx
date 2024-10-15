@@ -9,6 +9,7 @@ import { Helmet } from "react-helmet";
 import Post from "templates/Post";
 import SmallHeader from "templates/SmallHeader";
 import Message from "templates/Message";
+import GroupList from "templates/GroupList";
 import axios from "axios";
 
 export default function Home() {
@@ -22,6 +23,17 @@ export default function Home() {
         const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`);
         return response.data;
     }
+
+    const groups = [
+        { name: 'Nazov skupiny' },
+        { name: 'Nazov skupiny' },
+        { name: 'Dlhy Nazov skupiny' },
+        { name: 'Nazov skupiny' },
+        { name: 'Nazov skupiny' },
+        { name: 'Nazov skupiny' },
+        { name: 'Dlhy Nazov skupiny' },
+        { name: 'Nazov skupiny' },
+    ];
 
     const {
         data,
@@ -74,6 +86,7 @@ export default function Home() {
                 />
             }
 
+            <GroupList groups={groups} />
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message
