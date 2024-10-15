@@ -25,7 +25,7 @@ export default function Aside() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <aside className="aside">
+        <>
             <div className="news-card">
                 <Text px="lg" py="md" fw={700} size="lg" style={{ lineHeight: 1.2 }}>
                     Odporúčaní používatelia
@@ -75,6 +75,6 @@ export default function Aside() {
                     </Link>
                 )}
             </div>
-        </aside>
+        </>
     )
 }
