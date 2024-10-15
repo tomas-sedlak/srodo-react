@@ -109,7 +109,7 @@ export default function Login({ modal }) {
             dispatch(setLoginModal(false))
             navigate("/")
             notifications.show({
-                title: "Úspešne prihlásený. Vitaj na Šrodo.sk 👋"
+                title: "Úspešne prihlásený. Vitaj na späť 👋"
             })
         } catch (err) {
             setGlobalError(err.response.data)
@@ -129,7 +129,12 @@ export default function Login({ modal }) {
 
             <Box className={!modal && "form-center-wrapper"}>
                 <form onSubmit={handleLogin} className={!modal && "form-center-inner"}>
-                    {!modal && <Text fw={700} size="xl" mb="lg">Prihlásiť sa na Šrodo</Text>}
+                    {!modal &&
+                        <>
+                            <Text fw={700} size="xl">Vitaj späť 👋</Text>
+                            <Text c="dimmed" mb="lg">Prihlás sa na Šrodo</Text>
+                        </>
+                    }
 
                     {globalError &&
                         <Group

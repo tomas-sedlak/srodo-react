@@ -146,7 +146,8 @@ export default function Register() {
             <Box className="form-center-wrapper">
                 {pageType === "form" &&
                     <form onSubmit={handleLogin} className="form-center-inner">
-                        <Text fw={700} size="xl" mb="lg">Registrovať sa na Šrodo</Text>
+                        <Text fw={700} size="xl">Vytvor si účet</Text>
+                        <Text c="dimmed" mb="lg">Registruj sa na Šrodo</Text>
 
                         {globalError &&
                             <Group
