@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { Badge, Button, Group, Loader, Text, useMantineColorScheme } from "@mantine/core";
+import { Badge, Box, Button, Group, Loader, Text, useMantineColorScheme } from "@mantine/core";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import Post from "templates/Post";
 import SmallHeader from "templates/SmallHeader";
 import Message from "templates/Message";
 import GroupList from "templates/GroupList";
+import AdSenseAd from "templates/AdSenseAd";
 import axios from "axios";
 
 export default function Home() {
@@ -103,7 +104,18 @@ export default function Home() {
 
             {data.pages.map((page) => (
                 page.map((post, i) => {
-                    return <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
+                    if (i == 1 || i + 1 % 10 == 0) {
+                        return (
+                            <Box px="md" py="sm" className="border-bottom">
+                                <AdSenseAd
+                                    adClient="ca-pub-4886377834765269"
+                                    adSlot="6924990323"
+                                />
+                            </Box>
+                        )
+                    } else {
+                        return <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
+                    }
                 })
             ))}
 
