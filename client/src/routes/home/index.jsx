@@ -24,17 +24,6 @@ export default function Home() {
         return response.data;
     }
 
-    const groups = [
-        { name: 'Nazov skupiny' },
-        { name: 'Nazov skupiny' },
-        { name: 'Dlhy Nazov skupiny' },
-        { name: 'Nazov skupiny' },
-        { name: 'Nazov skupiny' },
-        { name: 'Nazov skupiny' },
-        { name: 'Dlhy Nazov skupiny' },
-        { name: 'Nazov skupiny' },
-    ];
-
     const {
         data,
         fetchNextPage,
@@ -86,7 +75,8 @@ export default function Home() {
                 />
             }
 
-            <GroupList groups={groups} />
+            <GroupList />
+            
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
                     <Message
