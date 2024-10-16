@@ -15,6 +15,7 @@ import axios from "axios";
 import Message from "templates/Message";
 import { ReportModal } from "templates/ReportModal";
 import SmallHeader from "templates/SmallHeader";
+import AdSenseAd from "templates/AdSenseAd";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
@@ -303,7 +304,23 @@ function Posts({ groupId, members, owner }) {
                         <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
                     }
 
-                    {data.map(post => <Post post={post} owner={owner} group />)}
+                    {data.map((post, i) => {
+                        if (i == 1 || i + 1 % 10 == 0) {
+                            return (
+                                <>
+                                    <Box px="md" py="sm" className="border-bottom">
+                                        <AdSenseAd
+                                            adClient="ca-pub-4886377834765269"
+                                            adSlot="6924990323"
+                                        />
+                                    </Box>
+                                    <Post post={post} owner={owner} group />
+                                </>
+                            )
+                        } else {
+                            return <Post post={post} owner={owner} group />
+                        }
+                    })}
                 </>
             )}
         </>
