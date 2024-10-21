@@ -164,7 +164,12 @@ export default function Navbar() {
                             className="menu-item"
                             data-active={active || undefined}
                         >
-                            <Avatar className="no-image" size="sm" src={group.profilePicture?.thumbnail} />
+                            <Avatar
+                                className="no-image"
+                                size="sm"
+                                radius="sm"
+                                src={group.profilePicture?.thumbnail}
+                            />
                             <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
                             {group.badge && (
                                 <Badge variant="light">

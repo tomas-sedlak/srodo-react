@@ -24,7 +24,6 @@ const initialData = {
 export default function CreateGroup() {
     const queryClient = useQueryClient();
     const isMobile = useMediaQuery("(max-width: 768px)");
-    const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
     const token = useSelector(state => state.token);
     const headers = {
@@ -163,6 +162,7 @@ export default function CreateGroup() {
                 <Group align="center" gap="xs">
                     <Avatar
                         size="xl"
+                        radius="md"
                         className="no-image"
                         src={data.profilePicture && (typeof data.profilePicture === "string" ? data.profilePicture : URL.createObjectURL(data.profilePicture))}
                     />

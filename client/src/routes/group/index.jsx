@@ -121,6 +121,7 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
+                    radius="md"
                     src={data.profilePicture?.large}
                 />
             </div>

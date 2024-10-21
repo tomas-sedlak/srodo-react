@@ -20,6 +20,7 @@ const Suggestion = forwardRef(({ group }, ref) => {
 
             <div style={{ position: "relative" }}>
                 <Avatar
+                    radius="md"
                     className="profile-picture"
                     size={profilePictureSize}
                     src={group.profilePicture?.large}
