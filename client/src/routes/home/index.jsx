@@ -67,7 +67,7 @@ export default function Home() {
                     title={
                         <Link to="/">
                             <Group gap={0}>
-                                {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                                {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                                 <Text ml={8} fw={700} fz={24}>Šrodo</Text>
                                 <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                             </Group>
