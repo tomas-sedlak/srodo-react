@@ -1,7 +1,6 @@
-import { Avatar, Box, Group, Tooltip, Text } from '@mantine/core'
-import { Link } from 'react-router-dom'
+import { Avatar, Box, Group, Text } from '@mantine/core'
 
-export default function MembersDisplay({ members }) {
+export default function MembersDisplay({ members, ...props }) {
     const getSlovakWord = (length) => {
         switch (length) {
             case 1: return "Člen"
@@ -13,18 +12,16 @@ export default function MembersDisplay({ members }) {
     }
 
     return (
-        <Group mt="sm" align="center" gap="sm">
+        <Group align="center" gap={8} wrap="nowrap" {...props}>
             <Box className="members-preview">
                 {members.slice(-5).map(member =>
-                    <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                        <Link to={`/${member.username}`} key={member._id}>
-                            <Avatar
-                                className="no-image"
-                                src={member.profilePicture?.thumbnail}
-                                style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                            />
-                        </Link>
-                    </Tooltip>
+                    <Avatar
+                        size={32}
+                        key={member._id}
+                        className="no-image"
+                        src={member.profilePicture?.thumbnail}
+                        style={{ outline: "var(--mantine-color-body) solid 2px" }}
+                    />
                 )}
             </Box>
             <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{members.length}</Text> {getSlovakWord(members.length)}</Text>

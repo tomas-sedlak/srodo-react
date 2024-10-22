@@ -227,7 +227,7 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                <MembersDisplay members={data.members} />
+                <MembersDisplay mt={8} members={data.members} />
             </Box>
 
             <Tabs
