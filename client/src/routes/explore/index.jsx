@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader, Tabs } from "@mantine/core";
+import { Loader, TextInput } from "@mantine/core";
+import { IconSearch, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
 import Suggestion from "templates/Group";
@@ -7,16 +9,27 @@ import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
 export default function Explore() {
-    const { tab = "popularne" } = useParams();
+    const { q = "" } = useParams();
+    const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
 
+    const handleFormSubmit = event => {
+        event.preventDefault()
+        navigate(`/preskumat?q=${searchValue}`)
+    }
+
+    const handleClear = () => {
+        setSearchValue("")
+        navigate(`/preskumat`)
+    }
+
     const fetchData = async () => {
-        const response = await axios.get(`/api/group/suggestions?sort=${tab}`);
+        const response = await axios.get(`/api/group/suggestions`);
         return response.data;
     }
 
     const { status, data } = useQuery({
-        queryKey: ["explore", tab],
+        queryKey: ["explore", q],
         queryFn: fetchData,
     });
 
@@ -36,23 +49,25 @@ export default function Explore() {
             </Helmet>
 
             <SmallHeader title={
-                <Tabs
-                    px="md"
-                    variant="unstyled"
-                    value={tab}
-                    onChange={newTab => {
-                        navigate(`/preskumat/${newTab}`)
-                    }}
-                >
-                    <Tabs.List className="custom-tabs">
-                        <Tabs.Tab value="popularne">
-                            Populárne
-                        </Tabs.Tab>
-                        <Tabs.Tab value="najnovsie">
-                            Najnovšie
-                        </Tabs.Tab>
-                    </Tabs.List>
-                </Tabs>
+                <form style={{ flex: 1 }} onSubmit={handleFormSubmit}>
+                    <TextInput
+                        name="q"
+                        size="md"
+                        placeholder="Hľadať"
+                        value={searchValue}
+                        onChange={event => setSearchValue(event.currentTarget.value)}
+                        leftSection={<IconSearch stroke={1.25} />}
+                        rightSection={
+                            searchValue !== "" && (
+                                <IconX
+                                    className="pointer"
+                                    onClick={handleClear}
+                                    stroke={1.25}
+                                />
+                            )
+                        }
+                    />
+                </form>
             } />
 
             {data.map(group => (
