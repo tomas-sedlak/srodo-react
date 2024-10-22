@@ -19,6 +19,7 @@ import AdSenseAd from "templates/AdSenseAd";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
+import MembersDisplay from "templates/MembersDisplay";
 moment.locale("sk");
 
 export default function Group() {
@@ -226,24 +227,7 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                {data.members.length > 1 &&
-                    <Flex mt="sm" align="center" gap="sm">
-                        <Box className="members-preview">
-                            {data.members.slice(-5).map(member =>
-                                <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                                    <Link to={`/${member.username}`} key={member._id}>
-                                        <Avatar
-                                            className="no-image"
-                                            src={member.profilePicture?.thumbnail}
-                                            style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                        />
-                                    </Link>
-                                </Tooltip>
-                            )}
-                        </Box>
-                        <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{data.members.length}</Text> členov</Text>
-                    </Flex>
-                }
+                <MembersDisplay members={data.members} />
             </Box>
 
             <Tabs
