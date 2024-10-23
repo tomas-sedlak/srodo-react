@@ -59,6 +59,10 @@ app.use(helmet({
         "'self'",
         `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com` // Allow images from S3 bucket
       ],
+      frameSrc: [
+        "'self'",
+        "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+      ]
     }
   }
 }));
