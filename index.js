@@ -64,7 +64,8 @@ app.use(helmet({
       ],
       imgSrc: [
         "'self'",
-        `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com` // Allow images from S3 bucket
+        `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com`, // Allow images from S3 bucket
+        "https://*.googlesyndication.com",
       ],
       frameSrc: [
         "'self'",
