@@ -46,12 +46,19 @@ app.use((req, res, next) => {
 });
 app.use(limiter)
 app.use(express.json());
-app.use(helmet());
-// app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      imgSrc: ["'self'", `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com`], // Allow images from S3 bucket
+    }
+  }
+}));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Allow only Vite's local development server
+}));
 
 // FILE STORAGE
 const storage = multer.memoryStorage();
