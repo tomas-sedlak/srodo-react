@@ -55,6 +55,7 @@ app.use(helmet({
         "https://www.googletagmanager.com",
         "https://www.google-analytics.com",
         "https://accounts.google.com",
+        "https://*.googleapis.com" // Allow Google APIs
       ],
       imgSrc: [
         "'self'",
@@ -67,6 +68,8 @@ app.use(helmet({
       connectSrc: [
         "'self'",
         "https://region1.google-analytics.com",
+        "https://ep1.adtrafficquality.google",
+        "https://*.googleapis.com" // Allow connection to Google APIs
       ]
     }
   }
