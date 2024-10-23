@@ -73,6 +73,10 @@ app.use(helmet({
         "https://ep1.adtrafficquality.google",
         "https://accounts.google.com", // Allow OAuth connections
         "https://*.googleapis.com" // Allow connection to Google APIs
+      ],
+      formAction: [
+        "'self'",
+        "https://accounts.google.com",
       ]
     }
   }
