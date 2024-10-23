@@ -49,13 +49,17 @@ app.use(express.json());
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
+      defaultSrc: [
+        "'self'",
+        "https://accounts.google.com",
+      ],
       scriptSrc: [
         "'self'",
-        "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
-        "https://ep1.adtrafficquality.google",
-        "https://www.googletagmanager.com",
-        "https://www.google-analytics.com",
         "https://accounts.google.com",
+        "https://*.googletagmanager.com",
+        "https://*.google-analytics.com",
+        "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
+        "https://*.adtrafficquality.google",
         "https://*.googleapis.com" // Allow Google APIs
       ],
       imgSrc: [
@@ -64,13 +68,13 @@ app.use(helmet({
       ],
       frameSrc: [
         "'self'",
-        "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+        "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
         "https://accounts.google.com",
       ],
       connectSrc: [
         "'self'",
-        "https://region1.google-analytics.com",
-        "https://ep1.adtrafficquality.google",
+        "https://*.google-analytics.com",
+        "https://*.adtrafficquality.google",
         "https://accounts.google.com", // Allow OAuth connections
         "https://*.googleapis.com" // Allow connection to Google APIs
       ],
