@@ -49,7 +49,16 @@ app.use(express.json());
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      imgSrc: ["'self'", `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com`], // Allow images from S3 bucket
+      scriptSrc: [
+        "'self'",
+        "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+        "https://www.googletagmanager.com",
+        "https://www.google-analytics.com",
+      ],
+      imgSrc: [
+        "'self'",
+        `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com` // Allow images from S3 bucket
+      ],
     }
   }
 }));
