@@ -69,6 +69,7 @@ app.use(helmet({
         "'self'",
         "https://region1.google-analytics.com",
         "https://ep1.adtrafficquality.google",
+        "https://accounts.google.com", // Allow OAuth connections
         "https://*.googleapis.com" // Allow connection to Google APIs
       ]
     }
