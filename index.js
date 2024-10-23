@@ -52,6 +52,7 @@ app.use(helmet({
       scriptSrc: [
         "'self'",
         "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+        "https://ep1.adtrafficquality.google",
         "https://www.googletagmanager.com",
         "https://www.google-analytics.com",
         "https://accounts.google.com",
@@ -64,6 +65,7 @@ app.use(helmet({
       frameSrc: [
         "'self'",
         "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+        "https://accounts.google.com",
       ],
       connectSrc: [
         "'self'",
