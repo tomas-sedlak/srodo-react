@@ -54,6 +54,7 @@ app.use(helmet({
         "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
         "https://www.googletagmanager.com",
         "https://www.google-analytics.com",
+        "https://accounts.google.com",
       ],
       imgSrc: [
         "'self'",
@@ -62,6 +63,10 @@ app.use(helmet({
       frameSrc: [
         "'self'",
         "https://pagead2.googlesyndication.com", // Allow scripts from Google Ad Services
+      ],
+      connectSrc: [
+        "'self'",
+        "https://region1.google-analytics.com",
       ]
     }
   }
