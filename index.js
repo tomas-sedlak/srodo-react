@@ -37,6 +37,13 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 });
 
+// Redirect from www to non-www
+app.use((req, res, next) => {
+  if (req.hostname === "www.srodo.sk") {
+    return res.redirect(301, `https://srodo.sk${req.originalUrl}`);
+  }
+  next();
+});
 app.use(limiter)
 app.use(express.json());
 // app.use(helmet());
