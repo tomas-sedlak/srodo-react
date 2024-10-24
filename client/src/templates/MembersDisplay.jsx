@@ -1,6 +1,6 @@
 import { Avatar, Box, Group, Text } from '@mantine/core'
 
-export default function MembersDisplay({ members, ...props }) {
+export default function MembersDisplay({ members, membersCount, ...props }) {
     const getSlovakWord = (length) => {
         switch (length) {
             case 1: return "Člen"
@@ -24,7 +24,7 @@ export default function MembersDisplay({ members, ...props }) {
                     />
                 )}
             </Box>
-            <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{members.length}</Text> {getSlovakWord(members.length)}</Text>
+            <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{membersCount}</Text> {getSlovakWord(membersCount)}</Text>
         </Group>
     )
 }

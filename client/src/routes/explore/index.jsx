@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader, TextInput } from "@mantine/core";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -9,7 +9,8 @@ import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
 export default function Explore() {
-    const { q = "" } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const q = searchParams.get("q") || "";
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate();
 
@@ -24,7 +25,7 @@ export default function Explore() {
     }
 
     const fetchData = async () => {
-        const response = await axios.get(`/api/group/suggestions`);
+        const response = await axios.get(`/api/group/suggestions?q=${searchValue}`);
         return response.data;
     }
 
@@ -33,15 +34,7 @@ export default function Explore() {
         queryFn: fetchData,
     });
 
-    return status === "pending" ? (
-        <div className="loader-center">
-            <Loader />
-        </div>
-    ) : status === "error" ? (
-        <div className="loader-center">
-            <p>Nastala chyba!</p>
-        </div>
-    ) : (
+    return (
         <>
             <Helmet>
                 <title>Preskúmať / Šrodo</title>
@@ -70,7 +63,15 @@ export default function Explore() {
                 </form>
             } />
 
-            {data.map(group => (
+            {status === "pending" ? (
+                <div className="loader-center">
+                    <Loader />
+                </div>
+            ) : status === "error" ? (
+                <div className="loader-center">
+                    <p>Nastala chyba!</p>
+                </div>
+            ) : data.map(group => (
                 <Suggestion group={group} />
             ))}
         </>

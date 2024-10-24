@@ -102,7 +102,7 @@ export default function Group() {
         <>
             <Helmet>
                 <title>{`${data.name} / Šrodo`}</title>
-                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.members.length} členov - ${data.name} na Šrodo: "${data.description}"`} />
+                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.membersLength} členov - ${data.name} na Šrodo: "${data.description}"`} />
             </Helmet>
 
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
@@ -147,7 +147,7 @@ export default function Group() {
                     >
                         Upraviť
                     </Button>
-                    : data.members.find(user => user._id == userId) ?
+                    : data.isMember ?
                         <Button
                             variant="default"
                             onClick={() => {
@@ -227,7 +227,7 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                <MembersDisplay mt={8} members={data.members} />
+                <MembersDisplay mt={8} members={data.members} membersCount={data.membersCount} />
             </Box>
 
             <Tabs
@@ -249,14 +249,14 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            {tab === "prispevky" && <Posts groupId={groupId} members={data.members} owner={data.owner} />}
+            {tab === "prispevky" && <Posts groupId={groupId} isMember={data.isMember} owner={data.owner} />}
 
             {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} />}
         </>
     )
 }
 
-function Posts({ groupId, members, owner }) {
+function Posts({ groupId, isMember, owner }) {
     const userId = useSelector(state => state.user?._id);
 
     const fetchPosts = async () => {
@@ -271,7 +271,7 @@ function Posts({ groupId, members, owner }) {
 
     return (
         <>
-            {userId && members.find(member => member._id === userId) &&
+            {isMember &&
                 <CreatePost groupId={groupId} />
             }
 

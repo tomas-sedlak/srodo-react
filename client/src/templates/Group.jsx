@@ -22,7 +22,7 @@ const Suggestion = forwardRef(({ group }, ref) => {
 
                     {group.description && <Text c="dimmed" style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.description}</Text>}
 
-                    <MembersDisplay members={group.members} />
+                    <MembersDisplay members={group.members} membersCount={group.membersCount} />
                 </Stack>
             </Group>
         </Link>
