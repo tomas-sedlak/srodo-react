@@ -46,6 +46,7 @@ export default function Home() {
         }
     }, [inView, fetchNextPage, hasNextPage])
 
+
     return status === "pending" ? (
         <div className="loader-center">
             <Loader />

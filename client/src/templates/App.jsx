@@ -15,6 +15,7 @@ import Root from "templates/Root";
 import Login from "routes/login";
 import ResetPassword from "routes/reset_password";
 import Register from "routes/register";
+import ImagesPreview from "./ImagesPreview";
 const Home = lazy(() => import("routes/home"));
 const AI = lazy(() => import("routes/ai"));
 const QuizRoute = lazy(() => import("routes/quiz")); {/* Route for quiz testing */ }
@@ -115,6 +116,7 @@ export default function App() {
                                 <Route path="resetovat-heslo" element={<ResetPassword />} />
                                 <Route path="resetovat-heslo/:token" element={<ResetPasswordConfirm />} />
                                 <Route path="registracia" element={<Register />} />
+                                <Route path="img" element={<ImagesPreview />} />
                             </Routes>
                         </BrowserRouter>
                     </GoogleOAuthProvider>
