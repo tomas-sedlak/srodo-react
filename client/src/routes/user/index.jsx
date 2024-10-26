@@ -52,16 +52,17 @@ export default function User() {
             </Helmet>
 
             <SmallHeader
-            withArrow
-            title={data.user.displayName}
-            rightSection={
-                data.user._id == userId &&
-                    <IconSettings
-                        stroke={1.25}
-                        className="pointer"
-                        onClick={() => navigate("/ucet/nastavenia")}
-                    />
-            }
+                withArrow
+                title={data.user.displayName}
+                rightSection={
+                    data.user._id == userId && (
+                        <IconSettings
+                            stroke={1.25}
+                            className="pointer"
+                            onClick={() => navigate("/ucet/nastavenia")}
+                        />
+                    )
+                }
             />
 
             <AspectRatio ratio={6 / 2}>
