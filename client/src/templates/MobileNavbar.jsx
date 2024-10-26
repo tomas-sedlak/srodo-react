@@ -4,6 +4,27 @@ import { useSelector } from 'react-redux';
 import { HomeIcon, MagnifyingGlassIcon, PlusCircleIcon, SparklesIcon } from "@heroicons/react/24/outline"
 import { HomeIcon as HomeIconSolid, MagnifyingGlassIcon as MagnifyingGlassIconSolid, PlusCircleIcon as PlusCircleIconSolid, SparklesIcon as SparklesIconSolid } from "@heroicons/react/24/solid"
 
+const guestMenu = [
+    {
+        label: "Domov",
+        url: "/",
+        leftSection: HomeIcon,
+        leftSectionSelected: HomeIconSolid,
+    },
+    {
+        label: "Preskúmať",
+        url: "/preskumat",
+        leftSection: MagnifyingGlassIcon,
+        leftSectionSelected: MagnifyingGlassIconSolid,
+    },
+    {
+        label: "Šrodo AI",
+        url: "/ai",
+        leftSection: SparklesIcon,
+        leftSectionSelected: SparklesIconSolid,
+    },
+]
+
 const menu = [
     {
         label: "Domov",
@@ -38,7 +59,7 @@ export default function MobileNavbar({ close }) {
 
     return (
         <Group justify="space-evenly" w="100%">
-            {menu.map(item => {
+            {(userId ? menu : guestMenu).map(item => {
                 let active = false;
                 if (item.url === "/") active = pathname === "/"
                 else if (pathname.startsWith(item.url)) active = true
@@ -69,16 +90,6 @@ export default function MobileNavbar({ close }) {
                         src={user.profilePicture?.thumbnail}
                         style={{ outline: pathname.startsWith(`/${user.username}`) && "2px solid var(--mantine-color-text)" }}
                     />
-                </Link>
-            }
-
-            {!userId &&
-                <Link
-                    key="login"
-                    to="/prihlasenie"
-                    style={{ display: "flex" }}
-                >
-                    <Avatar size={32} />
                 </Link>
             }
         </Group>
