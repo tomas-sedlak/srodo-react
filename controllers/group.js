@@ -121,16 +121,84 @@ export const getGroup = async (req, res) => {
 export const getGroupPosts = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const posts = await Post.find({ group: groupId })
-            .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture")
-            .populate("images", "thumbnail large")
-            .populate("files", "file name size")
-            .lean();
 
-        for (const post of posts) {
-            post.comments = await Comment.find({ postId: post._id }).countDocuments()
+        let userId = null;
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
+
+        if (token) {
+            userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
         }
+
+        const posts = await Post.aggregate([
+            {
+                $match: { group: new mongoose.Types.ObjectId(groupId) }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                displayName: 1,
+                                profilePicture: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$author" },
+            },
+            {
+                $lookup: {
+                    from: "images",
+                    localField: "images",
+                    foreignField: "_id",
+                    as: "images",
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files",
+                    foreignField: "_id",
+                    as: "files",
+                }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments",
+                }
+            },
+            {
+                $addFields: {
+                    isLiked: { $in: [new mongoose.Types.ObjectId(userId), "$likes"] },
+                    likes: { $size: "$likes" },
+                    comments: { $size: "$comments" },
+                }
+            },
+            {
+                $project: {
+                    group: 1,
+                    author: 1,
+                    content: 1,
+                    images: 1,
+                    files: 1,
+                    quiz: 1,
+                    isLiked: 1,
+                    likes: 1,
+                    comments: 1,
+                    createdAt: 1,
+                }
+            }
+        ]);
 
         res.status(200).json(posts);
     } catch (err) {

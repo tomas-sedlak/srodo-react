@@ -18,10 +18,14 @@ export default function Home() {
     const userId = useSelector(state => state.user?._id)
     const { colorScheme } = useMantineColorScheme()
     const isMobile = useMediaQuery("(max-width: 768px)")
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPosts = async ({ pageParam }) => {
         if (!userId) return []
-        const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`);
+        const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`, { headers });
         return response.data;
     }
 

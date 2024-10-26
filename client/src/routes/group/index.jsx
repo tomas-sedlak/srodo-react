@@ -257,10 +257,13 @@ export default function Group() {
 }
 
 function Posts({ groupId, isMember, owner }) {
-    const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPosts = async () => {
-        const response = await axios.get(`/api/group/${groupId}/posts`)
+        const response = await axios.get(`/api/group/${groupId}/posts`, { headers })
         return response.data
     }
 
