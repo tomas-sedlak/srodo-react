@@ -45,7 +45,6 @@ export default function Explore() {
                 <form style={{ flex: 1 }} onSubmit={handleFormSubmit}>
                     <TextInput
                         name="q"
-                        size="md"
                         placeholder="Hľadať"
                         value={searchValue}
                         onChange={event => setSearchValue(event.currentTarget.value)}

@@ -342,7 +342,6 @@ function Members({ groupId, owner }) {
             <TextInput
                 px="md"
                 py="sm"
-                size="md"
                 className="border-bottom"
                 placeholder="Hľadať členov"
                 value={searchValue}
