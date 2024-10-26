@@ -15,9 +15,13 @@ moment.locale("sk");
 export default function Post() {
     const { postId } = useParams();
     const userId = useSelector(state => state.user?._id);
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPost = async () => {
-        const post = await axios.get(`/api/post/${postId}`)
+        const post = await axios.get(`/api/post/${postId}`, { headers })
         return post.data
     }
 

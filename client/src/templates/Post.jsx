@@ -52,7 +52,10 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
             {group ? (
                 <>
                     <Link to={authorUrl}>
-                        <Avatar className="no-image" src={post.author.profilePicture?.thumbnail} />
+                        <Avatar
+                            className="no-image"
+                            src={post.author.profilePicture?.thumbnail}
+                        />
                     </Link>
 
                     <Stack gap={8} pos="relative" style={{ flex: 1 }}>
@@ -103,7 +106,11 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                 <Stack gap={8} style={{ flex: 1 }}>
                     <Group pr={32} gap="xs">
                         <Link to={groupUrl}>
-                            <Avatar className="no-image" src={post.group.profilePicture?.thumbnail} />
+                            <Avatar
+                                radius="sm"
+                                className="no-image"
+                                src={post.group.profilePicture?.thumbnail}
+                            />
                         </Link>
 
                         <Stack gap={4} miw={0} style={{ flex: 1 }}>

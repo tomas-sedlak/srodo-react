@@ -5,6 +5,8 @@ import Group from "../models/Group.js";
 import Image from "../models/Image.js";
 import File from "../models/File.js";
 import axios from "axios";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 // CREATE
 export const createPost = async (req, res) => {
@@ -61,24 +63,128 @@ export const createPost = async (req, res) => {
 // READ
 export const getFeedPosts = async (req, res) => {
     try {
-        const { page = 1, limit = 10, userId } = req.query;
+        const { page = 1, limit = 10 } = req.query;
 
-        const groups = await Group.find({ members: userId })
-            .select("_id");
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
 
-        const posts = await Post.find({ group: { $in: groups } })
-            .sort({ createdAt: -1 })
-            .limit(limit)
-            .skip(limit * (page - 1))
-            .populate("group", "name profilePicture owner isPrivate")
-            .populate("author", "username displayName profilePicture")
-            .populate("images", "thumbnail large")
-            .populate("files", "file name size")
-            .lean();
-
-        for (const post of posts) {
-            post.comments = await Comment.find({ postId: post._id }).countDocuments()
+        if (!token) {
+            return res.status(200).json([]);
         }
+
+        const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+
+        const posts = await Post.aggregate([
+            {
+                $lookup: {
+                    from: "groups",
+                    localField: "group",
+                    foreignField: "_id",
+                    as: "groups",
+                    pipeline: [
+                        {
+                            $project: {
+                                members: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $match: { "groups.members": new mongoose.Types.ObjectId(userId) }
+            },
+            {
+                $skip: limit * (page - 1)
+            },
+            {
+                $limit: limit
+            },
+            {
+                $lookup: {
+                    from: "groups",
+                    localField: "group",
+                    foreignField: "_id",
+                    as: "group",
+                    pipeline: [
+                        {
+                            $project: {
+                                name: 1,
+                                profilePicture: 1,
+                                owner: 1,
+                                isPrivate: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$group" },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                displayName: 1,
+                                profilePicture: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$author" },
+            },
+            {
+                $lookup: {
+                    from: "images",
+                    localField: "images",
+                    foreignField: "_id",
+                    as: "images",
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files",
+                    foreignField: "_id",
+                    as: "files",
+                }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments",
+                }
+            },
+            {
+                $addFields: {
+                    isLiked: { $in: [new mongoose.Types.ObjectId(userId), "$likes"] },
+                    likes: { $size: "$likes" },
+                    comments: { $size: "$comments" },
+                }
+            },
+            {
+                $project: {
+                    group: 1,
+                    author: 1,
+                    content: 1,
+                    images: 1,
+                    files: 1,
+                    quiz: 1,
+                    isLiked: 1,
+                    likes: 1,
+                    comments: 1,
+                    createdAt: 1,
+                }
+            },
+        ]);
 
         res.status(200).json(posts);
     } catch (err) {
@@ -89,16 +195,107 @@ export const getFeedPosts = async (req, res) => {
 export const getPost = async (req, res) => {
     try {
         const { postId } = req.params;
-        const post = await Post.findById(postId)
-            .populate("group", "name profilePicture owner isPrivate")
-            .populate("author", "username displayName profilePicture")
-            .populate("images", "thumbnail large")
-            .populate("files", "file name size")
-            .lean();
 
-        post.comments = await Comment.find({ postId: postId }).countDocuments()
+        let userId = null;
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
 
-        res.status(200).json(post);
+        if (token) {
+            userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+        }
+
+        const post = await Post.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(postId) }
+            },
+            {
+                $lookup: {
+                    from: "groups",
+                    localField: "group",
+                    foreignField: "_id",
+                    as: "group",
+                    pipeline: [
+                        {
+                            $project: {
+                                name: 1,
+                                profilePicture: 1,
+                                owner: 1,
+                                isPrivate: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$group" },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                displayName: 1,
+                                profilePicture: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$author" },
+            },
+            {
+                $lookup: {
+                    from: "images",
+                    localField: "images",
+                    foreignField: "_id",
+                    as: "images",
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files",
+                    foreignField: "_id",
+                    as: "files",
+                }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments",
+                }
+            },
+            {
+                $addFields: {
+                    isLiked: { $in: [new mongoose.Types.ObjectId(userId), "$likes"] },
+                    likes: { $size: "$likes" },
+                    comments: { $size: "$comments" },
+                }
+            },
+            {
+                $project: {
+                    group: 1,
+                    author: 1,
+                    content: 1,
+                    images: 1,
+                    files: 1,
+                    quiz: 1,
+                    isLiked: 1,
+                    likes: 1,
+                    comments: 1,
+                    createdAt: 1,
+                }
+            }
+        ]);
+
+        res.status(200).json(post[0]);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }

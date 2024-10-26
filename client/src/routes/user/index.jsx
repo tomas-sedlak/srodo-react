@@ -19,10 +19,14 @@ export default function User() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const getData = async () => {
         const user = await axios.get(`/api/user?username=${username}`);
-        const posts = await axios.get(`/api/user/${user.data._id}/posts`);
+        const posts = await axios.get(`/api/user/${user.data._id}/posts`, { headers });
         const groups = await axios.get(`/api/user/${user.data._id}/groups`);
         return { user: user.data, posts: posts.data, groups: groups.data }
     }

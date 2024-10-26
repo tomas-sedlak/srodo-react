@@ -1,51 +1,30 @@
 import { forwardRef } from "react";
-import { Group, Image, Text, Avatar, Stack, AspectRatio, Box, Tooltip } from '@mantine/core';
-import { IconLock, IconWorld } from "@tabler/icons-react";
+import { Group, Text, Avatar, Stack } from '@mantine/core';
 import { Link } from "react-router-dom";
-import { useMediaQuery } from "@mantine/hooks";
+import MembersDisplay from "./MembersDisplay";
 
 const Suggestion = forwardRef(({ group }, ref) => {
     const groupUrl = `/skupiny/${group._id}`;
-    const isMobile = useMediaQuery("(max-width: 768px)");
-    const profilePictureSize = isMobile ? 96 : 128;
 
     const suggestionContent = (
-        <Link to={groupUrl} key={group._id}>
-            <AspectRatio ratio={4 / 1}>
-                {group.coverImage ?
-                    <Image className="no-image" src={group.coverImage} />
-                    : <Box className="no-image"></Box>
-                }
-            </AspectRatio>
-
-            <div style={{ position: "relative" }}>
+        <Link to={groupUrl} key={group._id} >
+            <Group px="md" py={8} wrap="nowrap" gap="sm">
                 <Avatar
-                    className="profile-picture"
-                    size={profilePictureSize}
+                    radius="md"
+                    size={96}
                     src={group.profilePicture?.large}
                 />
-            </div>
 
-            <Stack px="md" pb="sm" gap={0} className="border-bottom">
-                <Group h={profilePictureSize / 2} ml={profilePictureSize + 12}>
-                    <Stack gap={2}>
-                        <Text fw={700} size="lg" style={{ lineHeight: 1.2 }}>
-                            {group.name}
-                        </Text>
-                        <Group gap={2}>
-                            {group.isPrivate ?
-                                <IconLock color="var(--mantine-color-dimmed)" width={16} height={16} stroke={1.25} />
-                                : <IconWorld color="var(--mantine-color-dimmed)" width={16} height={16} stroke={1.25} />
-                            }
-                            <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>{group.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
-                        </Group>
-                    </Stack>
-                </Group>
+                <Stack gap={0} h={96} miw={0} justify="space-evenly">
+                    <Text fw={700} style={{ lineHeight: 1 }}>
+                        {group.name}
+                    </Text>
 
-                {group.description && <Text mt={8}>{group.description}</Text>}
+                    {group.description && <Text c="dimmed" style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.description}</Text>}
 
-                <Text c="dimmed">Členovia: <Text component="span" c="white" fw={700}>{group.members.length}</Text></Text>
-            </Stack>
+                    <MembersDisplay members={group.members} membersCount={group.membersCount} />
+                </Stack>
+            </Group>
         </Link>
     )
 

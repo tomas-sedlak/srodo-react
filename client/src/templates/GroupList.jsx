@@ -42,7 +42,12 @@ function GroupListItem({ data }) {
     return (
         <Link to={`/skupiny/${data._id}`}>
             <Stack gap={4} w={84}>
-                <Avatar size="xl" src={data.profilePicture?.large} />
+                <Avatar
+                    size="xl"
+                    radius="md"
+                    src={data.profilePicture?.large}
+                />
+
                 <Text
                     size="sm"
                     ta="center"

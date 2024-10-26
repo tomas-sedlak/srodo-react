@@ -60,7 +60,7 @@ export default function Navbar() {
         <>
             <Link to="/">
                 <Group gap={0} mb="lg">
-                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                     <Text ml={8} fw={700} fz={24}>Šrodo</Text>
                     <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                 </Group>
@@ -164,7 +164,12 @@ export default function Navbar() {
                             className="menu-item"
                             data-active={active || undefined}
                         >
-                            <Avatar className="no-image" size="sm" src={group.profilePicture?.thumbnail} />
+                            <Avatar
+                                className="no-image"
+                                size="sm"
+                                radius="sm"
+                                src={group.profilePicture?.thumbnail}
+                            />
                             <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
                             {group.badge && (
                                 <Badge variant="light">
