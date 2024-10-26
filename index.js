@@ -63,7 +63,7 @@ app.post("/api/comment", verifyToken, upload.fields([{ name: "images", maxCount:
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 app.patch("/api/group/:groupId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateGroup);
-app.post("/api/ai", upload.fields([{ name: "file", maxCount: 1 }]), generateQuiz);
+app.post("/api/ai", upload.fields([{ name: "file", maxCount: 1 }, { name: "image", maxCount: 1 }]), generateQuiz);
 
 // ROUTES
 app.use("/api/auth", authRoutes);

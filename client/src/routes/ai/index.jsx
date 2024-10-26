@@ -15,6 +15,7 @@ export default function AI() {
     const [text, setText] = useState("")
     const [file, setFile] = useState(null)
     const [image, setImage] = useState(null)
+    const [error, setError] = useState("")
     const navigate = useNavigate()
 
     const generateQuizFromText = async () => {
@@ -23,7 +24,7 @@ export default function AI() {
             const result = await axios.post("/api/ai", { text })
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
-            console.log(err)
+            setError(err.response.data.message)
         } finally {
             setIsLoading(false)
         }
@@ -36,9 +37,10 @@ export default function AI() {
             formData.append("file", file)
 
             const result = await axios.post("/api/ai", formData)
+            
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
-            console.log(err)
+            setError(err.response.data.message)
         } finally {
             setIsLoading(false)
         }
@@ -53,7 +55,7 @@ export default function AI() {
             const result = await axios.post("/api/ai", formData)
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
-            console.log(err)
+            setError(err.response.data.message)
         } finally {
             setIsLoading(false)
         }
@@ -99,6 +101,7 @@ export default function AI() {
 
                     {tab == "text" &&
                         <Box px="md" pt="sm">
+                            {error && <Text mb="sm" c="red">{error}</Text>}
                             <Box pos="relative">
                                 <Textarea
                                     size="md"
@@ -129,6 +132,7 @@ export default function AI() {
 
                     {tab == "file" &&
                         <Box mx="md" mt="sm">
+                            {error && <Text mb="sm" c="red">{error}</Text>}
                             {!file ? (
                                 <>
                                     <Dropzone
@@ -175,6 +179,7 @@ export default function AI() {
 
                     {tab == "image" &&
                         <Box mx="md" mt="sm">
+                            {error && <Text mb="sm" c="red">{error}</Text>}
                             {!image ? (
                                 <>
                                     <Dropzone
