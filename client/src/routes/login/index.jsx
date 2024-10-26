@@ -9,6 +9,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { notifications } from "@mantine/notifications";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const initialValues = {
     usernameOrEmail: "",
@@ -159,19 +160,19 @@ export default function Login({ modal }) {
                         />
                     )}
 
-                    <Text
-                        mt={4}
-                        ta="right"
-                        size="sm"
-                        c="dimmed"
-                        className="pointer"
-                        onClick={() => {
-                            dispatch(setLoginModal(false))
-                            navigate("/resetovat-heslo")
-                        }}
-                    >
-                        Zabudnuté heslo?
-                    </Text>
+                    <Group mt={4} justify="flex-end">
+                        <Text
+                            size="sm"
+                            c="dimmed"
+                            className="pointer"
+                            onClick={() => {
+                                dispatch(setLoginModal(false))
+                                navigate("/resetovat-heslo")
+                            }}
+                        >
+                            Zabudnuté heslo?
+                        </Text>
+                    </Group>
 
                     <Button
                         fullWidth
