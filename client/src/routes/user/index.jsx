@@ -26,7 +26,7 @@ export default function User() {
 
     const getData = async () => {
         const user = await axios.get(`/api/user?username=${username}`);
-        const posts = await axios.get(`/api/user/${user.data._id}/posts`, { headers });
+        const posts = await axios.get(`/api/user/${user.data._id}/posts`, userId && { headers });
         const groups = await axios.get(`/api/user/${user.data._id}/groups`);
         return { user: user.data, posts: posts.data, groups: groups.data }
     }

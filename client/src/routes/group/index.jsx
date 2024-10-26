@@ -44,7 +44,7 @@ export default function Group() {
 
 
     const fetchGroup = async () => {
-        const group = await axios.get(`/api/group/${groupId}`, { headers })
+        const group = await axios.get(`/api/group/${groupId}`, userId && { headers })
         return group.data
     }
 
@@ -257,13 +257,14 @@ export default function Group() {
 }
 
 function Posts({ groupId, isMember, owner }) {
+    const userId = useSelector(state => state.user?.id);
     const token = useSelector(state => state.token);
     const headers = {
         Authorization: `Bearer ${token}`,
     }
 
     const fetchPosts = async () => {
-        const response = await axios.get(`/api/group/${groupId}/posts`, { headers })
+        const response = await axios.get(`/api/group/${groupId}/posts`, userId && { headers })
         return response.data
     }
 

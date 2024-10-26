@@ -21,7 +21,7 @@ export default function Post() {
     }
 
     const fetchPost = async () => {
-        const post = await axios.get(`/api/post/${postId}`, { headers })
+        const post = await axios.get(`/api/post/${postId}`, userId && { headers })
         return post.data
     }
 
