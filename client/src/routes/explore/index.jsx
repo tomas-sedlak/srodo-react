@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader, Tabs } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
+import { Helmet } from "react-helmet";
 import Suggestion from "templates/Group";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
@@ -29,6 +30,11 @@ export default function Explore() {
         </div>
     ) : (
         <>
+            <Helmet>
+                <title>Preskúmať / Šrodo</title>
+                <meta name="description" content="Nájdi zaujímavé učebné matriály alebo skupiny na Šrodo." />
+            </Helmet>
+
             <SmallHeader title={
                 <Tabs
                     px="md"

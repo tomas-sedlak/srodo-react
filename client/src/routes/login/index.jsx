@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setLogin, setLoginModal } from "state";
 import { useGoogleLogin } from "@react-oauth/google";
 import { notifications } from "@mantine/notifications";
+import { Helmet } from "react-helmet";
 import axios from "axios";
 
 const initialValues = {
@@ -108,7 +109,7 @@ export default function Login({ modal }) {
             dispatch(setLoginModal(false))
             navigate("/")
             notifications.show({
-                title: "Úspešne prihlásený. Vitaj na Šrodo.sk 👋"
+                title: "Úspešne prihlásený. Vitaj na späť 👋"
             })
         } catch (err) {
             setGlobalError(err.response.data)
@@ -120,89 +121,101 @@ export default function Login({ modal }) {
     const googleLogin = useGoogleLogin({ onSuccess: handleGoogleLogin });
 
     return (
-        <Box className={!modal && "form-center-wrapper"}>
-            <form onSubmit={handleLogin} className={!modal && "form-center-inner"}>
-                {!modal && <Text fw={700} size="xl" mb="lg">Prihlásiť sa na Šrodo</Text>}
+        <>
+            <Helmet>
+                <title>Prihlásenie / Šrodo</title>
+                <meta name="description" content="Vitaj späť na Šrodo. Prihlás sa aby si mohol zdieľať svoje vedomosti a zapájať sa do diskusií." />
+            </Helmet>
 
-                {globalError &&
-                    <Group
-                        bg="var(--mantine-color-red-light)"
-                        p="sm"
-                        mb="lg"
-                        gap={8}
-                        style={{ borderRadius: 8 }}
-                        align="flex-start"
-                    >
-                        <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
-                        <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
-                    </Group>
-                }
+            <Box className={!modal && "form-center-wrapper"}>
+                <form onSubmit={handleLogin} className={!modal && "form-center-inner"}>
+                    {!modal &&
+                        <>
+                            <Text fw={700} size="xl">Vitaj späť 👋</Text>
+                            <Text c="dimmed" mb="lg">Prihlás sa na Šrodo</Text>
+                        </>
+                    }
 
-                {inputs.map((input) =>
-                    <RegisterInput
-                        value={values[input.name]}
-                        setValue={setValue}
-                        error={errors[input.name]}
-                        {...input}
-                    />
-                )}
+                    {globalError &&
+                        <Group
+                            bg="var(--mantine-color-red-light)"
+                            p="sm"
+                            mb="lg"
+                            gap={8}
+                            style={{ borderRadius: 8 }}
+                            align="flex-start"
+                        >
+                            <IconAlertCircle width={20} height={20} color="red" stroke={1.25} />
+                            <Text size="sm" style={{ flex: 1 }}>{globalError}</Text>
+                        </Group>
+                    }
 
-                <Text
-                    mt={4}
-                    ta="right"
-                    size="sm"
-                    c="dimmed"
-                    className="pointer"
-                    onClick={() => {
-                        dispatch(setLoginModal(false))
-                        navigate("/resetovat-heslo")
-                    }}
-                >
-                    Zabudnuté heslo?
-                </Text>
+                    {inputs.map((input) =>
+                        <RegisterInput
+                            value={values[input.name]}
+                            setValue={setValue}
+                            error={errors[input.name]}
+                            {...input}
+                        />
+                    )}
 
-                <Button
-                    fullWidth
-                    mt="lg"
-                    type="submit"
-                    loading={loading}
-                >
-                    Prihlásiť sa
-                </Button>
-
-                <Divider label="alebo" my="md" />
-
-                <Button
-                    variant="default"
-                    leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
-                    onClick={googleLogin}
-                    fullWidth
-                >
-                    Prihlásiť sa cez Google
-                </Button>
-
-                <Text
-                    mt="xl"
-                    ta="center"
-                    c="dimmed"
-                    size="sm"
-                >
-                    Nemáte účet?
                     <Text
-                        ml={4}
-                        component="span"
-                        c="srobarka"
-                        fw={600}
+                        mt={4}
+                        ta="right"
+                        size="sm"
+                        c="dimmed"
                         className="pointer"
                         onClick={() => {
                             dispatch(setLoginModal(false))
-                            navigate("/registracia")
+                            navigate("/resetovat-heslo")
                         }}
                     >
-                        Zaregistrovať sa
+                        Zabudnuté heslo?
                     </Text>
-                </Text>
-            </form>
-        </Box>
+
+                    <Button
+                        fullWidth
+                        mt="lg"
+                        type="submit"
+                        loading={loading}
+                    >
+                        Prihlásiť sa
+                    </Button>
+
+                    <Divider label="alebo" my="md" />
+
+                    <Button
+                        variant="default"
+                        leftSection={<img src="/images/logos/google.svg" width={24} height={24} />}
+                        onClick={googleLogin}
+                        fullWidth
+                    >
+                        Prihlásiť sa cez Google
+                    </Button>
+
+                    <Text
+                        mt="xl"
+                        ta="center"
+                        c="dimmed"
+                        size="sm"
+                    >
+                        Nemáte účet?
+                        <Text
+                            ml={4}
+                            component="span"
+                            c="srobarka"
+                            fw={600}
+                            className="pointer"
+                            onClick={() => {
+                                dispatch(setLoginModal(false))
+                                navigate("/registracia")
+                            }}
+                        >
+                            Zaregistrovať sa
+                        </Text>
+                    </Text>
+                </form>
+            </Box>
+        </>
     );
 }

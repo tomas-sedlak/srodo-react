@@ -121,7 +121,7 @@ export default function CreatePost({ groupId, postId, opened = true }) {
                     onChange={event => setContent(event.target.value)}
                 />
 
-                <QuizDisplay mt={8} />
+                {/* <QuizDisplay mt={8} /> */}
 
                 <ImagesDisplay mt={8} images={images} setImages={setImages} withCloseButtons />
 

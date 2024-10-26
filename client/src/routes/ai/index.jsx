@@ -3,6 +3,7 @@ import { ActionIcon, Box, Button, Group, Image, Loader, Tabs, Text, Textarea } f
 import { Dropzone, MS_POWERPOINT_MIME_TYPE, MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
@@ -60,6 +61,11 @@ export default function AI() {
 
     return (
         <>
+            <Helmet>
+                <title>Šrodo AI</title>
+                <meta name="description" content="Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti." />
+            </Helmet>
+        
             <SmallHeader withArrow title="Šrodo AI" />
 
             {isLoading ? (

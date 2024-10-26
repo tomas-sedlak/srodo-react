@@ -15,6 +15,8 @@ const generateQuizFromText = async (text, language) => {
 
     Use ${language} language.
 
+    Generate at least 10 questions.
+
     Please return the response as JSON object:
     {
     "title": string,
@@ -22,7 +24,7 @@ const generateQuizFromText = async (text, language) => {
             {
                 "question": string,
                 "answers": [string, string, string, string],
-                "correctAnswer": number,
+                "correctAnswer": number between 0 and 3,
                 "explanation": string
             },
             ...
@@ -31,7 +33,7 @@ const generateQuizFromText = async (text, language) => {
     `;
 
     const chatCompletion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [{ role: "user", content: prompt }],
         response_format: {
             type: 'json_object',
@@ -63,6 +65,8 @@ const generateQuizFromFile = async (file, language) => {
 
     Use ${language} language.
 
+    Generate at least 10 questions.
+
     Please return the response as JSON object:
     {
     "title": string,
@@ -70,7 +74,7 @@ const generateQuizFromFile = async (file, language) => {
             {
                 "question": string,
                 "answers": [string, string, string, string],
-                "correctAnswer": number,
+                "correctAnswer": number between 0 and 3,
                 "explanation": string
             },
             ...
@@ -79,7 +83,7 @@ const generateQuizFromFile = async (file, language) => {
     `;
 
     const chatCompletion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [{ role: "user", content: prompt }],
         response_format: {
             type: 'json_object',

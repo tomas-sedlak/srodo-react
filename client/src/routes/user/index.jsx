@@ -1,10 +1,10 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "@mantine/hooks";
-import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge, Button, Menu } from "@mantine/core";
-import { IconCalendarMonth, IconDots, IconLock, IconLogout, IconSettings, IconWorld } from "@tabler/icons-react";
+import { AspectRatio, Stack, Avatar, Text, Group, Image, Box, Loader, Tabs, Badge, Button } from "@mantine/core";
+import { IconCalendarMonth, IconLock, IconPencil, IconSettings, IconWorld } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogout } from "state";
+import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 import SmallHeader from "templates/SmallHeader";
 import Post from "templates/Post";
 import axios from "axios";
@@ -19,7 +19,6 @@ export default function User() {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const profilePictureSize = isMobile ? 96 : 128;
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const getData = async () => {
         const user = await axios.get(`/api/user?username=${username}`);
@@ -43,7 +42,23 @@ export default function User() {
         </div>
     ) : (
         <>
-            <SmallHeader withArrow title={data.user.displayName} />
+            <Helmet>
+                <title>{`${data.user.displayName} (@${data.user.username}) / Šrodo`}</title>
+                <meta name="description" content={`${data.posts.length} príspevkov - ${data.user.displayName} (@${data.user.username}) na Šrodo: "${data.user.bio}"`} />
+            </Helmet>
+
+            <SmallHeader
+            withArrow
+            title={data.user.displayName}
+            rightSection={
+                data.user._id == userId &&
+                    <IconSettings
+                        stroke={1.25}
+                        className="pointer"
+                        onClick={() => navigate("/ucet/nastavenia")}
+                    />
+            }
+            />
 
             <AspectRatio ratio={6 / 2}>
                 {data.user.coverImage ?
@@ -65,32 +80,12 @@ export default function User() {
                     <>
                         <Button
                             variant="default"
-                            leftSection={<IconSettings stroke={1.25} />}
+                            leftSection={<IconPencil stroke={1.25} />}
                             styles={{ section: { marginRight: 4 } }}
-                            onClick={() => navigate("/nastavenia")}
+                            onClick={() => navigate("/ucet/upravit")}
                         >
-                            Nastavenia
+                            Upraviť profil
                         </Button>
-
-                        <Menu position="bottom-end" width={180}>
-                            <Menu.Target>
-                                <Button
-                                    variant="default"
-                                    px={8}
-                                >
-                                    <IconDots stroke={1.25} style={{ width: 20, height: 20 }} />
-                                </Button>
-                            </Menu.Target>
-                            <Menu.Dropdown>
-                                <Menu.Item
-                                    leftSection={<IconLogout stroke={1.25} />}
-                                    color="red"
-                                    onClick={() => dispatch(setLogout())}
-                                >
-                                    <Text fw={600} size="sm">Odhlásť sa</Text>
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
                     </>
                 }
             </Group>
