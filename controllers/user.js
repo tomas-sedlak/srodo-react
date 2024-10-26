@@ -84,6 +84,9 @@ export const getUserPosts = async (req, res) => {
                 $unwind: { path: "$group" },
             },
             {
+                $match: { "group.isPrivate": false }
+            },
+            {
                 $lookup: {
                     from: "users",
                     localField: "author",
