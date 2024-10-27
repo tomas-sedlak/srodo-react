@@ -6,6 +6,8 @@ import Comment from "../models/Comment.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
+const forbiddenUsernames = ["ai", "preskumat", "skupiny", "kviz", "ucet", "prihlasenie", "registracia", "vytvorit", "overenie-emailu", "pozvanka", "resetovat-heslo"];
+
 // READ
 export const getUser = async (req, res) => {
     try {
@@ -27,7 +29,7 @@ export const getUnique = async (req, res) => {
         const query = req.query;
         const result = await User.find(query)
 
-        if (result.length > 0) {
+        if (forbiddenUsernames.includes(username) || result.length > 0) {
             res.status(200).json({ unique: false });
         } else {
             res.status(200).json({ unique: true });
@@ -50,7 +52,7 @@ export const getUserSuggestions = async (req, res) => {
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;
-        
+
         let anotherUserId = null;
         let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
 
@@ -197,6 +199,7 @@ export const updateUserSettings = async (req, res) => {
         const user = await User.findById(userId).select("-password");
 
         const {
+            username,
             displayName,
             bio,
             socials,
@@ -231,6 +234,14 @@ export const updateUserSettings = async (req, res) => {
             user.profilePicture.large = await uploadImage(req.body.profilePicture, 400, 400);
         }
 
+        if (username) {
+            const result = await User.find({ username });
+            if (forbiddenUsernames.includes(username) || result.length > 0) {
+                throw new Error("Toto používateľské meno už existuje.")
+            } else {
+                user.username = username;
+            }
+        }
         if (displayName) user.displayName = displayName;
         if (bio) user.bio = bio;
         if (socials) user.socials = JSON.parse(socials);
