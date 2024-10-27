@@ -34,11 +34,9 @@ const groupSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     }],
-    membersLength: {
-        type: Number,
-        get: function() {
-            return this.members.length;
-        },
+    verifieed: {
+        type: Boolean,
+        default: false,
     },
 }, {
     timestamps: true

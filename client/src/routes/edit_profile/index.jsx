@@ -43,6 +43,7 @@ const socialsData = [
     },
 ];
 
+const maxUsernameCharacterLimit = 32;
 const maxDisplaynameCharacterLimit = 32;
 const maxBioCharacterLenght = 160;
 
@@ -52,6 +53,7 @@ export default function EditProfile() {
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);;
     const [isPublishing, setIsPublishing] = useState(false);
+    const [error, setError] = useState("");
 
     const [coverImage, setCoverImage] = useState(user.coverImage || "");
     const [coverImageModalOpened, coverImageModalHandlers] = useDisclosure(false);
@@ -115,13 +117,13 @@ export default function EditProfile() {
 
             dispatch(setUser({ user: response.data }))
 
-            navigate(`/${user.username}`)
+            navigate(`/${username}`)
 
             notifications.show({
                 title: "Zmeny boli uložené",
             });
         } catch (err) {
-            console.log(err)
+            setError(err.response.data.message);
         }
 
         setIsPublishing(false)
@@ -133,7 +135,7 @@ export default function EditProfile() {
 
             if (shouldShowConfirmation) {
                 // event.returnValue = 'Are you sure you want to leave?';
-                
+
                 modals.openConfirmModal({
                     title: "Uložiť zmeny",
                     children: <Text>Určite chceš odísť z tejto stránky? Zmeny, ktoré si urobil sa nemusia uložiť.</Text>,
@@ -395,14 +397,25 @@ export default function EditProfile() {
                     </Text>
                 </Box>
 
-                <TextInput
-                    mt="sm"
-                    label="Použivateľské meno"
-                    description="Použivateľské meno sa momentálne nedá zmeniť"
-                    styles={{ input: { paddingRight: 46 } }}
-                    value={username}
-                    disabled
-                />
+                <Box pos="relative">
+                    <TextInput
+                        mt="sm"
+                        label="Použivateľské meno"
+                        styles={{ input: { paddingRight: 46 } }}
+                        maxLength={maxUsernameCharacterLimit}
+                        value={username}
+                        onChange={event => {
+                            setUsername(event.currentTarget.value)
+                        }}
+                    />
+                    <Text
+                        size="xs"
+                        c="dimmed"
+                        className="input-counter"
+                    >
+                        {username.length}/{maxUsernameCharacterLimit}
+                    </Text>
+                </Box>
 
                 <Box pos="relative">
                     <Textarea
@@ -461,6 +474,8 @@ export default function EditProfile() {
                         </div>
                     }
                 </Group>
+
+                {error && <Text mt="sm" c="red">{error}</Text>}
 
                 <Group justify="flex-end" mt="sm">
                     <Button onClick={publish} loading={isPublishing}>
