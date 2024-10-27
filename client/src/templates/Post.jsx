@@ -132,10 +132,6 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                                         }
                                     </Group>
                                 </Link>
-                                {post.group.isPrivate ?
-                                    <IconLock size={16} stroke={1.25} style={{ flexShrink: 0 }} />
-                                    : <IconWorld size={16} stroke={1.25} style={{ flexShrink: 0 }} />
-                                }
                             </Group>
                             <Group gap={4} wrap="nowrap">
                                 <Link to={authorUrl} style={{ lineHeight: 1, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>
