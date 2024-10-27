@@ -30,7 +30,7 @@ export default function Favourites() {
         </div>
     ) : (
         <>
-            <SmallHeader title="❤️ Moje obľúbené príspevky" />
+            <SmallHeader withArrow title="Obľúbené príspevky" />
 
             {data.length === 0 &&
                 <div className="loader-center">

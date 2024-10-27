@@ -5,6 +5,7 @@ import normalizeStrings from "normalize-strings";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import Comment from "../models/Comment.js";
+import mongoose from "mongoose";
 
 // CREATE
 export const createGroup = async (req, res) => {
@@ -56,27 +57,62 @@ export const createGroup = async (req, res) => {
 export const getGroup = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const group = await Group.findById(groupId)
-            .populate("members", "username displayName profilePicture")
-            .lean();
 
-        if (group.isPrivate) {
-            let token = req.header("Authorization");
+        let userId = null;
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
 
-            if (!token) {
-                return res.status(403).send("Access Denied");
-            }
-
-            if (token.startsWith("Bearer ")) {
-                token = token.slice(7, token.length).trimLeft();
-            }
-
-            const user = jwt.verify(token, process.env.JWT_SECRET);
-
-            if (!group.members.find(member => member._id.equals(user.id))) return res.status(403).send("Access denied!");
+        if (token) {
+            userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
         }
 
-        res.status(200).json(group);
+        const group = await Group.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(groupId) }
+            },
+            {
+                $addFields: {
+                    isMember: { $in: [new mongoose.Types.ObjectId(userId), "$members"] },
+                    membersCount: { $size: "$members" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "members",
+                    foreignField: "_id",
+                    as: "members",
+                    pipeline: [
+                        { $limit: 5 },
+                        { $project: { profilePicture: 1 } }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    description: 1,
+                    coverImage: 1,
+                    profilePicture: 1,
+                    isPrivate: 1,
+                    privateKey: 1,
+                    owner: 1,
+                    members: 1,
+                    membersCount: 1,
+                    isMember: 1,
+                    createdAt: 1,
+                }
+            }
+        ]);
+
+        if (group[0].isPrivate && !group[0].isMember) {
+            return res.status(403).send("Access denied!");
+        }
+
+        if (!group[0].owner.equals(userId)) {
+            group[0].privateKey = undefined;
+        }
+
+        res.status(200).json(group[0]);
     } catch (err) {
         res.status(404).json({ message: err.message });
     }
@@ -85,16 +121,84 @@ export const getGroup = async (req, res) => {
 export const getGroupPosts = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const posts = await Post.find({ group: groupId })
-            .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture")
-            .populate("images", "thumbnail large")
-            .populate("files", "file name size")
-            .lean();
 
-        for (const post of posts) {
-            post.comments = await Comment.find({ postId: post._id }).countDocuments()
+        let userId = null;
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
+
+        if (token) {
+            userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
         }
+
+        const posts = await Post.aggregate([
+            {
+                $match: { group: new mongoose.Types.ObjectId(groupId) }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                displayName: 1,
+                                profilePicture: 1,
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $unwind: { path: "$author" },
+            },
+            {
+                $lookup: {
+                    from: "images",
+                    localField: "images",
+                    foreignField: "_id",
+                    as: "images",
+                }
+            },
+            {
+                $lookup: {
+                    from: "files",
+                    localField: "files",
+                    foreignField: "_id",
+                    as: "files",
+                }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments",
+                }
+            },
+            {
+                $addFields: {
+                    isLiked: { $in: [new mongoose.Types.ObjectId(userId), "$likes"] },
+                    likes: { $size: "$likes" },
+                    comments: { $size: "$comments" },
+                }
+            },
+            {
+                $project: {
+                    group: 1,
+                    author: 1,
+                    content: 1,
+                    images: 1,
+                    files: 1,
+                    quiz: 1,
+                    isLiked: 1,
+                    likes: 1,
+                    comments: 1,
+                    createdAt: 1,
+                }
+            }
+        ]);
 
         res.status(200).json(posts);
     } catch (err) {
@@ -132,20 +236,42 @@ export const getGroupMembers = async (req, res) => {
 
 export const getGroupSuggestions = async (req, res) => {
     try {
-        const querySort = req.query.sort;
+        const { q = "" } = req.query;
 
-        let sort = {};
-        if (querySort === "najnovsie") {
-            sort = { createdAt: -1 };
-        }
-        if (querySort === "popularne") {
-            sort = { membersLength: -1 };
-        }
-
-        const groups = await Group.find({ isPrivate: false })
-            .sort(sort)
-            .populate("members", "username displayName profilePicture")
-            .lean();
+        const groups = await Group.aggregate([
+            {
+                $match: {
+                    name: { $regex: q, $options: "i" },
+                    isPrivate: false,
+                }
+            },
+            {
+                $addFields: {
+                    membersCount: { $size: "$members" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "members",
+                    foreignField: "_id",
+                    as: "members",
+                    pipeline: [
+                        { $limit: 5 },
+                        { $project: { profilePicture: 1 } }
+                    ]
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    description: 1,
+                    profilePicture: 1,
+                    members: 1,
+                    membersCount: 1,
+                }
+            }
+        ]);
 
         res.status(200).json(groups);
     } catch (err) {

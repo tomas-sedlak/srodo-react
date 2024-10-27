@@ -1,13 +1,16 @@
 import { useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { Button, Group, Loader, Text, useMantineColorScheme } from "@mantine/core";
+import { Badge, Box, Button, Group, Loader, Text, useMantineColorScheme } from "@mantine/core";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "@mantine/hooks";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Post from "templates/Post";
 import SmallHeader from "templates/SmallHeader";
 import Message from "templates/Message";
+import GroupList from "templates/GroupList";
+import AdSenseAd from "templates/AdSenseAd";
 import axios from "axios";
 
 export default function Home() {
@@ -15,10 +18,14 @@ export default function Home() {
     const userId = useSelector(state => state.user?._id)
     const { colorScheme } = useMantineColorScheme()
     const isMobile = useMediaQuery("(max-width: 768px)")
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPosts = async ({ pageParam }) => {
         if (!userId) return []
-        const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`);
+        const response = await axios.get(`/api/post/?page=${pageParam}&userId=${userId}`, { headers });
         return response.data;
     }
 
@@ -54,19 +61,26 @@ export default function Home() {
         </div>
     ) : (
         <>
+            <Helmet>
+                <title>Šrodo - Od študentov študentom</title>
+                <meta name="description" content="Šrodo je sociálna sieť pre študentov, kde môžu zdieľať svoje vedomosti a zapájať sa do diskusií. Taktiež aj generovať interaktívne kvízy s pomocou AI." />
+            </Helmet>
+
             {isMobile &&
                 <SmallHeader
                     title={
                         <Link to="/">
                             <Group gap={0}>
-                                {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                                {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                                 <Text ml={8} fw={700} fz={24}>Šrodo</Text>
-                                {/* <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge> */}
+                                <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                             </Group>
                         </Link>
                     }
                 />
             }
+
+            <GroupList />
 
             {data.pages[0].length === 0 &&
                 <div className="loader-center">
@@ -84,7 +98,21 @@ export default function Home() {
 
             {data.pages.map((page) => (
                 page.map((post, i) => {
-                    return <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
+                    if (i == 1 || i + 1 % 10 == 0) {
+                        return (
+                            <>
+                                <Box px="md" py="sm" className="border-bottom">
+                                    <AdSenseAd
+                                        adClient="ca-pub-4886377834765269"
+                                        adSlot="6924990323"
+                                    />
+                                </Box>
+                                <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
+                            </>
+                        )
+                    } else {
+                        return <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
+                    }
                 })
             ))}
 

@@ -18,8 +18,8 @@ export function PostButtons(props) {
     const userId = useSelector(state => state.user?._id);
     const token = useSelector(state => state.token);
 
-    const [likes, setLikes] = useState(post.likes.length);
-    const [isLiked, setIsLiked] = useState(post.likes.includes(userId));
+    const [likes, setLikes] = useState(post.likes);
+    const [isLiked, setIsLiked] = useState(post.isLiked);
 
     const headers = {
         Authorization: `Bearer ${token}`,

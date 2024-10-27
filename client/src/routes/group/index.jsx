@@ -8,15 +8,18 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDispatch, useSelector } from "react-redux";
 import { setLoginModal } from "state";
 import { notifications } from "@mantine/notifications";
+import { Helmet } from "react-helmet";
 import Post from "templates/Post";
 import CreatePost from "templates/CreatePost";
 import axios from "axios";
 import Message from "templates/Message";
 import { ReportModal } from "templates/ReportModal";
 import SmallHeader from "templates/SmallHeader";
+import AdSenseAd from "templates/AdSenseAd";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
+import MembersDisplay from "templates/MembersDisplay";
 moment.locale("sk");
 
 export default function Group() {
@@ -97,6 +100,11 @@ export default function Group() {
         </div>
     ) : (
         <>
+            <Helmet>
+                <title>{`${data.name} / Šrodo`}</title>
+                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.membersLength} členov - ${data.name} na Šrodo: "${data.description}"`} />
+            </Helmet>
+
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
 
             <ReportModal opened={opened} close={close} />
@@ -114,6 +122,7 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
+                    radius="md"
                     src={data.profilePicture?.large}
                 />
             </div>
@@ -138,7 +147,7 @@ export default function Group() {
                     >
                         Upraviť
                     </Button>
-                    : data.members.find(user => user._id == userId) ?
+                    : data.isMember ?
                         <Button
                             variant="default"
                             onClick={() => {
@@ -218,21 +227,7 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                {data.members.length > 1 &&
-                    <Box mt="sm" className="members-preview">
-                        {data.members.slice(-8).map(member =>
-                            <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                                <Link to={`/${member.username}`} key={member._id}>
-                                    <Avatar
-                                        className="no-image"
-                                        src={member.profilePicture?.thumbnail}
-                                        style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                    />
-                                </Link>
-                            </Tooltip>
-                        )}
-                    </Box>
-                }
+                <MembersDisplay mt={8} members={data.members} membersCount={data.membersCount} />
             </Box>
 
             <Tabs
@@ -254,18 +249,21 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            {tab === "prispevky" && <Posts groupId={groupId} members={data.members} owner={data.owner} />}
+            {tab === "prispevky" && <Posts groupId={groupId} isMember={data.isMember} owner={data.owner} />}
 
             {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} />}
         </>
     )
 }
 
-function Posts({ groupId, members, owner }) {
-    const userId = useSelector(state => state.user?._id);
+function Posts({ groupId, isMember, owner }) {
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPosts = async () => {
-        const response = await axios.get(`/api/group/${groupId}/posts`)
+        const response = await axios.get(`/api/group/${groupId}/posts`, { headers })
         return response.data
     }
 
@@ -276,7 +274,7 @@ function Posts({ groupId, members, owner }) {
 
     return (
         <>
-            {userId && members.find(member => member._id === userId) &&
+            {isMember &&
                 <CreatePost groupId={groupId} />
             }
 
@@ -294,7 +292,23 @@ function Posts({ groupId, members, owner }) {
                         <Text px="md" py="sm" c="dimmed">Zatiaľ žiadne príspevky</Text>
                     }
 
-                    {data.map(post => <Post post={post} owner={owner} group />)}
+                    {data.map((post, i) => {
+                        if (i == 1 || i + 1 % 10 == 0) {
+                            return (
+                                <>
+                                    <Box px="md" py="sm" className="border-bottom">
+                                        <AdSenseAd
+                                            adClient="ca-pub-4886377834765269"
+                                            adSlot="6924990323"
+                                        />
+                                    </Box>
+                                    <Post post={post} owner={owner} group />
+                                </>
+                            )
+                        } else {
+                            return <Post post={post} owner={owner} group />
+                        }
+                    })}
                 </>
             )}
         </>

@@ -26,6 +26,7 @@ const Post = lazy(() => import("routes/post"));
 const Group = lazy(() => import("routes/group"));
 const CreateGroup = lazy(() => import("routes/create_group"));
 const EditGroup = lazy(() => import("routes/edit_goup"));
+const EditProfile = lazy(() => import("routes/edit_profile"));
 const Settings = lazy(() => import("routes/settings"));
 const Verify = lazy(() => import("routes/verify"));
 const Invite = lazy(() => import("routes/invite"));
@@ -98,8 +99,9 @@ export default function App() {
                                     <Route exact path=":username/prispevok/:postId" element={<Post />} />
 
                                     {/* PRIVATE ROUTES */}
-                                    <Route path="oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" replace />} />
-                                    <Route path="nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" replace />} />
+                                    <Route path="ucet/upravit" element={isAuth ? <EditProfile /> : <Navigate to="/" replace />} />
+                                    <Route path="ucet/nastavenia" element={isAuth ? <Settings /> : <Navigate to="/" replace />} />
+                                    <Route path="ucet/oblubene" element={isAuth ? <Favourites /> : <Navigate to="/" replace />} />
                                     <Route path="skupiny/:groupId/upravit" element={isAuth ? <EditGroup /> : <Navigate to="/" replace />} />
                                     <Route path="vytvorit" element={!isAuth && <Navigate to="/" replace />}>
                                         <Route path="skupina" element={<CreateGroup />} />

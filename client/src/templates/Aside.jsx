@@ -25,7 +25,7 @@ export default function Aside() {
             <p>Nastala chyba!</p>
         </div>
     ) : (
-        <aside className="aside">
+        <>
             <div className="news-card">
                 <Text px="lg" py="md" fw={700} size="lg" style={{ lineHeight: 1.2 }}>
                     Odporúčaní používatelia
@@ -57,7 +57,7 @@ export default function Aside() {
                 {data.groups.map(group =>
                     <Link to={`/skupiny/${group._id}`} key={group._id} className="news-card-item">
                         <Group gap="xs">
-                            <Avatar className="no-image" src={group.profilePicture?.thumbnail} />
+                            <Avatar radius="sm" className="no-image" src={group.profilePicture?.thumbnail} />
 
                             <Stack gap={4}>
                                 <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
@@ -75,6 +75,6 @@ export default function Aside() {
                     </Link>
                 )}
             </div>
-        </aside>
+        </>
     )
 }

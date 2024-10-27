@@ -52,26 +52,31 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
             {group ? (
                 <>
                     <Link to={authorUrl}>
-                        <Avatar className="no-image" src={post.author.profilePicture?.thumbnail} />
+                        <Avatar
+                            className="no-image"
+                            src={post.author.profilePicture?.thumbnail}
+                        />
                     </Link>
 
                     <Stack gap={8} pos="relative" style={{ flex: 1 }}>
-                        <Group pr={32} gap={4}>
-                            <Link to={authorUrl}>
-                                <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                        <Group pr={32} gap={4} wrap="nowrap" miw={0} style={{ flex: 1 }}>
+                            <Link to={authorUrl} style={{ lineHeight: 1, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>
+                                <Text span fw={700} size="sm" style={{ lineHeight: 1 }}>
                                     {post.author.displayName}
                                 </Text>
                             </Link>
                             {post.author._id === owner &&
-                                <Badge variant="light" size="xs">Admin</Badge>
+                                <Badge variant="light" size="xs" style={{ flexShrink: 0 }}>Admin</Badge>
                             }
-                            <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                            <Text c="dimmed" size="sm" style={{ lineHeight: 1, flexShrink: 0 }}>
                                 &middot;
                             </Text>
-                            <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMMM yyyy")} openDelay={500} withArrow>
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                            <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMM yyyy")} openDelay={500} withArrow>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1, flexShrink: 0 }}>
                                     {showLongTime ?
-                                        moment(post.createdAt).format("D. MMM yyyy")
+                                        moment(post.createdAt).year() == moment().year() ?
+                                            moment(post.createdAt).format("D. MMM")
+                                            : moment(post.createdAt).format("D. MMM yyyy")
                                         : moment(post.createdAt).fromNow(true)
                                     }
                                 </Text>
@@ -99,39 +104,45 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                 </>
             ) : (
                 <Stack gap={8} style={{ flex: 1 }}>
-                    <Group pr={32} gap="xs" wrap="nowrap">
+                    <Group pr={32} gap="xs">
                         <Link to={groupUrl}>
-                            <Avatar className="no-image" src={post.group.profilePicture?.thumbnail} />
+                            <Avatar
+                                radius="sm"
+                                className="no-image"
+                                src={post.group.profilePicture?.thumbnail}
+                            />
                         </Link>
 
-                        <Stack gap={4}>
-                            <Group gap={4}>
-                                <Link to={groupUrl}>
-                                    <Text fw={700} size="sm" style={{ lineHeight: 1 }}>
+                        <Stack gap={4} miw={0} style={{ flex: 1 }}>
+                            <Group gap={4} wrap="nowrap">
+                                <Link to={groupUrl} style={{ lineHeight: 1, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>
+                                    <Text span fw={700} size="sm" style={{ lineHeight: 1 }}>
                                         {post.group.name}
                                     </Text>
                                 </Link>
                                 {post.group.isPrivate ?
-                                    <IconLock size={16} stroke={1.25} />
-                                    : <IconWorld size={16} stroke={1.25} />
+                                    <IconLock size={16} stroke={1.25} style={{ flexShrink: 0 }} />
+                                    : <IconWorld size={16} stroke={1.25} style={{ flexShrink: 0 }} />
                                 }
                             </Group>
-                            <Group gap={4}>
-                                <Link to={authorUrl}>
-                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                            <Group gap={4} wrap="nowrap">
+                                <Link to={authorUrl} style={{ lineHeight: 1, textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>
+                                    <Text span c="dimmed" size="sm" style={{ lineHeight: 1 }}>
                                         {post.author.displayName}
                                     </Text>
                                 </Link>
                                 {post.author._id === post.group.owner &&
-                                    <Badge variant="light" size="xs">Admin</Badge>
+                                    <Badge variant="light" size="xs" style={{ flexShrink: 0 }}>Admin</Badge>
                                 }
-                                <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                <Text c="dimmed" size="sm" style={{ lineHeight: 1, flexShrink: 0 }}>
                                     &middot;
                                 </Text>
                                 <Tooltip disabled={showLongTime} label={moment(post.createdAt).format("D. MMM yyyy")} openDelay={500} withArrow>
-                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1 }}>
+                                    <Text c="dimmed" size="sm" style={{ lineHeight: 1, flexShrink: 0 }}>
                                         {showLongTime ?
-                                            moment(post.createdAt).format("D. MMM yyyy")
+                                            moment(post.createdAt).year() == moment().year() ?
+                                                moment(post.createdAt).format("D. MMM")
+                                                : moment(post.createdAt).format("D. MMM yyyy")
                                             : moment(post.createdAt).fromNow(true)
                                         }
                                     </Text>

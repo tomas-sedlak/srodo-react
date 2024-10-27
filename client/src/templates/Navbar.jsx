@@ -1,4 +1,4 @@
-import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme } from '@mantine/core';
+import { Badge, Text, Loader, Avatar, Button, Group, useMantineColorScheme, Box } from '@mantine/core';
 import { HomeIcon, MagnifyingGlassIcon, SparklesIcon } from "@heroicons/react/24/outline"
 import { HomeIcon as HomeIconSolid, MagnifyingGlassIcon as MagnifyingGlassIconSolid, SparklesIcon as SparklesIconSolid } from "@heroicons/react/24/solid"
 import { useLocation, Link } from "react-router-dom";
@@ -60,9 +60,9 @@ export default function Navbar() {
         <>
             <Link to="/">
                 <Group gap={0} mb="lg">
-                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.png" /> : <img width={36} height={36} src="/images/logo_dark.png" />}
+                    {colorScheme === "light" ? <img width={36} height={36} src="/images/logo_light.svg" /> : <img width={36} height={36} src="/images/logo_dark.svg" />}
                     <Text ml={8} fw={700} fz={24}>Šrodo</Text>
-                    {/* <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge> */}
+                    <Badge ml={4} mb={8} variant="light" size="xs">BETA</Badge>
                 </Group>
             </Link>
 
@@ -151,28 +151,35 @@ export default function Navbar() {
                 <Text px="sm" c="dimmed">Zatiaľ žiadne skupiny.</Text>
             }
 
-            {userId && data.map(group => {
-                const url = `/skupiny/${group._id}`
-                const active = url === pathname
+            <Box style={{ overflowY: "auto" }}>
+                {userId && data.map(group => {
+                    const url = `/skupiny/${group._id}`
+                    const active = url === pathname
 
-                return (
-                    <Link
-                        key={group.name}
-                        to={url}
-                        onClick={close}
-                        className="menu-item"
-                        data-active={active || undefined}
-                    >
-                        <Avatar className="no-image" size="sm" src={group.profilePicture?.thumbnail} />
-                        <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
-                        {group.badge && (
-                            <Badge variant="light">
-                                {group.badge}
-                            </Badge>
-                        )}
-                    </Link>
-                )
-            })}
+                    return (
+                        <Link
+                            key={group.name}
+                            to={url}
+                            onClick={close}
+                            className="menu-item"
+                            data-active={active || undefined}
+                        >
+                            <Avatar
+                                className="no-image"
+                                size="sm"
+                                radius="sm"
+                                src={group.profilePicture?.thumbnail}
+                            />
+                            <span style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{group.name}</span>
+                            {group.badge && (
+                                <Badge variant="light">
+                                    {group.badge}
+                                </Badge>
+                            )}
+                        </Link>
+                    )
+                })}
+            </Box>
         </>
     )
 }
