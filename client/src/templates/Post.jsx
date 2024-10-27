@@ -1,6 +1,5 @@
 import { forwardRef } from "react";
 import { Group, Text, Avatar, Stack, Spoiler, Badge, Tooltip } from '@mantine/core';
-import { IconLock, IconWorld } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { PostButtons, PostMenu } from "./PostWidgets";
 import ImagesDisplay from "./ImagesDisplay";
@@ -101,7 +100,7 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                             <Linkify>{post.content}</Linkify>
                         </Spoiler>
 
-                        <ImagesDisplay images={post.images} />
+                        <ImagesDisplay images={post.images} postUrl={postUrl} />
 
                         <FilesDisplay files={post.files} />
 
@@ -179,7 +178,7 @@ const Post = forwardRef(({ post, owner, group, withoutLink }, ref) => {
                         </div>
                     </Spoiler>
 
-                    <ImagesDisplay images={post.images} />
+                    <ImagesDisplay images={post.images} postUrl={postUrl} />
 
                     <FilesDisplay files={post.files} />
 
