@@ -36,6 +36,14 @@ const limiter = rateLimit({
   standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
 });
+const aiLimiter = rateLimit({
+  max: 2, // Limit each IP to 2 requests per day
+  windowMs: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+  message: {
+    message: "Môžeš vytvoriť maximálne 2 kvízy za deň"
+  },
+  keyGenerator: (req) => req.ip, // Use IP as unique identifier (or req.user.id for authenticated users)
+});
 
 // Redirect from www to non-www
 app.use((req, res, next) => {
@@ -63,7 +71,7 @@ app.post("/api/comment", verifyToken, upload.fields([{ name: "images", maxCount:
 app.post("/api/group", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), createGroup);
 app.patch("/api/user/:userId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateUserSettings);
 app.patch("/api/group/:groupId/update", verifyToken, upload.fields([{ name: "coverImage", maxCount: 1 }, { name: "profilePicture", maxCount: 1 }]), updateGroup);
-app.post("/api/ai", upload.fields([{ name: "file", maxCount: 1 }]), generateQuiz);
+app.post("/api/ai", aiLimiter, upload.fields([{ name: "file", maxCount: 1 }, { name: "image", maxCount: 1 }]), generateQuiz);
 
 // ROUTES
 app.use("/api/auth", authRoutes);
