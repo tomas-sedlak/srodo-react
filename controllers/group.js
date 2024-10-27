@@ -197,6 +197,9 @@ export const getGroupPosts = async (req, res) => {
                     comments: 1,
                     createdAt: 1,
                 }
+            },
+            {
+                $sort: { createdAt: -1 }
             }
         ]);
 

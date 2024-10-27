@@ -93,6 +93,9 @@ export const getFeedPosts = async (req, res) => {
                 $match: { "groups.members": new mongoose.Types.ObjectId(userId) }
             },
             {
+                $sort: { createdAt: -1 }
+            },
+            {
                 $skip: limit * (page - 1)
             },
             {
