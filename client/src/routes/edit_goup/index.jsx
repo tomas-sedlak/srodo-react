@@ -169,6 +169,7 @@ export default function EditGroup() {
                 <Group align="center" gap="xs">
                     <Avatar
                         size="xl"
+                        radius="md"
                         className="no-image"
                         src={data.profilePicture && (typeof data.profilePicture === "string" ? data.profilePicture : URL.createObjectURL(data.profilePicture))}
                     />

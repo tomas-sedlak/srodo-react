@@ -3,6 +3,7 @@ import { IconHeart, IconChevronRight, IconMoon } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogout } from "state";
+import { modals } from "@mantine/modals";
 import SmallHeader from "templates/SmallHeader";
 
 export default function Settings() {
@@ -30,7 +31,17 @@ export default function Settings() {
                     px="md"
                     c="red"
                     className="pointer"
-                    onClick={() => dispatch(setLogout())}
+                    onClick={(event) => {
+                        event.preventDefault()
+                        modals.openConfirmModal({
+                            title: "Odhlásiť sa z účtu",
+                            children: <Text>Určite sa chceš odhlásiť?</Text>,
+                            centered: true,
+                            labels: { confirm: "Potvrdiť", cancel: "Zrušiť" },
+                            confirmProps: { color: "red" },
+                            onConfirm: () => dispatch(setLogout()),
+                        })
+                    }}
                 >
                     Odhlásiť sa
                 </Text>

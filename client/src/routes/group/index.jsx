@@ -19,6 +19,7 @@ import AdSenseAd from "templates/AdSenseAd";
 
 import moment from "moment";
 import "moment/dist/locale/sk";
+import MembersDisplay from "templates/MembersDisplay";
 moment.locale("sk");
 
 export default function Group() {
@@ -43,7 +44,7 @@ export default function Group() {
 
 
     const fetchGroup = async () => {
-        const group = await axios.get(`/api/group/${groupId}`, { headers })
+        const group = await axios.get(`/api/group/${groupId}`, userId && { headers })
         return group.data
     }
 
@@ -101,7 +102,7 @@ export default function Group() {
         <>
             <Helmet>
                 <title>{`${data.name} / Šrodo`}</title>
-                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.members.length} členov - ${data.name} na Šrodo: "${data.description}"`} />
+                <meta name="description" content={`${data.isPrivate ? "Súkromná" : "Verejná"} skupina, ${data.membersLength} členov - ${data.name} na Šrodo: "${data.description}"`} />
             </Helmet>
 
             {data.isPrivate && <UrlModal url={`https://srodo.sk/pozvanka/${data.privateKey}`} opened={urlModalOpened} close={setUrlModalOpened} />}
@@ -121,6 +122,7 @@ export default function Group() {
                 <Avatar
                     className="profile-picture"
                     size={profilePictureSize}
+                    radius="md"
                     src={data.profilePicture?.large}
                 />
             </div>
@@ -145,7 +147,7 @@ export default function Group() {
                     >
                         Upraviť
                     </Button>
-                    : data.members.find(user => user._id == userId) ?
+                    : data.isMember ?
                         <Button
                             variant="default"
                             onClick={() => {
@@ -203,9 +205,15 @@ export default function Group() {
             </Flex>
 
             <Box px="md" py="sm">
-                <Text fw={700} size="xl" style={{ lineHeight: 1.2 }}>
-                    {data.name}
-                </Text>
+                <Flex gap={4}>
+                    <Text fw={700} size="xl" style={{ lineHeight: 1.2 }}>
+                        {data.name}
+                    </Text>
+                    {/* Verified icon */}
+                    {data.verified &&
+                        <svg color="var(--mantine-primary-color-filled)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-rosette-discount-check"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12.01 2.011a3.2 3.2 0 0 1 2.113 .797l.154 .145l.698 .698a1.2 1.2 0 0 0 .71 .341l.135 .008h1a3.2 3.2 0 0 1 3.195 3.018l.005 .182v1c0 .27 .092 .533 .258 .743l.09 .1l.697 .698a3.2 3.2 0 0 1 .147 4.382l-.145 .154l-.698 .698a1.2 1.2 0 0 0 -.341 .71l-.008 .135v1a3.2 3.2 0 0 1 -3.018 3.195l-.182 .005h-1a1.2 1.2 0 0 0 -.743 .258l-.1 .09l-.698 .697a3.2 3.2 0 0 1 -4.382 .147l-.154 -.145l-.698 -.698a1.2 1.2 0 0 0 -.71 -.341l-.135 -.008h-1a3.2 3.2 0 0 1 -3.195 -3.018l-.005 -.182v-1a1.2 1.2 0 0 0 -.258 -.743l-.09 -.1l-.697 -.698a3.2 3.2 0 0 1 -.147 -4.382l.145 -.154l.698 -.698a1.2 1.2 0 0 0 .341 -.71l.008 -.135v-1l.005 -.182a3.2 3.2 0 0 1 3.013 -3.013l.182 -.005h1a1.2 1.2 0 0 0 .743 -.258l.1 -.09l.698 -.697a3.2 3.2 0 0 1 2.269 -.944zm3.697 7.282a1 1 0 0 0 -1.414 0l-3.293 3.292l-1.293 -1.292l-.094 -.083a1 1 0 0 0 -1.32 1.497l2 2l.094 .083a1 1 0 0 0 1.32 -.083l4 -4l.083 -.094a1 1 0 0 0 -.083 -1.32z" /></svg>
+                    }
+                </Flex>
 
                 <Text mt="sm" style={{ lineHeight: 1.4 }}>
                     {data.description}
@@ -225,24 +233,7 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                {data.members.length > 1 &&
-                    <Flex mt="sm" align="center" gap="sm">
-                        <Box className="members-preview">
-                            {data.members.slice(-5).map(member =>
-                                <Tooltip label={`@${member.username}`} openDelay={200} withArrow>
-                                    <Link to={`/${member.username}`} key={member._id}>
-                                        <Avatar
-                                            className="no-image"
-                                            src={member.profilePicture?.thumbnail}
-                                            style={{ outline: "var(--mantine-color-body) solid 2px" }}
-                                        />
-                                    </Link>
-                                </Tooltip>
-                            )}
-                        </Box>
-                        <Text span c="dimmed"><Text span fw={700} c="var(--mantine-color-text)">{data.members.length}</Text> členov</Text>
-                    </Flex>
-                }
+                <MembersDisplay mt={8} members={data.members} membersCount={data.membersCount} />
             </Box>
 
             <Tabs
@@ -264,18 +255,22 @@ export default function Group() {
                 </Tabs.List>
             </Tabs>
 
-            {tab === "prispevky" && <Posts groupId={groupId} members={data.members} owner={data.owner} />}
+            {tab === "prispevky" && <Posts groupId={groupId} isMember={data.isMember} owner={data.owner} />}
 
             {tab === "clenovia" && <Members groupId={groupId} owner={data.owner} />}
         </>
     )
 }
 
-function Posts({ groupId, members, owner }) {
-    const userId = useSelector(state => state.user?._id);
+function Posts({ groupId, isMember, owner }) {
+    const userId = useSelector(state => state.user?.id);
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
 
     const fetchPosts = async () => {
-        const response = await axios.get(`/api/group/${groupId}/posts`)
+        const response = await axios.get(`/api/group/${groupId}/posts`, userId && { headers })
         return response.data
     }
 
@@ -286,7 +281,7 @@ function Posts({ groupId, members, owner }) {
 
     return (
         <>
-            {userId && members.find(member => member._id === userId) &&
+            {isMember &&
                 <CreatePost groupId={groupId} />
             }
 
@@ -354,7 +349,6 @@ function Members({ groupId, owner }) {
             <TextInput
                 px="md"
                 py="sm"
-                size="md"
                 className="border-bottom"
                 placeholder="Hľadať členov"
                 value={searchValue}
