@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 
 export default function SmallHeader({ title = "", withArrow = false, rightSection = null }) {
     const navigate = useNavigate()
-    const userId = useSelector(state => state.user?.id)
+    const userId = useSelector(state => state.user?._id)
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
