@@ -34,6 +34,10 @@ const groupSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     }],
+    verifieed: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true
 })

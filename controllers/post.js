@@ -114,6 +114,7 @@ export const getFeedPosts = async (req, res) => {
                                 profilePicture: 1,
                                 owner: 1,
                                 isPrivate: 1,
+                                verified: 1,
                             }
                         }
                     ]
@@ -134,6 +135,7 @@ export const getFeedPosts = async (req, res) => {
                                 username: 1,
                                 displayName: 1,
                                 profilePicture: 1,
+                                verified: 1,
                             }
                         }
                     ]
@@ -223,6 +225,7 @@ export const getPost = async (req, res) => {
                                 profilePicture: 1,
                                 owner: 1,
                                 isPrivate: 1,
+                                verified: 1,
                             }
                         }
                     ]
@@ -243,6 +246,7 @@ export const getPost = async (req, res) => {
                                 username: 1,
                                 displayName: 1,
                                 profilePicture: 1,
+                                verified: 1,
                             }
                         }
                     ]
@@ -309,7 +313,7 @@ export const getPostComments = async (req, res) => {
         const { postId } = req.params;
         const comments = await Comment.find({ postId })
             .sort({ createdAt: -1 })
-            .populate("author", "username displayName profilePicture")
+            .populate("author", "username displayName profilePicture verified")
             .populate("images", "thumbnail large")
             .populate("files", "file name size")
             .lean();

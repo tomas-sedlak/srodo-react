@@ -59,6 +59,10 @@ const userSchema = new Schema({
         },
         maxLength: 5,
     }],
+    verified: {
+        type: Boolean,
+        default: false,
+    },
 }, {
     timestamps: true,
 })

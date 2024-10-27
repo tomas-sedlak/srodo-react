@@ -100,6 +100,7 @@ export const getGroup = async (req, res) => {
                     membersCount: 1,
                     isMember: 1,
                     createdAt: 1,
+                    verified: 1,
                 }
             }
         ]);
@@ -145,6 +146,7 @@ export const getGroupPosts = async (req, res) => {
                                 username: 1,
                                 displayName: 1,
                                 profilePicture: 1,
+                                verified: 1,
                             }
                         }
                     ]
@@ -272,6 +274,7 @@ export const getGroupSuggestions = async (req, res) => {
                     profilePicture: 1,
                     members: 1,
                     membersCount: 1,
+                    verified: 1,
                 }
             }
         ]);
