@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ActionIcon, Box, Button, Group, Image, Loader, Tabs, Text, Textarea } from "@mantine/core";
+import { ActionIcon, Badge, Box, Button, Card, Group, Image, Loader, Tabs, Text, Textarea, Title } from "@mantine/core";
 import { Dropzone, MS_POWERPOINT_MIME_TYPE, MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
-import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
+import { IconFile, IconUpload, IconX, IconAlarm, IconTrendingUp, IconFileText, IconDevices } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
@@ -216,6 +216,55 @@ export default function AI() {
                             </Group>
                         </Box>
                     }
+
+                    <Box m='sm'>
+                        <Text fw={700} size='lg'>Ako to funguje?</Text>
+                        <Group mt="md">
+                            <Badge size="lg" circle> {/* Not round, idk why tho */}
+                                1
+                            </Badge>
+                            <Text><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
+                        </Group>
+                        <Group mt="sm">
+                            <Badge size="lg" circle>
+                                2
+                            </Badge>
+                            <Text>Šrodo AI automaticky<span style={{ fontWeight: 'bold' }}> vygeneruje kvíz </span>podľa náhradného obsahu.</Text>
+                        </Group>
+                        <Group mt="sm">
+                            <Badge size="lg" circle>
+                                3
+                            </Badge>
+                            <Text><span style={{ fontWeight: 'bold' }}>Vypĺň kvíz </span>a zisti svoje skóre.</Text>
+                        </Group>
+
+                        <Text fw={700} size='lg' mt="lg">Prečo si vybrať šrodo AI?</Text>
+                        <Card mt="sm">
+                            <Group wrap="nowrap">
+                                <IconAlarm stroke={1.25} />
+                                <Text style={{ flex: 1 }}><span style={{ fontWeight: 'bold' }}>Rýchla a jednoduchá príprava na testy: </span>Učte sa presne to, čo potrebujete.</Text>
+                            </Group>
+                        </Card>
+                        <Card mt="sm">
+                            <Group wrap="nowrap">
+                                <IconTrendingUp stroke={1.25} />
+                                <Text><span style={{ fontWeight: 'bold' }}>Vylepšite si svoje vedomosti: </span>Zistite, kde máte medzery, a učte sa efektívnejšie.</Text>
+                            </Group>
+                        </Card>
+                        <Card mt="sm">
+                            <Group wrap="nowrap">
+                                <IconFileText stroke={1.25} />
+                                <Text><span style={{ fontWeight: 'bold' }}>Podpora rôznych formátov: </span>Pracujeme so súbormi ako Word, PDF, PowerPoint a dokonca aj s obrázkami.</Text>
+                            </Group>
+                        </Card>
+                        <Card mt="sm">
+                            <Group wrap="nowrap">
+                                <IconDevices stroke={1.25} />
+                                <Text><span style={{ fontWeight: 'bold' }}>Intuitívne rozhranie: </span>Práca so Šrodo AI je rýchla, jednoduchá a prístupná pre každého.</Text>
+                            </Group>
+                        </Card>
+                    </Box>
+
                 </>
             )}
         </>
