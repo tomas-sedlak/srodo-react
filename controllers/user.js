@@ -41,7 +41,8 @@ export const getUnique = async (req, res) => {
 
 export const getUserSuggestions = async (req, res) => {
     try {
-        const users = await User.find({ verifiedEmail: true }).lean();
+        const ids = ["664d045d0776e0770cc47e34", "664ddbf6c781ebff57563eff", "66501bd19cb989885bcbade2", "664daddec781ebff57563e0f"];
+        const users = await User.find({ _id: { $in: ids } }).lean();
 
         res.status(200).json(users);
     } catch (err) {
