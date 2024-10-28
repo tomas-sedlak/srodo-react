@@ -232,19 +232,19 @@ export default function AI() {
                     <Box m='sm'>
                         <Text fw={700} size='lg'>Ako to funguje?</Text>
                         <Group mt="md">
-                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
+                            <Badge styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 1
                             </Badge>
                             <Text><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
                         </Group>
                         <Group mt="sm">
-                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
+                            <Badge styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 2
                             </Badge>
                             <Text>Šrodo AI automaticky<span style={{ fontWeight: 'bold' }}> vygeneruje kvíz </span>podľa náhradného obsahu.</Text>
                         </Group>
                         <Group mt="sm">
-                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
+                            <Badge styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 3
                             </Badge>
                             <Text><span style={{ fontWeight: 'bold' }}>Vypĺň kvíz </span>a zisti svoje skóre.</Text>
@@ -276,7 +276,6 @@ export default function AI() {
                             </Group>
                         </Card>
                     </Box>
-
                 </>
             )}
         </>
