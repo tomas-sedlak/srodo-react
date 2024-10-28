@@ -232,7 +232,7 @@ export default function AI() {
                     <Box m='sm'>
                         <Text fw={700} size='lg'>Ako to funguje?</Text>
                         <Group mt="md">
-                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}> {/* Not round, idk why tho */}
+                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 1
                             </Badge>
                             <Text><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
