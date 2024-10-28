@@ -275,7 +275,11 @@ export const getGroupSuggestions = async (req, res) => {
                     members: 1,
                     membersCount: 1,
                     verified: 1,
+                    createdAt: 1,
                 }
+            },
+            {
+                $sort: { verified: -1, membersCount: -1 }
             }
         ]);
 
