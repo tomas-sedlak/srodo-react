@@ -77,7 +77,7 @@ export default function AI() {
                 </div>
             ) : (
                 <>
-                    <Title ta="center" mt="md">AI generovaný kvíz</Title>
+                    <Title ta="center" mt="md">AI generované kvízy</Title>
                     <Text px="md" py="sm" ta="center">Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
 
                     <Tabs
