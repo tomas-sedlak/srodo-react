@@ -37,7 +37,7 @@ export default function AI() {
             formData.append("file", file)
 
             const result = await axios.post("/api/ai", formData)
-            
+
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
             setError(err.response.data.message)
@@ -67,7 +67,7 @@ export default function AI() {
                 <title>Šrodo AI</title>
                 <meta name="description" content="Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti." />
             </Helmet>
-        
+
             <SmallHeader withArrow title="Šrodo AI" />
 
             {isLoading ? (
@@ -77,7 +77,8 @@ export default function AI() {
                 </div>
             ) : (
                 <>
-                    <Text px="md" py="sm">Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
+                    <Title ta="center" mt="md">AI generovaný kvíz</Title>
+                    <Text px="md" py="sm" ta="center">Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
 
                     <Tabs
                         px="md"
@@ -231,19 +232,19 @@ export default function AI() {
                     <Box m='sm'>
                         <Text fw={700} size='lg'>Ako to funguje?</Text>
                         <Group mt="md">
-                            <Badge size="lg" circle> {/* Not round, idk why tho */}
+                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}> {/* Not round, idk why tho */}
                                 1
                             </Badge>
                             <Text><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
                         </Group>
                         <Group mt="sm">
-                            <Badge size="lg" circle>
+                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 2
                             </Badge>
                             <Text>Šrodo AI automaticky<span style={{ fontWeight: 'bold' }}> vygeneruje kvíz </span>podľa náhradného obsahu.</Text>
                         </Group>
                         <Group mt="sm">
-                            <Badge size="lg" circle>
+                            <Badge size="lg" styles={{ root: { width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' } }}>
                                 3
                             </Badge>
                             <Text><span style={{ fontWeight: 'bold' }}>Vypĺň kvíz </span>a zisti svoje skóre.</Text>
