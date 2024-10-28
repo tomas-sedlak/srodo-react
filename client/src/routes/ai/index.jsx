@@ -253,25 +253,25 @@ export default function AI() {
                         <Text fw={700} size='lg' mt="lg">Prečo si vybrať šrodo AI?</Text>
                         <Card mt="sm">
                             <Group wrap="nowrap">
-                                <IconAlarm stroke={1.25} />
+                                <IconAlarm stroke={1.25} style={{ flexShrink: 0 }} />
                                 <Text style={{ flex: 1 }}><span style={{ fontWeight: 'bold' }}>Rýchla a jednoduchá príprava na testy: </span>Učte sa presne to, čo potrebujete.</Text>
                             </Group>
                         </Card>
                         <Card mt="sm">
                             <Group wrap="nowrap">
-                                <IconTrendingUp stroke={1.25} />
+                                <IconTrendingUp stroke={1.25} style={{ flexShrink: 0 }} />
                                 <Text><span style={{ fontWeight: 'bold' }}>Vylepšite si svoje vedomosti: </span>Zistite, kde máte medzery, a učte sa efektívnejšie.</Text>
                             </Group>
                         </Card>
                         <Card mt="sm">
                             <Group wrap="nowrap">
-                                <IconFileText stroke={1.25} />
+                                <IconFileText stroke={1.25} style={{ flexShrink: 0 }} />
                                 <Text><span style={{ fontWeight: 'bold' }}>Podpora rôznych formátov: </span>Pracujeme so súbormi ako Word, PDF, PowerPoint a dokonca aj s obrázkami.</Text>
                             </Group>
                         </Card>
                         <Card mt="sm">
                             <Group wrap="nowrap">
-                                <IconDevices stroke={1.25} />
+                                <IconDevices stroke={1.25} style={{ flexShrink: 0 }} />
                                 <Text><span style={{ fontWeight: 'bold' }}>Intuitívne rozhranie: </span>Práca so Šrodo AI je rýchla, jednoduchá a prístupná pre každého.</Text>
                             </Group>
                         </Card>
