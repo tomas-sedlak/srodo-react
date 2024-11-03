@@ -54,46 +54,46 @@ app.use((req, res, next) => {
 });
 app.use(limiter)
 app.use(express.json());
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: [
-        "'self'",
-        "https://accounts.google.com",
-      ],
-      scriptSrc: [
-        "'self'",
-        "https://accounts.google.com",
-        "https://*.googletagmanager.com",
-        "https://*.google-analytics.com",
-        "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
-        "https://*.adtrafficquality.google",
-        "https://*.googleapis.com" // Allow Google APIs
-      ],
-      imgSrc: [
-        "'self'",
-        `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com`, // Allow images from S3 bucket
-        "https://*.googlesyndication.com",
-      ],
-      frameSrc: [
-        "'self'",
-        "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
-        "https://accounts.google.com",
-      ],
-      connectSrc: [
-        "'self'",
-        "https://*.google-analytics.com",
-        "https://*.adtrafficquality.google",
-        "https://accounts.google.com", // Allow OAuth connections
-        "https://*.googleapis.com" // Allow connection to Google APIs
-      ],
-      formAction: [
-        "'self'",
-        "https://accounts.google.com",
-      ]
-    }
-  }
-}));
+// app.use(helmet({
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: [
+//         "'self'",
+//         "https://accounts.google.com",
+//       ],
+//       scriptSrc: [
+//         "'self'",
+//         "https://accounts.google.com",
+//         "https://*.googletagmanager.com",
+//         "https://*.google-analytics.com",
+//         "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
+//         "https://*.adtrafficquality.google",
+//         "https://*.googleapis.com" // Allow Google APIs
+//       ],
+//       imgSrc: [
+//         "'self'",
+//         `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com`, // Allow images from S3 bucket
+//         "https://*.googlesyndication.com",
+//       ],
+//       frameSrc: [
+//         "'self'",
+//         "https://*.googlesyndication.com", // Allow scripts from Google Ad Services
+//         "https://accounts.google.com",
+//       ],
+//       connectSrc: [
+//         "'self'",
+//         "https://*.google-analytics.com",
+//         "https://*.adtrafficquality.google",
+//         "https://accounts.google.com", // Allow OAuth connections
+//         "https://*.googleapis.com" // Allow connection to Google APIs
+//       ],
+//       formAction: [
+//         "'self'",
+//         "https://accounts.google.com",
+//       ]
+//     }
+//   }
+// }));
 app.use(morgan("common"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
