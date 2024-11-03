@@ -38,18 +38,6 @@ a {
   border-radius: var(--mantine-radius-lg);
 }
 
-/* For YouTube videos to change size based on screen size */
-iframe {
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  height: auto;
-  border: none;
-  border-radius: var(--mantine-radius-lg);
-  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-}
-
-/* For YouTube videos */
-
 header {
   z-index: 99;
   position: fixed;
