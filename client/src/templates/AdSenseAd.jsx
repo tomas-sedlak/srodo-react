@@ -13,10 +13,9 @@ export default function AdSenseAd({ adClient, adSlot, style = {}, className }) {
         <ins
             className={`adsbygoogle ${className || ''}`}
             style={{ display: "block", textAlign: "center", ...style }}
-            data-ad-layout="in-article"
-            data-ad-format="fluid"
             data-ad-client={adClient}
             data-ad-slot={adSlot}
+            data-ad-format="fluid"
         ></ins>
     );
 };
