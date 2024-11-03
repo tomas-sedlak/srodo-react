@@ -219,17 +219,17 @@ export default function Group() {
                     {data.description}
                 </Text>
 
-                <Flex gap="md" mt={4}>
+                <Flex rowGap={4} columnGap="md" mt={8} wrap="wrap">
                     <Flex gap={4}>
                         {data.isPrivate ?
                             <IconLock color="var(--mantine-color-dimmed)" stroke={1.25} />
                             : <IconWorld color="var(--mantine-color-dimmed)" stroke={1.25} />
                         }
-                        <Text c="dimmed">{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
+                        <Text c="dimmed" style={{ whiteSpace: "nowrap" }}>{data.isPrivate ? "Súkromná" : "Verejná"} skupina</Text>
                     </Flex>
                     <Flex gap={4}>
                         <IconCalendarMonth color="var(--mantine-color-dimmed)" stroke={1.25} />
-                        <Text c="dimmed" style={{ lineHeight: 1.4 }}>{moment(data.createdAt).format("D. MMMM yyyy")}</Text>
+                        <Text c="dimmed" style={{ whiteSpace: "nowrap" }}>{moment(data.createdAt).format("D. MMMM yyyy")}</Text>
                     </Flex>
                 </Flex>
 
