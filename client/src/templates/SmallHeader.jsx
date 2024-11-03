@@ -12,12 +12,12 @@ export default function SmallHeader({ title = "", withArrow = false, rightSectio
 
     return (
         <div className="small-header">
-            <Group gap={8} h="100%" px="var(--mantine-spacing-md)">
-                <Group gap="sm" style={{ flex: 1 }}>
+            <Group gap={8} h="100%" px="var(--mantine-spacing-md)" wrap="nowrap">
+                <Group miw={0} gap="sm" style={{ flex: 1 }} wrap="nowrap">
                     {withArrow &&
                         <IconArrowLeft stroke={1.25} className="pointer" onClick={() => navigate(-1)} />
                     }
-                    {typeof title === "string" ? <Text fw={600}>{title}</Text> : title}
+                    {typeof title === "string" ? <Text fw={600} style={{ textOverflow: "ellipsis", whiteSpace: "nowrap", overflow: "hidden" }}>{title}</Text> : title}
                 </Group>
                 {!userId && isMobile ?
                     <Link to="/prihlasenie">
