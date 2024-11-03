@@ -300,22 +300,21 @@ function Posts({ groupId, isMember, owner }) {
                     }
 
                     {data.map((post, i) => {
-                        // if (i == 1 || i + 1 % 10 == 0) {
-                        //     return (
-                        //         <>
-                        //             <Box px="md" py="sm" className="border-bottom">
-                        //                 <AdSenseAd
-                        //                     adClient="ca-pub-4886377834765269"
-                        //                     adSlot="6924990323"
-                        //                 />
-                        //             </Box>
-                        //             <Post post={post} owner={owner} group />
-                        //         </>
-                        //     )
-                        // } else {
-                        //     return <Post post={post} owner={owner} group />
-                        // }
-                        return <Post post={post} owner={owner} group />
+                        if (i == 1 || i + 1 % 10 == 0) {
+                            return (
+                                <>
+                                    <Box px="md" py="sm" className="border-bottom">
+                                        <AdSenseAd
+                                            adClient="ca-pub-4886377834765269"
+                                            adSlot="6924990323"
+                                        />
+                                    </Box>
+                                    <Post post={post} owner={owner} group />
+                                </>
+                            )
+                        } else {
+                            return <Post post={post} owner={owner} group />
+                        }
                     })}
                 </>
             )}
