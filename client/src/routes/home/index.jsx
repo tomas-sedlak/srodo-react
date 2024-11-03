@@ -102,10 +102,10 @@ export default function Home() {
                     if (i == 1 || i + 1 % 10 == 0) {
                         return (
                             <>
-                                <Box px="md" py="sm" className="border-bottom">
+                                <Box className="border-bottom">
                                     <AdSenseAd
                                         adClient="ca-pub-4886377834765269"
-                                        adSlot="6924990323"
+                                        adSlot="1202718334"
                                     />
                                 </Box>
                                 <Post ref={page.length === i + 1 ? ref : undefined} post={post} />
