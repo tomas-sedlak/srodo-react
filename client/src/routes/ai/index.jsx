@@ -10,7 +10,7 @@ import axios from "axios";
 const textMaxLength = 5000;
 
 export default function AI() {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [tab, setTab] = useState("text")
     const [text, setText] = useState("")
     const [file, setFile] = useState(null)
