@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { ActionIcon, Badge, Box, Button, Card, Group, Image, Loader, Tabs, Text, Textarea, Title } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Image, Loader, Stack, Tabs, Text, Textarea, Title } from "@mantine/core";
 import { Dropzone, MS_POWERPOINT_MIME_TYPE, MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { IconFile, IconUpload, IconX, IconAlarm, IconTrendingUp, IconFileText, IconDevices } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
-import { useMediaQuery } from "@mantine/hooks";
 
 const textMaxLength = 5000;
 
@@ -18,7 +17,6 @@ export default function AI() {
     const [image, setImage] = useState(null)
     const [error, setError] = useState("")
     const navigate = useNavigate()
-    const isMobile = useMediaQuery("(max-width: 768px)")
 
     const generateQuizFromText = async () => {
         setIsLoading(true)
@@ -79,8 +77,11 @@ export default function AI() {
                 </div>
             ) : (
                 <>
-                    <Title ta="center" mt="md" p="sm"><span style={{ color: 'var(--mantine-primary-color-filled)' }}>AI</span> generované kvízy</Title> {/* Maybe change the color of AI to --mantine-color-pink-filled */}
-                    <Text px="md" py="sm" ta="center" c="dimmed">Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
+                    <Box px="md" py="xl">
+                        <Title ta="center">Interaktívne kvízy ✨</Title>
+                        <Text maw={380} mx="auto" mt={8} c="dimmed" ta="center">Vytvor kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
+                    </Box>
+
                     <Tabs
                         px="md"
                         variant="unstyled"
@@ -229,146 +230,56 @@ export default function AI() {
                             </Group>
                         </Box>
                     }
-                    <Box m='sm'>
+
+                    <Box px="md" py="sm">
                         <Text fw={700} size='lg'>Ako to funguje?</Text>
 
-                        {isMobile ? (
-                            <>
-                                <div style={{ justifyContent: 'center', display: 'flex' }}> {/* This is to center the indent circle */}
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)'
-                                        }
-                                    }}
-                                        mt="sm"> {/* It didn't work in index.css, I forced to make it here */}
-                                        1
-                                    </Text>
-                                </div>
-                                <Text c="dimmed" ta="center"><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
-                                <div style={{ justifyContent: 'center', display: 'flex' }}>
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)'
-                                        }
-                                    }} mt="sm">
-                                        2
-                                    </Text>
-                                </div>
-                                <Text c="dimmed" ta="center">Šrodo AI automaticky<span style={{ fontWeight: 'bold' }}> vygeneruje kvíz </span>podľa náhradného obsahu.</Text>
-                                <div style={{ justifyContent: 'center', display: 'flex' }}>
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)'
-                                        }
-                                    }}
-                                        mt="sm">
-                                        3
-                                    </Text>
-                                </div>
-                                <Text c="dimmed" ta="center"><span style={{ fontWeight: 'bold' }}>Vypĺň kvíz </span>a zisti svoje skóre.</Text>
-                            </>
-                        ) : (
-                            <>
-                                <Group mt="md" wrap="nowrap">
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)',
-                                            flexShrink: 0,
-                                        }
-                                    }}>
-                                        1
-                                    </Text>
-                                    <Text c="dimmed"><span style={{ fontWeight: 'bold' }}>Nahraj svoje poznámky </span>ako dokument, prezentáciu alebo obrázok.</Text>
-                                </Group>
-                                <Group mt="sm" wrap="nowrap">
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)',
-                                            flexShrink: 0,
-                                        }
-                                    }}>
-                                        2
-                                    </Text>
-                                    <Text c="dimmed">Šrodo AI automaticky<span style={{ fontWeight: 'bold' }}> vygeneruje kvíz </span>podľa náhradného obsahu.</Text>
-                                </Group>
-                                <Group mt="sm" wrap="nowrap">
-                                    <Text styles={{
-                                        root: {
-                                            width: '32px',
-                                            height: '32px',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            borderRadius: '50%',
-                                            backgroundColor: 'var(--mantine-primary-color-filled)',
-                                            flexShrink: 0,
-                                        }
-                                    }}>
-                                        3
-                                    </Text>
-                                    <Text c="dimmed"><span style={{ fontWeight: 'bold' }}>Vypĺň kvíz </span>a zisti svoje skóre.</Text>
-                                </Group>
-                            </>
-                        )}
+                        <Stack mt="md" gap="sm">
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={1} />
+                                <Text><b>Nahraj svoje poznámky </b>ako dokument, prezentáciu alebo obrázok.</Text>
+                            </Group>
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={2} />
+                                <Text>Šrodo AI automaticky<b> vygeneruje kvíz </b>podľa náhradného obsahu.</Text>
+                            </Group>
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={3} />
+                                <Text><b>Vypĺň kvíz </b>a zisti svoje skóre.</Text>
+                            </Group>
+                        </Stack>
 
                         <Text fw={700} size='lg' mt="lg">Prečo si vybrať šrodo AI?</Text>
-                        <Card mt="sm" className="background-light">
-                            <Group wrap="nowrap">
+
+                        <Stack mt="md" gap="sm">
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
                                 <IconAlarm stroke={1.25} style={{ flexShrink: 0 }} />
-                                <Text style={{ flex: 1 }}><span style={{ fontWeight: 'bold' }}>Rýchla a jednoduchá príprava na testy: </span>Učte sa presne to, čo potrebujete.</Text>
+                                <Text style={{ flex: 1 }}><b>Rýchla a jednoduchá príprava na testy: </b>Učte sa presne to, čo potrebujete.</Text>
                             </Group>
-                        </Card>
-                        <Card mt="sm" className="background-light">
-                            <Group wrap="nowrap">
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
                                 <IconTrendingUp stroke={1.25} style={{ flexShrink: 0 }} />
-                                <Text><span style={{ fontWeight: 'bold' }}>Vylepšite si svoje vedomosti: </span>Zistite, kde máte medzery, a učte sa efektívnejšie.</Text>
+                                <Text><b>Vylepšite si svoje vedomosti: </b>Zistite, kde máte medzery, a učte sa efektívnejšie.</Text>
                             </Group>
-                        </Card>
-                        <Card mt="sm" className="background-light">
-                            <Group wrap="nowrap">
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
                                 <IconFileText stroke={1.25} style={{ flexShrink: 0 }} />
-                                <Text><span style={{ fontWeight: 'bold' }}>Podpora rôznych formátov: </span>Pracujeme so súbormi ako Word, PDF, PowerPoint a dokonca aj s obrázkami.</Text>
+                                <Text><b>Podpora rôznych formátov: </b>Pracujeme so súbormi ako Word, PDF, PowerPoint a dokonca aj s obrázkami.</Text>
                             </Group>
-                        </Card>
-                        <Card mt="sm" className="background-light">
-                            <Group wrap="nowrap">
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
                                 <IconDevices stroke={1.25} style={{ flexShrink: 0 }} />
-                                <Text><span style={{ fontWeight: 'bold' }}>Intuitívne rozhranie: </span>Práca so Šrodo AI je rýchla, jednoduchá a prístupná pre každého.</Text>
+                                <Text><b>Intuitívne rozhranie: </b>Práca so Šrodo AI je rýchla, jednoduchá a prístupná pre každého.</Text>
                             </Group>
-                        </Card>
+                        </Stack>
                     </Box>
                 </>
             )}
         </>
+    )
+}
+
+function NumberCircle({ number }) {
+    return (
+        <Group w={32} h={32} justify="center" style={{ backgroundColor: "var(--mantine-primary-color-filled)", borderRadius: "50%", flexShrink: 0 }}>
+            <Text span fw={700}>{number}</Text>
+        </Group>
     )
 }
