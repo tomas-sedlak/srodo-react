@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ActionIcon, Box, Button, Group, Image, Loader, Tabs, Text, Textarea } from "@mantine/core";
+import { ActionIcon, Box, Button, Group, Image, Loader, Stack, Tabs, Text, Textarea, Title } from "@mantine/core";
 import { Dropzone, MS_POWERPOINT_MIME_TYPE, MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
-import { IconFile, IconUpload, IconX } from "@tabler/icons-react";
+import { IconFile, IconUpload, IconX, IconAlarm, IconTrendingUp, IconFileText, IconDevices } from "@tabler/icons-react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import SmallHeader from "templates/SmallHeader";
@@ -37,7 +37,7 @@ export default function AI() {
             formData.append("file", file)
 
             const result = await axios.post("/api/ai", formData)
-            
+
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
             setError(err.response.data.message)
@@ -67,7 +67,7 @@ export default function AI() {
                 <title>Šrodo AI</title>
                 <meta name="description" content="Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti." />
             </Helmet>
-        
+
             <SmallHeader withArrow title="Šrodo AI" />
 
             {isLoading ? (
@@ -77,7 +77,10 @@ export default function AI() {
                 </div>
             ) : (
                 <>
-                    <Text px="md" py="sm">Vytvor interaktívny kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
+                    <Box px="md" py="xl">
+                        <Title ta="center">Interaktívne kvízy ✨</Title>
+                        <Text maw={380} mx="auto" mt={8} c="dimmed" ta="center">Vytvor kvíz zo svojich poznámok a preskúšaj svoje vedomosti.</Text >
+                    </Box>
 
                     <Tabs
                         px="md"
@@ -227,8 +230,56 @@ export default function AI() {
                             </Group>
                         </Box>
                     }
+
+                    <Box px="md" py="sm">
+                        <Text fw={700} size='lg'>Ako to funguje?</Text>
+
+                        <Stack mt="md" gap="sm">
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={1} />
+                                <Text><b>Nahraj svoje poznámky </b>ako dokument, prezentáciu alebo obrázok.</Text>
+                            </Group>
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={2} />
+                                <Text>Šrodo AI automaticky<b> vygeneruje kvíz </b>podľa náhradného obsahu.</Text>
+                            </Group>
+                            <Group gap="sm" wrap="nowrap">
+                                <NumberCircle number={3} />
+                                <Text><b>Vypĺň kvíz </b>a zisti svoje skóre.</Text>
+                            </Group>
+                        </Stack>
+
+                        <Text fw={700} size='lg' mt="lg">Prečo si vybrať šrodo AI?</Text>
+
+                        <Stack mt="md" gap="sm">
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
+                                <IconAlarm stroke={1.25} style={{ flexShrink: 0 }} />
+                                <Text style={{ flex: 1 }}><b>Rýchla a jednoduchá príprava na testy: </b>Učte sa presne to, čo potrebujete.</Text>
+                            </Group>
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
+                                <IconTrendingUp stroke={1.25} style={{ flexShrink: 0 }} />
+                                <Text><b>Vylepšite si svoje vedomosti: </b>Zistite, kde máte medzery, a učte sa efektívnejšie.</Text>
+                            </Group>
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
+                                <IconFileText stroke={1.25} style={{ flexShrink: 0 }} />
+                                <Text><b>Podpora rôznych formátov: </b>Pracujeme so súbormi ako Word, PDF, PowerPoint a dokonca aj s obrázkami.</Text>
+                            </Group>
+                            <Group px="md" py="sm" wrap="nowrap" className="background-light" style={{ borderRadius: "var(--mantine-radius-md)" }}>
+                                <IconDevices stroke={1.25} style={{ flexShrink: 0 }} />
+                                <Text><b>Intuitívne rozhranie: </b>Práca so Šrodo AI je rýchla, jednoduchá a prístupná pre každého.</Text>
+                            </Group>
+                        </Stack>
+                    </Box>
                 </>
             )}
         </>
+    )
+}
+
+function NumberCircle({ number }) {
+    return (
+        <Group w={32} h={32} justify="center" style={{ backgroundColor: "var(--mantine-primary-color-filled)", borderRadius: "50%", flexShrink: 0 }}>
+            <Text span fw={700}>{number}</Text>
+        </Group>
     )
 }
