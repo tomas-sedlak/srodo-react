@@ -50,6 +50,20 @@ export const getUserSuggestions = async (req, res) => {
     }
 };
 
+export const getUsers = async (req, res) => {
+    try {
+        const { q = "" } = req.query;
+
+        const users = await User.find({ username: { $regex: q, $options: "i" }, })
+            .select("profilePicture displayName username")
+            .lean();
+
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
 export const getUserPosts = async (req, res) => {
     try {
         const { userId } = req.params;

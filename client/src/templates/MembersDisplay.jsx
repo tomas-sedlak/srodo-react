@@ -12,7 +12,7 @@ export default function MembersDisplay({ members, membersCount, ...props }) {
     }
 
     return (
-        <Group align="center" gap={8} wrap="nowrap" {...props}>
+        <Group align="center" gap={8} wrap="nowrap" display="inline-flex" {...props}>
             <Box className="members-preview">
                 {members.slice(-5).map(member =>
                     <Avatar

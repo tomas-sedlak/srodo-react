@@ -2,7 +2,7 @@ import express from "express";
 import {
   getUser,
   getUnique,
-  getUserSuggestions,
+  getUsers,
   getUserPosts,
   getUserGroups,
   getUserFavourites,
@@ -13,7 +13,7 @@ const router = express.Router();
 /* READ */
 router.get("/", getUser);
 router.get("/unique", getUnique);
-router.get("/suggestions", getUserSuggestions);
+router.get("/suggestions", getUsers);
 router.get("/:userId/posts", getUserPosts);
 router.get("/:userId/groups", getUserGroups);
 router.get("/:userId/favourites", getUserFavourites);

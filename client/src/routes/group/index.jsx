@@ -233,7 +233,9 @@ export default function Group() {
                     </Flex>
                 </Flex>
 
-                <MembersDisplay mt={8} members={data.members} membersCount={data.membersCount} />
+                <Link to={`/skupiny/${data._id}/clenovia`} style={{ marginTop: 8, display: "inline-block" }}>
+                    <MembersDisplay members={data.members} membersCount={data.membersCount} />
+                </Link>
             </Box>
 
             <Tabs
@@ -388,7 +390,7 @@ function Members({ groupId, owner }) {
     )
 }
 
-function UserProfile({ user, badge }) {
+export function UserProfile({ user, badge }) {
     return (
         <Link to={`/${user.username}`} key={user._id}>
             <Flex gap="xs" align="center" px="md" py="sm" className="border-bottom light-hover">

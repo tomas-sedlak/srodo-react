@@ -92,7 +92,6 @@ export default function App() {
                                     <Route path="quiz" element={<QuizRoute />} /> {/* Added route to quiz fro testing */}
                                     <Route path="kviz/:quizId" element={<Quiz />} />
                                     <Route path="preskumat" element={<Explore />} />
-                                    <Route path="preskumat/:tab" element={<Explore />} />
                                     <Route path="skupiny/:groupId" element={<Group />} />
                                     <Route path="skupiny/:groupId/:tab" element={<Group />} />
                                     <Route exact path=":username" element={<User />} />

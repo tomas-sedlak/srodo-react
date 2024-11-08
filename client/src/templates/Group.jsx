@@ -7,8 +7,8 @@ const Suggestion = forwardRef(({ group }, ref) => {
     const groupUrl = `/skupiny/${group._id}`;
 
     const suggestionContent = (
-        <Link to={groupUrl} key={group._id} >
-            <Group px="md" py={8} wrap="nowrap" gap="sm">
+        <Link to={groupUrl} key={group._id}>
+            <Group px="md" py={8} wrap="nowrap" gap="sm" className="border-bottom light-hover">
                 <Avatar
                     radius="md"
                     size={96}

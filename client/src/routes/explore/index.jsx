@@ -1,36 +1,38 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader, TextInput } from "@mantine/core";
+import { useSearchParams } from "react-router-dom";
+import { Loader, TextInput, Stack, Tabs } from "@mantine/core";
 import { IconSearch, IconX } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet";
+import { UserProfile } from "routes/group";
 import Suggestion from "templates/Group";
-import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
 export default function Explore() {
     const [searchParams, setSearchParams] = useSearchParams();
+    
     const q = searchParams.get("q") || "";
-    const [searchValue, setSearchValue] = useState("");
-    const navigate = useNavigate();
+    const tab = searchParams.get("tab") || "skupiny";
+
+    const [searchValue, setSearchValue] = useState(q);
 
     const handleFormSubmit = event => {
         event.preventDefault()
-        navigate(`/preskumat?q=${searchValue}`)
+        setSearchParams({ q: searchValue, tab })
     }
 
     const handleClear = () => {
         setSearchValue("")
-        navigate(`/preskumat`)
+        setSearchParams({ tab })
     }
 
     const fetchData = async () => {
-        const response = await axios.get(`/api/group/suggestions?q=${searchValue}`);
+        const response = await axios.get(`/api/${tab === "skupiny" ? "group" : "user"}/suggestions?q=${searchValue}`);
         return response.data;
     }
 
     const { status, data } = useQuery({
-        queryKey: ["explore", q],
+        queryKey: ["explore", q, tab],
         queryFn: fetchData,
     });
 
@@ -41,8 +43,8 @@ export default function Explore() {
                 <meta name="description" content="Nájdi zaujímavé učebné matriály alebo skupiny na Šrodo." />
             </Helmet>
 
-            <SmallHeader title={
-                <form style={{ flex: 1 }} onSubmit={handleFormSubmit}>
+            <Stack gap={0} px="md" pt={8} className="border-bottom" pos="sticky" top={0} bg="var(--mantine-color-body)" style={{ zIndex: 98 }}>
+                <form onSubmit={handleFormSubmit}>
                     <TextInput
                         name="q"
                         placeholder="Hľadať"
@@ -60,7 +62,25 @@ export default function Explore() {
                         }
                     />
                 </form>
-            } />
+
+                <Tabs
+                    px="md"
+                    variant="unstyled"
+                    value={tab}
+                    onChange={newTab => {
+                        setSearchParams({ q, tab: newTab })
+                    }}
+                >
+                    <Tabs.List grow className="custom-tabs">
+                        <Tabs.Tab m={0} value="skupiny">
+                            Skupiny
+                        </Tabs.Tab>
+                        <Tabs.Tab m={0} value="pouzivatelia">
+                            Používatelia
+                        </Tabs.Tab>
+                    </Tabs.List>
+                </Tabs>
+            </Stack>
 
             {status === "pending" ? (
                 <div className="loader-center">
@@ -70,9 +90,17 @@ export default function Explore() {
                 <div className="loader-center">
                     <p>Nastala chyba!</p>
                 </div>
-            ) : data.map(group => (
-                <Suggestion group={group} />
-            ))}
+            ) : (
+                <>
+                    {tab === "skupiny" && data.map(group => (
+                        <Suggestion group={group} />
+                    ))}
+
+                    {tab === "pouzivatelia" && data.map(user => (
+                        <UserProfile user={user} />
+                    ))}
+                </>
+            )}
         </>
     )
 }
