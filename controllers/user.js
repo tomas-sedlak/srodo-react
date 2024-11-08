@@ -54,7 +54,7 @@ export const getUsers = async (req, res) => {
     try {
         const { q = "" } = req.query;
 
-        const users = await User.find({ username: { $regex: q, $options: "i" }, })
+        const users = await User.find({ $or: [{ username: { $regex: q, $options: "i" } }, { displayName: { $regex: q, $options: "i" } }] })
             .select("profilePicture displayName username")
             .lean();
 

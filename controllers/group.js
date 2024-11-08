@@ -239,7 +239,7 @@ export const getGroupMembers = async (req, res) => {
     }
 }
 
-export const getGroupSuggestions = async (req, res) => {
+export const getGroups = async (req, res) => {
     try {
         const { q = "" } = req.query;
 

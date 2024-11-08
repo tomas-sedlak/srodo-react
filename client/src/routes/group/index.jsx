@@ -96,7 +96,7 @@ export default function Group() {
         </div>
     ) : status === "error" ? (
         <div className="loader-center">
-            <Message title="Nastala chyba! 💔" content="Skupina, ktorú hľadáš nebola nájdená." />
+            <Message title="Nastala chyba! 💔" content="Skupina, ktorú hľadáš, nebola nájdená." />
         </div>
     ) : (
         <>

@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    getGroupSuggestions,
+    getGroups,
     getGroup,
     getGroupPosts,
     getGroupMembers,
@@ -14,7 +14,8 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 // READ
-router.get("/suggestions", getGroupSuggestions);
+router.get("/search", getGroups);
+router.get("/suggestions", getGroups);
 router.get("/:groupId", getGroup);
 router.get("/:groupId/posts", getGroupPosts);
 router.get("/:groupId/members", getGroupMembers);

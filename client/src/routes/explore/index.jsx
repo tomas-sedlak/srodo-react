@@ -7,10 +7,11 @@ import { Helmet } from "react-helmet";
 import { UserProfile } from "routes/group";
 import Suggestion from "templates/Group";
 import axios from "axios";
+import Message from "templates/Message";
 
 export default function Explore() {
     const [searchParams, setSearchParams] = useSearchParams();
-    
+
     const q = searchParams.get("q") || "";
     const tab = searchParams.get("tab") || "skupiny";
 
@@ -27,7 +28,7 @@ export default function Explore() {
     }
 
     const fetchData = async () => {
-        const response = await axios.get(`/api/${tab === "skupiny" ? "group" : "user"}/suggestions?q=${searchValue}`);
+        const response = await axios.get(`/api/${tab === "skupiny" ? "group" : "user"}/search?q=${searchValue}`);
         return response.data;
     }
 
@@ -92,6 +93,10 @@ export default function Explore() {
                 </div>
             ) : (
                 <>
+                    {data.length == 0 &&
+                        <Message content={tab == "skupiny" ? "Skupina, ktorú hľadáš, nebola nájdená." : "Používateľ, ktorého hľadáš, nebol nájdený."} />
+                    }
+
                     {tab === "skupiny" && data.map(group => (
                         <Suggestion group={group} />
                     ))}
