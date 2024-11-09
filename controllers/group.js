@@ -223,7 +223,7 @@ export const getGroupMembers = async (req, res) => {
             .select("members")
             .populate({
                 path: "members",
-                select: "username displayName profilePicture",
+                select: "username displayName profilePicture verified",
                 match: {
                     $or: [
                         { username: regexQuery },
