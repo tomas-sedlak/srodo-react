@@ -13,9 +13,11 @@ export const getUser = async (req, res) => {
     try {
         let user;
         if (req.query.userId) {
-            user = await User.findById(req.query.userId);
+            user = await User.findById(req.query.userId)
+                .select("username displayName profilePicture coverImage bio socials verified createdAt");
         } else if (req.query.username) {
-            user = await User.findOne({ username: req.query.username });
+            user = await User.findOne({ username: req.query.username })
+                .select("username displayName profilePicture coverImage bio socials verified createdAt");
         }
 
         res.status(200).json(user);
@@ -42,7 +44,7 @@ export const getUnique = async (req, res) => {
 export const getUserSuggestions = async (req, res) => {
     try {
         const ids = ["664d045d0776e0770cc47e34", "664ddbf6c781ebff57563eff", "66501bd19cb989885bcbade2", "664daddec781ebff57563e0f"];
-        
+
         const users = await User.find({ _id: { $in: ids } })
             .select("profilePicture displayName username verified")
             .lean();
@@ -182,7 +184,8 @@ export const getUserPosts = async (req, res) => {
 export const getUserGroups = async (req, res) => {
     try {
         const { userId } = req.params;
-        const groups = await Group.find({ members: userId });
+        const groups = await Group.find({ members: userId })
+            .select("profilePicture name isPrivate verified owner");
 
         res.status(200).json(groups);
     } catch (err) {
@@ -214,7 +217,8 @@ export const updateUserSettings = async (req, res) => {
             return res.status(403).send("Access Denied");
         }
 
-        const user = await User.findById(userId).select("-password");
+        const user = await User.findById(userId)
+            .select("username displayName profilePicture coverImage bio socials")
 
         const {
             username,
