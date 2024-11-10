@@ -2,8 +2,11 @@ import { useState } from "react";
 import { ActionIcon, Box, Button, Group, Image, Loader, Stack, Tabs, Text, Textarea, Title } from "@mantine/core";
 import { Dropzone, MS_POWERPOINT_MIME_TYPE, MS_WORD_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { IconFile, IconUpload, IconX, IconAlarm, IconTrendingUp, IconFileText, IconDevices } from "@tabler/icons-react";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { useSelector } from "react-redux";
 import SmallHeader from "templates/SmallHeader";
 import axios from "axios";
 
@@ -18,10 +21,16 @@ export default function AI() {
     const [error, setError] = useState("")
     const navigate = useNavigate()
 
+    const userId = useSelector(state => state.user?._id)
+    const token = useSelector(state => state.token);
+    const headers = {
+        Authorization: `Bearer ${token}`,
+    }
+
     const generateQuizFromText = async () => {
         setIsLoading(true)
         try {
-            const result = await axios.post("/api/ai", { text })
+            const result = await axios.post("/api/ai", { text }, { headers })
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
             setError(err.response.data.message)
@@ -36,7 +45,7 @@ export default function AI() {
             const formData = new FormData()
             formData.append("file", file)
 
-            const result = await axios.post("/api/ai", formData)
+            const result = await axios.post("/api/ai", formData, { headers })
 
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
@@ -52,7 +61,7 @@ export default function AI() {
             const formData = new FormData()
             formData.append("image", image)
 
-            const result = await axios.post("/api/ai", formData)
+            const result = await axios.post("/api/ai", formData, { headers })
             navigate(`/kviz/${result.data.id}`)
         } catch (err) {
             setError(err.response.data.message)
@@ -60,6 +69,20 @@ export default function AI() {
             setIsLoading(false)
         }
     }
+
+    const fetchHistory = async () => {
+        try {
+            const response = await axios.get("/api/quiz", { headers })
+            return response.data
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
+    const { data, status } = useQuery({
+        queryFn: fetchHistory,
+        queryKey: ["ai-history", userId],
+    })
 
     return (
         <>
@@ -108,7 +131,7 @@ export default function AI() {
                             <Box pos="relative">
                                 <Textarea
                                     size="md"
-                                    placeholder="Tu vlož text z ktorého chceš vytoriť kvíz."
+                                    placeholder="Tu vlož text, z ktorého chceš vytoriť kvíz."
                                     minRows={8}
                                     maxRows={8}
                                     autosize
@@ -155,7 +178,7 @@ export default function AI() {
                                             <Button variant="default" mt={8}>Pridať súbor</Button>
                                         </div>
                                     </Dropzone>
-                                    <Text mt={4} c="dimmed" size="sm">Podporované formáty sú .pfd, .docx, .pptx, .xlsx. Maximálna veľkosť 5MB.</Text>
+                                    <Text mt={4} c="dimmed" size="sm">Podporované formáty sú .pdf, .docx, .pptx, .xlsx. Maximálna veľkosť 5MB.</Text>
                                 </>
                             ) : (
                                 <Group
@@ -227,6 +250,35 @@ export default function AI() {
                                 <Button onClick={generateQuizFromImage} disabled={!image}>
                                     Vytvoriť kvíz
                                 </Button>
+                            </Group>
+                        </Box>
+                    }
+
+                    {status === "success" && data.length > 0 &&
+                        <Box px="md" py="sm">
+                            <Text fw={700} size='lg'>História tvojich kvízov</Text>
+
+                            <Group
+                                mt="md"
+                                gap={8}
+                                wrap="nowrap"
+                                style={{ overflowX: "auto" }}
+                            >
+                                {data.map(quiz => (
+                                    <Link to={`/kviz/${quiz._id}`}>
+                                        <Group
+                                            px="md"
+                                            py={8}
+                                            className="border background-light"
+                                            justify="space-between"
+                                            style={{ borderRadius: "var(--mantine-radius-md)" }}
+                                        >
+                                            <Text style={{ whiteSpace: "nowrap" }}>
+                                                {quiz.title}
+                                            </Text>
+                                        </Group>
+                                    </Link>
+                                ))}
                             </Group>
                         </Box>
                     }

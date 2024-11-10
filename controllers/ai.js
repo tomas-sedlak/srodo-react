@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import path from "path";
 import officeParser from "officeparser";
 import Quiz from "../models/Quiz.js";
+import jwt from "jsonwebtoken";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -11,7 +12,7 @@ const generateQuizFromText = async (text, language) => {
     if (text.length > 5000) {
         throw new Error("Text je príliš dlhý.");
     }
-    
+
     const prompt = `
     Based on the following text, generate quiz:
 
@@ -173,6 +174,12 @@ export const generateQuiz = async (req, res) => {
             quizContent = await generateQuizFromImage(req.files.image[0], language);
         } else {
             return res.status(400).json({ message: "Nebol nahratý žiaden obsah." });
+        }
+
+        let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
+        const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
+        if (userId) {
+            quizContent.author = userId;
         }
 
         const quiz = await Quiz.create(quizContent);

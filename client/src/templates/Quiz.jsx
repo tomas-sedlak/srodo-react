@@ -70,13 +70,14 @@ export default function Quiz({ data }) {
                                     key={index}
                                     onClick={isAnswerSubmitted ? null : () => handleChange(index)}
                                     className="pointer border background-light"
+                                    wrap="nowrap"
                                     style={{
                                         outline: border,
                                         borderRadius: 8,
                                     }}
                                 >
                                     <Radio checked={selectedAnswer === index} />
-                                    <Text>{answer}</Text>
+                                    <Text style={{ flex: 1 }}>{answer}</Text>
                                 </Group>
                             )
                         })}
@@ -90,8 +91,9 @@ export default function Quiz({ data }) {
                                 py={8}
                                 className="pointer border background-light"
                                 style={{ borderRadius: 8 }}
+                                wrap="nowrap"
                             >
-                                <IconMessage stroke={1.25} />
+                                <IconMessage stroke={1.25} style={{ flexShrink: 0 }} />
                                 <Text style={{ flex: 1 }}>{question.explanation}</Text>
                             </Group>
                             <Button mt="md" variant="filled" onClick={handleNextQuestion}>
