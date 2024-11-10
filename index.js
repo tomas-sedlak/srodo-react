@@ -52,6 +52,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+// Set the trust proxy setting for Heroku to handle X-Forwarded-For headers
+app.set("trust proxy", 1);
 app.use(limiter)
 app.use(express.json());
 // app.use(helmet({
