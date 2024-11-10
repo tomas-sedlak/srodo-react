@@ -177,9 +177,8 @@ export const generateQuiz = async (req, res) => {
         }
 
         let token = req.header("Authorization") && req.header("Authorization").split(" ")[1];
-        const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
-        if (userId) {
-            quizContent.author = userId;
+        if (token && token !== "null") {
+            quizContent.author = jwt.verify(token, process.env.JWT_SECRET)?.id;
         }
 
         const quiz = await Quiz.create(quizContent);
