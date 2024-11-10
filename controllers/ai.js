@@ -168,10 +168,13 @@ export const generateQuiz = async (req, res) => {
         let quizContent;
         if (req.body.text) {
             quizContent = await generateQuizFromText(req.body.text, language);
+            quizContent.method = "text";
         } else if (req.files.file) {
             quizContent = await generateQuizFromFile(req.files.file[0], language);
+            quizContent.method = "file";
         } else if (req.files.image) {
             quizContent = await generateQuizFromImage(req.files.image[0], language);
+            quizContent.method = "image";
         } else {
             return res.status(400).json({ message: "Nebol nahratý žiaden obsah." });
         }

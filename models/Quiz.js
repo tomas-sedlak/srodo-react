@@ -6,6 +6,10 @@ const quizSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
     },
+    method: {
+        type: String,
+        enum: ["text", "file", "image"],
+    },
     title: String,
     questions: [{
         question: String,
