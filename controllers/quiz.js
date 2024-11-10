@@ -23,6 +23,7 @@ export const getQuizHistory = async (req, res) => {
         const userId = jwt.verify(token, process.env.JWT_SECRET)?.id;
 
         const quiz = await Quiz.find({ author: userId })
+            .sort({ createdAt: -1 })
             .select("title createdAt");
 
         res.status(200).json(quiz);
